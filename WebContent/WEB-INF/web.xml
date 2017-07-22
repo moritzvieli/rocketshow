@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" version="3.1">
-  <display-name>ShowMachine</display-name>
+  <display-name>RocketShow</display-name>
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
     <welcome-file>index.htm</welcome-file>
@@ -18,10 +18,9 @@
     <servlet-name>Jersey Web Application</servlet-name>
     <url-pattern>/api/*</url-pattern>
   </servlet-mapping>
-  
-  <listener>  
+  <listener>
     <listener-class>
-        com.ascargon.showmachine.rest.ContextListener
+        com.ascargon.rocketshow.rest.ContextListener
     </listener-class>
-</listener> 
+  </listener>
 </web-app>

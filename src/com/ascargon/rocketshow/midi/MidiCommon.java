@@ -1,4 +1,4 @@
-package com.ascargon.showmachine.midi;
+package com.ascargon.rocketshow.midi;
 
 /*
  *	MidiCommon.java

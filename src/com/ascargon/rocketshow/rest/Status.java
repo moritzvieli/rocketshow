@@ -1,4 +1,4 @@
-package com.ascargon.showmachine.rest;
+package com.ascargon.rocketshow.rest;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

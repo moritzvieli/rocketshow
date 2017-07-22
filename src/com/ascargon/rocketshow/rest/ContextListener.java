@@ -1,9 +1,9 @@
-package com.ascargon.showmachine.rest;
+package com.ascargon.rocketshow.rest;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import com.ascargon.showmachine.midi.Startup;
+import com.ascargon.rocketshow.midi.Startup;
 
 public class ContextListener implements ServletContextListener {
 

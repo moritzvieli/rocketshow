@@ -1,4 +1,4 @@
-package com.ascargon.showmachine.dmx;
+package com.ascargon.rocketshow.dmx;
 
 import com.juanjo.openDmx.OpenDmx;
 
