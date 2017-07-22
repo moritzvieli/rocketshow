@@ -1,12 +1,7 @@
-package com.ascargon.showmachine.DmxSender;
+package com.ascargon.showmachine.dmx;
 
 import com.juanjo.openDmx.OpenDmx;
 
-import java.io.IOException;
-
-/**
- * Created by moritzvieli on 21.07.17.
- */
 public class SendDmxSignal {
 
     public static final int MAX_CHANNELS = 512;

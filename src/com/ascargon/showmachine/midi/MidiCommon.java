@@ -1,4 +1,4 @@
-package com.ascargon.showmachine.MidiInputHandler;
+package com.ascargon.showmachine.midi;
 
 /*
  *	MidiCommon.java

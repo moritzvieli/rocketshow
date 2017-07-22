@@ -1,29 +1,26 @@
-package com.ascargon.showmachine;
-
-import com.ascargon.showmachine.MidiFilePlayer.MidiFilePlayer;
-import com.ascargon.showmachine.MidiInputHandler.DumpReceiver;
-import com.ascargon.showmachine.MidiInputHandler.MidiCommon;
-import gnu.getopt.Getopt;
+package com.ascargon.showmachine.midi;
 
 import java.io.IOException;
 
-import javax.sound.midi.Transmitter;
-import javax.sound.midi.Receiver;
-import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Receiver;
 import javax.sound.midi.Synthesizer;
+import javax.sound.midi.Transmitter;
 
-public class Main {
+import gnu.getopt.Getopt;
+
+public class Startup {
+
     /**
      * Flag for debugging messages.
      * If true, some messages are dumped to the console
      * during operation.
      */
     private static boolean DEBUG = true;
-
-
-    public static void main(String[] args)
+	
+    public void main(String[] args)
             throws Exception {
 
         // Display background image, when nothing else runs
@@ -200,4 +197,5 @@ public class Main {
             out(t.toString());
         }
     }
+	
 }

@@ -1,4 +1,4 @@
-package com.ascargon.showmachine.MidiFilePlayer;
+package com.ascargon.showmachine.midi;
 
 public class Note {
 

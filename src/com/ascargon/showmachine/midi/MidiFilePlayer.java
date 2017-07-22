@@ -1,11 +1,16 @@
-package com.ascargon.showmachine.MidiFilePlayer;
+package com.ascargon.showmachine.midi;
 
-import javax.sound.midi.*;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
-/**
- * Created by moritzvieli on 21.07.17.
- */
+import javax.sound.midi.MidiMessage;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.Receiver;
+import javax.sound.midi.Sequencer;
+import javax.sound.midi.ShortMessage;
+
 public class MidiFilePlayer implements Receiver {
 
     public void play(String fileName) throws Exception {
