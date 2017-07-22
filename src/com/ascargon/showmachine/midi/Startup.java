@@ -24,25 +24,25 @@ public class Startup {
             throws Exception {
 
         // Display background image, when nothing else runs
-        Runtime.getRuntime().exec("sudo fbi -T 1 -a -noverbose /opt/showmachine/img/test.jpg");
+        //Runtime.getRuntime().exec("sudo fbi -T 1 -a -noverbose /opt/showmachine/img/test.jpg");
 
 
         MidiFilePlayer[] playerList = new MidiFilePlayer[100];
 
-        for(int i = 0; i < 32; i ++) {
-            playerList[i] = new MidiFilePlayer();
-            playerList[i].play("/Users/moritzvieli/repo/ShowMachine/test2.mid");
+        //for(int i = 0; i < 32; i ++) {
+            //playerList[i] = new MidiFilePlayer();
+            //playerList[i].play("/Users/moritzvieli/repo/ShowMachine/test2.mid");
             //playerList[i].play("/opt/showmachine/midi/test2.mid");
-        }
+        //}
 
         // TODO Use this approach to kill the video if neccessary
         // https://stackoverflow.com/questions/15095819/how-to-kill-runtime-exec
         // Play video
-        Runtime.getRuntime().exec("omxplayer /opt/showmachine/video/test.mp4").waitFor();
+        //Runtime.getRuntime().exec("omxplayer /opt/showmachine/video/test.mp4").waitFor();
 
 
         // TODO
-        Thread.sleep(5000000);
+        //Thread.sleep(5000000);
 
 		/*
          *	The device name/index to listen to.
@@ -114,7 +114,7 @@ public class Startup {
             } else {
                 out("no device info found for index " + nDeviceIndex);
             }
-            System.exit(1);
+            //System.exit(1);
         }
         MidiDevice inputDevice = null;
         try {
@@ -181,7 +181,7 @@ public class Startup {
         out("    -d <input device name>\treads from named device (see '-l')");
         out("    -n <input device index>\treads from device with given index(see '-l')");
         out("    -D\tenables debugging output");
-        System.exit(1);
+        //System.exit(1);
     }
 
 

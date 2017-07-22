@@ -14,7 +14,7 @@ public class ContextListener implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent arg0) {
 		Startup s = new Startup();
 		String[] args = new String[1];
-		args[0] = "l";
+		args[0] = "-l";
 		try {
 			s.main(args);
 		} catch (Exception e) {

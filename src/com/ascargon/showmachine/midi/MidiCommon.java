@@ -114,7 +114,7 @@ public class MidiCommon
         {
             out("[No devices available]");
         }
-        System.exit(0);
+        //System.exit(0);
     }
 
 
