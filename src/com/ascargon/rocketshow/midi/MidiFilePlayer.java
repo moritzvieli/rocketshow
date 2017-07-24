@@ -27,6 +27,8 @@ public class MidiFilePlayer implements Receiver {
     }
 
     public void send(MidiMessage message, long timeStamp) {
+    		ShortMessage a = new ShortMessage();
+    	
         if(message instanceof ShortMessage) {
             ShortMessage sm = (ShortMessage) message;
             int channel = sm.getChannel();
