@@ -14,7 +14,15 @@ abstract public class File {
 
 	// Play offset
 	private int offsetInMillis = 0;
-
+	
+	abstract public void load();
+	
+	abstract public void play();
+	
+	abstract public void pause();
+	
+	abstract public void resume();
+	
 	@XmlElement(name = "path")
 	public String getXmlPath() {
 		return path;
@@ -36,12 +44,6 @@ abstract public class File {
 	public void setOffsetInMillis(int offsetInMillis) {
 		this.offsetInMillis = offsetInMillis;
 	}
-	
-	abstract public void play();
-	
-	abstract public void pause();
-	
-	abstract public void load();
 
 	public Manager getManager() {
 		return manager;

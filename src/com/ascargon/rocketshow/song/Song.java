@@ -59,6 +59,14 @@ public class Song {
 		}
 	}
 	
+	public void resume() {
+		// Pause the song
+		for (int i = 0; i < fileList.size(); i++) {
+			File file = fileList.get(i);
+			file.resume();
+		}
+	}
+	
 	@XmlTransient
 	public Midi2DmxMapping getMidi2DmxMapping() {
 		return midi2DmxMapping;

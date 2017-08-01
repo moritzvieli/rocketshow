@@ -33,10 +33,6 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 		}
 	}
 
-	public void close() {
-		midiPlayer.close();
-	}
-
 	@Override
 	public void play() {
 		midiPlayer.setMidiFileOutType(midiFileOutType);
@@ -58,6 +54,15 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 	@Override
 	public void pause() {
 		midiPlayer.pause();
+	}
+	
+	@Override
+	public void resume() {
+		midiPlayer.play();
+	}
+	
+	public void close() {
+		midiPlayer.close();
 	}
 
 	public Midi2DmxMapping getMidi2DmxMapping() {

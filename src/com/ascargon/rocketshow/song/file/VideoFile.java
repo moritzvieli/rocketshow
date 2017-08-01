@@ -5,6 +5,11 @@ import com.ascargon.rocketshow.video.VideoPlayer;
 public class VideoFile extends File {
 
 	@Override
+	public void load() {
+		this.getManager().getVideoPlayer().load(this.getPath());
+	}
+	
+	@Override
 	public void play() {
 		VideoPlayer videoPlayer = this.getManager().getVideoPlayer();
 		
@@ -22,13 +27,13 @@ public class VideoFile extends File {
 	}
 
 	@Override
-	public void load() {
-		this.getManager().getVideoPlayer().load(this.getPath());
-	}
-
-	@Override
 	public void pause() {
 		this.getManager().getVideoPlayer().pause();
+	}
+	
+	@Override
+	public void resume() {
+		this.getManager().getVideoPlayer().resume();
 	}
 
 }

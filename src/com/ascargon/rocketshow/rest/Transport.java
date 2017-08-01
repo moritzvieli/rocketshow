@@ -21,7 +21,7 @@ public class Transport {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response play() {
 		Manager manager = (Manager)context.getAttribute("manager");
-		manager.play();
+		manager.getCurrentSong().play();
 		return Response.status(200).build();
 	}
 	
@@ -30,7 +30,16 @@ public class Transport {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response pause() {
 		Manager manager = (Manager)context.getAttribute("manager");
-		manager.pause();
+		manager.getCurrentSong().pause();
+		return Response.status(200).build();
+	}
+	
+	@Path("resume")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response resume() {
+		Manager manager = (Manager)context.getAttribute("manager");
+		manager.getCurrentSong().resume();
 		return Response.status(200).build();
 	}
 

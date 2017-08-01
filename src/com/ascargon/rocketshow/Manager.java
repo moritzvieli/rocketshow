@@ -80,14 +80,6 @@ public class Manager {
 		}
 	}
 
-	public void play() {
-		currentSong.play();
-	}
-	
-	public void pause() {
-		currentSong.pause();
-	}
-
 	public String test() {
 		return "Hello there";
 	}
@@ -114,6 +106,22 @@ public class Manager {
 
 	public void setMidi2DmxMapping(Midi2DmxMapping midi2DmxMapping) {
 		this.midi2DmxMapping = midi2DmxMapping;
+	}
+
+	public SetList getCurrentSetList() {
+		return currentSetList;
+	}
+
+	public void setCurrentSetList(SetList currentSetList) {
+		this.currentSetList = currentSetList;
+	}
+
+	public Song getCurrentSong() {
+		return currentSong;
+	}
+
+	public void setCurrentSong(Song currentSong) {
+		this.currentSong = currentSong;
 	}
 
 }
