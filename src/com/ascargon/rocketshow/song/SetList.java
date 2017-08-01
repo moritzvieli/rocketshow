@@ -28,6 +28,8 @@ public class SetList {
 	
 	private Midi2DmxMapping midi2DmxMapping = new Midi2DmxMapping();
 
+	private int currentSongIndex = 0;
+	
 	private Manager manager;
 	
 	// Load all songs inside the setlist
@@ -42,7 +44,6 @@ public class SetList {
 			try {
 				File file = new File(path);
 				JAXBContext jaxbContext = JAXBContext.newInstance(Song.class);
-
 				Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 				Song song = (Song) jaxbUnmarshaller.unmarshal(file);
 				song.setPath(path);
@@ -103,12 +104,22 @@ public class SetList {
 		this.path = path;
 	}
 
+	@XmlTransient
 	public Manager getManager() {
 		return manager;
 	}
 
 	public void setManager(Manager manager) {
 		this.manager = manager;
+	}
+
+	@XmlTransient
+	public int getCurrentSongIndex() {
+		return currentSongIndex;
+	}
+
+	public void setCurrentSongIndex(int currentSongIndex) {
+		this.currentSongIndex = currentSongIndex;
 	}
 	
 }

@@ -23,7 +23,7 @@ public class Status {
 	@Produces("application/json")
 	public Response convertFtoC() throws JSONException {
 		Manager manager = (Manager)context.getAttribute("manager");
-		System.out.println("Out: " + manager.test());
+		//System.out.println("Out: " + manager.test());
 		
 		JSONObject jsonObject = new JSONObject();
 		Double fahrenheit = 98.24;

@@ -2,7 +2,7 @@ package com.ascargon.rocketshow.song;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "song")
+@XmlRootElement
 public class SetListSong {
 
 	private String path;

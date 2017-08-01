@@ -23,6 +23,7 @@ public class SetList {
 	public Response loadSetList(@QueryParam("path") String path) {
 		Manager manager = (Manager)context.getAttribute("manager");
 		manager.loadSetlist(path);
+		manager.saveSession();
 		return Response.status(200).build();
 	}
 

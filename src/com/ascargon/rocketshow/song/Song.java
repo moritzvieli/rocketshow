@@ -9,6 +9,8 @@ import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.apache.log4j.Logger;
+
 import com.ascargon.rocketshow.Manager;
 import com.ascargon.rocketshow.dmx.Midi2DmxMapping;
 import com.ascargon.rocketshow.song.file.AudioFile;
@@ -19,6 +21,8 @@ import com.ascargon.rocketshow.song.file.VideoFile;;
 @XmlRootElement
 public class Song {
 
+	final static Logger logger = Logger.getLogger(Song.class);
+	
 	public static final String FILE_EXTENSION = "sng";
 
 	private String path;
@@ -30,6 +34,8 @@ public class Song {
 	private Manager manager;
 
 	public void load() {
+		logger.info("Loading song " + path);
+		
 		for (int i = 0; i < fileList.size(); i++) {
 			File file = fileList.get(i);
 
@@ -44,6 +50,8 @@ public class Song {
 	}
 
 	public void play() {
+		logger.info("Playing song " + path);
+		
 		// Start playing the song
 		for (int i = 0; i < fileList.size(); i++) {
 			File file = fileList.get(i);
@@ -52,6 +60,8 @@ public class Song {
 	}
 
 	public void pause() {
+		logger.info("Pausing song " + path);
+		
 		// Pause the song
 		for (int i = 0; i < fileList.size(); i++) {
 			File file = fileList.get(i);
@@ -60,6 +70,8 @@ public class Song {
 	}
 	
 	public void resume() {
+		logger.info("Resuming song " + path);
+		
 		// Pause the song
 		for (int i = 0; i < fileList.size(); i++) {
 			File file = fileList.get(i);

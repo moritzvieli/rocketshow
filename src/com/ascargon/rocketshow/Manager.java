@@ -5,7 +5,10 @@ import java.util.HashMap;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+
+import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.dmx.DmxSignalSender;
 import com.ascargon.rocketshow.dmx.Midi2DmxConverter;
@@ -17,10 +20,16 @@ import com.ascargon.rocketshow.video.VideoPlayer;
 
 public class Manager {
 
+	final static Logger logger = Logger.getLogger(Manager.class);
+	
+	public final String BASE_PATH = "/opt/rocketshow/";
+	
 	private DmxSignalSender dmxSignalSender;
 	private Midi2DmxConverter midi2DmxConverter;
 	
 	private VideoPlayer videoPlayer;
+	
+	private Session session = new Session();
 
 	// Global settings
 	private Midi2DmxMapping midi2DmxMapping;
@@ -28,17 +37,32 @@ public class Manager {
 	private SetList currentSetList;
 	private Song currentSong;
 
+	public void setSongIndex(int index) {
+		if(currentSetList != null) {
+			if(currentSetList.getSongList().size() >= index) {
+				currentSong = currentSetList.getSongList().get(index);
+				currentSetList.setCurrentSongIndex(index);
+				
+				logger.info("Set song index " + index);
+			}
+		}
+	}
+	
 	public void loadSetlist(String path) {
+		logger.info("Loading setlist " + path + "...");
+		
 		// Load a setlist
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(SetList.class);
-
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 			currentSetList = (SetList) jaxbUnmarshaller.unmarshal(new File(path));
 			currentSetList.setManager(this);
+			currentSetList.setPath(path);
 			currentSetList.load();
 			
-			currentSong = currentSetList.getSongList().get(0);
+			setSongIndex(0);
+			
+			logger.info("Setlist " + path + " successfully loaded");
 		} catch (JAXBException e) {
 			e.printStackTrace();
 		}
@@ -58,6 +82,8 @@ public class Manager {
 	}
 	
 	public void load() {
+		logger.info("Initialize RocketShow...");
+		
 		// Initialize the DMX sender and default global mapping
 		dmxSignalSender = new DmxSignalSender();
 		midi2DmxConverter = new Midi2DmxConverter(dmxSignalSender);
@@ -66,7 +92,9 @@ public class Manager {
 		// Initialize the video player
 		videoPlayer = new VideoPlayer();
 
-		// TODO Load the last setlist stored in the session object
+		restoreSession();
+		
+		logger.info("RocketShow initialized");
 		
 		// TODO Initialize the MIDI system
 		Startup s = new Startup();
@@ -79,9 +107,54 @@ public class Manager {
 			e.printStackTrace();
 		}
 	}
+	
+	public void saveSession() {
+		if(currentSetList != null) {
+			session.setCurrentSetListPath(currentSetList.getPath());
+			session.setCurrentSongIndex(currentSetList.getCurrentSongIndex());
+		}
+		
+		try {
+			File file = new File(BASE_PATH + "session");
+			JAXBContext jaxbContext = JAXBContext.newInstance(Session.class);
+			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 
-	public String test() {
-		return "Hello there";
+			// output pretty printed
+			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+			jaxbMarshaller.marshal(session, file);
+			
+			logger.info("Session saved");
+		} catch (JAXBException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void restoreSession() {
+		File file = new File(BASE_PATH + "session");
+		if(!file.exists() || file.isDirectory()) { 
+		    return;
+		}
+		
+		// Restore the session from the file
+		try {
+			JAXBContext jaxbContext = JAXBContext.newInstance(Session.class);
+
+			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+			session = (Session) jaxbUnmarshaller.unmarshal(file);
+
+			if(session.getCurrentSetListPath() != null) {
+				loadSetlist(session.getCurrentSetListPath());
+				
+				if(session.getCurrentSongIndex() != null) {
+					setSongIndex(session.getCurrentSongIndex());
+				}
+			}
+			
+			logger.info("Session restored");
+		} catch (JAXBException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public Midi2DmxConverter getMidi2DmxConverter() {
