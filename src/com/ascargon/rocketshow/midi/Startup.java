@@ -26,7 +26,7 @@ public class Startup {
         //Runtime.getRuntime().exec("sudo fbi -T 1 -a -noverbose /opt/rocketshow/img/test.jpg");
 
 
-        MidiFilePlayer[] playerList = new MidiFilePlayer[100];
+        //MidiFilePlayer[] playerList = new MidiFilePlayer[100];
 
         //for(int i = 0; i < 32; i ++) {
             //playerList[i] = new MidiFilePlayer();

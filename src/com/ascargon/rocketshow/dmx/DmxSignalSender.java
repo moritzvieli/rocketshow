@@ -1,8 +1,8 @@
 package com.ascargon.rocketshow.dmx;
 
-public class SendDmxSignal {
+public class DmxSignalSender {
 
-    public SendDmxSignal() {
+    public DmxSignalSender() {
         // TODO
     }
 

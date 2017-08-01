@@ -16,7 +16,7 @@ public class ContextListener implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
 		manager = new Manager();
-		manager.init();
+		manager.load();
 		
 		servletContextEvent.getServletContext().setAttribute("manager", manager);
 		
