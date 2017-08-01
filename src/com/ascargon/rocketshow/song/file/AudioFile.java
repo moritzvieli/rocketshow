@@ -13,5 +13,11 @@ public class AudioFile extends File {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void pause() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

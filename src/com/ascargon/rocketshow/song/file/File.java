@@ -2,7 +2,6 @@ package com.ascargon.rocketshow.song.file;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 import com.ascargon.rocketshow.Manager;
 
@@ -21,7 +20,6 @@ abstract public class File {
 		return path;
 	}
 
-	@XmlTransient
 	public String getPath() {
 		return path;
 	}
@@ -40,6 +38,8 @@ abstract public class File {
 	}
 	
 	abstract public void play();
+	
+	abstract public void pause();
 	
 	abstract public void load();
 

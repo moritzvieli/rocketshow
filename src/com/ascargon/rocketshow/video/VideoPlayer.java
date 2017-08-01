@@ -26,10 +26,16 @@ public class VideoPlayer {
 		// TODO to make it more exact: Set position one second before and delay the play by the remaining milliseconds
 		
 		try {
-			Runtime.getRuntime().exec("omxplayer --pos " + startPos + " " + path).waitFor();
-		} catch (InterruptedException e) {
+			Runtime.getRuntime().exec("omxplayer --pos " + startPos + " " + path);
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+	
+	public void pause() {
+		try {
+			Runtime.getRuntime().exec("p");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

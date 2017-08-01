@@ -10,10 +10,9 @@ import javax.xml.bind.Unmarshaller;
 import com.ascargon.rocketshow.dmx.DmxSignalSender;
 import com.ascargon.rocketshow.dmx.Midi2DmxConverter;
 import com.ascargon.rocketshow.dmx.Midi2DmxMapping;
+import com.ascargon.rocketshow.midi.Startup;
 import com.ascargon.rocketshow.song.SetList;
 import com.ascargon.rocketshow.song.Song;
-import com.ascargon.rocketshow.song.file.MidiFile;
-import com.ascargon.rocketshow.song.file.VideoFile;
 import com.ascargon.rocketshow.video.VideoPlayer;
 
 public class Manager {
@@ -29,10 +28,23 @@ public class Manager {
 	private SetList currentSetList;
 	private Song currentSong;
 
-	public void load() {
-		dmxSignalSender = new DmxSignalSender();
-		midi2DmxConverter = new Midi2DmxConverter(dmxSignalSender);
+	public void loadSetlist(String path) {
+		// Load a setlist
+		try {
+			JAXBContext jaxbContext = JAXBContext.newInstance(SetList.class);
 
+			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+			currentSetList = (SetList) jaxbUnmarshaller.unmarshal(new File(path));
+			currentSetList.setManager(this);
+			currentSetList.load();
+			
+			currentSong = currentSetList.getSongList().get(0);
+		} catch (JAXBException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void initializeDefaultDmxMapping() {
 		midi2DmxMapping = new Midi2DmxMapping();
 		midi2DmxMapping.setChannelOffset(0);
 		
@@ -43,80 +55,37 @@ public class Manager {
 		}
 		
 		midi2DmxMapping.setChannelMap(channelMap);
+	}
+	
+	public void load() {
+		// Initialize the DMX sender and default global mapping
+		dmxSignalSender = new DmxSignalSender();
+		midi2DmxConverter = new Midi2DmxConverter(dmxSignalSender);
+		initializeDefaultDmxMapping();
 		
-		// TODO Load the setlist and the first song
+		// Initialize the video player
+		videoPlayer = new VideoPlayer();
 
-		currentSetList = new SetList();
-
-		currentSetList.setPath("/users/moritzvieli/Test Setlist.stl");
-
-		currentSong = new Song();
-
-		currentSong.setPath("/users/moritzvieli/Test Song.sng");
-
-		MidiFile midiFile = new MidiFile();
-		midiFile.setOffsetInMillis(1250);
-		midiFile.setPath("/users/moritzvieli/test.mid");
-		currentSong.getFileList().add(midiFile);
+		// TODO Load the last setlist stored in the session object
 		
-		VideoFile videoFile = new VideoFile();
-		videoFile.setOffsetInMillis(0);
-		videoFile.setPath("/users/moritzvieli/test.mpeg");
-		currentSong.getFileList().add(videoFile);
-		
-
-		currentSetList.getSongList().add(currentSong);
-		currentSetList.getSongList().add(currentSong);
-
-		// Save song/setlist
-//		try {
-//
-//			File file = new File("/users/moritzvieli/setlist.stl");
-//			JAXBContext jaxbContext = JAXBContext.newInstance(SetList.class);
-//			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-//
-//			// output pretty printed
-//			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-//
-//			jaxbMarshaller.marshal(currentSetList, file);
-//			jaxbMarshaller.marshal(currentSetList, System.out);
-//		} catch (JAXBException e) {
-//			e.printStackTrace();
-//		}
-//
-//		try {
-//
-//			File file = new File("/users/moritzvieli/song.sng");
-//			JAXBContext jaxbContext = JAXBContext.newInstance(Song.class);
-//			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-//
-//			// output pretty printed
-//			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-//
-//			jaxbMarshaller.marshal(currentSong, file);
-//			jaxbMarshaller.marshal(currentSong, System.out);
-//		} catch (JAXBException e) {
-//			e.printStackTrace();
-//		}
-
-
-		// Load a setlist
+		// TODO Initialize the MIDI system
+		Startup s = new Startup();
+		String[] args = new String[1];
+		args[0] = "-l";
 		try {
-
-			File file = new File("/users/moritzvieli/setlist.stl");
-			JAXBContext jaxbContext = JAXBContext.newInstance(SetList.class);
-
-			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-			SetList s = (SetList) jaxbUnmarshaller.unmarshal(file);
-			s.load();
-		} catch (JAXBException e) {
+			s.main(args);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
 
 	public void play() {
 		currentSong.play();
+	}
+	
+	public void pause() {
+		currentSong.pause();
 	}
 
 	public String test() {

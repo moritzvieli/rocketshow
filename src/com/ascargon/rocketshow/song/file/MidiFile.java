@@ -16,7 +16,7 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 
 	private MidiFileOutType midiFileOutType = MidiFileOutType.DIRECT;
 
-	private Midi2DmxMapping midi2DmxMapping;
+	private Midi2DmxMapping midi2DmxMapping = new Midi2DmxMapping();
 
 	private MidiPlayer midiPlayer;
 
@@ -53,6 +53,11 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 			midiPlayer.setPositionInMillis(this.getOffsetInMillis() * -1);
 			midiPlayer.play();
 		}
+	}
+	
+	@Override
+	public void pause() {
+		midiPlayer.pause();
 	}
 
 	public Midi2DmxMapping getMidi2DmxMapping() {

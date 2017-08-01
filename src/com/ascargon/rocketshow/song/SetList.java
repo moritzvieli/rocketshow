@@ -26,7 +26,7 @@ public class SetList {
 	
 	private List<SetListSong> setListSongList = new ArrayList<SetListSong>();
 	
-	private Midi2DmxMapping midi2DmxMapping;
+	private Midi2DmxMapping midi2DmxMapping = new Midi2DmxMapping();
 
 	private Manager manager;
 	
@@ -47,8 +47,8 @@ public class SetList {
 				Song song = (Song) jaxbUnmarshaller.unmarshal(file);
 				song.setPath(path);
 				song.getMidi2DmxMapping().setParent(midi2DmxMapping);
-				song.load();
 				song.setManager(manager);
+				song.load();
 				songList.add(song);
 			} catch (JAXBException e) {
 				e.printStackTrace();

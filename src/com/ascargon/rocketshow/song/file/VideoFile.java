@@ -26,4 +26,9 @@ public class VideoFile extends File {
 		this.getManager().getVideoPlayer().load(this.getPath());
 	}
 
+	@Override
+	public void pause() {
+		this.getManager().getVideoPlayer().pause();
+	}
+
 }

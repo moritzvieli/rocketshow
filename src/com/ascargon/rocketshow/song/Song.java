@@ -23,7 +23,7 @@ public class Song {
 
 	private String path;
 
-	private Midi2DmxMapping midi2DmxMapping;
+	private Midi2DmxMapping midi2DmxMapping = new Midi2DmxMapping();
 
 	private List<File> fileList = new ArrayList<File>();
 
@@ -45,13 +45,20 @@ public class Song {
 
 	public void play() {
 		// Start playing the song
-
 		for (int i = 0; i < fileList.size(); i++) {
 			File file = fileList.get(i);
 			file.play();
 		}
 	}
 
+	public void pause() {
+		// Pause the song
+		for (int i = 0; i < fileList.size(); i++) {
+			File file = fileList.get(i);
+			file.pause();
+		}
+	}
+	
 	@XmlTransient
 	public Midi2DmxMapping getMidi2DmxMapping() {
 		return midi2DmxMapping;
