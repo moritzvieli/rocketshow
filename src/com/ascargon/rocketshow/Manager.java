@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import com.ascargon.rocketshow.dmx.DmxSignalSender;
 import com.ascargon.rocketshow.dmx.Midi2DmxConverter;
 import com.ascargon.rocketshow.dmx.Midi2DmxMapping;
+import com.ascargon.rocketshow.image.ImageDisplayer;
 import com.ascargon.rocketshow.midi.Startup;
 import com.ascargon.rocketshow.song.SetList;
 import com.ascargon.rocketshow.song.Song;
@@ -28,8 +29,10 @@ public class Manager {
 	private Midi2DmxConverter midi2DmxConverter;
 	
 	private VideoPlayer videoPlayer;
+	private ImageDisplayer imageDisplayer;
 	
 	private Session session = new Session();
+	private Settings settings = new Settings();
 
 	// Global settings
 	private Midi2DmxMapping midi2DmxMapping;
@@ -91,7 +94,11 @@ public class Manager {
 		
 		// Initialize the video player
 		videoPlayer = new VideoPlayer();
+		
+		// Initialize the image displayer
+		imageDisplayer = new ImageDisplayer();
 
+		loadSettings();
 		restoreSession();
 		
 		logger.info("RocketShow initialized");
@@ -104,6 +111,29 @@ public class Manager {
 			s.main(args);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void loadSettings() {
+		File file = new File(BASE_PATH + "settings");
+		if(!file.exists() || file.isDirectory()) { 
+		    return;
+		}
+		
+		// Restore the session from the file
+		try {
+			JAXBContext jaxbContext = JAXBContext.newInstance(Settings.class);
+
+			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+			settings = (Settings) jaxbUnmarshaller.unmarshal(file);
+
+			if(settings.getDefaultImagePath() != null) {
+				imageDisplayer.display(settings.getDefaultImagePath());
+			}
+			
+			logger.info("Settings loaded");
+		} catch (JAXBException e) {
 			e.printStackTrace();
 		}
 	}
