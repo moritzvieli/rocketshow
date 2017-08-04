@@ -43,4 +43,13 @@ public class Transport {
 		return Response.status(200).build();
 	}
 
+	@Path("toggle-play")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response togglePlay() throws Exception {
+		Manager manager = (Manager)context.getAttribute("manager");
+		manager.getCurrentSong().togglePlay();
+		return Response.status(200).build();
+	}
+	
 }

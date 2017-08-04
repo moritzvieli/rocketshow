@@ -32,6 +32,8 @@ public class Song {
 	private List<File> fileList = new ArrayList<File>();
 
 	private Manager manager;
+	
+	private boolean playing = false;
 
 	public void load() throws Exception {
 		logger.info("Loading song " + path);
@@ -52,6 +54,8 @@ public class Song {
 	public void play() throws Exception {
 		logger.info("Playing song " + path);
 		
+		playing = true;
+		
 		// Start playing the song
 		for (int i = 0; i < fileList.size(); i++) {
 			File file = fileList.get(i);
@@ -61,6 +65,8 @@ public class Song {
 
 	public void pause() throws Exception {
 		logger.info("Pausing song " + path);
+		
+		playing = false;
 		
 		// Pause the song
 		for (int i = 0; i < fileList.size(); i++) {
@@ -72,10 +78,20 @@ public class Song {
 	public void resume() throws Exception {
 		logger.info("Resuming song " + path);
 		
+		playing = true;
+		
 		// Pause the song
 		for (int i = 0; i < fileList.size(); i++) {
 			File file = fileList.get(i);
 			file.resume();
+		}
+	}
+	
+	public void togglePlay() throws Exception {
+		if(playing) {
+			pause();
+		} else {
+			resume();
 		}
 	}
 	
@@ -109,12 +125,22 @@ public class Song {
 		this.path = path;
 	}
 
+	@XmlTransient
 	public Manager getManager() {
 		return manager;
 	}
 
 	public void setManager(Manager manager) {
 		this.manager = manager;
+	}
+
+	@XmlTransient
+	public boolean isPlaying() {
+		return playing;
+	}
+
+	public void setPlaying(boolean playing) {
+		this.playing = playing;
 	}
 
 }
