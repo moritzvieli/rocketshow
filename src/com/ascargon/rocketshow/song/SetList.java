@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
@@ -17,66 +16,63 @@ import com.ascargon.rocketshow.dmx.Midi2DmxMapping;
 
 @XmlRootElement
 public class SetList {
-	
+
 	public static final String FILE_EXTENSION = "stl";
-	
+
 	private String path;
-	
+
 	private List<Song> songList = new ArrayList<Song>();
-	
+
 	private List<SetListSong> setListSongList = new ArrayList<SetListSong>();
-	
+
 	private Midi2DmxMapping midi2DmxMapping = new Midi2DmxMapping();
 
 	private int currentSongIndex = 0;
-	
+
 	private Manager manager;
-	
+
 	// Load all songs inside the setlist
-	public void load() {
+	public void load() throws Exception {
 		midi2DmxMapping.setParent(manager.getSettings().getFileMidi2DmxMapping());
-		
+
 		songList = new ArrayList<Song>();
 
 		for (int i = 0; i < setListSongList.size(); i++) {
 			String path = setListSongList.get(i).getPath();
-			
-			try {
-				File file = new File(path);
-				JAXBContext jaxbContext = JAXBContext.newInstance(Song.class);
-				Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-				Song song = (Song) jaxbUnmarshaller.unmarshal(file);
-				song.setPath(path);
-				song.getMidi2DmxMapping().setParent(midi2DmxMapping);
-				song.setManager(manager);
-				song.load();
-				songList.add(song);
-			} catch (JAXBException e) {
-				e.printStackTrace();
-			}
+
+			File file = new File(path);
+			JAXBContext jaxbContext = JAXBContext.newInstance(Song.class);
+			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+			Song song = (Song) jaxbUnmarshaller.unmarshal(file);
+			song.setPath(path);
+			song.getMidi2DmxMapping().setParent(midi2DmxMapping);
+			song.setManager(manager);
+			song.load();
+			songList.add(song);
 		}
 	}
-	
-	// Return only the setlist-relevant information of the song (e.g. to save to a file)
+
+	// Return only the setlist-relevant information of the song (e.g. to save to
+	// a file)
 	@XmlElement(name = "song")
-	@XmlElementWrapper(name="songList")
+	@XmlElementWrapper(name = "songList")
 	public List<SetListSong> getSetListSongList() {
 		setListSongList = new ArrayList<SetListSong>();
-		
+
 		for (int i = 0; i < songList.size(); i++) {
 			SetListSong setListSong = new SetListSong();
 			setListSong.create(songList.get(i));
-			
+
 			setListSongList.add(setListSong);
 		}
-		
+
 		return setListSongList;
 	}
 
 	public void setXmlSongList(List<SetListSong> setListSongList) {
 		this.setListSongList = setListSongList;
 	}
-	
+
 	@XmlTransient
 	public List<Song> getSongList() {
 		return songList;
@@ -121,5 +117,5 @@ public class SetList {
 	public void setCurrentSongIndex(int currentSongIndex) {
 		this.currentSongIndex = currentSongIndex;
 	}
-	
+
 }

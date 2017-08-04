@@ -33,7 +33,7 @@ public class Song {
 
 	private Manager manager;
 
-	public void load() {
+	public void load() throws Exception {
 		logger.info("Loading song " + path);
 		
 		for (int i = 0; i < fileList.size(); i++) {
@@ -49,7 +49,7 @@ public class Song {
 		}
 	}
 
-	public void play() {
+	public void play() throws Exception {
 		logger.info("Playing song " + path);
 		
 		// Start playing the song
@@ -59,7 +59,7 @@ public class Song {
 		}
 	}
 
-	public void pause() {
+	public void pause() throws Exception {
 		logger.info("Pausing song " + path);
 		
 		// Pause the song
@@ -69,7 +69,7 @@ public class Song {
 		}
 	}
 	
-	public void resume() {
+	public void resume() throws Exception {
 		logger.info("Resuming song " + path);
 		
 		// Pause the song

@@ -11,6 +11,8 @@ import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Receiver;
 import javax.sound.midi.Sequencer;
 
+import org.apache.log4j.Logger;
+
 import com.ascargon.rocketshow.Manager;
 import com.ascargon.rocketshow.dmx.Midi2DmxConverter;
 import com.ascargon.rocketshow.dmx.Midi2DmxMapping;
@@ -18,6 +20,8 @@ import com.ascargon.rocketshow.song.file.MidiFile.MidiFileOutType;
 
 public class MidiPlayer implements Receiver {
 
+	final static Logger logger = Logger.getLogger(MidiPlayer.class);
+	
 	private Sequencer sequencer;
 	
 	private MidiFileOutType midiFileOutType = MidiFileOutType.DIRECT;
@@ -26,7 +30,10 @@ public class MidiPlayer implements Receiver {
 	
 	private Midi2DmxConverter midi2DmxConverter;
 	
+	private Manager manager;
+	
 	public MidiPlayer(Manager manager) throws MidiUnavailableException {
+		this.manager = manager;
 		this.midi2DmxConverter = manager.getMidi2DmxConverter();
 	}
 	
@@ -62,7 +69,15 @@ public class MidiPlayer implements Receiver {
 	public void send(MidiMessage message, long timeStamp) {
 		if (midiFileOutType == MidiFileOutType.DIRECT) {
 			// Directly send the message to the out system
-			// TODO choose device
+			try {
+				javax.sound.midi.MidiDevice midiDevice = MidiUtil.getHardwareMidiDevice(manager.getSettings().getMidiOutDevice());
+				
+				if(midiDevice != null) {
+					sequencer.getTransmitter().setReceiver(midiDevice.getReceiver());
+				}
+			} catch (MidiUnavailableException e) {
+				logger.error(e.getStackTrace());
+			}
 		} else if(midiFileOutType == MidiFileOutType.DMX) {
 			// Map the midi to DMX out
 			midi2DmxConverter.processMidiEvent(message, timeStamp, midi2DmxMapping);

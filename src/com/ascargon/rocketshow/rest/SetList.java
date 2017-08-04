@@ -20,7 +20,7 @@ public class SetList {
 	@Path("load")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response loadSetList(@QueryParam("path") String path) {
+	public Response loadSetList(@QueryParam("path") String path) throws Exception {
 		Manager manager = (Manager)context.getAttribute("manager");
 		manager.loadSetlist(path);
 		manager.saveSession();

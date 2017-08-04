@@ -2,7 +2,6 @@ package com.ascargon.rocketshow.song.file;
 
 import java.io.File;
 
-import javax.sound.midi.MidiUnavailableException;
 import javax.xml.bind.annotation.XmlElement;
 
 import com.ascargon.rocketshow.dmx.Midi2DmxMapping;
@@ -20,17 +19,9 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 
 	private MidiPlayer midiPlayer;
 
-	public void load() {
-		try {
-			midiPlayer = new MidiPlayer(this.getManager());
-			midiPlayer.load(new File(this.getPath()));
-		} catch (MidiUnavailableException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void load() throws Exception {
+		midiPlayer = new MidiPlayer(this.getManager());
+		midiPlayer.load(new File(this.getPath()));
 	}
 
 	@Override
@@ -50,17 +41,17 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 			midiPlayer.play();
 		}
 	}
-	
+
 	@Override
 	public void pause() {
 		midiPlayer.pause();
 	}
-	
+
 	@Override
 	public void resume() {
 		midiPlayer.play();
 	}
-	
+
 	public void close() {
 		midiPlayer.close();
 	}

@@ -1,10 +1,12 @@
 package com.ascargon.rocketshow;
 
-import java.util.HashMap;
 import java.util.List;
 
+import javax.sound.midi.MidiUnavailableException;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.dmx.Midi2DmxMapping;
 import com.ascargon.rocketshow.midi.MidiDevice;
@@ -13,6 +15,8 @@ import com.ascargon.rocketshow.midi.MidiUtil;
 @XmlRootElement
 public class Settings {
 
+	final static Logger logger = Logger.getLogger(Settings.class);
+	
 	private String defaultImagePath;
 	
 	private boolean liveDmx;
@@ -29,31 +33,34 @@ public class Settings {
 		
 		liveDmx = false;
 		
-		// Default channel mapping
-		HashMap<Integer, Integer> channelMap = new HashMap<Integer, Integer>();
-		
-		for (int i = 0; i < 128; i++) {
-			channelMap.put(i, i);	
-		}
-		
 		// File MIDI to DMX mapping
 		fileMidi2DmxMapping = new Midi2DmxMapping();
 		fileMidi2DmxMapping.setChannelOffset(0);
-		fileMidi2DmxMapping.setChannelMap(channelMap);
 		
 		// Live MIDI to DMX mapping
 		liveMidi2DmxMapping = new Midi2DmxMapping();
 		liveMidi2DmxMapping.setChannelOffset(0);
-		liveMidi2DmxMapping.setChannelMap(channelMap);
 		
-		List<MidiDevice> midiInDeviceList = MidiUtil.getInMidiDevices();
-		if(midiInDeviceList.size() > 0) {
-			midiInDevice = midiInDeviceList.get(0);
+		try {
+			List<MidiDevice> midiInDeviceList;
+			midiInDeviceList = MidiUtil.getInMidiDevices();
+			if(midiInDeviceList.size() > 0) {
+				midiInDevice = midiInDeviceList.get(0);
+			}
+		} catch (MidiUnavailableException e) {
+			logger.error("Could not get any MIDI IN devices");
+			logger.error(e.getStackTrace());
 		}
 		
-		List<MidiDevice> midiOutDeviceList = MidiUtil.getOutMidiDevices();
-		if(midiOutDeviceList.size() > 0) {
-			midiOutDevice = midiOutDeviceList.get(0);
+		try {
+			List<MidiDevice> midiOutDeviceList;
+			midiOutDeviceList = MidiUtil.getOutMidiDevices();
+			if(midiOutDeviceList.size() > 0) {
+				midiOutDevice = midiOutDeviceList.get(0);
+			}
+		} catch (MidiUnavailableException e) {
+			logger.error("Could not get any MIDI OUT devices");
+			logger.error(e.getStackTrace());
 		}
 	}
 

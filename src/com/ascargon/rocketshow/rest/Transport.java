@@ -19,7 +19,7 @@ public class Transport {
 	@Path("play")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response play() {
+	public Response play() throws Exception {
 		Manager manager = (Manager)context.getAttribute("manager");
 		manager.getCurrentSong().play();
 		return Response.status(200).build();
@@ -28,7 +28,7 @@ public class Transport {
 	@Path("pause")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response pause() {
+	public Response pause() throws Exception {
 		Manager manager = (Manager)context.getAttribute("manager");
 		manager.getCurrentSong().pause();
 		return Response.status(200).build();
@@ -37,7 +37,7 @@ public class Transport {
 	@Path("resume")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response resume() {
+	public Response resume() throws Exception {
 		Manager manager = (Manager)context.getAttribute("manager");
 		manager.getCurrentSong().resume();
 		return Response.status(200).build();

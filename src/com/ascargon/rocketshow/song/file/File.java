@@ -1,5 +1,8 @@
 package com.ascargon.rocketshow.song.file;
 
+import java.io.IOException;
+
+import javax.sound.midi.MidiUnavailableException;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -15,13 +18,13 @@ abstract public class File {
 	// Play offset
 	private int offsetInMillis = 0;
 	
-	abstract public void load();
+	abstract public void load() throws Exception;
 	
-	abstract public void play();
+	abstract public void play() throws Exception;
 	
-	abstract public void pause();
+	abstract public void pause() throws Exception;
 	
-	abstract public void resume();
+	abstract public void resume() throws Exception;
 	
 	@XmlElement(name = "path")
 	public String getXmlPath() {
