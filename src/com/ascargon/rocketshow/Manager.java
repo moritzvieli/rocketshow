@@ -3,6 +3,7 @@ package com.ascargon.rocketshow;
 import java.io.File;
 import java.io.IOException;
 
+import javax.sound.midi.MidiUnavailableException;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -13,7 +14,7 @@ import org.apache.log4j.Logger;
 import com.ascargon.rocketshow.dmx.DmxSignalSender;
 import com.ascargon.rocketshow.dmx.Midi2DmxConverter;
 import com.ascargon.rocketshow.image.ImageDisplayer;
-import com.ascargon.rocketshow.midi.Startup;
+import com.ascargon.rocketshow.midi.MidiReceiver;
 import com.ascargon.rocketshow.song.SetList;
 import com.ascargon.rocketshow.song.Song;
 import com.ascargon.rocketshow.video.VideoPlayer;
@@ -29,6 +30,7 @@ public class Manager {
 
 	private VideoPlayer videoPlayer;
 	private ImageDisplayer imageDisplayer;
+	private MidiReceiver midiReceiver;
 
 	private Session session = new Session();
 	private Settings settings = new Settings();
@@ -104,18 +106,16 @@ public class Manager {
 			logger.error(e1.getStackTrace());
 		}
 
-		logger.info("RocketShow initialized");
-
-		// TODO Initialize the MIDI system
-		Startup s = new Startup();
-		String[] args = new String[1];
-		args[0] = "-l";
+		// Initialize the MIDI receiver
+		midiReceiver = new MidiReceiver(this);
 		try {
-			s.main(args);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			midiReceiver.load();
+		} catch (MidiUnavailableException e1) {
+			logger.error("Could not initialize the MIDI receiver");
+			logger.error(e1.getStackTrace());
 		}
+		
+		logger.info("RocketShow initialized");
 	}
 
 	public void saveSettings() throws JAXBException {

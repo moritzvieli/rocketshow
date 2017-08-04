@@ -27,6 +27,8 @@ public class Settings {
 	private MidiDevice midiInDevice;
 	private MidiDevice midiOutDevice;
 	
+	private List<MidiActionMapping> midiActionMappingList;
+	
 	public Settings () {
 		// Initialize default settings
 		defaultImagePath = null;
@@ -116,6 +118,15 @@ public class Settings {
 
 	public void setMidiOutDevice(MidiDevice midiOutDevice) {
 		this.midiOutDevice = midiOutDevice;
+	}
+
+	@XmlElement
+	public List<MidiActionMapping> getMidiActionMappingList() {
+		return midiActionMappingList;
+	}
+
+	public void setMidiActionMappingList(List<MidiActionMapping> midiActionMappingList) {
+		this.midiActionMappingList = midiActionMappingList;
 	}
 	
 }
