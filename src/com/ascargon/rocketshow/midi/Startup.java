@@ -1,15 +1,6 @@
 package com.ascargon.rocketshow.midi;
 
-import java.io.IOException;
-
 import javax.sound.midi.MidiDevice;
-import javax.sound.midi.MidiSystem;
-import javax.sound.midi.MidiUnavailableException;
-import javax.sound.midi.Receiver;
-import javax.sound.midi.Synthesizer;
-import javax.sound.midi.Transmitter;
-
-import gnu.getopt.Getopt;
 
 public class Startup {
 
@@ -55,46 +46,46 @@ public class Startup {
 		/*
          *	Parsing of command-line options takes place...
 		 */
-        Getopt g = new Getopt("MidiInDump", args, "hlsd:n:D");
-        int c;
-        while ((c = g.getopt()) != -1) {
-            switch (c) {
-                case 'h':
-                    printUsageAndExit();
-
-                case 'l':
-                    MidiCommon.listDevicesAndExit(true, false);
-
-                case 's':
-                    bUseDefaultSynthesizer = true;
-                    break;
-
-                case 'd':
-                    strDeviceName = g.getOptarg();
-                    if (DEBUG) {
-                        out("MidiInDump.main(): device name: " + strDeviceName);
-                    }
-                    break;
-
-                case 'n':
-                    nDeviceIndex = Integer.parseInt(g.getOptarg());
-                    if (DEBUG) {
-                        out("MidiInDump.main(): device index: " + nDeviceIndex);
-                    }
-                    break;
-
-                case 'D':
-                    DEBUG = true;
-                    break;
-
-                case '?':
-                    printUsageAndExit();
-
-                default:
-                    out("MidiInDump.main(): getopt() returned " + c);
-                    break;
-            }
-        }
+//        Getopt g = new Getopt("MidiInDump", args, "hlsd:n:D");
+//        int c;
+//        while ((c = g.getopt()) != -1) {
+//            switch (c) {
+//                case 'h':
+//                    printUsageAndExit();
+//
+//                case 'l':
+//                    MidiCommon.listDevicesAndExit(true, false);
+//
+//                case 's':
+//                    bUseDefaultSynthesizer = true;
+//                    break;
+//
+//                case 'd':
+//                    strDeviceName = g.getOptarg();
+//                    if (DEBUG) {
+//                        out("MidiInDump.main(): device name: " + strDeviceName);
+//                    }
+//                    break;
+//
+//                case 'n':
+//                    nDeviceIndex = Integer.parseInt(g.getOptarg());
+//                    if (DEBUG) {
+//                        out("MidiInDump.main(): device index: " + nDeviceIndex);
+//                    }
+//                    break;
+//
+//                case 'D':
+//                    DEBUG = true;
+//                    break;
+//
+//                case '?':
+//                    printUsageAndExit();
+//
+//                default:
+//                    out("MidiInDump.main(): getopt() returned " + c);
+//                    break;
+//            }
+//        }
 
         if ((strDeviceName == null) && (nDeviceIndex < 0)) {
             out("device name/index not specified!");

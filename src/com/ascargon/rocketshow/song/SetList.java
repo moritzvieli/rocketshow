@@ -34,7 +34,7 @@ public class SetList {
 	
 	// Load all songs inside the setlist
 	public void load() {
-		midi2DmxMapping.setParent(manager.getMidi2DmxMapping());
+		midi2DmxMapping.setParent(manager.getSettings().getFileMidi2DmxMapping());
 		
 		songList = new ArrayList<Song>();
 

@@ -1,6 +1,5 @@
 package com.ascargon.rocketshow.video;
 
-import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import com.ascargon.rocketshow.util.ShellManager;

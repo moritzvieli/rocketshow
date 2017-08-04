@@ -1,7 +1,6 @@
 package com.ascargon.rocketshow;
 
 import java.io.File;
-import java.util.HashMap;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -12,7 +11,6 @@ import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.dmx.DmxSignalSender;
 import com.ascargon.rocketshow.dmx.Midi2DmxConverter;
-import com.ascargon.rocketshow.dmx.Midi2DmxMapping;
 import com.ascargon.rocketshow.image.ImageDisplayer;
 import com.ascargon.rocketshow.midi.Startup;
 import com.ascargon.rocketshow.song.SetList;
@@ -33,9 +31,6 @@ public class Manager {
 	
 	private Session session = new Session();
 	private Settings settings = new Settings();
-
-	// Global settings
-	private Midi2DmxMapping midi2DmxMapping;
 
 	private SetList currentSetList;
 	private Song currentSong;
@@ -71,26 +66,12 @@ public class Manager {
 		}
 	}
 	
-	private void initializeDefaultDmxMapping() {
-		midi2DmxMapping = new Midi2DmxMapping();
-		midi2DmxMapping.setChannelOffset(0);
-		
-		HashMap<Integer, Integer> channelMap = new HashMap<Integer, Integer>();
-		
-		for (int i = 0; i < 128; i++) {
-			channelMap.put(0, 0);	
-		}
-		
-		midi2DmxMapping.setChannelMap(channelMap);
-	}
-	
 	public void load() {
 		logger.info("Initialize RocketShow...");
 		
-		// Initialize the DMX sender and default global mapping
+		// Initialize the DMX sender
 		dmxSignalSender = new DmxSignalSender();
 		midi2DmxConverter = new Midi2DmxConverter(dmxSignalSender);
-		initializeDefaultDmxMapping();
 		
 		// Initialize the video player
 		videoPlayer = new VideoPlayer();
@@ -98,9 +79,15 @@ public class Manager {
 		// Initialize the image displayer
 		imageDisplayer = new ImageDisplayer();
 
+		// Load the settings
 		loadSettings();
-		restoreSession();
 		
+		// Save the settings (in case none were already existant)
+		saveSettings();
+		
+		// Restore the session from the file
+		restoreSession();
+
 		logger.info("RocketShow initialized");
 		
 		// TODO Initialize the MIDI system
@@ -111,6 +98,23 @@ public class Manager {
 			s.main(args);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void saveSettings() {
+		try {
+			File file = new File(BASE_PATH + "settings");
+			JAXBContext jaxbContext = JAXBContext.newInstance(Settings.class);
+			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+
+			// output pretty printed
+			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+			jaxbMarshaller.marshal(settings, file);
+			
+			logger.info("Settings saved");
+		} catch (JAXBException e) {
 			e.printStackTrace();
 		}
 	}
@@ -203,14 +207,6 @@ public class Manager {
 		this.videoPlayer = videoPlayer;
 	}
 
-	public Midi2DmxMapping getMidi2DmxMapping() {
-		return midi2DmxMapping;
-	}
-
-	public void setMidi2DmxMapping(Midi2DmxMapping midi2DmxMapping) {
-		this.midi2DmxMapping = midi2DmxMapping;
-	}
-
 	public SetList getCurrentSetList() {
 		return currentSetList;
 	}
@@ -225,6 +221,14 @@ public class Manager {
 
 	public void setCurrentSong(Song currentSong) {
 		this.currentSong = currentSong;
+	}
+
+	public Settings getSettings() {
+		return settings;
+	}
+
+	public void setSettings(Settings settings) {
+		this.settings = settings;
 	}
 
 }

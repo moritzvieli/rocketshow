@@ -2,6 +2,10 @@ package com.ascargon.rocketshow.dmx;
 
 import java.util.HashMap;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class Midi2DmxMapping {
 
 	public enum MappingType {
@@ -31,6 +35,7 @@ public class Midi2DmxMapping {
 		this.parent = parent;
 	}
 
+	@XmlElement
 	public boolean isOverrideParent() {
 		return overrideParent;
 	}
@@ -39,6 +44,7 @@ public class Midi2DmxMapping {
 		this.overrideParent = overrideParent;
 	}
 
+	@XmlElement
 	public MappingType getMappingType() {
 		return mappingType;
 	}
@@ -47,6 +53,7 @@ public class Midi2DmxMapping {
 		this.mappingType = mappingType;
 	}
 
+	@XmlElement
 	public HashMap<Integer, Integer> getChannelMap() {
 		return channelMap;
 	}
@@ -55,6 +62,7 @@ public class Midi2DmxMapping {
 		this.channelMap = channelMap;
 	}
 
+	@XmlElement
 	public Integer getChannelOffset() {
 		return channelOffset;
 	}

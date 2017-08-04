@@ -28,10 +28,6 @@ public class MidiPlayer implements Receiver {
 	
 	public MidiPlayer(Manager manager) throws MidiUnavailableException {
 		this.midi2DmxConverter = manager.getMidi2DmxConverter();
-		
-		sequencer = MidiSystem.getSequencer(false);
-		sequencer.open();
-		sequencer.getTransmitter().setReceiver(this);
 	}
 	
 	public void setPositionInMillis(long position) {
@@ -39,6 +35,14 @@ public class MidiPlayer implements Receiver {
 	}
 
 	public void load(File file) throws Exception {
+		if(sequencer.isOpen()) {
+			sequencer.close();
+		}
+		
+		sequencer = MidiSystem.getSequencer(false);
+		sequencer.open();
+		sequencer.getTransmitter().setReceiver(this);
+		
 		InputStream is = new BufferedInputStream(new FileInputStream(file));
 		sequencer.setSequence(is);
 	}
