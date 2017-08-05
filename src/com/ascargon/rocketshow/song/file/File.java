@@ -1,10 +1,8 @@
 package com.ascargon.rocketshow.song.file;
 
-import java.io.IOException;
-
-import javax.sound.midi.MidiUnavailableException;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import com.ascargon.rocketshow.Manager;
 
@@ -48,6 +46,7 @@ abstract public class File {
 		this.offsetInMillis = offsetInMillis;
 	}
 
+	@XmlTransient
 	public Manager getManager() {
 		return manager;
 	}

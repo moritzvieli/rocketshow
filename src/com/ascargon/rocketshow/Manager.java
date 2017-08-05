@@ -66,7 +66,7 @@ public class Manager {
 	}
 
 	public void load() {
-		logger.info("Initialize RocketShow...");
+		logger.info("Initialize...");
 
 		// Initialize the DMX sender
 		dmxSignalSender = new DmxSignalSender();
@@ -78,44 +78,40 @@ public class Manager {
 		// Initialize the image displayer
 		try {
 			imageDisplayer = new ImageDisplayer();
-		} catch (IOException e2) {
-			logger.error("Could not initialize image displayer");
-			logger.error(e2.getStackTrace());
+		} catch (IOException e) {
+			logger.error("Could not initialize image displayer", e);
 		}
 
 		// Load the settings
 		try {
 			loadSettings();
-		} catch (JAXBException e1) {
-			logger.error(e1.getStackTrace());
+		} catch (JAXBException e) {
+			logger.error("Could not load the settings", e);
 		}
 
 		// Save the settings (in case none were already existant)
 		try {
 			saveSettings();
-		} catch (JAXBException e1) {
-			logger.error("Could not save settings");
-			logger.error(e1.getStackTrace());
+		} catch (JAXBException e) {
+			logger.error("Could not save settings", e);
 		}
 
 		// Restore the session from the file
 		try {
 			restoreSession();
-		} catch (Exception e1) {
-			logger.error("Could not restore session");
-			logger.error(e1.getStackTrace());
+		} catch (Exception e) {
+			logger.error("Could not restore session", e);
 		}
 
 		// Initialize the MIDI receiver
 		midiReceiver = new MidiReceiver(this);
 		try {
 			midiReceiver.load();
-		} catch (MidiUnavailableException e1) {
-			logger.error("Could not initialize the MIDI receiver");
-			logger.error(e1.getStackTrace());
+		} catch (MidiUnavailableException e) {
+			logger.error("Could not initialize the MIDI receiver", e);
 		}
 		
-		logger.info("RocketShow initialized");
+		logger.info("Finished initializing");
 	}
 
 	public void saveSettings() throws JAXBException {

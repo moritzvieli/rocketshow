@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import com.ascargon.rocketshow.dmx.Midi2DmxMapping;
 import com.ascargon.rocketshow.midi.MidiDevice;
 import com.ascargon.rocketshow.midi.MidiUtil;
+import com.ascargon.rocketshow.midi.MidiUtil.MidiDirection;
 
 @XmlRootElement
 public class Settings {
@@ -37,15 +38,13 @@ public class Settings {
 		
 		// File MIDI to DMX mapping
 		fileMidi2DmxMapping = new Midi2DmxMapping();
-		fileMidi2DmxMapping.setChannelOffset(0);
 		
 		// Live MIDI to DMX mapping
 		liveMidi2DmxMapping = new Midi2DmxMapping();
-		liveMidi2DmxMapping.setChannelOffset(0);
-		
+
 		try {
 			List<MidiDevice> midiInDeviceList;
-			midiInDeviceList = MidiUtil.getInMidiDevices();
+			midiInDeviceList = MidiUtil.getMidiDevices(MidiDirection.IN);
 			if(midiInDeviceList.size() > 0) {
 				midiInDevice = midiInDeviceList.get(0);
 			}
@@ -56,7 +55,7 @@ public class Settings {
 		
 		try {
 			List<MidiDevice> midiOutDeviceList;
-			midiOutDeviceList = MidiUtil.getOutMidiDevices();
+			midiOutDeviceList = MidiUtil.getMidiDevices(MidiDirection.OUT);
 			if(midiOutDeviceList.size() > 0) {
 				midiOutDevice = midiOutDeviceList.get(0);
 			}

@@ -1,6 +1,5 @@
 package com.ascargon.rocketshow.dmx;
 
-import java.util.HashMap;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -26,7 +25,7 @@ public class Midi2DmxMapping {
 	private Integer channelOffset;
 
 	// Completely ignore all parent's settings
-	private boolean overrideParent = false;
+	private Boolean overrideParent = false;
 
 	public Midi2DmxMapping getParent() {
 		return parent;
@@ -37,11 +36,11 @@ public class Midi2DmxMapping {
 	}
 
 	@XmlElement
-	public boolean isOverrideParent() {
+	public Boolean isOverrideParent() {
 		return overrideParent;
 	}
 
-	public void setOverrideParent(boolean overrideParent) {
+	public void setOverrideParent(Boolean overrideParent) {
 		this.overrideParent = overrideParent;
 	}
 

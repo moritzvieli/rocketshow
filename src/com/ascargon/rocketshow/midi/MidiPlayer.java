@@ -3,6 +3,7 @@ package com.ascargon.rocketshow.midi;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 import javax.sound.midi.MidiMessage;
@@ -16,6 +17,7 @@ import org.apache.log4j.Logger;
 import com.ascargon.rocketshow.Manager;
 import com.ascargon.rocketshow.dmx.Midi2DmxConverter;
 import com.ascargon.rocketshow.dmx.Midi2DmxMapping;
+import com.ascargon.rocketshow.midi.MidiUtil.MidiDirection;
 import com.ascargon.rocketshow.song.file.MidiFile.MidiFileOutType;
 
 public class MidiPlayer implements Receiver {
@@ -42,8 +44,10 @@ public class MidiPlayer implements Receiver {
 	}
 
 	public void load(File file) throws Exception {
-		if(sequencer.isOpen()) {
-			sequencer.close();
+		if(sequencer != null) {
+			if(sequencer.isOpen()) {
+				sequencer.close();
+			}
 		}
 		
 		sequencer = MidiSystem.getSequencer(false);
@@ -70,7 +74,7 @@ public class MidiPlayer implements Receiver {
 		if (midiFileOutType == MidiFileOutType.DIRECT) {
 			// Directly send the message to the out system
 			try {
-				javax.sound.midi.MidiDevice midiDevice = MidiUtil.getHardwareMidiDevice(manager.getSettings().getMidiOutDevice());
+				javax.sound.midi.MidiDevice midiDevice = MidiUtil.getHardwareMidiDevice(manager.getSettings().getMidiOutDevice(), MidiDirection.OUT);
 				
 				if(midiDevice != null) {
 					sequencer.getTransmitter().setReceiver(midiDevice.getReceiver());
@@ -80,7 +84,11 @@ public class MidiPlayer implements Receiver {
 			}
 		} else if(midiFileOutType == MidiFileOutType.DMX) {
 			// Map the midi to DMX out
-			midi2DmxConverter.processMidiEvent(message, timeStamp, midi2DmxMapping);
+			try {
+				midi2DmxConverter.processMidiEvent(message, timeStamp, midi2DmxMapping);
+			} catch (IOException e) {
+				logger.error("Could not send DMX signal from MIDI file", e);
+			}
 		}
 	}
 
