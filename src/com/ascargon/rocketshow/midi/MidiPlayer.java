@@ -66,6 +66,11 @@ public class MidiPlayer implements Receiver {
 		sequencer.stop();
 	}
 	
+	public void stop() {
+		sequencer.stop();
+		sequencer.setMicrosecondPosition(0);
+	}
+	
 	public void close() {
 		sequencer.close();
 	}

@@ -48,4 +48,9 @@ public class VideoFile extends File {
 		this.getManager().getVideoPlayer().resume();
 	}
 
+	@Override
+	public void stop() throws Exception {
+		this.getManager().getVideoPlayer().stop();
+	}
+	
 }

@@ -65,15 +65,17 @@ public class Midi2DmxConverter {
 	private void mapSimple(int command, int channel, int note, int velocity, Midi2DmxMapping midi2DmxMapping)
 			throws IOException {
 
-		// Only react to NOTE_ON events
-		if (command != ShortMessage.NOTE_ON) {
-			return;
+		if (command == ShortMessage.NOTE_ON) {
+			int channelTo = mapChannel(note, midi2DmxMapping);
+			int valueTo = velocity * 2;
+
+			dmxSignalSender.send(channelTo, valueTo);
+		} else if (command == ShortMessage.NOTE_OFF) {
+			int channelTo = mapChannel(note, midi2DmxMapping);
+			int valueTo = 0;
+
+			dmxSignalSender.send(channelTo, valueTo);
 		}
-
-		int channelTo = mapChannel(note, midi2DmxMapping);
-		int valueTo = velocity * 2;
-
-		dmxSignalSender.send(channelTo, valueTo);
 	}
 
 	private void mapExact(int command, int channel, int note, int velocity, Midi2DmxMapping midi2DmxMapping)
@@ -88,21 +90,28 @@ public class Midi2DmxConverter {
 		// Map the MIDI event and send the appropriate DMX signal
 		if (message instanceof ShortMessage) {
 			ShortMessage shortMessage = (ShortMessage) message;
-			
+
 			int command = shortMessage.getCommand();
-			
+
 			// Only react to NOTE_ON/NOTE_OFF events
 			if (command != ShortMessage.NOTE_ON && command != ShortMessage.NOTE_OFF) {
 				return;
 			}
-			
+
 			int channel = shortMessage.getChannel();
 			int note = shortMessage.getData1();
 			int velocity = shortMessage.getData2();
 
-			logger.debug("Mapping for command " + command + ", channel " + channel + ", note " + note + ", velocity "
-					+ velocity);
-
+			String loggingCommand = "";
+			
+			if(command == ShortMessage.NOTE_ON) {
+				loggingCommand = "ON";
+			} else if (command == ShortMessage.NOTE_OFF) {
+				loggingCommand = "OFF";
+			}
+			
+			logger.debug("Note " + loggingCommand + ", channel = " + channel + ", note = " + note + ", velocity = " + velocity);
+			
 			if (midi2DmxMapping.getMappingType() == MappingType.SIMPLE) {
 				mapSimple(command, channel, note, velocity, midi2DmxMapping);
 			} else if (midi2DmxMapping.getMappingType() == MappingType.EXACT) {

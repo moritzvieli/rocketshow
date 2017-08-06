@@ -240,4 +240,12 @@ public class Manager {
 		this.settings = settings;
 	}
 
+	public DmxSignalSender getDmxSignalSender() {
+		return dmxSignalSender;
+	}
+
+	public void setDmxSignalSender(DmxSignalSender dmxSignalSender) {
+		this.dmxSignalSender = dmxSignalSender;
+	}
+
 }

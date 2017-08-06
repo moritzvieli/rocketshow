@@ -24,6 +24,8 @@ abstract public class File {
 	
 	abstract public void resume() throws Exception;
 	
+	abstract public void stop() throws Exception;
+	
 	@XmlElement(name = "path")
 	public String getXmlPath() {
 		return path;

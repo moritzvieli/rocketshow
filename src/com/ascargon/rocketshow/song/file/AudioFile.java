@@ -25,5 +25,11 @@ public class AudioFile extends File {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void stop() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

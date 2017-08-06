@@ -52,6 +52,11 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 		midiPlayer.play();
 	}
 
+	@Override
+	public void stop() throws Exception {
+		midiPlayer.stop();
+	}
+	
 	public void close() {
 		midiPlayer.close();
 	}

@@ -95,6 +95,18 @@ public class Song {
 		}
 	}
 	
+	public void stop() throws Exception {
+		logger.info("Resuming song " + path);
+		
+		playing = true;
+		
+		// Pause the song
+		for (int i = 0; i < fileList.size(); i++) {
+			File file = fileList.get(i);
+			file.stop();
+		}
+	}
+	
 	@XmlTransient
 	public Midi2DmxMapping getMidi2DmxMapping() {
 		return midi2DmxMapping;

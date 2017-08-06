@@ -52,4 +52,13 @@ public class Transport {
 		return Response.status(200).build();
 	}
 	
+	@Path("stop")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response stop() throws Exception {
+		Manager manager = (Manager)context.getAttribute("manager");
+		manager.getCurrentSong().stop();
+		return Response.status(200).build();
+	}
+	
 }
