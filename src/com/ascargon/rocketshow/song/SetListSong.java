@@ -6,10 +6,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class SetListSong {
 
 	private String path;
-	
-	public void create(Song song) {
-		this.path = song.getPath();
-	}
 
 	public String getPath() {
 		return path;

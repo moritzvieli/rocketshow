@@ -16,7 +16,6 @@ import com.ascargon.rocketshow.dmx.Midi2DmxConverter;
 import com.ascargon.rocketshow.image.ImageDisplayer;
 import com.ascargon.rocketshow.midi.MidiReceiver;
 import com.ascargon.rocketshow.song.SetList;
-import com.ascargon.rocketshow.song.Song;
 import com.ascargon.rocketshow.video.VideoPlayer;
 
 public class Manager {
@@ -36,18 +35,6 @@ public class Manager {
 	private Settings settings = new Settings();
 
 	private SetList currentSetList;
-	private Song currentSong;
-
-	public void setSongIndex(int index) {
-		if (currentSetList != null) {
-			if (currentSetList.getSongList().size() >= index) {
-				currentSong = currentSetList.getSongList().get(index);
-				currentSetList.setCurrentSongIndex(index);
-
-				logger.info("Set song index " + index);
-			}
-		}
-	}
 
 	public void loadSetlist(String path) throws Exception {
 		logger.info("Loading setlist " + path + "...");
@@ -59,8 +46,7 @@ public class Manager {
 		currentSetList.setManager(this);
 		currentSetList.setPath(path);
 		currentSetList.load();
-
-		setSongIndex(0);
+		currentSetList.setSongIndex(0);
 
 		logger.info("Setlist " + path + " successfully loaded");
 	}
@@ -69,7 +55,7 @@ public class Manager {
 		logger.info("Initialize...");
 
 		// Initialize the DMX sender
-		dmxSignalSender = new DmxSignalSender();
+		dmxSignalSender = new DmxSignalSender(this);
 		midi2DmxConverter = new Midi2DmxConverter(dmxSignalSender);
 
 		// Initialize the video player
@@ -190,7 +176,7 @@ public class Manager {
 				loadSetlist(session.getCurrentSetListPath());
 
 				if (session.getCurrentSongIndex() != null) {
-					setSongIndex(session.getCurrentSongIndex());
+					currentSetList.setSongIndex(session.getCurrentSongIndex());
 				}
 			}
 
@@ -222,14 +208,6 @@ public class Manager {
 
 	public void setCurrentSetList(SetList currentSetList) {
 		this.currentSetList = currentSetList;
-	}
-
-	public Song getCurrentSong() {
-		return currentSong;
-	}
-
-	public void setCurrentSong(Song currentSong) {
-		this.currentSong = currentSong;
 	}
 
 	public Settings getSettings() {

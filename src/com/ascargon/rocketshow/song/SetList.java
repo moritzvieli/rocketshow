@@ -11,17 +11,19 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.apache.log4j.Logger;
+
 import com.ascargon.rocketshow.Manager;
 import com.ascargon.rocketshow.dmx.Midi2DmxMapping;
 
 @XmlRootElement
 public class SetList {
 
+	final static Logger logger = Logger.getLogger(SetList.class);
+	
 	public static final String FILE_EXTENSION = "stl";
 
 	private String path;
-
-	private List<Song> songList = new ArrayList<Song>();
 
 	private List<SetListSong> setListSongList = new ArrayList<SetListSong>();
 
@@ -30,26 +32,12 @@ public class SetList {
 	private int currentSongIndex = 0;
 
 	private Manager manager;
+	
+	private Song currentSong;
 
 	// Load all songs inside the setlist
 	public void load() throws Exception {
 		midi2DmxMapping.setParent(manager.getSettings().getFileMidi2DmxMapping());
-
-		songList = new ArrayList<Song>();
-
-		for (int i = 0; i < setListSongList.size(); i++) {
-			String path = setListSongList.get(i).getPath();
-
-			File file = new File(path);
-			JAXBContext jaxbContext = JAXBContext.newInstance(Song.class);
-			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-			Song song = (Song) jaxbUnmarshaller.unmarshal(file);
-			song.setPath(path);
-			song.getMidi2DmxMapping().setParent(midi2DmxMapping);
-			song.setManager(manager);
-			song.load();
-			songList.add(song);
-		}
 	}
 
 	// Return only the setlist-relevant information of the song (e.g. to save to
@@ -57,29 +45,46 @@ public class SetList {
 	@XmlElement(name = "song")
 	@XmlElementWrapper(name = "songList")
 	public List<SetListSong> getSetListSongList() {
-		setListSongList = new ArrayList<SetListSong>();
-
-		for (int i = 0; i < songList.size(); i++) {
-			SetListSong setListSong = new SetListSong();
-			setListSong.create(songList.get(i));
-
-			setListSongList.add(setListSong);
-		}
-
 		return setListSongList;
 	}
 
+	public void setSongIndex(int index) {
+		currentSongIndex = index;
+		logger.info("Set song index " + index);
+	}
+	
+	public void play() throws Exception {
+		// Load the song first
+		File file = new File(setListSongList.get(currentSongIndex).getPath());
+		JAXBContext jaxbContext = JAXBContext.newInstance(Song.class);
+		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+		currentSong = (Song)jaxbUnmarshaller.unmarshal(file);
+		currentSong.setPath(path);
+		currentSong.getMidi2DmxMapping().setParent(midi2DmxMapping);
+		currentSong.setManager(manager);
+		currentSong.load();
+		
+		currentSong.play();
+	}
+
+	public void pause() throws Exception {
+		currentSong.stop();
+	}
+	
+	public void resume() throws Exception {
+		currentSong.resume();
+	}
+	
+	public void togglePlay() throws Exception {
+		currentSong.togglePlay();
+	}
+	
+	public void stop() throws Exception {
+		currentSong.stop();
+	}
+	
 	public void setXmlSongList(List<SetListSong> setListSongList) {
 		this.setListSongList = setListSongList;
-	}
-
-	@XmlTransient
-	public List<Song> getSongList() {
-		return songList;
-	}
-
-	public void setSongList(List<Song> songList) {
-		this.songList = songList;
 	}
 
 	@XmlTransient

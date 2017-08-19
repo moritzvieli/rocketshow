@@ -30,6 +30,9 @@ public class Settings {
 	
 	private List<MidiActionMapping> midiActionMappingList;
 	
+	private int dmxSendDelayMillis;
+	private int dmxSendRepeat;
+	
 	public Settings () {
 		// Initialize default settings
 		defaultImagePath = null;
@@ -63,6 +66,9 @@ public class Settings {
 			logger.error("Could not get any MIDI OUT devices");
 			logger.error(e.getStackTrace());
 		}
+		
+		dmxSendDelayMillis = 5;
+		dmxSendRepeat = 4;
 	}
 
 	@XmlElement
@@ -126,6 +132,22 @@ public class Settings {
 
 	public void setMidiActionMappingList(List<MidiActionMapping> midiActionMappingList) {
 		this.midiActionMappingList = midiActionMappingList;
+	}
+
+	public int getDmxSendDelayMillis() {
+		return dmxSendDelayMillis;
+	}
+
+	public void setDmxSendDelayMillis(int dmxSendDelayMillis) {
+		this.dmxSendDelayMillis = dmxSendDelayMillis;
+	}
+
+	public int getDmxSendRepeat() {
+		return dmxSendRepeat;
+	}
+
+	public void setDmxSendRepeat(int dmxSendRepeat) {
+		this.dmxSendRepeat = dmxSendRepeat;
 	}
 	
 }
