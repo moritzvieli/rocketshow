@@ -11,21 +11,19 @@ public class VideoFile extends File {
 	final static Logger logger = Logger.getLogger(VideoFile.class);
 	
 	@Override
-	public void load() {
-		this.getManager().getVideoPlayer().load(this.getPath());
-	}
+	public void load() throws IOException {}
 	
 	@Override
 	public void play() throws IOException {
 		VideoPlayer videoPlayer = this.getManager().getVideoPlayer();
 		String path = this.getPath();
-		
+
 		if (this.getOffsetInMillis() >= 0) {
 			new java.util.Timer().schedule(new java.util.TimerTask() {
 				@Override
 				public void run() {
 					try {
-						videoPlayer.play();
+						videoPlayer.play(path);
 					} catch (IOException e) {
 						logger.error("Could not play video \"" + path + "\"");
 						logger.error(e.getStackTrace());
@@ -34,7 +32,7 @@ public class VideoFile extends File {
 			}, this.getOffsetInMillis());
 		} else {
 			videoPlayer.setPositionInMillis(this.getOffsetInMillis() * -1);
-			videoPlayer.play();
+			videoPlayer.play(path);
 		}
 	}
 

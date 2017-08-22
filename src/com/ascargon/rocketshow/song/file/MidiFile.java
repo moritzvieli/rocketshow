@@ -4,11 +4,15 @@ import java.io.File;
 
 import javax.xml.bind.annotation.XmlElement;
 
+import org.apache.log4j.Logger;
+
 import com.ascargon.rocketshow.dmx.Midi2DmxMapping;
 import com.ascargon.rocketshow.midi.MidiPlayer;
 
 public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 
+	final static Logger logger = Logger.getLogger(MidiFile.class);
+	
 	public enum MidiFileOutType {
 		DIRECT, DMX
 	}
@@ -30,6 +34,8 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 		midiPlayer.setMidi2DmxMapping(midi2DmxMapping);
 
 		if (this.getOffsetInMillis() >= 0) {
+			logger.debug("Wait " + this.getOffsetInMillis() + " milliseconds before starting the midi file");
+			
 			new java.util.Timer().schedule(new java.util.TimerTask() {
 				@Override
 				public void run() {
@@ -37,7 +43,9 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 				}
 			}, this.getOffsetInMillis());
 		} else {
-			midiPlayer.setPositionInMillis(this.getOffsetInMillis() * -1);
+			logger.debug("Set MIDI file offset to " + (this.getOffsetInMillis() * -1000) + " milliseconds");
+			
+			midiPlayer.setPositionInMillis(this.getOffsetInMillis() * -1000);
 			midiPlayer.play();
 		}
 	}

@@ -56,10 +56,20 @@ public class Song {
 		
 		playing = true;
 		
-		// Start playing the song
+		// Start playing -> video files first because it takes longer to load
 		for (int i = 0; i < fileList.size(); i++) {
-			File file = fileList.get(i);
-			file.play();
+			if(fileList.get(i) instanceof VideoFile) {
+				File file = fileList.get(i);
+				file.play();
+			}	
+		}
+		
+		// All other files
+		for (int i = 0; i < fileList.size(); i++) {
+			if(!(fileList.get(i) instanceof VideoFile)) {
+				File file = fileList.get(i);
+				file.play();
+			}	
 		}
 	}
 
@@ -96,7 +106,7 @@ public class Song {
 	}
 	
 	public void stop() throws Exception {
-		logger.info("Resuming song " + path);
+		logger.info("Stopping song " + path);
 		
 		playing = true;
 		

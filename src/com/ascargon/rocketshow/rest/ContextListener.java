@@ -1,12 +1,18 @@
 package com.ascargon.rocketshow.rest;
 
+import java.io.IOException;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+
+import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.Manager;
 
 public class ContextListener implements ServletContextListener {
 
+	final static Logger logger = Logger.getLogger(ContextListener.class);
+	
 	private Manager manager;
 	
 	@Override
@@ -16,7 +22,12 @@ public class ContextListener implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
 		// Initialize the manager
 		manager = new Manager();
-		manager.load();
+		
+		try {
+			manager.load();
+		} catch (IOException e) {
+			logger.error("Could not load the manager", e);
+		}
 		
 		servletContextEvent.getServletContext().setAttribute("manager", manager);
 	}

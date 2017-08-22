@@ -59,6 +59,7 @@ public class MidiPlayer implements Receiver {
 	}
 
 	public void play() {
+		logger.debug("Starting sequencer from position " + sequencer.getMicrosecondPosition());
 		sequencer.start();
 	}
 

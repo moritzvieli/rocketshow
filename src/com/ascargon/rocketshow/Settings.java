@@ -31,7 +31,6 @@ public class Settings {
 	private List<MidiActionMapping> midiActionMappingList;
 	
 	private int dmxSendDelayMillis;
-	private int dmxSendRepeat;
 	
 	public Settings () {
 		// Initialize default settings
@@ -67,8 +66,7 @@ public class Settings {
 			logger.error(e.getStackTrace());
 		}
 		
-		dmxSendDelayMillis = 5;
-		dmxSendRepeat = 4;
+		dmxSendDelayMillis = 10;
 	}
 
 	@XmlElement
@@ -140,14 +138,6 @@ public class Settings {
 
 	public void setDmxSendDelayMillis(int dmxSendDelayMillis) {
 		this.dmxSendDelayMillis = dmxSendDelayMillis;
-	}
-
-	public int getDmxSendRepeat() {
-		return dmxSendRepeat;
-	}
-
-	public void setDmxSendRepeat(int dmxSendRepeat) {
-		this.dmxSendRepeat = dmxSendRepeat;
 	}
 	
 }

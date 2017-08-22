@@ -27,7 +27,7 @@ public class DmxSignalSender {
 	final static Logger logger = Logger.getLogger(MidiReceiver.class);
 
 	private Manager manager;
-	
+
 	private final String URL = "http://localhost:9090/set_dmx";
 
 	// Cache the channel values and send them each time
@@ -36,19 +36,19 @@ public class DmxSignalSender {
 	private HttpClient httpClient;
 
 	// Delay sending of the universe because of 2 reasons:
-	// - Performance: Sending the whole universe each midi event is not fast enough
-	// - Glitches: If we send each event separately, you can see the transitions even if
-	//   they're not meant to be (e.g. activate two channels at the same time, but sent
-	//   separately)
+	// - Performance: Sending the whole universe each midi event is not fast
+	// enough
+	// - Glitches: If we send each event separately, you can see the transitions
+	// even if they're not meant to be (e.g. activate two channels at the same
+	// time, but sentseparately)
 	private Timer timer;
-	private int executedCount = 0;
-	
+
 	public DmxSignalSender(Manager manager) {
 		this.manager = manager;
-		
+
 		RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(20).build();
 		httpClient = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
-		
+
 		reset();
 	}
 
@@ -63,7 +63,7 @@ public class DmxSignalSender {
 		try {
 			sendUniverse();
 		} catch (IOException e) {
-			logger.debug("Could not initialize the DMX universe", e);
+			logger.error("Could not initialize the DMX universe", e);
 		}
 	}
 
@@ -87,46 +87,43 @@ public class DmxSignalSender {
 		HttpResponse response = httpClient.execute(httpPost);
 
 		// Read the response. The POST connection will not be released otherwise
-        BufferedReader rd = new BufferedReader(new InputStreamReader(
-                response.getEntity().getContent()));
-        
-        String line = "";
-        
-        while ((line = rd.readLine()) != null) {
-            logger.debug("Response from OLA POST: " + line);
-        }
+		BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+
+		String line = "";
+
+		while ((line = rd.readLine()) != null) {
+			logger.debug("Response from OLA POST: " + line);
+		}
 	}
-	
+
 	public void send(int channel, int value) throws IOException {
 		logger.debug("Setting DMX channel " + channel + " to value " + value);
 
 		channelValues.put(channel, value);
-		
-		// Schedule the specified count of timers in the specified delay
-		if(timer == null) {
-			
-			TimerTask timerTask = new TimerTask() {
-		        @Override
-		        public void run() {
-			    		try {
-			    			// Send the universe and reset the timer for the next run
-			    			sendUniverse();
-			    		} catch (IOException e) {
-			    			logger.error("Could not send the DMX universe", e);
-			    		}
-			    		
-			    		executedCount ++;
-			    		
-			    		if(executedCount >= manager.getSettings().getDmxSendRepeat()) {
-			    			timer.cancel();
-				    		timer = null;
-			    		}
-		        }
-		    };
 
-		 	timer = new Timer();
-			timer.scheduleAtFixedRate(timerTask, manager.getSettings().getDmxSendDelayMillis(), manager.getSettings().getDmxSendDelayMillis());	
+		// Schedule the specified count of executions in the specified delay
+		if (timer != null) {
+			timer.cancel();
+			timer = null;
 		}
+
+		TimerTask timerTask = new TimerTask() {
+			@Override
+			public void run() {
+				try {
+					// Send the universe
+					sendUniverse();
+				} catch (IOException e) {
+					logger.error("Could not send the DMX universe", e);
+				}
+
+				timer.cancel();
+				timer = null;
+			}
+		};
+
+		timer = new Timer();
+		timer.schedule(timerTask, manager.getSettings().getDmxSendDelayMillis());
 	}
 
 }

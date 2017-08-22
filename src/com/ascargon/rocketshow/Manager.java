@@ -51,7 +51,7 @@ public class Manager {
 		logger.info("Setlist " + path + " successfully loaded");
 	}
 
-	public void load() {
+	public void load() throws IOException {
 		logger.info("Initialize...");
 
 		// Initialize the DMX sender
@@ -60,6 +60,7 @@ public class Manager {
 
 		// Initialize the video player
 		videoPlayer = new VideoPlayer();
+		videoPlayer.load();
 
 		// Initialize the image displayer
 		try {

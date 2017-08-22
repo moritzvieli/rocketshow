@@ -10,7 +10,7 @@ import javax.ws.rs.core.Response;
 
 import com.ascargon.rocketshow.Manager;
 
-@Path("/transport")
+@Path("/system")
 public class System {
 
 	@Context
