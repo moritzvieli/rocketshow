@@ -22,10 +22,6 @@
     <servlet-name>Rocket Show API</servlet-name>
     <url-pattern>/api/*</url-pattern>
   </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>jsp</servlet-name>
-    <url-pattern>*.html</url-pattern>
-  </servlet-mapping>
   <listener>
     <listener-class>
         com.ascargon.rocketshow.rest.ContextListener

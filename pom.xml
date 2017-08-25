@@ -57,7 +57,7 @@
 		                    <executable>ng</executable>
 		                    <arguments>
 		                        <argument>build</argument>
-		                        <argument>--base-href=/ngfirst/ng/</argument>
+		                        <argument>--base-href=http://localhost:8080/RocketShow/app/</argument>
 		                    </arguments>
 		                </configuration>
 		                <goals>
@@ -70,11 +70,6 @@
 	</build>
 
 	<dependencies>
-		<dependency>
-			<groupId>asm</groupId>
-			<artifactId>asm</artifactId>
-			<version>3.3.1</version>
-		</dependency>
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-bundle</artifactId>
@@ -99,19 +94,6 @@
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-json</artifactId>
 			<version>1.19</version>
-		</dependency>
-
-		<dependency>
-			<groupId>jstl</groupId>
-			<artifactId>jstl</artifactId>
-			<version>1.2</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>taglibs</groupId>
-			<artifactId>standard</artifactId>
-			<version>1.1.2</version>
-			<scope>compile</scope>
 		</dependency>
 		
 		<dependency>
