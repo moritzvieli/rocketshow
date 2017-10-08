@@ -21,19 +21,39 @@ public class MidiReceiver implements Receiver {
 	private Manager manager;
 
 	private Timer connectTimer;
-	
+
+	private javax.sound.midi.MidiDevice midiReceiver;
+
 	public MidiReceiver(Manager manager) {
 		this.manager = manager;
 	}
 
-	private void connectMidiReceiver() throws MidiUnavailableException {
+	/**
+	 * Connect the MIDI player to a sender, if required. Also call this method,
+	 * if you change the settings and want to reload the device.
+	 * 
+	 * @throws MidiUnavailableException
+	 */
+	public void connectMidiReceiver() throws MidiUnavailableException {
+		if(midiReceiver != null && midiReceiver.isOpen()) {
+			// We already have an open receiver -> close this one
+			midiReceiver.close();
+		}
+		
 		MidiDevice midiDevice = manager.getSettings().getMidiInDevice();
 
-		javax.sound.midi.MidiDevice hardwareMidiDevice = MidiUtil.getHardwareMidiDevice(midiDevice, MidiDirection.IN);
+		if (midiDevice == null) {
+			// No device specified or found
+			return;
+		}
 
-		if (hardwareMidiDevice == null) {
+		logger.info("Try connecting to input MIDI device " + midiDevice.getId() + " \"" + midiDevice.getName() + "\"");
+
+		midiReceiver = MidiUtil.getHardwareMidiDevice(midiDevice, MidiDirection.IN);
+
+		if (midiReceiver == null) {
 			logger.warn("MIDI input device not found. Try again in 2 seconds.");
-			
+
 			TimerTask timerTask = new TimerTask() {
 				@Override
 				public void run() {
@@ -51,22 +71,24 @@ public class MidiReceiver implements Receiver {
 
 			connectTimer = new Timer();
 			connectTimer.schedule(timerTask, 2000);
-			
+
 			return;
 		}
-		
+
 		// We found the device
-		hardwareMidiDevice.open();
-		hardwareMidiDevice.getTransmitter().setReceiver(this);
-		
-		logger.info("Successfully connected to input MIDI device " + midiDevice.getId() + " \"" + midiDevice.getName() + "\"");
+		midiReceiver.open();
+		midiReceiver.getTransmitter().setReceiver(this);
+
+		logger.info("Successfully connected to input MIDI device " + midiDevice.getId() + " \"" + midiDevice.getName()
+				+ "\"");
 	}
-	
+
 	public void load() throws MidiUnavailableException {
 		MidiDevice midiDevice = manager.getSettings().getMidiInDevice();
 
 		// Get the incoming MIDI device
-		logger.info("Setting up listener to input MIDI device " + midiDevice.getId() + " \"" + midiDevice.getName() + "\"");
+		logger.info(
+				"Setting up listener to input MIDI device " + midiDevice.getId() + " \"" + midiDevice.getName() + "\"");
 
 		connectMidiReceiver();
 	}
@@ -76,7 +98,7 @@ public class MidiReceiver implements Receiver {
 		if (!(message instanceof ShortMessage)) {
 			return;
 		}
-		
+
 		ShortMessage shortMessage = (ShortMessage) message;
 
 		int command = shortMessage.getCommand();
@@ -85,17 +107,18 @@ public class MidiReceiver implements Receiver {
 		int velocity = shortMessage.getData2();
 
 		String loggingCommand = "";
-		
-		if(command == ShortMessage.NOTE_ON) {
+
+		if (command == ShortMessage.NOTE_ON) {
 			loggingCommand = "ON";
 		} else if (command == ShortMessage.NOTE_OFF) {
 			loggingCommand = "OFF";
 		} else {
 			loggingCommand = "MISC";
 		}
-		
-		logger.debug("Note " + loggingCommand + ", channel = " + channel + ", note = " + note + ", velocity = " + velocity);
-		
+
+		logger.debug(
+				"Note " + loggingCommand + ", channel = " + channel + ", note = " + note + ", velocity = " + velocity);
+
 		if (manager.getSettings().isLiveDmx()) {
 			// Route incoming MIDI events through the global MIDI to DMX mapping
 			try {
@@ -117,7 +140,9 @@ public class MidiReceiver implements Receiver {
 
 	@Override
 	public void close() {
-		// TODO Auto-generated method stub
+		if (midiReceiver != null && midiReceiver.isOpen()) {
+			midiReceiver.close();
+		}
 	}
 
 }
