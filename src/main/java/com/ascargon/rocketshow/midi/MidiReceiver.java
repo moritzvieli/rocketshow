@@ -1,6 +1,8 @@
 package com.ascargon.rocketshow.midi;
 
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.sound.midi.MidiMessage;
 import javax.sound.midi.MidiUnavailableException;
@@ -18,25 +20,55 @@ public class MidiReceiver implements Receiver {
 
 	private Manager manager;
 
+	private Timer connectTimer;
+	
 	public MidiReceiver(Manager manager) {
 		this.manager = manager;
 	}
 
-	public void load() throws MidiUnavailableException {
+	private void connectMidiReceiver() throws MidiUnavailableException {
 		MidiDevice midiDevice = manager.getSettings().getMidiInDevice();
-
-		// Get the incoming MIDI device
-		logger.info("Listening to input MIDI device " + midiDevice.getId() + " \"" + midiDevice.getName() + "\"");
 
 		javax.sound.midi.MidiDevice hardwareMidiDevice = MidiUtil.getHardwareMidiDevice(midiDevice, MidiDirection.IN);
 
 		if (hardwareMidiDevice == null) {
-			logger.warn("Hardware MIDI device not found");
+			logger.warn("MIDI input device not found. Try again in 2 seconds.");
+			
+			TimerTask timerTask = new TimerTask() {
+				@Override
+				public void run() {
+					try {
+						// Send the universe
+						connectMidiReceiver();
+					} catch (Exception e) {
+						logger.error("Could not connect to MIDI input device", e);
+					}
+
+					connectTimer.cancel();
+					connectTimer = null;
+				}
+			};
+
+			connectTimer = new Timer();
+			connectTimer.schedule(timerTask, 2000);
+			
 			return;
 		}
-
+		
+		// We found the device
 		hardwareMidiDevice.open();
 		hardwareMidiDevice.getTransmitter().setReceiver(this);
+		
+		logger.info("Successfully connected to input MIDI device " + midiDevice.getId() + " \"" + midiDevice.getName() + "\"");
+	}
+	
+	public void load() throws MidiUnavailableException {
+		MidiDevice midiDevice = manager.getSettings().getMidiInDevice();
+
+		// Get the incoming MIDI device
+		logger.info("Setting up listener to input MIDI device " + midiDevice.getId() + " \"" + midiDevice.getName() + "\"");
+
+		connectMidiReceiver();
 	}
 
 	@Override
@@ -48,7 +80,6 @@ public class MidiReceiver implements Receiver {
 		ShortMessage shortMessage = (ShortMessage) message;
 
 		int command = shortMessage.getCommand();
-
 		int channel = shortMessage.getChannel();
 		int note = shortMessage.getData1();
 		int velocity = shortMessage.getData2();
