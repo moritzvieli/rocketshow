@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import com.ascargon.rocketshow.dmx.DmxSignalSender;
 import com.ascargon.rocketshow.dmx.Midi2DmxConverter;
 import com.ascargon.rocketshow.image.ImageDisplayer;
+import com.ascargon.rocketshow.midi.Midi2ActionConverter;
 import com.ascargon.rocketshow.midi.MidiReceiver;
 import com.ascargon.rocketshow.song.SetList;
 import com.ascargon.rocketshow.video.VideoPlayer;
@@ -24,13 +25,14 @@ public class Manager {
 
 	public final String BASE_PATH = "/opt/rocketshow/";
 
-	private DmxSignalSender dmxSignalSender;
-	private Midi2DmxConverter midi2DmxConverter;
-
 	private VideoPlayer videoPlayer;
 	private ImageDisplayer imageDisplayer;
 	private MidiReceiver midiReceiver;
+	private Midi2ActionConverter midi2ActionConverter;
 
+	private DmxSignalSender dmxSignalSender;
+	private Midi2DmxConverter midi2DmxConverter;
+	
 	private Session session = new Session();
 	private Settings settings = new Settings();
 
@@ -54,6 +56,9 @@ public class Manager {
 	public void load() throws IOException {
 		logger.info("Initialize...");
 
+		// Initialize the MIDI action converter
+		midi2ActionConverter = new Midi2ActionConverter(this);
+		
 		// Initialize the DMX sender
 		dmxSignalSender = new DmxSignalSender(this);
 		midi2DmxConverter = new Midi2DmxConverter(dmxSignalSender);
@@ -225,6 +230,10 @@ public class Manager {
 
 	public void setDmxSignalSender(DmxSignalSender dmxSignalSender) {
 		this.dmxSignalSender = dmxSignalSender;
+	}
+
+	public Midi2ActionConverter getMidi2ActionConverter() {
+		return midi2ActionConverter;
 	}
 
 }

@@ -60,5 +60,23 @@ public class Transport {
 		manager.getCurrentSetList().stop();
 		return Response.status(200).build();
 	}
+
+	@Path("next-song")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response nextSong() throws Exception {
+		Manager manager = (Manager)context.getAttribute("manager");
+		manager.getCurrentSetList().nextSong();;
+		return Response.status(200).build();
+	}
+	
+	@Path("previous-song")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response previousSong() throws Exception {
+		Manager manager = (Manager)context.getAttribute("manager");
+		manager.getCurrentSetList().previousSong();
+		return Response.status(200).build();
+	}
 	
 }

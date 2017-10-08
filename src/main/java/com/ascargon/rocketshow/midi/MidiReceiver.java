@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.sound.midi.MidiMessage;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Receiver;
+import javax.sound.midi.ShortMessage;
 
 import org.apache.log4j.Logger;
 
@@ -40,18 +41,47 @@ public class MidiReceiver implements Receiver {
 
 	@Override
 	public void send(MidiMessage message, long timeStamp) {
+		if (!(message instanceof ShortMessage)) {
+			return;
+		}
+		
+		ShortMessage shortMessage = (ShortMessage) message;
+
+		int command = shortMessage.getCommand();
+
+		int channel = shortMessage.getChannel();
+		int note = shortMessage.getData1();
+		int velocity = shortMessage.getData2();
+
+		String loggingCommand = "";
+		
+		if(command == ShortMessage.NOTE_ON) {
+			loggingCommand = "ON";
+		} else if (command == ShortMessage.NOTE_OFF) {
+			loggingCommand = "OFF";
+		} else {
+			loggingCommand = "MISC";
+		}
+		
+		logger.debug("Note " + loggingCommand + ", channel = " + channel + ", note = " + note + ", velocity = " + velocity);
+		
 		if (manager.getSettings().isLiveDmx()) {
 			// Route incoming MIDI events through the global MIDI to DMX mapping
 			try {
-				manager.getMidi2DmxConverter().processMidiEvent(message, timeStamp,
+				manager.getMidi2DmxConverter().processMidiEvent(command, channel, note, velocity, timeStamp,
 						manager.getSettings().getLiveMidi2DmxMapping());
 			} catch (IOException e) {
 				logger.error("Could not send DMX signal from live MIDI", e);
 			}
 		}
 
-		// TODO Process MIDI events as actions according to the settings
-		// (midiActionMapping)
+		// Process MIDI events as actions according to the settings
+		try {
+			manager.getMidi2ActionConverter().processMidiEvent(command, channel, note, timeStamp,
+					manager.getSettings().getLiveMidi2ActionMapping());
+		} catch (Exception e) {
+			logger.error("Could not execute action from live MIDI", e);
+		}
 	}
 
 	@Override

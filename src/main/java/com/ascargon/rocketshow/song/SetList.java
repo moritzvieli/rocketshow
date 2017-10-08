@@ -83,10 +83,18 @@ public class SetList {
 		currentSong.stop();
 	}
 	
+	public void nextSong() throws Exception {
+		// TODO
+	}
+	
+	public void previousSong() throws Exception {
+		// TODO
+	}
+	
 	public void setXmlSongList(List<SetListSong> setListSongList) {
 		this.setListSongList = setListSongList;
 	}
-
+	
 	@XmlTransient
 	public Midi2DmxMapping getMidi2DmxMapping() {
 		return midi2DmxMapping;

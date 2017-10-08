@@ -84,39 +84,20 @@ public class Midi2DmxConverter {
 		// TODO
 	}
 
-	public void processMidiEvent(MidiMessage message, long timeStamp, Midi2DmxMapping midi2DmxMapping)
-			throws IOException {
+	public void processMidiEvent(int command, int channel, int note, int velocity, long timeStamp,
+			Midi2DmxMapping midi2DmxMapping) throws IOException {
 
 		// Map the MIDI event and send the appropriate DMX signal
-		if (message instanceof ShortMessage) {
-			ShortMessage shortMessage = (ShortMessage) message;
 
-			int command = shortMessage.getCommand();
+		// Only react to NOTE_ON/NOTE_OFF events
+		if (command != ShortMessage.NOTE_ON && command != ShortMessage.NOTE_OFF) {
+			return;
+		}
 
-			// Only react to NOTE_ON/NOTE_OFF events
-			if (command != ShortMessage.NOTE_ON && command != ShortMessage.NOTE_OFF) {
-				return;
-			}
-
-			int channel = shortMessage.getChannel();
-			int note = shortMessage.getData1();
-			int velocity = shortMessage.getData2();
-
-			String loggingCommand = "";
-			
-			if(command == ShortMessage.NOTE_ON) {
-				loggingCommand = "ON";
-			} else if (command == ShortMessage.NOTE_OFF) {
-				loggingCommand = "OFF";
-			}
-			
-			logger.debug("Note " + loggingCommand + ", channel = " + channel + ", note = " + note + ", velocity = " + velocity);
-			
-			if (midi2DmxMapping.getMappingType() == MappingType.SIMPLE) {
-				mapSimple(command, channel, note, velocity, midi2DmxMapping);
-			} else if (midi2DmxMapping.getMappingType() == MappingType.EXACT) {
-				mapExact(command, channel, note, velocity, midi2DmxMapping);
-			}
+		if (midi2DmxMapping.getMappingType() == MappingType.SIMPLE) {
+			mapSimple(command, channel, note, velocity, midi2DmxMapping);
+		} else if (midi2DmxMapping.getMappingType() == MappingType.EXACT) {
+			mapExact(command, channel, note, velocity, midi2DmxMapping);
 		}
 	}
 
