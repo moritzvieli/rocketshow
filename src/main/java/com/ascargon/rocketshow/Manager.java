@@ -102,7 +102,7 @@ public class Manager {
 		} catch (MidiUnavailableException e) {
 			logger.error("Could not initialize the MIDI receiver", e);
 		}
-		
+
 		logger.info("Finished initializing");
 	}
 

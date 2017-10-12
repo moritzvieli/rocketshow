@@ -73,7 +73,6 @@ public class Settings {
 		dmxSendDelayMillis = 10;
 	}
 	
-	@XmlTransient
 	public RemoteDevice getRemoteDeviceById(int id) {
 		for(RemoteDevice remoteDevice : remoteDeviceList) {
 			if(remoteDevice.getId() == id) {
