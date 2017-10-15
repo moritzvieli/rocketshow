@@ -1,4 +1,4 @@
-package com.ascargon.rocketshow.rest;
+package com.ascargon.rocketshow;
 
 import java.io.IOException;
 
@@ -16,7 +16,10 @@ public class ContextListener implements ServletContextListener {
 	private Manager manager;
 	
 	@Override
-	public void contextDestroyed(ServletContextEvent servletContextEvent) {}
+	public void contextDestroyed(ServletContextEvent servletContextEvent) {
+		// Destroy the manager
+		manager.close();
+	}
 
 	@Override
 	public void contextInitialized(ServletContextEvent servletContextEvent) {

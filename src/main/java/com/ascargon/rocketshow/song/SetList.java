@@ -91,6 +91,10 @@ public class SetList {
 		// TODO
 	}
 	
+	public void close() {
+		// TODO
+	}
+	
 	public void setXmlSongList(List<SetListSong> setListSongList) {
 		this.setListSongList = setListSongList;
 	}

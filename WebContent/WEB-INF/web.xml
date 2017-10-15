@@ -24,7 +24,7 @@
   </servlet-mapping>
   <listener>
     <listener-class>
-        com.ascargon.rocketshow.rest.ContextListener
+        com.ascargon.rocketshow.ContextListener
     </listener-class>
   </listener>
 </web-app>

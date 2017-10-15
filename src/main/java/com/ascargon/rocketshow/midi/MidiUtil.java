@@ -20,13 +20,13 @@ public class MidiUtil {
 	private static boolean midiDeviceHasDirection(MidiDevice midiDevice, MidiDirection midiDirection) {
 		if ((midiDirection == MidiDirection.IN && midiDevice.getMaxTransmitters() != 0)
 				|| (midiDirection == MidiDirection.OUT && midiDevice.getMaxReceivers() != 0)) {
-			
+
 			return true;
-		}else {
+		} else {
 			return false;
 		}
 	}
-	
+
 	public static MidiDevice getHardwareMidiDevice(com.ascargon.rocketshow.midi.MidiDevice midiDevice,
 			MidiDirection midiDirection) throws MidiUnavailableException {
 
@@ -37,7 +37,7 @@ public class MidiUtil {
 		if (midiDeviceInfos.length > midiDevice.getId()) {
 			if (midiDeviceInfos[midiDevice.getId()].getName().equals(midiDevice.getName())) {
 				MidiDevice hardwareMidiDevice = MidiSystem.getMidiDevice(midiDeviceInfos[midiDevice.getId()]);
-				
+
 				if (midiDeviceHasDirection(hardwareMidiDevice, midiDirection)) {
 					logger.debug("Found MIDI device with same ID and name");
 					return hardwareMidiDevice;
@@ -49,7 +49,7 @@ public class MidiUtil {
 		for (int i = 0; i < midiDeviceInfos.length; i++) {
 			if (midiDeviceInfos[i].getName().equals(midiDevice.getName())) {
 				MidiDevice hardwareMidiDevice = MidiSystem.getMidiDevice(midiDeviceInfos[i]);
-				
+
 				if (midiDeviceHasDirection(hardwareMidiDevice, midiDirection)) {
 					logger.debug("Found MIDI device with same name");
 					return hardwareMidiDevice;
@@ -60,7 +60,7 @@ public class MidiUtil {
 		// Search for a device with the same id
 		if (midiDeviceInfos.length > midiDevice.getId()) {
 			MidiDevice hardwareMidiDevice = MidiSystem.getMidiDevice(midiDeviceInfos[midiDevice.getId()]);
-			
+
 			if (midiDeviceHasDirection(hardwareMidiDevice, midiDirection)) {
 				logger.debug("Found MIDI device with same ID");
 				return hardwareMidiDevice;
@@ -79,7 +79,12 @@ public class MidiUtil {
 
 		for (int i = 0; i < midiDeviceInfos.length; i++) {
 			MidiDevice hardwareMidiDevice = MidiSystem.getMidiDevice(midiDeviceInfos[i]);
-			if (midiDeviceHasDirection(hardwareMidiDevice, midiDirection)) {
+			
+			// Filter the direction and hide system devices
+			if (midiDeviceHasDirection(hardwareMidiDevice, midiDirection)
+					&& !midiDeviceInfos[i].getName().equals("Real Time Sequencer")
+					&& !midiDeviceInfos[i].getName().equals("Gervill")) {
+				
 				com.ascargon.rocketshow.midi.MidiDevice midiDevice = new com.ascargon.rocketshow.midi.MidiDevice();
 				midiDevice.setId(i);
 				midiDevice.setName(midiDeviceInfos[i].getName());

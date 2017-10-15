@@ -191,6 +191,13 @@ public class Manager {
 			e.printStackTrace();
 		}
 	}
+	
+	public void close() {
+		logger.info("Close...");
+		midiReceiver.close();
+		currentSetList.close();
+		logger.info("Finished closing");
+	}
 
 	public Midi2DmxConverter getMidi2DmxConverter() {
 		return midi2DmxConverter;

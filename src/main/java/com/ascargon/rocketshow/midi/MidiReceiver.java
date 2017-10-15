@@ -44,6 +44,7 @@ public class MidiReceiver implements Receiver {
 
 		if (midiDevice == null) {
 			// No device specified or found
+			// TODO Just take the first one, if one is connected
 			return;
 		}
 
@@ -130,13 +131,12 @@ public class MidiReceiver implements Receiver {
 		}
 
 		// Process MIDI events as actions according to the settings
-		// TODO lets the receiver crash
-//		try {
-//			manager.getMidi2ActionConverter().processMidiEvent(command, channel, note, timeStamp,
-//					manager.getSettings().getLiveMidi2ActionMapping());
-//		} catch (Exception e) {
-//			logger.error("Could not execute action from live MIDI", e);
-//		}
+		try {
+			manager.getMidi2ActionConverter().processMidiEvent(command, channel, note, timeStamp,
+					manager.getSettings().getLiveMidi2ActionMapping());
+		} catch (Exception e) {
+			logger.error("Could not execute action from live MIDI", e);
+		}
 	}
 
 	@Override

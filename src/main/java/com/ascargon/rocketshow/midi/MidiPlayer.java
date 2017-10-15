@@ -66,6 +66,7 @@ public class MidiPlayer implements Receiver {
 
 		if (midiDevice == null) {
 			// No device specified or found
+			// TODO Just take the first one, if one is connected
 			return;
 		}
 
