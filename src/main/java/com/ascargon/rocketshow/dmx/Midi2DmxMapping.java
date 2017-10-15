@@ -1,5 +1,6 @@
 package com.ascargon.rocketshow.dmx;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -20,7 +21,7 @@ public class Midi2DmxMapping {
 
 	private Midi2DmxMapping parent;
 
-	private List<ChannelMapping> channelMap;
+	private List<ChannelMapping> channelMap = new ArrayList<ChannelMapping>();
 	
 	private Integer channelOffset;
 

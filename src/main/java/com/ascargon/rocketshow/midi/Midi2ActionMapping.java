@@ -1,5 +1,6 @@
 package com.ascargon.rocketshow.midi;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -12,7 +13,7 @@ public class Midi2ActionMapping {
 
 	private Midi2DmxMapping parent;
 
-	private List<ActionMapping> actionMappingList;
+	private List<ActionMapping> actionMappingList = new ArrayList<ActionMapping>();
 
 	// Completely ignore all parent's settings
 	private Boolean overrideParent = false;

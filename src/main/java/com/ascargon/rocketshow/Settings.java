@@ -42,6 +42,9 @@ public class Settings {
 
 		liveDmx = false;
 
+		// Live MIDI to action mapping
+		liveMidi2ActionMapping = new Midi2ActionMapping();
+		
 		// File MIDI to DMX mapping
 		fileMidi2DmxMapping = new Midi2DmxMapping();
 

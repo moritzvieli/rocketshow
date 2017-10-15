@@ -130,12 +130,13 @@ public class MidiReceiver implements Receiver {
 		}
 
 		// Process MIDI events as actions according to the settings
-		try {
-			manager.getMidi2ActionConverter().processMidiEvent(command, channel, note, timeStamp,
-					manager.getSettings().getLiveMidi2ActionMapping());
-		} catch (Exception e) {
-			logger.error("Could not execute action from live MIDI", e);
-		}
+		// TODO lets the receiver crash
+//		try {
+//			manager.getMidi2ActionConverter().processMidiEvent(command, channel, note, timeStamp,
+//					manager.getSettings().getLiveMidi2ActionMapping());
+//		} catch (Exception e) {
+//			logger.error("Could not execute action from live MIDI", e);
+//		}
 	}
 
 	@Override

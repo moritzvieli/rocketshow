@@ -67,12 +67,14 @@ public class Midi2ActionConverter {
 
 		if (response.getStatusLine().getStatusCode() != 200) {
 			logger.error("Could not execute action on remote device with url '" + url + "'. Reason: '"
-					+ response.getStatusLine().getReasonPhrase() + "'. Body: " + EntityUtils.toString(response.getEntity()));
+					+ response.getStatusLine().getReasonPhrase() + "'. Body: "
+					+ EntityUtils.toString(response.getEntity()));
 		}
 	}
 
 	private void executeActionOnRemoteDevice(MidiAction action, RemoteDevice remoteDevice)
 			throws ClientProtocolException, IOException {
+
 		String url = "";
 
 		// Build the url for the post request
