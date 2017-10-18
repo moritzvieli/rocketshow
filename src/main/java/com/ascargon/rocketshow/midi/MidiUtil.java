@@ -33,40 +33,57 @@ public class MidiUtil {
 		// Get a hardware device for a given MIDI device
 		MidiDevice.Info[] midiDeviceInfos = MidiSystem.getMidiDeviceInfo();
 
-		// Search for a device with same id and name
-		if (midiDeviceInfos.length > midiDevice.getId()) {
-			if (midiDeviceInfos[midiDevice.getId()].getName().equals(midiDevice.getName())) {
+		if (midiDevice != null) {
+			// Search for a device with same id and name
+			if (midiDeviceInfos.length > midiDevice.getId()) {
+				if (midiDeviceInfos[midiDevice.getId()].getName().equals(midiDevice.getName())) {
+					MidiDevice hardwareMidiDevice = MidiSystem.getMidiDevice(midiDeviceInfos[midiDevice.getId()]);
+
+					if (midiDeviceHasDirection(hardwareMidiDevice, midiDirection)) {
+						logger.debug("Found MIDI device with same ID and name");
+						return hardwareMidiDevice;
+					}
+				}
+			}
+
+			// Search for a device with the same name
+			for (int i = 0; i < midiDeviceInfos.length; i++) {
+				if (midiDeviceInfos[i].getName().equals(midiDevice.getName())) {
+					MidiDevice hardwareMidiDevice = MidiSystem.getMidiDevice(midiDeviceInfos[i]);
+
+					if (midiDeviceHasDirection(hardwareMidiDevice, midiDirection)) {
+						logger.debug("Found MIDI device with same name");
+						return hardwareMidiDevice;
+					}
+				}
+			}
+
+			// Search for a device with the same id
+			if (midiDeviceInfos.length > midiDevice.getId()) {
 				MidiDevice hardwareMidiDevice = MidiSystem.getMidiDevice(midiDeviceInfos[midiDevice.getId()]);
 
 				if (midiDeviceHasDirection(hardwareMidiDevice, midiDirection)) {
-					logger.debug("Found MIDI device with same ID and name");
+					logger.debug("Found MIDI device with same ID");
 					return hardwareMidiDevice;
 				}
 			}
 		}
 
-		// Search for a device with the same name
+		// Return the default device, if no device has been found or no settings
+		// have been specified
+		logger.debug(
+				"No settings provided or no device found for the provided settings. Return default MIDI device, if available");
+
 		for (int i = 0; i < midiDeviceInfos.length; i++) {
-			if (midiDeviceInfos[i].getName().equals(midiDevice.getName())) {
-				MidiDevice hardwareMidiDevice = MidiSystem.getMidiDevice(midiDeviceInfos[i]);
-
-				if (midiDeviceHasDirection(hardwareMidiDevice, midiDirection)) {
-					logger.debug("Found MIDI device with same name");
-					return hardwareMidiDevice;
-				}
-			}
-		}
-
-		// Search for a device with the same id
-		if (midiDeviceInfos.length > midiDevice.getId()) {
-			MidiDevice hardwareMidiDevice = MidiSystem.getMidiDevice(midiDeviceInfos[midiDevice.getId()]);
+			MidiDevice hardwareMidiDevice = MidiSystem.getMidiDevice(midiDeviceInfos[i]);
 
 			if (midiDeviceHasDirection(hardwareMidiDevice, midiDirection)) {
-				logger.debug("Found MIDI device with same ID");
+				logger.debug("Default MIDI device found");
 				return hardwareMidiDevice;
 			}
 		}
 
+		logger.debug("No MIDI device found");
 		return null;
 	}
 
@@ -79,12 +96,12 @@ public class MidiUtil {
 
 		for (int i = 0; i < midiDeviceInfos.length; i++) {
 			MidiDevice hardwareMidiDevice = MidiSystem.getMidiDevice(midiDeviceInfos[i]);
-			
+
 			// Filter the direction and hide system devices
 			if (midiDeviceHasDirection(hardwareMidiDevice, midiDirection)
 					&& !midiDeviceInfos[i].getName().equals("Real Time Sequencer")
 					&& !midiDeviceInfos[i].getName().equals("Gervill")) {
-				
+
 				com.ascargon.rocketshow.midi.MidiDevice midiDevice = new com.ascargon.rocketshow.midi.MidiDevice();
 				midiDevice.setId(i);
 				midiDevice.setName(midiDeviceInfos[i].getName());

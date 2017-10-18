@@ -2,7 +2,12 @@ package com.ascargon.rocketshow;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiUnavailableException;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -15,7 +20,10 @@ import com.ascargon.rocketshow.dmx.DmxSignalSender;
 import com.ascargon.rocketshow.dmx.Midi2DmxConverter;
 import com.ascargon.rocketshow.image.ImageDisplayer;
 import com.ascargon.rocketshow.midi.Midi2ActionConverter;
+import com.ascargon.rocketshow.midi.MidiDeviceConnectedListener;
 import com.ascargon.rocketshow.midi.MidiReceiver;
+import com.ascargon.rocketshow.midi.MidiUtil;
+import com.ascargon.rocketshow.midi.MidiUtil.MidiDirection;
 import com.ascargon.rocketshow.song.SetList;
 import com.ascargon.rocketshow.video.VideoPlayer;
 
@@ -32,11 +40,23 @@ public class Manager {
 
 	private DmxSignalSender dmxSignalSender;
 	private Midi2DmxConverter midi2DmxConverter;
-	
+
+	private MidiDevice midiOutDevice;
+	private Timer connectMidiOutDeviceTimer;
+	private List<MidiDeviceConnectedListener> midiOutDeviceConnectedListeners = new ArrayList<MidiDeviceConnectedListener>();
+
 	private Session session = new Session();
 	private Settings settings = new Settings();
 
 	private SetList currentSetList;
+
+	public void addMidiOutDeviceConnectedListener(MidiDeviceConnectedListener listener) {
+		midiOutDeviceConnectedListeners.add(listener);
+	}
+
+	public void removeMidiOutDeviceConnectedListener(MidiDeviceConnectedListener listener) {
+		midiOutDeviceConnectedListeners.remove(listener);
+	}
 
 	public void loadSetlist(String path) throws Exception {
 		logger.info("Loading setlist " + path + "...");
@@ -53,12 +73,64 @@ public class Manager {
 		logger.info("Setlist " + path + " successfully loaded");
 	}
 
+	/**
+	 * Connect the MIDI player to a sender, if required. Also call this method,
+	 * if you change the settings and want to reload the device.
+	 * 
+	 * @throws MidiUnavailableException
+	 */
+	public void connectMidiSender() throws MidiUnavailableException {
+		if (midiOutDevice != null && midiOutDevice.isOpen()) {
+			// We already have an open sender -> close this one
+			midiOutDevice.close();
+		}
+
+		com.ascargon.rocketshow.midi.MidiDevice midiDevice = settings.getMidiInDevice();
+
+		logger.info("Try connecting to output MIDI device " + midiDevice.getId() + " \"" + midiDevice.getName() + "\"");
+
+		midiOutDevice = MidiUtil.getHardwareMidiDevice(midiDevice, MidiDirection.OUT);
+
+		if (midiOutDevice == null) {
+			logger.warn("MIDI output device not found. Try again in 5 seconds.");
+
+			TimerTask timerTask = new TimerTask() {
+				@Override
+				public void run() {
+					try {
+						// Send the universe
+						connectMidiSender();
+					} catch (Exception e) {
+						logger.error("Could not connect to MIDI output device", e);
+					}
+
+					connectMidiOutDeviceTimer.cancel();
+					connectMidiOutDeviceTimer = null;
+				}
+			};
+
+			connectMidiOutDeviceTimer = new Timer();
+			connectMidiOutDeviceTimer.schedule(timerTask, 5000);
+
+			return;
+		}
+
+		// Connect all listeners
+		for (MidiDeviceConnectedListener listener : midiOutDeviceConnectedListeners) {
+			listener.deviceConnected(midiOutDevice);
+		}
+
+		// We found the device and all listeners are connected
+		logger.info("Successfully connected to output MIDI device " + midiDevice.getId() + " \"" + midiDevice.getName()
+				+ "\"");
+	}
+
 	public void load() throws IOException {
 		logger.info("Initialize...");
 
 		// Initialize the MIDI action converter
 		midi2ActionConverter = new Midi2ActionConverter(this);
-		
+
 		// Initialize the DMX sender
 		dmxSignalSender = new DmxSignalSender(this);
 		midi2DmxConverter = new Midi2DmxConverter(dmxSignalSender);
@@ -101,6 +173,13 @@ public class Manager {
 			midiReceiver.load();
 		} catch (MidiUnavailableException e) {
 			logger.error("Could not initialize the MIDI receiver", e);
+		}
+
+		// Initialize the MIDI out device
+		try {
+			midiOutDevice = MidiUtil.getHardwareMidiDevice(settings.getMidiInDevice(), MidiDirection.OUT);
+		} catch (MidiUnavailableException e) {
+			logger.error("Could not initialize the MIDI out device", e);
 		}
 
 		logger.info("Finished initializing");
@@ -191,11 +270,16 @@ public class Manager {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void close() {
 		logger.info("Close...");
 		midiReceiver.close();
-		currentSetList.close();
+
+		try {
+			currentSetList.close();
+		} catch (Exception e) {
+		}
+
 		logger.info("Finished closing");
 	}
 

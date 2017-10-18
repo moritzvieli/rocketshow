@@ -6,25 +6,18 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.ascargon.rocketshow.dmx.Midi2DmxMapping;
-
+/**
+ * Map one specific MIDI event to an action.
+ *
+ * @author Moritz Vieli
+ */
 @XmlRootElement
 public class Midi2ActionMapping {
-
-	private Midi2DmxMapping parent;
 
 	private List<ActionMapping> actionMappingList = new ArrayList<ActionMapping>();
 
 	// Completely ignore all parent's settings
 	private Boolean overrideParent = false;
-
-	public Midi2DmxMapping getParent() {
-		return parent;
-	}
-
-	public void setParent(Midi2DmxMapping parent) {
-		this.parent = parent;
-	}
 
 	@XmlElement
 	public List<ActionMapping> getActionMappingList() {

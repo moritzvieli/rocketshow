@@ -14,6 +14,12 @@ import org.apache.log4j.Logger;
 import com.ascargon.rocketshow.Manager;
 import com.ascargon.rocketshow.midi.MidiUtil.MidiDirection;
 
+/**
+ * This class handles all MIDI events from the currently connected MIDI input
+ * device.
+ *
+ * @author Moritz A. Vieli
+ */
 public class MidiReceiver implements Receiver {
 
 	final static Logger logger = Logger.getLogger(MidiReceiver.class);
@@ -35,25 +41,19 @@ public class MidiReceiver implements Receiver {
 	 * @throws MidiUnavailableException
 	 */
 	public void connectMidiReceiver() throws MidiUnavailableException {
-		if(midiReceiver != null && midiReceiver.isOpen()) {
+		if (midiReceiver != null && midiReceiver.isOpen()) {
 			// We already have an open receiver -> close this one
 			midiReceiver.close();
 		}
-		
-		MidiDevice midiDevice = manager.getSettings().getMidiInDevice();
 
-		if (midiDevice == null) {
-			// No device specified or found
-			// TODO Just take the first one, if one is connected
-			return;
-		}
+		MidiDevice midiDevice = manager.getSettings().getMidiInDevice();
 
 		logger.info("Try connecting to input MIDI device " + midiDevice.getId() + " \"" + midiDevice.getName() + "\"");
 
 		midiReceiver = MidiUtil.getHardwareMidiDevice(midiDevice, MidiDirection.IN);
 
 		if (midiReceiver == null) {
-			logger.warn("MIDI input device not found. Try again in 2 seconds.");
+			logger.warn("MIDI input device not found. Try again in 5 seconds.");
 
 			TimerTask timerTask = new TimerTask() {
 				@Override
@@ -71,7 +71,7 @@ public class MidiReceiver implements Receiver {
 			};
 
 			connectTimer = new Timer();
-			connectTimer.schedule(timerTask, 2000);
+			connectTimer.schedule(timerTask, 5000);
 
 			return;
 		}

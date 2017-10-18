@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 /**
  * Defines a remote RocketShow device to be triggered by this one.
  *
- * @author Moritz Vieli
+ * @author Moritz A. Vieli
  */
 @XmlRootElement
 public class RemoteDevice {

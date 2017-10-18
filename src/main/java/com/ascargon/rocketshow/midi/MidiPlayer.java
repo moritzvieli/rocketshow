@@ -3,106 +3,51 @@ package com.ascargon.rocketshow.midi;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import javax.sound.midi.MidiMessage;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
-import javax.sound.midi.Receiver;
 import javax.sound.midi.Sequencer;
-import javax.sound.midi.ShortMessage;
 
 import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.Manager;
-import com.ascargon.rocketshow.dmx.Midi2DmxConverter;
-import com.ascargon.rocketshow.dmx.Midi2DmxMapping;
-import com.ascargon.rocketshow.midi.MidiUtil.MidiDirection;
 import com.ascargon.rocketshow.song.file.MidiFile.MidiFileOutType;
 
-public class MidiPlayer implements Receiver {
+public class MidiPlayer implements MidiDeviceConnectedListener {
 
 	final static Logger logger = Logger.getLogger(MidiPlayer.class);
 
 	private Sequencer sequencer;
-
 	private MidiFileOutType midiFileOutType = MidiFileOutType.DIRECT;
-
-	private Midi2DmxMapping midi2DmxMapping;
-
-	private Midi2DmxConverter midi2DmxConverter;
-
+	private Midi2DmxReceiver midi2DmxReceiver;
 	private Manager manager;
-
-	private Timer connectTimer;
-
 	private javax.sound.midi.MidiDevice midiSender;
 
 	public MidiPlayer(Manager manager) throws MidiUnavailableException {
 		this.manager = manager;
-		this.midi2DmxConverter = manager.getMidi2DmxConverter();
+		midi2DmxReceiver = new Midi2DmxReceiver(manager);
+
+		manager.addMidiOutDeviceConnectedListener(this);
+	}
+
+	@Override
+	public void deviceConnected(javax.sound.midi.MidiDevice midiDevice) {
+		// Connect the sequencer to the MIDI output device
+		try {
+			sequencer.getTransmitter().setReceiver(midiDevice.getReceiver());
+		} catch (MidiUnavailableException e) {
+			logger.error("Could not set MIDI out device as sender for the file player", e);
+		}
+	}
+
+	@Override
+	public void deviceDisconnected(javax.sound.midi.MidiDevice midiDevice) {
+		// Nothing to do at the moment
 	}
 
 	public void setPositionInMillis(long position) {
 		sequencer.setMicrosecondPosition(position);
-	}
-
-	/**
-	 * Connect the MIDI player to a sender, if required. Also call this method,
-	 * if you change the settings and want to reload the device.
-	 * 
-	 * @throws MidiUnavailableException
-	 */
-	public void connectMidiSender() throws MidiUnavailableException {
-		if(midiSender != null && midiSender.isOpen()) {
-			// We already have an open sender -> close this one
-			midiSender.close();
-		}
-		
-		MidiDevice midiDevice = manager.getSettings().getMidiInDevice();
-
-		if (midiDevice == null) {
-			// No device specified or found
-			// TODO Just take the first one, if one is connected
-			return;
-		}
-
-		logger.info("Try connecting to output MIDI device " + midiDevice.getId() + " \"" + midiDevice.getName() + "\"");
-
-		midiSender = MidiUtil.getHardwareMidiDevice(manager.getSettings().getMidiOutDevice(), MidiDirection.OUT);
-
-		if (midiSender == null) {
-			logger.warn("MIDI output device not found. Try again in 2 seconds.");
-
-			TimerTask timerTask = new TimerTask() {
-				@Override
-				public void run() {
-					try {
-						// Send the universe
-						connectMidiSender();
-					} catch (Exception e) {
-						logger.error("Could not connect to MIDI output device", e);
-					}
-
-					connectTimer.cancel();
-					connectTimer = null;
-				}
-			};
-
-			connectTimer = new Timer();
-			connectTimer.schedule(timerTask, 2000);
-
-			return;
-		}
-
-		// We found the device
-		sequencer.getTransmitter().setReceiver(midiSender.getReceiver());
-
-		logger.info("Successfully connected to output MIDI device " + midiDevice.getId() + " \"" + midiDevice.getName()
-				+ "\"");
 	}
 
 	public void load(File file) throws Exception {
@@ -118,12 +63,9 @@ public class MidiPlayer implements Receiver {
 		InputStream is = new BufferedInputStream(new FileInputStream(file));
 		sequencer.setSequence(is);
 
-		if (midiFileOutType == MidiFileOutType.DIRECT) {
-			// Connect the sequencer to the MIDI output device
-			connectMidiSender();
-		} else if (midiFileOutType == MidiFileOutType.DMX) {
+		if (midiFileOutType == MidiFileOutType.DMX) {
 			// Connect the sequencer to the this receiver for DMX mapping
-			sequencer.getTransmitter().setReceiver(this);
+			sequencer.getTransmitter().setReceiver(midi2DmxReceiver);
 		}
 	}
 
@@ -143,27 +85,11 @@ public class MidiPlayer implements Receiver {
 
 	public void close() {
 		sequencer.close();
+		midi2DmxReceiver.close();
+		manager.removeMidiOutDeviceConnectedListener(this);
 
 		if (midiSender != null && midiSender.isOpen()) {
 			midiSender.close();
-		}
-	}
-
-	public void send(MidiMessage message, long timeStamp) {
-		// Map the midi to DMX out
-		if (message instanceof ShortMessage) {
-			ShortMessage shortMessage = (ShortMessage) message;
-
-			int command = shortMessage.getCommand();
-			int channel = shortMessage.getChannel();
-			int note = shortMessage.getData1();
-			int velocity = shortMessage.getData2();
-
-			try {
-				midi2DmxConverter.processMidiEvent(command, channel, note, velocity, timeStamp, midi2DmxMapping);
-			} catch (IOException e) {
-				logger.error("Could not send DMX signal from MIDI file", e);
-			}
 		}
 	}
 
@@ -175,12 +101,12 @@ public class MidiPlayer implements Receiver {
 		this.midiFileOutType = midiFileOutType;
 	}
 
-	public Midi2DmxMapping getMidi2DmxMapping() {
-		return midi2DmxMapping;
+	public Midi2DmxReceiver getMidi2DmxReceiver() {
+		return midi2DmxReceiver;
 	}
 
-	public void setMidi2DmxMapping(Midi2DmxMapping midi2DmxMapping) {
-		this.midi2DmxMapping = midi2DmxMapping;
+	public void setMidi2DmxReceiver(Midi2DmxReceiver midi2DmxReceiver) {
+		this.midi2DmxReceiver = midi2DmxReceiver;
 	}
 
 }

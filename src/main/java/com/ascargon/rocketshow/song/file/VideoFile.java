@@ -14,6 +14,9 @@ public class VideoFile extends File {
 	public void load() throws IOException {}
 	
 	@Override
+	public void close() {}
+	
+	@Override
 	public void play() throws IOException {
 		VideoPlayer videoPlayer = this.getManager().getVideoPlayer();
 		String path = this.getPath();

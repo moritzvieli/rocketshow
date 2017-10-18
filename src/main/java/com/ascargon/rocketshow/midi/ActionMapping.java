@@ -6,8 +6,11 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.ascargon.rocketshow.RemoteDevice;
-
+/**
+ * Map one specific MIDI event to an action.
+ *
+ * @author Moritz Vieli
+ */
 @XmlRootElement
 public class ActionMapping {
 
@@ -16,19 +19,19 @@ public class ActionMapping {
 	}
 
 	private MidiAction action;
-	
+
 	// If null -> all channels
 	private Integer channelFrom;
-	
+
 	// The note, this action should be triggered. If null -> all notes
 	private Integer noteFrom;
-	
+
 	// Should this action apply to a remote devices?
 	private List<Integer> remoteDeviceIds = new ArrayList<Integer>();
 
 	// Should this action apply locally?
 	private boolean executeLocally = true;
-	
+
 	@XmlElement
 	public MidiAction getAction() {
 		return action;

@@ -9,6 +9,12 @@ public class AudioFile extends File {
 	}
 	
 	@Override
+	public void close() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
 	public void play() {
 		// TODO Auto-generated method stub
 		

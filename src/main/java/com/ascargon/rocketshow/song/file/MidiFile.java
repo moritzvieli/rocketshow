@@ -31,7 +31,7 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 	@Override
 	public void play() {
 		midiPlayer.setMidiFileOutType(midiFileOutType);
-		midiPlayer.setMidi2DmxMapping(midi2DmxMapping);
+		midiPlayer.getMidi2DmxReceiver().setMidi2DmxMapping(midi2DmxMapping);
 
 		if (this.getOffsetInMillis() >= 0) {
 			logger.debug("Wait " + this.getOffsetInMillis() + " milliseconds before starting the midi file");
@@ -65,6 +65,7 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 		midiPlayer.stop();
 	}
 	
+	@Override
 	public void close() {
 		midiPlayer.close();
 	}

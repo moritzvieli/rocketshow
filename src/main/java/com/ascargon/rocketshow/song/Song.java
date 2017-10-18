@@ -38,9 +38,7 @@ public class Song {
 	public void load() throws Exception {
 		logger.info("Loading song " + path);
 		
-		for (int i = 0; i < fileList.size(); i++) {
-			File file = fileList.get(i);
-
+		for (File file : fileList) {
 			if (file instanceof MidiFile) {
 				MidiFile midiFile = (MidiFile) file;
 				midiFile.getMidi2DmxMapping().setParent(midi2DmxMapping);
@@ -48,6 +46,12 @@ public class Song {
 
 			file.setManager(manager);
 			file.load();
+		}
+	}
+	
+	public void close() throws Exception {
+		for (File file : fileList) {
+			file.close();
 		}
 	}
 

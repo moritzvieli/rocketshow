@@ -18,6 +18,8 @@ abstract public class File {
 	
 	abstract public void load() throws Exception;
 	
+	abstract public void close() throws Exception;
+	
 	abstract public void play() throws Exception;
 	
 	abstract public void pause() throws Exception;
