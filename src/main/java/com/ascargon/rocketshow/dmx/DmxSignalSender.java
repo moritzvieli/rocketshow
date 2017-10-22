@@ -38,7 +38,7 @@ public class DmxSignalSender {
 		} catch (Exception e) {
 			logger.error("Could not initialize OLA DMX client", e);
 		}
-		
+
 		reset();
 	}
 
@@ -58,21 +58,22 @@ public class DmxSignalSender {
 	}
 
 	private void sendUniverse() throws IOException {
-		if(olaClient == null) {
+		if (olaClient == null) {
 			return;
 		}
-		
-		short[] universe = new short[512];		
-		
+
+		short[] universe = new short[512];
+
 		for (int i = 0; i < channelValues.size(); i++) {
 			universe[i] = (short) channelValues.get(i).intValue();
 		}
-		
+
 		olaClient.streamDmx(1, universe);
 	}
 
 	public void send(int channel, int value) throws IOException {
-		logger.debug("Setting DMX channel " + channel + " to value " + value);
+		// logger.debug("Setting DMX channel " + channel + " to value " +
+		// value);
 
 		channelValues.put(channel, value);
 

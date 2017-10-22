@@ -127,8 +127,9 @@ public class MidiInDeviceReceiver implements Receiver {
 			loggingCommand = "MISC";
 		}
 
-		logger.debug(
-				"Note " + loggingCommand + ", channel = " + channel + ", note = " + note + ", velocity = " + velocity);
+		// logger.debug(
+		// "Note " + loggingCommand + ", channel = " + channel + ", note = " +
+		// note + ", velocity = " + velocity);
 
 		// Process MIDI events as actions according to the settings
 		try {
