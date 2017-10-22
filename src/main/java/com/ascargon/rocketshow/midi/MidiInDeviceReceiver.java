@@ -54,7 +54,6 @@ public class MidiInDeviceReceiver implements Receiver {
 
 		midiReceiver = MidiUtil.getHardwareMidiDevice(midiDevice, MidiDirection.IN);
 
-
 		if (midiReceiver == null) {
 			logger.warn("MIDI input device not found. Try again in 5 seconds.");
 
@@ -115,17 +114,18 @@ public class MidiInDeviceReceiver implements Receiver {
 		int command = shortMessage.getCommand();
 		int channel = shortMessage.getChannel();
 		int note = shortMessage.getData1();
-		int velocity = shortMessage.getData2();
 
-		String loggingCommand = "";
-
-		if (command == ShortMessage.NOTE_ON) {
-			loggingCommand = "ON";
-		} else if (command == ShortMessage.NOTE_OFF) {
-			loggingCommand = "OFF";
-		} else {
-			loggingCommand = "MISC";
-		}
+		// int velocity = shortMessage.getData2();
+		//
+		// String loggingCommand = "";
+		//
+		// if (command == ShortMessage.NOTE_ON) {
+		// loggingCommand = "ON";
+		// } else if (command == ShortMessage.NOTE_OFF) {
+		// loggingCommand = "OFF";
+		// } else {
+		// loggingCommand = "MISC";
+		// }
 
 		// logger.debug(
 		// "Note " + loggingCommand + ", channel = " + channel + ", note = " +

@@ -79,8 +79,8 @@ public class Manager {
 	}
 
 	/**
-	 * Connect the MIDI player to a sender, if required. Also call this method,
-	 * if you change the settings and want to reload the device.
+	 * Connect to the MIDI out device. Also call this method, if you change the
+	 * settings and want to reload the device.
 	 * 
 	 * @throws MidiUnavailableException
 	 */
@@ -132,7 +132,7 @@ public class Manager {
 
 	public void load() throws IOException {
 		logger.info("Initialize...");
-		
+
 		// Initialize the settings
 		settings = new Settings();
 
@@ -167,9 +167,9 @@ public class Manager {
 		} catch (JAXBException e) {
 			logger.error("Could not save settings", e);
 		}
-		
+
 		// Initialize the required objects inside settings
-		if(settings.getDeviceInMidiRouting() != null) {
+		if (settings.getDeviceInMidiRouting() != null) {
 			try {
 				settings.getDeviceInMidiRouting().load(this);
 			} catch (MidiUnavailableException e) {
@@ -194,7 +194,7 @@ public class Manager {
 
 		// Initialize the MIDI out device
 		try {
-			midiOutDevice = MidiUtil.getHardwareMidiDevice(settings.getMidiInDevice(), MidiDirection.OUT);
+			connectMidiSender();
 		} catch (MidiUnavailableException e) {
 			logger.error("Could not initialize the MIDI out device", e);
 		}
