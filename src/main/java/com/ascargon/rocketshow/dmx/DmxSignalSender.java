@@ -8,13 +8,12 @@ import java.util.TimerTask;
 import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.Manager;
-import com.ascargon.rocketshow.midi.MidiReceiver;
 
 import ola.OlaClient;
 
 public class DmxSignalSender {
 
-	final static Logger logger = Logger.getLogger(MidiReceiver.class);
+	final static Logger logger = Logger.getLogger(DmxSignalSender.class);
 
 	private Manager manager;
 
@@ -59,7 +58,11 @@ public class DmxSignalSender {
 	}
 
 	private void sendUniverse() throws IOException {
-		short[] universe = new short[512];
+		if(olaClient == null) {
+			return;
+		}
+		
+		short[] universe = new short[512];		
 		
 		for (int i = 0; i < channelValues.size(); i++) {
 			universe[i] = (short) channelValues.get(i).intValue();

@@ -1,4 +1,4 @@
-package com.ascargon.rocketshow.midi;
+package com.ascargon.rocketshow.dmx;
 
 import java.io.IOException;
 
@@ -10,8 +10,6 @@ import javax.sound.midi.ShortMessage;
 import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.Manager;
-import com.ascargon.rocketshow.dmx.Midi2DmxConverter;
-import com.ascargon.rocketshow.dmx.Midi2DmxMapping;
 
 /**
  * Receive MIDI messages and map them to DMX signals.
@@ -44,7 +42,7 @@ public class Midi2DmxReceiver implements Receiver {
 			try {
 				midi2DmxConverter.processMidiEvent(command, channel, note, velocity, timeStamp, midi2DmxMapping);
 			} catch (IOException e) {
-				logger.error("Could not send DMX signal from MIDI file", e);
+				logger.error("Could not send DMX signal", e);
 			}
 		}
 	}

@@ -21,7 +21,7 @@ import com.ascargon.rocketshow.dmx.Midi2DmxConverter;
 import com.ascargon.rocketshow.image.ImageDisplayer;
 import com.ascargon.rocketshow.midi.Midi2ActionConverter;
 import com.ascargon.rocketshow.midi.MidiDeviceConnectedListener;
-import com.ascargon.rocketshow.midi.MidiReceiver;
+import com.ascargon.rocketshow.midi.MidiInDeviceReceiver;
 import com.ascargon.rocketshow.midi.MidiUtil;
 import com.ascargon.rocketshow.midi.MidiUtil.MidiDirection;
 import com.ascargon.rocketshow.song.SetList;
@@ -35,7 +35,7 @@ public class Manager {
 
 	private VideoPlayer videoPlayer;
 	private ImageDisplayer imageDisplayer;
-	private MidiReceiver midiReceiver;
+	private MidiInDeviceReceiver midiInDeviceReceiver;
 	private Midi2ActionConverter midi2ActionConverter;
 
 	private DmxSignalSender dmxSignalSender;
@@ -46,12 +46,17 @@ public class Manager {
 	private List<MidiDeviceConnectedListener> midiOutDeviceConnectedListeners = new ArrayList<MidiDeviceConnectedListener>();
 
 	private Session session = new Session();
-	private Settings settings = new Settings();
+	private Settings settings;
 
 	private SetList currentSetList;
 
 	public void addMidiOutDeviceConnectedListener(MidiDeviceConnectedListener listener) {
 		midiOutDeviceConnectedListeners.add(listener);
+
+		// We already have a device connected -> fire the listener
+		if (midiOutDevice != null) {
+			listener.deviceConnected(midiOutDevice);
+		}
 	}
 
 	public void removeMidiOutDeviceConnectedListener(MidiDeviceConnectedListener listener) {
@@ -127,6 +132,9 @@ public class Manager {
 
 	public void load() throws IOException {
 		logger.info("Initialize...");
+		
+		// Initialize the settings
+		settings = new Settings();
 
 		// Initialize the MIDI action converter
 		midi2ActionConverter = new Midi2ActionConverter(this);
@@ -159,6 +167,15 @@ public class Manager {
 		} catch (JAXBException e) {
 			logger.error("Could not save settings", e);
 		}
+		
+		// Initialize the required objects inside settings
+		if(settings.getDeviceInMidiRouting() != null) {
+			try {
+				settings.getDeviceInMidiRouting().load(this);
+			} catch (MidiUnavailableException e) {
+				logger.error("Could not initialize the MIDI input device routing");
+			}
+		}
 
 		// Restore the session from the file
 		try {
@@ -168,9 +185,9 @@ public class Manager {
 		}
 
 		// Initialize the MIDI receiver
-		midiReceiver = new MidiReceiver(this);
+		midiInDeviceReceiver = new MidiInDeviceReceiver(this);
 		try {
-			midiReceiver.load();
+			midiInDeviceReceiver.load();
 		} catch (MidiUnavailableException e) {
 			logger.error("Could not initialize the MIDI receiver", e);
 		}
@@ -273,7 +290,11 @@ public class Manager {
 
 	public void close() {
 		logger.info("Close...");
-		midiReceiver.close();
+		midiInDeviceReceiver.close();
+
+		if (midiOutDevice != null && midiOutDevice.isOpen()) {
+			midiOutDevice.close();
+		}
 
 		try {
 			currentSetList.close();

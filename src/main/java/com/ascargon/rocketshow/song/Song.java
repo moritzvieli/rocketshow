@@ -38,10 +38,11 @@ public class Song {
 	public void load() throws Exception {
 		logger.info("Loading song " + path);
 		
+		// Load all files inside the song
 		for (File file : fileList) {
 			if (file instanceof MidiFile) {
 				MidiFile midiFile = (MidiFile) file;
-				midiFile.getMidi2DmxMapping().setParent(midi2DmxMapping);
+				midiFile.getMidiRouting().getMidi2DmxMapping().setParent(midi2DmxMapping);
 			}
 
 			file.setManager(manager);

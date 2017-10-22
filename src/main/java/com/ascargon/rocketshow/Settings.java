@@ -5,13 +5,13 @@ import java.util.List;
 import javax.sound.midi.MidiUnavailableException;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.dmx.Midi2DmxMapping;
 import com.ascargon.rocketshow.midi.Midi2ActionMapping;
 import com.ascargon.rocketshow.midi.MidiDevice;
+import com.ascargon.rocketshow.midi.MidiRouting;
 import com.ascargon.rocketshow.midi.MidiUtil;
 import com.ascargon.rocketshow.midi.MidiUtil.MidiDirection;
 
@@ -22,35 +22,31 @@ public class Settings {
 
 	private String defaultImagePath;
 
-	private boolean liveDmx;
-
 	private MidiDevice midiInDevice;
 	private MidiDevice midiOutDevice;
 
 	private List<RemoteDevice> remoteDeviceList;
-	
-	private Midi2ActionMapping liveMidi2ActionMapping;
 
-	private Midi2DmxMapping fileMidi2DmxMapping;
-	private Midi2DmxMapping liveMidi2DmxMapping;
+	private Midi2ActionMapping midi2ActionMapping;
+	private Midi2DmxMapping midi2DmxMapping;
 
 	private int dmxSendDelayMillis;
+	
+	private MidiRouting deviceInMidiRouting;
 
 	public Settings() {
 		// Initialize default settings
 		defaultImagePath = null;
 
-		liveDmx = false;
-
-		// Live MIDI to action mapping
-		liveMidi2ActionMapping = new Midi2ActionMapping();
+		// Global MIDI to action mapping
+		midi2ActionMapping = new Midi2ActionMapping();
 		
-		// File MIDI to DMX mapping
-		fileMidi2DmxMapping = new Midi2DmxMapping();
+		// Global MIDI to DMX mapping
+		midi2DmxMapping = new Midi2DmxMapping();
 
-		// Live MIDI to DMX mapping
-		liveMidi2DmxMapping = new Midi2DmxMapping();
-
+		// The default MIDI input routing
+		deviceInMidiRouting = new MidiRouting();
+		
 		try {
 			List<MidiDevice> midiInDeviceList;
 			midiInDeviceList = MidiUtil.getMidiDevices(MidiDirection.IN);
@@ -75,14 +71,14 @@ public class Settings {
 
 		dmxSendDelayMillis = 10;
 	}
-	
+
 	public RemoteDevice getRemoteDeviceById(int id) {
-		for(RemoteDevice remoteDevice : remoteDeviceList) {
-			if(remoteDevice.getId() == id) {
+		for (RemoteDevice remoteDevice : remoteDeviceList) {
+			if (remoteDevice.getId() == id) {
 				return remoteDevice;
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -93,33 +89,6 @@ public class Settings {
 
 	public void setDefaultImagePath(String defaultImagePath) {
 		this.defaultImagePath = defaultImagePath;
-	}
-
-	@XmlElement
-	public boolean isLiveDmx() {
-		return liveDmx;
-	}
-
-	public void setLiveDmx(boolean liveDmx) {
-		this.liveDmx = liveDmx;
-	}
-
-	@XmlElement
-	public Midi2DmxMapping getFileMidi2DmxMapping() {
-		return fileMidi2DmxMapping;
-	}
-
-	public void setFileMidi2DmxMapping(Midi2DmxMapping fileMidi2DmxMapping) {
-		this.fileMidi2DmxMapping = fileMidi2DmxMapping;
-	}
-
-	@XmlElement
-	public Midi2DmxMapping getLiveMidi2DmxMapping() {
-		return liveMidi2DmxMapping;
-	}
-
-	public void setLiveMidi2DmxMapping(Midi2DmxMapping liveMidi2DmxMapping) {
-		this.liveMidi2DmxMapping = liveMidi2DmxMapping;
 	}
 
 	@XmlElement
@@ -159,12 +128,30 @@ public class Settings {
 	}
 
 	@XmlElement
-	public Midi2ActionMapping getLiveMidi2ActionMapping() {
-		return liveMidi2ActionMapping;
+	public Midi2ActionMapping getMidi2ActionMapping() {
+		return midi2ActionMapping;
 	}
 
-	public void setLiveMidi2ActionMapping(Midi2ActionMapping liveMidi2ActionMapping) {
-		this.liveMidi2ActionMapping = liveMidi2ActionMapping;
+	public void setMidi2ActionMapping(Midi2ActionMapping midi2ActionMapping) {
+		this.midi2ActionMapping = midi2ActionMapping;
+	}
+
+	@XmlElement
+	public Midi2DmxMapping getMidi2DmxMapping() {
+		return midi2DmxMapping;
+	}
+
+	public void setMidi2DmxMapping(Midi2DmxMapping midi2DmxMapping) {
+		this.midi2DmxMapping = midi2DmxMapping;
+	}
+
+	@XmlElement
+	public MidiRouting getDeviceInMidiRouting() {
+		return deviceInMidiRouting;
+	}
+
+	public void setDeviceInMidiRouting(MidiRouting deviceInMidiRouting) {
+		this.deviceInMidiRouting = deviceInMidiRouting;
 	}
 
 }

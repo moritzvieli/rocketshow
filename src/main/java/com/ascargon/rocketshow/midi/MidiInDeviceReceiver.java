@@ -1,6 +1,5 @@
 package com.ascargon.rocketshow.midi;
 
-import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -15,14 +14,13 @@ import com.ascargon.rocketshow.Manager;
 import com.ascargon.rocketshow.midi.MidiUtil.MidiDirection;
 
 /**
- * This class handles all MIDI events from the currently connected MIDI input
- * device.
+ * Handle the MIDI events from the currently connected MIDI input device.
  *
  * @author Moritz A. Vieli
  */
-public class MidiReceiver implements Receiver {
+public class MidiInDeviceReceiver implements Receiver {
 
-	final static Logger logger = Logger.getLogger(MidiReceiver.class);
+	final static Logger logger = Logger.getLogger(MidiInDeviceReceiver.class);
 
 	private Manager manager;
 
@@ -30,8 +28,12 @@ public class MidiReceiver implements Receiver {
 
 	private javax.sound.midi.MidiDevice midiReceiver;
 
-	public MidiReceiver(Manager manager) {
+	private MidiRouting midiRouting;
+
+	public MidiInDeviceReceiver(Manager manager) {
 		this.manager = manager;
+
+		midiRouting = manager.getSettings().getDeviceInMidiRouting();
 	}
 
 	/**
@@ -51,6 +53,7 @@ public class MidiReceiver implements Receiver {
 		logger.info("Try connecting to input MIDI device " + midiDevice.getId() + " \"" + midiDevice.getName() + "\"");
 
 		midiReceiver = MidiUtil.getHardwareMidiDevice(midiDevice, MidiDirection.IN);
+
 
 		if (midiReceiver == null) {
 			logger.warn("MIDI input device not found. Try again in 5 seconds.");
@@ -78,6 +81,13 @@ public class MidiReceiver implements Receiver {
 
 		// We found the device
 		midiReceiver.open();
+
+		// Set the MIDI routing receiver
+		midiRouting.setTransmitter(midiReceiver.getTransmitter());
+
+		// Also set this class as a second receiver to execute the MIDI actions
+		// (midiReceiver.getTransmitter returns a different transmitter each
+		// time)
 		midiReceiver.getTransmitter().setReceiver(this);
 
 		logger.info("Successfully connected to input MIDI device " + midiDevice.getId() + " \"" + midiDevice.getName()
@@ -120,20 +130,10 @@ public class MidiReceiver implements Receiver {
 		logger.debug(
 				"Note " + loggingCommand + ", channel = " + channel + ", note = " + note + ", velocity = " + velocity);
 
-		if (manager.getSettings().isLiveDmx()) {
-			// Route incoming MIDI events through the global MIDI to DMX mapping
-			try {
-				manager.getMidi2DmxConverter().processMidiEvent(command, channel, note, velocity, timeStamp,
-						manager.getSettings().getLiveMidi2DmxMapping());
-			} catch (IOException e) {
-				logger.error("Could not send DMX signal from live MIDI", e);
-			}
-		}
-
 		// Process MIDI events as actions according to the settings
 		try {
 			manager.getMidi2ActionConverter().processMidiEvent(command, channel, note, timeStamp,
-					manager.getSettings().getLiveMidi2ActionMapping());
+					manager.getSettings().getMidi2ActionMapping());
 		} catch (Exception e) {
 			logger.error("Could not execute action from live MIDI", e);
 		}

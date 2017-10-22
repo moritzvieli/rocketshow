@@ -56,7 +56,7 @@ public class SetList {
 		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 		currentSong = (Song) jaxbUnmarshaller.unmarshal(file);
 		currentSong.setPath(setListSongList.get(currentSongIndex).getPath());
-		currentSong.getMidi2DmxMapping().setParent(manager.getSettings().getFileMidi2DmxMapping());
+		currentSong.getMidi2DmxMapping().setParent(manager.getSettings().getMidi2DmxMapping());
 		currentSong.setManager(manager);
 		currentSong.load();
 
