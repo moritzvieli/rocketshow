@@ -57,7 +57,7 @@
 							<executable>ng</executable>
 							<arguments>
 								<argument>build</argument>
-								<argument>--base-href=http://localhost:8080/RocketShow/app/</argument>
+								<argument>--base-href=/app/</argument>
 							</arguments>
 						</configuration>
 						<goals>

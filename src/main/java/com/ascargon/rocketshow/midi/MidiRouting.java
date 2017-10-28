@@ -42,6 +42,8 @@ public class MidiRouting implements MidiDeviceConnectedListener {
 	private Transmitter transmitter;
 	private Receiver receiver;
 
+	private String midiSource = "";
+
 	public MidiRouting() {
 	}
 
@@ -73,12 +75,13 @@ public class MidiRouting implements MidiDeviceConnectedListener {
 				return;
 			}
 
-			if (midiOutDevice != null) {
-				try {
-					receiver = midiOutDevice.getReceiver();
-				} catch (MidiUnavailableException e) {
-					logger.error("Could not connect transmitter to receiver", e);
-				}
+			try {
+				logger.info("Connected " + this.midiSource + " to output device "
+						+ midiOutDevice.getDeviceInfo().getName());
+				
+				receiver = midiOutDevice.getReceiver();
+			} catch (MidiUnavailableException e) {
+				logger.error("Could not connect transmitter to receiver", e);
 			}
 		} else if (midiDestination == MidiDestination.DMX) {
 			// Connect the transmitter to the DMX receiver
@@ -162,6 +165,15 @@ public class MidiRouting implements MidiDeviceConnectedListener {
 	public void setMidiDestination(MidiDestination midiDestination) {
 		this.midiDestination = midiDestination;
 		refreshTransmitterConnection();
+	}
+
+	@XmlTransient
+	public String getMidiSource() {
+		return midiSource;
+	}
+
+	public void setMidiSource(String midiSource) {
+		this.midiSource = midiSource;
 	}
 
 }

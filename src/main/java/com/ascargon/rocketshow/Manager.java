@@ -78,39 +78,46 @@ public class Manager {
 		logger.info("Setlist " + path + " successfully loaded");
 	}
 
+	public void reconnectMidiDevices() throws MidiUnavailableException {
+		if(midiInDeviceReceiver != null) {
+			midiInDeviceReceiver.connectMidiReceiver();
+		}
+		
+		connectMidiSender();
+	}
+	
 	/**
 	 * Connect to the MIDI out device. Also call this method, if you change the
-	 * settings and want to reload the device.
+	 * settings or want to reconnect the device.
 	 * 
 	 * @throws MidiUnavailableException
 	 */
 	public void connectMidiSender() throws MidiUnavailableException {
 		if (midiOutDevice != null && midiOutDevice.isOpen()) {
 			// We already have an open sender -> close this one
-			midiOutDevice.close();
+			try {
+				midiOutDevice.close();
+			} catch (Exception e) {
+			}
 		}
 
-		com.ascargon.rocketshow.midi.MidiDevice midiDevice = settings.getMidiInDevice();
+		com.ascargon.rocketshow.midi.MidiDevice midiDevice = settings.getMidiOutDevice();
 
-		logger.info("Try connecting to output MIDI device " + midiDevice.getId() + " \"" + midiDevice.getName() + "\"");
+		logger.debug("Try connecting to output MIDI device " + midiDevice.getId() + " \"" + midiDevice.getName() + "\"");
 
 		midiOutDevice = MidiUtil.getHardwareMidiDevice(midiDevice, MidiDirection.OUT);
 
 		if (midiOutDevice == null) {
-			logger.warn("MIDI output device not found. Try again in 5 seconds.");
+			logger.debug("MIDI output device not found. Try again in 5 seconds.");
 
 			TimerTask timerTask = new TimerTask() {
 				@Override
 				public void run() {
 					try {
-						// Send the universe
 						connectMidiSender();
 					} catch (Exception e) {
-						logger.error("Could not connect to MIDI output device", e);
+						logger.debug("Could not connect to MIDI output device", e);
 					}
-
-					connectMidiOutDeviceTimer.cancel();
-					connectMidiOutDeviceTimer = null;
 				}
 			};
 
@@ -120,14 +127,19 @@ public class Manager {
 			return;
 		}
 
+		// We found a device
+		connectMidiOutDeviceTimer.cancel();
+		connectMidiOutDeviceTimer = null;
+		
+		midiOutDevice.open();
+		
 		// Connect all listeners
 		for (MidiDeviceConnectedListener listener : midiOutDeviceConnectedListeners) {
 			listener.deviceConnected(midiOutDevice);
 		}
 
 		// We found the device and all listeners are connected
-		logger.info("Successfully connected to output MIDI device " + midiDevice.getId() + " \"" + midiDevice.getName()
-				+ "\"");
+		logger.info("Successfully connected to output MIDI device " + midiOutDevice.getDeviceInfo().getName());
 	}
 
 	public void load() throws IOException {

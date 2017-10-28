@@ -15,6 +15,10 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 
 	private MidiRouting midiRouting;
 
+	public MidiFile() {
+		setMidiRouting(new MidiRouting());
+	}
+	
 	public void load() throws Exception {
 		midiPlayer = new MidiPlayer(this.getManager(), midiRouting);
 		midiPlayer.load(new File(this.getPath()));
@@ -60,6 +64,7 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 	}
 
 	public void setMidiRouting(MidiRouting midiRouting) {
+		midiRouting.setMidiSource("MIDI file '" + getPath() + "'");
 		this.midiRouting = midiRouting;
 	}
 

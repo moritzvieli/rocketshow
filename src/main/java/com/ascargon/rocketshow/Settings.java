@@ -45,7 +45,7 @@ public class Settings {
 		midi2DmxMapping = new Midi2DmxMapping();
 
 		// The default MIDI input routing
-		deviceInMidiRouting = new MidiRouting();
+		setDeviceInMidiRouting(new MidiRouting());
 		
 		try {
 			List<MidiDevice> midiInDeviceList;
@@ -151,6 +151,7 @@ public class Settings {
 	}
 
 	public void setDeviceInMidiRouting(MidiRouting deviceInMidiRouting) {
+		deviceInMidiRouting.setMidiSource("input MIDI device");
 		this.deviceInMidiRouting = deviceInMidiRouting;
 	}
 

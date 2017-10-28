@@ -25,4 +25,13 @@ public class System {
 		return Response.status(200).build();
 	}
 	
+	@Path("reconnect-midi")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response reconnectMidi() throws Exception {
+		Manager manager = (Manager)context.getAttribute("manager");
+		manager.reconnectMidiDevices();
+		return Response.status(200).build();
+	}
+	
 }

@@ -38,37 +38,36 @@ public class MidiInDeviceReceiver implements Receiver {
 
 	/**
 	 * Connect the MIDI player to a sender, if required. Also call this method,
-	 * if you change the settings and want to reload the device.
+	 * if you change the settings or want to reconnect the device.
 	 * 
 	 * @throws MidiUnavailableException
 	 */
 	public void connectMidiReceiver() throws MidiUnavailableException {
 		if (midiReceiver != null && midiReceiver.isOpen()) {
 			// We already have an open receiver -> close this one
-			midiReceiver.close();
+			try {
+				midiReceiver.close();
+			} catch (Exception e) {
+			}
 		}
 
 		MidiDevice midiDevice = manager.getSettings().getMidiInDevice();
 
-		logger.info("Try connecting to input MIDI device " + midiDevice.getId() + " \"" + midiDevice.getName() + "\"");
+		logger.debug("Try connecting to input MIDI device " + midiDevice.getId() + " \"" + midiDevice.getName() + "\"");
 
 		midiReceiver = MidiUtil.getHardwareMidiDevice(midiDevice, MidiDirection.IN);
 
 		if (midiReceiver == null) {
-			logger.warn("MIDI input device not found. Try again in 5 seconds.");
+			logger.debug("MIDI input device not found. Try again in 5 seconds.");
 
 			TimerTask timerTask = new TimerTask() {
 				@Override
 				public void run() {
 					try {
-						// Send the universe
 						connectMidiReceiver();
 					} catch (Exception e) {
-						logger.error("Could not connect to MIDI input device", e);
+						logger.debug("Could not connect to MIDI input device", e);
 					}
-
-					connectTimer.cancel();
-					connectTimer = null;
 				}
 			};
 
@@ -79,6 +78,9 @@ public class MidiInDeviceReceiver implements Receiver {
 		}
 
 		// We found the device
+		connectTimer.cancel();
+		connectTimer = null;
+		
 		midiReceiver.open();
 
 		// Set the MIDI routing receiver

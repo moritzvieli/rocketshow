@@ -17,7 +17,20 @@ public class MidiUtil {
 		IN, OUT
 	}
 
+	private static boolean isDeviceAllowed(String name) {
+		if (name.equals("Real Time Sequencer") || name.equals("Gervill")) {
+			// Internal devices
+			return false;
+		}
+
+		return true;
+	}
+	
 	private static boolean midiDeviceHasDirection(MidiDevice midiDevice, MidiDirection midiDirection) {
+		if(!isDeviceAllowed(midiDevice.getDeviceInfo().getName())) {
+			return false;
+		}
+		
 		if ((midiDirection == MidiDirection.IN && midiDevice.getMaxTransmitters() != 0)
 				|| (midiDirection == MidiDirection.OUT && midiDevice.getMaxReceivers() != 0)) {
 
@@ -98,10 +111,7 @@ public class MidiUtil {
 			MidiDevice hardwareMidiDevice = MidiSystem.getMidiDevice(midiDeviceInfos[i]);
 
 			// Filter the direction and hide system devices
-			if (midiDeviceHasDirection(hardwareMidiDevice, midiDirection)
-					&& !midiDeviceInfos[i].getName().equals("Real Time Sequencer")
-					&& !midiDeviceInfos[i].getName().equals("Gervill")) {
-
+			if (midiDeviceHasDirection(hardwareMidiDevice, midiDirection)) {
 				com.ascargon.rocketshow.midi.MidiDevice midiDevice = new com.ascargon.rocketshow.midi.MidiDevice();
 				midiDevice.setId(i);
 				midiDevice.setName(midiDeviceInfos[i].getName());
