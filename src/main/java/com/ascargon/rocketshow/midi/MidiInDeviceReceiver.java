@@ -78,9 +78,11 @@ public class MidiInDeviceReceiver implements Receiver {
 		}
 
 		// We found the device
-		connectTimer.cancel();
-		connectTimer = null;
-		
+		if (connectTimer != null) {
+			connectTimer.cancel();
+			connectTimer = null;
+		}
+
 		midiReceiver.open();
 
 		// Set the MIDI routing receiver

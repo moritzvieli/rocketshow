@@ -7,101 +7,34 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-          <a class="nav-link" href="#">Status</a>
+          <a class="nav-link" href="#">{{ 'navigation.start' | translate }}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Live Mode</a>
+          <a class="nav-link" href="#">{{ 'navigation.live-mode' | translate }}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Configuration</a>
+          <a class="nav-link" href="#">{{ 'navigation.configuration' | translate }}</a>
         </li>
       </ul>
     </div>
+
+    <button (click)="switchLanguage('de')">de</button>
+    <button (click)="switchLanguage('en')">en</button>
   </nav>
 
 <div class="container-fluid">
   <div class="row">
     <div class="col-sm">
-      One of three columns
-    </div>
-    <div class="col-sm">
-      One of three columns
-    </div>
-    <div class="col-sm">
-      One of three columns
+      <div class="card" style="width: 20rem;">
+        <div class="card-body">
+          <h4 class="card-title">{{ 'misc.midi' | translate }}</h4>
+          <i class="fa fa-circle-o text-success" aria-hidden="true"></i> {{ 'misc.midi-in' | translate }}<br />
+          <i class="fa fa-circle text-danger" aria-hidden="true"></i> {{ 'misc.midi-out' | translate }}
+        </div>
+        <div class="card-body">
+            <h4 class="card-title">{{ 'misc.dmx' | translate }}</h4>
+          </div>
+      </div>
     </div>
   </div>
-  <alert type="success">hello</alert>
-  <div class="row">
-      <div class="col-sm">
-        One of three columns
-      </div>
-      <div class="col-sm">
-        One of three columns
-      </div>
-      <div class="col-sm">
-        One of three columns
-      </div>
-    </div>
-    <alert type="success">hello</alert>
-    <div class="row">
-        <div class="col-sm">
-          One of three columns
-        </div>
-        <div class="col-sm">
-          One of three columns
-        </div>
-        <div class="col-sm">
-          One of three columns
-        </div>
-      </div>
-      <alert type="success">hello</alert>
-      <div class="row">
-          <div class="col-sm">
-            One of three columns
-          </div>
-          <div class="col-sm">
-            One of three columns
-          </div>
-          <div class="col-sm">
-            One of three columns
-          </div>
-        </div>
-        <alert type="success">hello</alert>
-        <div class="row">
-            <div class="col-sm">
-              One of three columns
-            </div>
-            <div class="col-sm">
-              One of three columns
-            </div>
-            <div class="col-sm">
-              One of three columns
-            </div>
-          </div>
-          <alert type="success">hello</alert>
-          <div class="row">
-              <div class="col-sm">
-                One of three columns
-              </div>
-              <div class="col-sm">
-                One of three columns
-              </div>
-              <div class="col-sm">
-                One of three columns
-              </div>
-            </div>
-            <alert type="success">hello</alert>
-            <div class="row">
-                <div class="col-sm">
-                  One of three columns
-                </div>
-                <div class="col-sm">
-                  One of three columns
-                </div>
-                <div class="col-sm">
-                  One of three columns
-                </div>
-              </div>
-              <alert type="success">hello</alert>
 </div>

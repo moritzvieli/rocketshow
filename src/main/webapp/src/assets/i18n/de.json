@@ -1,0 +1,12 @@
+{
+    "misc": {
+        "midi": "MIDI",
+        "midi-in": "MIDI Eingang",
+        "midi-out": "MIDI Ausgang"
+    },
+    "navigation": {
+        "start": "Start",
+        "live-mode": "Live Modus",
+        "configuration": "Konfiguration" 
+    }
+}

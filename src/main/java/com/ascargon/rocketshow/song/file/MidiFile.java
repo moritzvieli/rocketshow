@@ -18,7 +18,7 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 	public MidiFile() {
 		setMidiRouting(new MidiRouting());
 	}
-	
+
 	public void load() throws Exception {
 		midiPlayer = new MidiPlayer(this.getManager(), midiRouting);
 		midiPlayer.load(new File(this.getPath()));
@@ -26,6 +26,11 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 
 	@Override
 	public void play() {
+		if (midiPlayer == null) {
+			logger.error("MIDI player not initialized for file '" + this.getPath() + "'");
+			return;
+		}
+
 		if (this.getOffsetInMillis() >= 0) {
 			logger.debug("Wait " + this.getOffsetInMillis() + " milliseconds before starting the midi file");
 
@@ -45,22 +50,39 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 
 	@Override
 	public void pause() {
+		if (midiPlayer == null) {
+			logger.error("MIDI player not initialized for file '" + this.getPath() + "'");
+			return;
+		}
+
 		midiPlayer.pause();
 	}
 
 	@Override
 	public void resume() {
+		if (midiPlayer == null) {
+			logger.error("MIDI player not initialized for file '" + this.getPath() + "'");
+			return;
+		}
+
 		midiPlayer.play();
 	}
 
 	@Override
 	public void stop() throws Exception {
+		if (midiPlayer == null) {
+			logger.error("MIDI player not initialized for file '" + this.getPath() + "'");
+			return;
+		}
+
 		midiPlayer.stop();
 	}
 
 	@Override
 	public void close() {
-		midiPlayer.close();
+		if (midiPlayer != null) {
+			midiPlayer.close();
+		}
 	}
 
 	public void setMidiRouting(MidiRouting midiRouting) {

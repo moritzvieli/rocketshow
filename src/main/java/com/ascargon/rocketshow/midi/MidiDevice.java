@@ -38,7 +38,7 @@ public class MidiDevice {
 		this.name = name;
 	}
 
-	@XmlTransient
+	@XmlElement
 	public String getVendor() {
 		return vendor;
 	}
@@ -47,7 +47,7 @@ public class MidiDevice {
 		this.vendor = vendor;
 	}
 
-	@XmlTransient
+	@XmlElement
 	public String getDescription() {
 		return description;
 	}

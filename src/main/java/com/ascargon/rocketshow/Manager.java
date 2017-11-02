@@ -49,7 +49,7 @@ public class Manager {
 	private Settings settings;
 
 	private SetList currentSetList;
-
+	
 	public void addMidiOutDeviceConnectedListener(MidiDeviceConnectedListener listener) {
 		midiOutDeviceConnectedListeners.add(listener);
 
@@ -128,8 +128,10 @@ public class Manager {
 		}
 
 		// We found a device
-		connectMidiOutDeviceTimer.cancel();
-		connectMidiOutDeviceTimer = null;
+		if (connectMidiOutDeviceTimer != null) {
+			connectMidiOutDeviceTimer.cancel();
+			connectMidiOutDeviceTimer = null;
+		}
 		
 		midiOutDevice.open();
 		
