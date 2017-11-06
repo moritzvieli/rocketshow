@@ -1,16 +1,18 @@
-<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Navbar</a>
-    <button class="navbar-toggler navbar-toggler-left" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+<div [@preventInitialChildAnimations]>
+  <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light" @introAppEnters *ngIf="showIntroApp">
+    <a class="navbar-brand" href="#">Rocket Show</a>
+    <button class="navbar-toggler navbar-toggler-left" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-  
+
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
           <a class="nav-link" href="#">{{ 'navigation.start' | translate }}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">{{ 'navigation.live-mode' | translate }}</a>
+          <a class="nav-link" href="#">{{ 'navigation.editor' | translate }}</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">{{ 'navigation.configuration' | translate }}</a>
@@ -22,18 +24,115 @@
     <button (click)="switchLanguage('en')">en</button>
   </nav>
 
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-sm">
-      <div class="card" style="width: 20rem;">
-        <div class="card-body">
-          <h4 class="card-title">{{ 'misc.midi' | translate }}</h4>
-          <i class="fa fa-circle-o text-success" aria-hidden="true"></i> {{ 'misc.midi-in' | translate }}<br />
-          <i class="fa fa-circle text-danger" aria-hidden="true"></i> {{ 'misc.midi-out' | translate }}
-        </div>
-        <div class="card-body">
-            <h4 class="card-title">{{ 'misc.dmx' | translate }}</h4>
+  <div class="container-fluid" @introAppEnters *ngIf="showIntroApp">
+      <div class="row">
+        <div class="col">
+          <div class="card" style="margin-bottom: 15px">
+            <div class="card-body">
+              1h Set
+            </div>
           </div>
+        </div>
+      </div>
+
+    <div class="row">
+      <div class="col">
+          <div class="list-group">
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">List group item heading</h5>
+                <small>3 days ago</small>
+              </div>
+              <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+              <small>Donec id elit non mi porta.</small>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">List group item heading</h5>
+                <small class="text-muted">3 days ago</small>
+              </div>
+              <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+              <small class="text-muted">Donec id elit non mi porta.</small>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">List group item heading</h5>
+                <small class="text-muted">3 days ago</small>
+              </div>
+              <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+              <small class="text-muted">Donec id elit non mi porta.</small>
+            </a>
+          </div>
+      </div>
+    </div>
+
+          <!-- The MIDI status -->
+<!--     <div class="row">
+
+
+       <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">{{ 'misc.midi' | translate }}</h4>
+            <i class="fa fa-circle-o text-success" aria-hidden="true"></i> {{ 'misc.midi-in' | translate }}
+            <br />
+            <i class="fa fa-circle text-danger" aria-hidden="true"></i> {{ 'misc.midi-out' | translate }}
+          </div>
+        </div>
+      </div>
+
+    </div> -->
+
+  </div>
+</div>
+
+<div class="container d-flex h-100" @introWizardLeaves *ngIf="showIntroWizard">
+  <div class="row justify-content-center align-self-center mx-auto">
+    <div class="col-xl">
+      <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="false">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <div class="card text-center" style="border: none">
+              <img class="card-img-top" src="assets/img/intro_title.png" alt="Card image cap">
+              <div class="card-body" style="min-height: 158px;">
+                <h4 class="card-title">{{ 'intro.welcome' | translate }}</h4>
+                <h6 class="card-subtitle mb-2 text-muted">{{ 'intro.welcome-language' | translate }}</h6>
+
+                <select class="custom-select">
+                  <option selected>{{ 'intro.choose-language' | translate }}</option>
+                  <option value="1">English</option>
+                  <option value="2">Deutsch</option>
+                </select>
+              </div>
+              <div class="card-footer text-muted">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                  <a class="btn btn-primary" href="#carouselExampleControls" role="button" data-slide="next">{{ 'misc.nav-next' | translate }}
+                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <div class="card text-center" style="border: none">
+              <img class="card-img-top" src="assets/img/intro_title.png" alt="Card image cap">
+              <div class="card-body" style="min-height: 158px;">
+                <h4 class="card-title">{{ 'intro.almost-finished' | translate }}</h4>
+                <h6 class="card-subtitle mb-2 text-muted">{{ 'intro.name-unit' | translate }}</h6>
+
+                <input type="text" class="form-control text-center" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="{{ 'intro.default-unit-name' | translate }}">
+              </div>
+              <div class="card-footer text-muted">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                  <a class="btn btn-primary" href="#carouselExampleControls" role="button" data-slide="prev">
+                    <i class="fa fa-chevron-left" aria-hidden="true"></i> {{ 'misc.nav-back' | translate }}</a>
+                  <a class="btn btn-primary" href="#carouselExampleControls" role="button" (click)="finishIntroWizard()">
+                    <i class="fa fa-check" aria-hidden="true"></i> {{ 'misc.finish' | translate }}</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

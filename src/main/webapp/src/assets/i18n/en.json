@@ -1,12 +1,24 @@
 {
     "misc": {
+        "save": "Save",
+        "finish": "Finish",
+        "nav-next": "Next",
+        "nav-back": "Back",
         "midi": "MIDI",
         "midi-in": "MIDI in",
         "midi-out": "MIDI out"
     },
+    "intro": {
+        "welcome": "Whoop, whoop!",
+        "welcome-language": "Welcome to Rocket Show! Which language do you speak?",
+        "choose-language": "Choose your language",
+        "almost-finished": "We're almost ready!",
+        "name-unit": "Please name this device.",
+        "default-unit-name": "My Rocket Show"
+    },
     "navigation": {
         "start": "Start",
-        "live-mode": "Live mode" ,
+        "editor": "Editor" ,
         "configuration": "Configuration" 
     }
 }

@@ -1,1 +1,43 @@
-/* You can add global styles to this file, and also import other style files */
+/* To center some parts (like the intro wizard) */
+html, body {
+    height: 100%;
+}
+
+/* Tiled background, infinite movement during the intro wizard with
+animation-play-stateto not reset the position on stop */
+body {
+    background-image: url(assets/img/intro_bg.png);
+    background-repeat: repeat;
+    animation: bgMovement 60s linear infinite;
+    animation-play-state: paused;
+}
+/* The movement of the background tiles during the intro wizard */ 
+@keyframes bgMovement {
+    100%{
+        background-position: 1000px -1000px;
+    }
+}
+
+/* Run the background movement */
+.body-bg-moving {
+    animation-play-state: running;
+}
+
+/* Better navbar spacing for elements below */
+.navbar {
+    margin-bottom: 15px;
+}
+
+/* Better primary color buttons */
+.btn-primary {
+    background-color: #502b7f;
+    border-color: #502b7f;
+}
+.btn-primary:hover {
+    background-color: #7c5aaa;
+    border-color: #7c5aaa;
+}
+.btn-primary:active {
+    background-color: #9b7cc4 !important;
+    border-color: #9b7cc4 !important;
+}

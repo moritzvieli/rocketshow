@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AlertModule } from 'ngx-bootstrap';
 
@@ -16,6 +17,7 @@ import { AppComponent } from './app.component';
   imports: [
     BrowserModule,
     HttpClientModule,
+    BrowserAnimationsModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
