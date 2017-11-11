@@ -87,6 +87,7 @@ public class Song {
 			if (!file.isLoaded()) {
 				// This song is not yet loaded -> start playing, as soon as all
 				// files have been loaded
+				logger.debug("File '" + file.getName() + "' not yet loaded");
 				return;
 			}
 		}
@@ -136,7 +137,7 @@ public class Song {
 	public void stop() throws Exception {
 		logger.info("Stopping song '" + name + "'");
 
-		playing = true;
+		playing = false;
 
 		// Pause the song
 		for (int i = 0; i < fileList.size(); i++) {

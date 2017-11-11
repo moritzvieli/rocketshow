@@ -65,7 +65,9 @@ public class MidiRouting implements MidiDeviceConnectedListener {
 			midi2DmxReceiver.close();
 		}
 
-		manager.removeMidiOutDeviceConnectedListener(this);
+		if(manager != null) {
+			manager.removeMidiOutDeviceConnectedListener(this);
+		}
 	}
 
 	private void refreshTransmitterConnection() {

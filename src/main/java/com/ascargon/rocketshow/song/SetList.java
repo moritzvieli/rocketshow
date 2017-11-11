@@ -33,13 +33,13 @@ public class SetList {
 	private Song currentSong;
 
 	// Load the current song
-	private void load() throws Exception {
+	public void load() throws Exception {
 		if(currentSongIndex >= setListSongList.size()) {
 			return;
 		}
 		
 		// Load the song first
-		File file = new File(manager.BASE_PATH + "song/" + setListSongList.get(currentSongIndex).getName());
+		File file = new File(Manager.BASE_PATH + "song/" + setListSongList.get(currentSongIndex).getName());
 		JAXBContext jaxbContext = JAXBContext.newInstance(Song.class);
 		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 		currentSong = (Song) jaxbUnmarshaller.unmarshal(file);

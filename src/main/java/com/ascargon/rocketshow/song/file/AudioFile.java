@@ -4,14 +4,21 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 
+import com.ascargon.rocketshow.Manager;
 import com.ascargon.rocketshow.audio.AudioPlayer;
 
 public class AudioFile extends com.ascargon.rocketshow.song.file.File {
 
 	final static Logger logger = Logger.getLogger(AudioFile.class);
 
+	public final static String AUDIO_PATH = "audio/";
+	
 	private AudioPlayer audioPlayer;
 
+	private String getPath() {
+		return Manager.BASE_PATH + MEDIA_PATH + AUDIO_PATH + getName();
+	}
+	
 	@Override
 	public void load() throws IOException {
 		this.setLoaded(false);
@@ -19,7 +26,7 @@ public class AudioFile extends com.ascargon.rocketshow.song.file.File {
 		audioPlayer = new AudioPlayer();
 		
 		// TODO Device
-		audioPlayer.load(this, this.getPath(), "stereo1");
+		audioPlayer.load(this, getPath(), "stereo1");
 	}
 
 	@Override
@@ -31,10 +38,10 @@ public class AudioFile extends com.ascargon.rocketshow.song.file.File {
 
 	@Override
 	public void play() throws Exception {
-		String path = this.getPath();
+		String path = getPath();
 		
 		if (audioPlayer == null) {
-			logger.error("Audio player not initialized for file '" + this.getPath() + "'");
+			logger.error("Audio player not initialized for file '" + path + "'");
 			return;
 		}
 
@@ -60,7 +67,7 @@ public class AudioFile extends com.ascargon.rocketshow.song.file.File {
 	@Override
 	public void pause() throws IOException {
 		if (audioPlayer == null) {
-			logger.error("Audio player not initialized for file '" + this.getPath() + "'");
+			logger.error("Audio player not initialized for file '" + getPath() + "'");
 			return;
 		}
 
@@ -70,7 +77,7 @@ public class AudioFile extends com.ascargon.rocketshow.song.file.File {
 	@Override
 	public void resume() throws IOException {
 		if (audioPlayer == null) {
-			logger.error("Audio player not initialized for file '" + this.getPath() + "'");
+			logger.error("Audio player not initialized for file '" + getPath() + "'");
 			return;
 		}
 
@@ -80,7 +87,7 @@ public class AudioFile extends com.ascargon.rocketshow.song.file.File {
 	@Override
 	public void stop() throws Exception {
 		if (audioPlayer == null) {
-			logger.error("Audio player not initialized for file '" + this.getPath() + "'");
+			logger.error("Audio player not initialized for file '" + getPath() + "'");
 			return;
 		}
 

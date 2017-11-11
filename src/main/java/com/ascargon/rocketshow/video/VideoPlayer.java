@@ -17,7 +17,18 @@ public class VideoPlayer {
 
 	public void load(PlayerLoadedListener playerLoadedListener, String path) throws IOException {
 		shellManager = new ShellManager();
-
+		shellManager.sendCommand("omxplayer " + path);
+		
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		// Pause, as soon as the song has been loaded and wait for it to be played
+		pause();
+		
 		new Thread(new Runnable() {
 			public void run() {
 				BufferedReader reader = new BufferedReader(new InputStreamReader(shellManager.getInputStream()));
@@ -26,7 +37,13 @@ public class VideoPlayer {
 					while ((line = reader.readLine()) != null) {
 						// TODO playerLoadedListener.playerLoaded();
 						// builder.redirectErrorStream(true);??
-						logger.info("Line received:" + line);
+						logger.info("VIDEOPLAYER Line received:" + line);
+						
+						if(line.contains("V:PortSettingsChanged")) {
+							logger.debug("Video player loaded");
+							playerLoadedListener.playerLoaded();
+							break;
+						}
 					}
 				} catch (Exception e) {
 					logger.error("Could not wait for the video player to get loaded", e);
@@ -34,12 +51,10 @@ public class VideoPlayer {
 
 			}
 		}).start();
-
-		shellManager.sendCommand("omxplayer " + path);
 	}
 
 	public void play() throws IOException {
-		shellManager.sendCommand("p");
+		shellManager.sendCommand("p", false);
 	}
 
 	public void pause() throws IOException {

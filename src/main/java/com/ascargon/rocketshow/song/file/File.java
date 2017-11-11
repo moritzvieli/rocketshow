@@ -10,7 +10,9 @@ import com.ascargon.rocketshow.song.Song;
 @XmlRootElement
 abstract public class File implements PlayerLoadedListener {
 
-	private String path;
+	public final static String MEDIA_PATH = "media/";
+	
+	private String name;
 	
 	private Manager manager;
 	private Song song;
@@ -40,18 +42,12 @@ abstract public class File implements PlayerLoadedListener {
 			song.playerLoaded();
 		}
 	}
-	
-	@XmlElement(name = "path")
-	public String getXmlPath() {
-		return path;
+	public String getName() {
+		return name;
 	}
 
-	public String getPath() {
-		return path;
-	}
-
-	public void setPath(String path) {
-		this.path = path;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@XmlElement

@@ -10,7 +10,7 @@ public class ShellManager {
 	private Process process;
 
 	public ShellManager() throws IOException {
-		process = new ProcessBuilder("sh").start();
+		process = new ProcessBuilder("sh").redirectErrorStream(true).start();
 	}
 
 	public void sendCommand(String command, boolean newLine) throws IOException {

@@ -4,20 +4,27 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 
+import com.ascargon.rocketshow.Manager;
 import com.ascargon.rocketshow.video.VideoPlayer;
 
 public class VideoFile extends File {
 
 	final static Logger logger = Logger.getLogger(VideoFile.class);
-
+	
+	public final static String VIDEO_PATH = "video/";
+	
 	private VideoPlayer videoPlayer;
 
+	private String getPath() {
+		return Manager.BASE_PATH + MEDIA_PATH + VIDEO_PATH + getName();
+	}
+	
 	@Override
 	public void load() throws IOException {
 		this.setLoaded(false);
 
 		videoPlayer = this.getManager().getVideoPlayer();
-		videoPlayer.load(this, this.getPath());
+		videoPlayer.load(this, getPath());
 	}
 
 	@Override
@@ -26,10 +33,10 @@ public class VideoFile extends File {
 
 	@Override
 	public void play() throws IOException {
-		String path = this.getPath();
+		String path = getPath();
 
 		if (videoPlayer == null) {
-			logger.error("Video player not initialized for file '" + this.getPath() + "'");
+			logger.error("Video player not initialized for file '" + getPath() + "'");
 			return;
 		}
 

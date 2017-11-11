@@ -25,15 +25,17 @@ import com.ascargon.rocketshow.midi.MidiInDeviceReceiver;
 import com.ascargon.rocketshow.midi.MidiUtil;
 import com.ascargon.rocketshow.midi.MidiUtil.MidiDirection;
 import com.ascargon.rocketshow.song.SetList;
-import com.ascargon.rocketshow.song.Song;
+import com.ascargon.rocketshow.song.SongManager;
 import com.ascargon.rocketshow.video.VideoPlayer;
 
 public class Manager {
 
 	final static Logger logger = Logger.getLogger(Manager.class);
 
-	public final String BASE_PATH = "/opt/rocketshow/";
+	public final static String BASE_PATH = "/opt/rocketshow/";
 
+	private SongManager songManager;
+	
 	private VideoPlayer videoPlayer;
 	private ImageDisplayer imageDisplayer;
 	private MidiInDeviceReceiver midiInDeviceReceiver;
@@ -62,21 +64,6 @@ public class Manager {
 
 	public void removeMidiOutDeviceConnectedListener(MidiDeviceConnectedListener listener) {
 		midiOutDeviceConnectedListeners.remove(listener);
-	}
-
-	public void loadSetlist(String name) throws Exception {
-		logger.info("Loading setlist " + name + "...");
-
-		// Load a setlist
-		JAXBContext jaxbContext = JAXBContext.newInstance(SetList.class);
-		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-		currentSetList = (SetList) jaxbUnmarshaller.unmarshal(new File(BASE_PATH + "setlist/" + name));
-		currentSetList.setManager(this);
-		currentSetList.setName(name);
-
-		saveSession();
-
-		logger.info("Setlist '" + name + "' successfully loaded");
 	}
 
 	public void reconnectMidiDevices() throws MidiUnavailableException {
@@ -149,6 +136,9 @@ public class Manager {
 	public void load() throws IOException {
 		logger.info("Initialize...");
 
+		// Initialize the songmanager
+		songManager = new SongManager();
+		
 		// Initialize the settings
 		settings = new Settings();
 
@@ -289,7 +279,7 @@ public class Manager {
 			session = (Session) jaxbUnmarshaller.unmarshal(file);
 
 			if (session.getCurrentSetListName() != null) {
-				loadSetlist(session.getCurrentSetListName());
+				loadSetList(session.getCurrentSetListName());
 			}
 
 			logger.info("Session restored");
@@ -297,31 +287,15 @@ public class Manager {
 			e.printStackTrace();
 		}
 	}
-
-	public void saveSetList(SetList setList) throws JAXBException {
-		File file = new File(BASE_PATH + "setlist/" + setList.getName());
-		JAXBContext jaxbContext = JAXBContext.newInstance(SetList.class);
-		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-
-		// output pretty printed
-		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
-		jaxbMarshaller.marshal(setList, file);
-
-		logger.info("Setlist '" + setList.getName() + "' saved");
-	}
-
-	public void saveSong(Song song) throws JAXBException {
-		File file = new File(BASE_PATH + "song/" + song.getName());
-		JAXBContext jaxbContext = JAXBContext.newInstance(Song.class);
-		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-
-		// output pretty printed
-		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
-		jaxbMarshaller.marshal(song, file);
-
-		logger.info("Song '" + song.getName() + "' saved");
+	
+	public void loadSetList(String name) throws Exception {
+		currentSetList = songManager.loadSetList(name);
+		currentSetList.setManager(this);
+		currentSetList.setName(name);
+		
+		currentSetList.load();
+		
+		saveSession();
 	}
 
 	public void close() {
@@ -366,16 +340,8 @@ public class Manager {
 		return midi2DmxConverter;
 	}
 
-	public void setMidi2DmxConverter(Midi2DmxConverter midi2DmxConverter) {
-		this.midi2DmxConverter = midi2DmxConverter;
-	}
-
 	public VideoPlayer getVideoPlayer() {
 		return videoPlayer;
-	}
-
-	public void setVideoPlayer(VideoPlayer videoPlayer) {
-		this.videoPlayer = videoPlayer;
 	}
 
 	public SetList getCurrentSetList() {
@@ -405,6 +371,10 @@ public class Manager {
 
 	public Midi2ActionConverter getMidi2ActionConverter() {
 		return midi2ActionConverter;
+	}
+
+	public SongManager getSongManager() {
+		return songManager;
 	}
 
 }

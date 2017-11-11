@@ -2,6 +2,7 @@ package com.ascargon.rocketshow.rest;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -23,8 +24,15 @@ public class SetList {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response load(@QueryParam("name") String name) throws Exception {
 		Manager manager = (Manager)context.getAttribute("manager");
-		manager.loadSetlist(name);
+		manager.loadSetList(name);
 		return Response.status(200).build();
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public com.ascargon.rocketshow.song.SetList get() throws Exception {
+		Manager manager = (Manager)context.getAttribute("manager");
+		return manager.getCurrentSetList();
 	}
 
 	@POST
@@ -32,7 +40,7 @@ public class SetList {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response create(com.ascargon.rocketshow.song.SetList setList) throws Exception {
 		Manager manager = (Manager)context.getAttribute("manager");
-		manager.saveSetList(setList);
+		manager.getSongManager().saveSetList(setList);
 		manager.setCurrentSetList(setList);
 		return Response.status(200).build();
 	}
