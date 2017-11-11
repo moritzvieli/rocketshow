@@ -8,8 +8,6 @@ public class Session {
 
 	private String currentSetListName;
 	
-	private Integer currentSongIndex;
-
 	@XmlElement
 	public String getCurrentSetListName() {
 		return currentSetListName;
@@ -17,15 +15,6 @@ public class Session {
 
 	public void setCurrentSetListName(String currentSetListName) {
 		this.currentSetListName = currentSetListName;
-	}
-
-	@XmlElement
-	public Integer getCurrentSongIndex() {
-		return currentSongIndex;
-	}
-
-	public void setCurrentSongIndex(Integer currentSongIndex) {
-		this.currentSongIndex = currentSongIndex;
 	}
 	
 }

@@ -11,8 +11,6 @@ import javax.ws.rs.core.Response;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.ascargon.rocketshow.Manager;
-
 @Path("/status")
 public class Status {
 
@@ -22,7 +20,7 @@ public class Status {
 	@GET
 	@Produces("application/json")
 	public Response convertFtoC() throws JSONException {
-		Manager manager = (Manager)context.getAttribute("manager");
+//		Manager manager = (Manager)context.getAttribute("manager");
 		//System.out.println("Out: " + manager.test());
 		
 		JSONObject jsonObject = new JSONObject();

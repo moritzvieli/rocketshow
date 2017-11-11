@@ -21,9 +21,9 @@ public class SetList {
 	@Path("load")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response load(@QueryParam("path") String path) throws Exception {
+	public Response load(@QueryParam("name") String name) throws Exception {
 		Manager manager = (Manager)context.getAttribute("manager");
-		manager.loadSetlist(path);
+		manager.loadSetlist(name);
 		return Response.status(200).build();
 	}
 

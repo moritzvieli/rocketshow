@@ -33,8 +33,8 @@ public class SetList {
 	private Song currentSong;
 
 	// Load the current song
-	public void load() throws Exception {
-		if(currentSongIndex > setListSongList.size()) {
+	private void load() throws Exception {
+		if(currentSongIndex >= setListSongList.size()) {
 			return;
 		}
 		
@@ -90,7 +90,7 @@ public class SetList {
 	public void nextSong() throws Exception {
 		int newIndex = currentSongIndex + 1;
 		
-		if(newIndex > setListSongList.size()) {
+		if(newIndex >= setListSongList.size()) {
 			return;
 		}
 		
@@ -98,7 +98,7 @@ public class SetList {
 			currentSong.close();
 		}
 		
-		setCurrentSongIndex(newIndex, true);
+		setCurrentSongIndex(newIndex);
 	}
 
 	public void previousSong() throws Exception {
@@ -112,7 +112,7 @@ public class SetList {
 			currentSong.close();
 		}
 		
-		setCurrentSongIndex(newIndex, true);
+		setCurrentSongIndex(newIndex);
 	}
 
 	public void close() throws Exception {
@@ -120,11 +120,7 @@ public class SetList {
 			currentSong.close();
 		}
 	}
-
-	public void setXmlSongList(List<SetListSong> setListSongList) {
-		this.setListSongList = setListSongList;
-	}
-
+	
 	public String getName() {
 		return name;
 	}
@@ -142,18 +138,14 @@ public class SetList {
 		this.manager = manager;
 	}
 
-	@XmlTransient
 	public int getCurrentSongIndex() {
 		return currentSongIndex;
 	}
 
-	public void setCurrentSongIndex(int currentSongIndex, boolean doLoad) throws Exception {
+	public void setCurrentSongIndex(int currentSongIndex) throws Exception {
 		this.currentSongIndex = currentSongIndex;
 		logger.info("Set song index " + currentSongIndex);
-		
-		if(doLoad) {
-			load();
-		}
+		load();
 	}
 
 }

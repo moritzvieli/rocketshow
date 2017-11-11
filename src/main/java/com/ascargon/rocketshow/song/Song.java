@@ -165,8 +165,7 @@ public class Song {
 	public void setFileList(List<File> fileList) {
 		this.fileList = fileList;
 	}
-
-	@XmlTransient
+	
 	public String getName() {
 		return name;
 	}

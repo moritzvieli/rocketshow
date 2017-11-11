@@ -9,36 +9,34 @@ import com.ascargon.rocketshow.video.VideoPlayer;
 public class VideoFile extends File {
 
 	final static Logger logger = Logger.getLogger(VideoFile.class);
-	
+
 	private VideoPlayer videoPlayer;
-	
+
 	@Override
 	public void load() throws IOException {
 		this.setLoaded(false);
-		
+
 		videoPlayer = this.getManager().getVideoPlayer();
 		videoPlayer.load(this, this.getPath());
 	}
-	
+
 	@Override
 	public void close() {
-		if(videoPlayer != null) {
-			videoPlayer.close();
-		}
 	}
-	
+
 	@Override
 	public void play() throws IOException {
 		String path = this.getPath();
-		
+
 		if (videoPlayer == null) {
 			logger.error("Video player not initialized for file '" + this.getPath() + "'");
 			return;
 		}
-		
+
 		if (this.getOffsetInMillis() > 0) {
-			logger.debug("Wait " + this.getOffsetInMillis() + " milliseconds before starting the video file '" + this.getPath() + "'");
-			
+			logger.debug("Wait " + this.getOffsetInMillis() + " milliseconds before starting the video file '"
+					+ this.getPath() + "'");
+
 			new java.util.Timer().schedule(new java.util.TimerTask() {
 				@Override
 				public void run() {
@@ -59,7 +57,7 @@ public class VideoFile extends File {
 	public void pause() throws IOException {
 		this.getManager().getVideoPlayer().pause();
 	}
-	
+
 	@Override
 	public void resume() throws IOException {
 		this.getManager().getVideoPlayer().resume();

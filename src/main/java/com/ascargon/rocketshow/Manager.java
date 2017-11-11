@@ -50,7 +50,7 @@ public class Manager {
 	private Settings settings;
 
 	private SetList currentSetList;
-	
+
 	public void addMidiOutDeviceConnectedListener(MidiDeviceConnectedListener listener) {
 		midiOutDeviceConnectedListeners.add(listener);
 
@@ -73,21 +73,20 @@ public class Manager {
 		currentSetList = (SetList) jaxbUnmarshaller.unmarshal(new File(BASE_PATH + "setlist/" + name));
 		currentSetList.setManager(this);
 		currentSetList.setName(name);
-		currentSetList.setCurrentSongIndex(0, false);
 
 		saveSession();
-		
+
 		logger.info("Setlist '" + name + "' successfully loaded");
 	}
 
 	public void reconnectMidiDevices() throws MidiUnavailableException {
-		if(midiInDeviceReceiver != null) {
+		if (midiInDeviceReceiver != null) {
 			midiInDeviceReceiver.connectMidiReceiver();
 		}
-		
+
 		connectMidiSender();
 	}
-	
+
 	/**
 	 * Connect to the MIDI out device. Also call this method, if you change the
 	 * settings or want to reconnect the device.
@@ -105,7 +104,8 @@ public class Manager {
 
 		com.ascargon.rocketshow.midi.MidiDevice midiDevice = settings.getMidiOutDevice();
 
-		logger.debug("Try connecting to output MIDI device " + midiDevice.getId() + " \"" + midiDevice.getName() + "\"");
+		logger.debug(
+				"Try connecting to output MIDI device " + midiDevice.getId() + " \"" + midiDevice.getName() + "\"");
 
 		midiOutDevice = MidiUtil.getHardwareMidiDevice(midiDevice, MidiDirection.OUT);
 
@@ -134,9 +134,9 @@ public class Manager {
 			connectMidiOutDeviceTimer.cancel();
 			connectMidiOutDeviceTimer = null;
 		}
-		
+
 		midiOutDevice.open();
-		
+
 		// Connect all listeners
 		for (MidiDeviceConnectedListener listener : midiOutDeviceConnectedListeners) {
 			listener.deviceConnected(midiOutDevice);
@@ -257,7 +257,6 @@ public class Manager {
 	public void saveSession() {
 		if (currentSetList != null) {
 			session.setCurrentSetListName(currentSetList.getName());
-			session.setCurrentSongIndex(currentSetList.getCurrentSongIndex());
 		}
 
 		try {
@@ -291,13 +290,6 @@ public class Manager {
 
 			if (session.getCurrentSetListName() != null) {
 				loadSetlist(session.getCurrentSetListName());
-
-				if (session.getCurrentSongIndex() != null) {
-					currentSetList.setCurrentSongIndex(session.getCurrentSongIndex(), false);
-				}
-				
-				// Manually load the song
-				currentSetList.load();
 			}
 
 			logger.info("Session restored");
@@ -305,10 +297,10 @@ public class Manager {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void saveSetList(SetList setList) throws JAXBException {
 		File file = new File(BASE_PATH + "setlist/" + setList.getName());
-		JAXBContext jaxbContext = JAXBContext.newInstance(Song.class);
+		JAXBContext jaxbContext = JAXBContext.newInstance(SetList.class);
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 
 		// output pretty printed
@@ -318,7 +310,7 @@ public class Manager {
 
 		logger.info("Setlist '" + setList.getName() + "' saved");
 	}
-	
+
 	public void saveSong(Song song) throws JAXBException {
 		File file = new File(BASE_PATH + "song/" + song.getName());
 		JAXBContext jaxbContext = JAXBContext.newInstance(Song.class);
@@ -334,18 +326,37 @@ public class Manager {
 
 	public void close() {
 		logger.info("Close...");
-		
-		if(midiInDeviceReceiver != null) {
-			midiInDeviceReceiver.close();
-		}
-		
-		if (midiOutDevice != null && midiOutDevice.isOpen()) {
-			midiOutDevice.close();
+
+		if (midiInDeviceReceiver != null) {
+			try {
+				midiInDeviceReceiver.close();
+			} catch (Exception e) {
+				logger.error("Could not close MIDI in device receiver", e);
+			}
 		}
 
-		try {
-			currentSetList.close();
-		} catch (Exception e) {
+		if (midiOutDevice != null && midiOutDevice.isOpen()) {
+			try {
+				midiOutDevice.close();
+			} catch (Exception e) {
+				logger.error("Could not close MIDI out device", e);
+			}
+		}
+
+		if (videoPlayer != null) {
+			try {
+				videoPlayer.close();
+			} catch (Exception e) {
+				logger.error("Could not close video player", e);
+			}
+		}
+
+		if (currentSetList != null) {
+			try {
+				currentSetList.close();
+			} catch (Exception e) {
+				logger.error("Could not close current set list", e);
+			}
 		}
 
 		logger.info("Finished closing");
