@@ -22,22 +22,26 @@ import com.ascargon.rocketshow.song.file.VideoFile;;
 public class Song {
 
 	final static Logger logger = Logger.getLogger(Song.class);
-	
+
 	public static final String FILE_EXTENSION = "sng";
 
-	private String path;
+	private String name;
 
 	private Midi2DmxMapping midi2DmxMapping = new Midi2DmxMapping();
 
 	private List<File> fileList = new ArrayList<File>();
 
 	private Manager manager;
-	
+
+	// Waiting for all files to be loaded to start playing this song?
+	private boolean loading = false;
+
+	// Is this song playing?
 	private boolean playing = false;
 
 	public void load() throws Exception {
-		logger.info("Loading song " + path);
-		
+		logger.info("Loading song '" + name + "'");
+
 		// Load all files inside the song
 		for (File file : fileList) {
 			if (file instanceof MidiFile) {
@@ -46,82 +50,101 @@ public class Song {
 			}
 
 			file.setManager(manager);
+			file.setSong(this);
 			file.load();
 		}
 	}
-	
+
 	public void close() throws Exception {
+		loading = false;
+		playing = false;
+
 		for (File file : fileList) {
 			file.close();
 		}
 	}
 
-	public void play() throws Exception {
-		logger.info("Playing song " + path);
-		
-		playing = true;
-		
-		// Start playing -> video files first because it takes longer to load
-		for (int i = 0; i < fileList.size(); i++) {
-			if(fileList.get(i) instanceof VideoFile) {
-				File file = fileList.get(i);
-				file.play();
-			}	
+	public void playerLoaded() {
+		// Start playing the song, if needed
+		if (loading) {
+			try {
+				play();
+			} catch (Exception e) {
+				logger.error("Could not play song '" + name + "'", e);
+			}
 		}
-		
-		// All other files
-		for (int i = 0; i < fileList.size(); i++) {
-			if(!(fileList.get(i) instanceof VideoFile)) {
-				File file = fileList.get(i);
-				file.play();
-			}	
+	}
+
+	public void play() throws Exception {
+		if (playing) {
+			return;
+		}
+
+		loading = true;
+
+		// Only play, if all files have been finished loading
+		for (File file : fileList) {
+			if (!file.isLoaded()) {
+				// This song is not yet loaded -> start playing, as soon as all
+				// files have been loaded
+				return;
+			}
+		}
+
+		loading = false;
+		playing = true;
+
+		logger.info("Playing song '" + name + "'");
+
+		for (File file : fileList) {
+			file.play();
 		}
 	}
 
 	public void pause() throws Exception {
-		logger.info("Pausing song " + path);
-		
+		logger.info("Pausing song '" + name + "'");
+
 		playing = false;
-		
+
 		// Pause the song
 		for (int i = 0; i < fileList.size(); i++) {
 			File file = fileList.get(i);
 			file.pause();
 		}
 	}
-	
+
 	public void resume() throws Exception {
-		logger.info("Resuming song " + path);
-		
+		logger.info("Resuming song '" + name + "'");
+
 		playing = true;
-		
+
 		// Pause the song
 		for (int i = 0; i < fileList.size(); i++) {
 			File file = fileList.get(i);
 			file.resume();
 		}
 	}
-	
+
 	public void togglePlay() throws Exception {
-		if(playing) {
+		if (playing) {
 			pause();
 		} else {
 			resume();
 		}
 	}
-	
+
 	public void stop() throws Exception {
-		logger.info("Stopping song " + path);
-		
+		logger.info("Stopping song '" + name + "'");
+
 		playing = true;
-		
+
 		// Pause the song
 		for (int i = 0; i < fileList.size(); i++) {
 			File file = fileList.get(i);
 			file.stop();
 		}
 	}
-	
+
 	@XmlTransient
 	public Midi2DmxMapping getMidi2DmxMapping() {
 		return midi2DmxMapping;
@@ -144,12 +167,12 @@ public class Song {
 	}
 
 	@XmlTransient
-	public String getPath() {
-		return path;
+	public String getName() {
+		return name;
 	}
 
-	public void setPath(String path) {
-		this.path = path;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@XmlTransient

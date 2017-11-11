@@ -2,7 +2,6 @@ package com.ascargon.rocketshow.midi;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * A MIDI device containing name and id.

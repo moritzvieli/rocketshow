@@ -12,6 +12,7 @@ import javax.sound.midi.Sequencer;
 import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.Manager;
+import com.ascargon.rocketshow.song.file.PlayerLoadedListener;
 
 public class MidiPlayer {
 
@@ -28,7 +29,7 @@ public class MidiPlayer {
 		sequencer.setMicrosecondPosition(position);
 	}
 
-	public void load(File file) throws Exception {
+	public void load(PlayerLoadedListener playerLoadedListener, String path) throws Exception {
 		if (sequencer != null) {
 			if (sequencer.isOpen()) {
 				sequencer.close();
@@ -38,10 +39,12 @@ public class MidiPlayer {
 		sequencer = MidiSystem.getSequencer(false);
 		sequencer.open();
 
-		InputStream is = new BufferedInputStream(new FileInputStream(file));
+		InputStream is = new BufferedInputStream(new FileInputStream(new File(path)));
 		sequencer.setSequence(is);
 		
 		midiRouting.setTransmitter(sequencer.getTransmitter());
+		
+		playerLoadedListener.playerLoaded();
 	}
 
 	public void play() {

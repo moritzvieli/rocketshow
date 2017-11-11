@@ -6,17 +6,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Session {
 
-	private String currentSetListPath;
+	private String currentSetListName;
 	
 	private Integer currentSongIndex;
 
 	@XmlElement
-	public String getCurrentSetListPath() {
-		return currentSetListPath;
+	public String getCurrentSetListName() {
+		return currentSetListName;
 	}
 
-	public void setCurrentSetListPath(String currentSetListPath) {
-		this.currentSetListPath = currentSetListPath;
+	public void setCurrentSetListName(String currentSetListName) {
+		this.currentSetListName = currentSetListName;
 	}
 
 	@XmlElement

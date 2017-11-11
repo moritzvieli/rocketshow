@@ -10,32 +10,48 @@ public class VideoFile extends File {
 
 	final static Logger logger = Logger.getLogger(VideoFile.class);
 	
-	@Override
-	public void load() throws IOException {}
+	private VideoPlayer videoPlayer;
 	
 	@Override
-	public void close() {}
+	public void load() throws IOException {
+		this.setLoaded(false);
+		
+		videoPlayer = this.getManager().getVideoPlayer();
+		videoPlayer.load(this, this.getPath());
+	}
+	
+	@Override
+	public void close() {
+		if(videoPlayer != null) {
+			videoPlayer.close();
+		}
+	}
 	
 	@Override
 	public void play() throws IOException {
-		VideoPlayer videoPlayer = this.getManager().getVideoPlayer();
 		String path = this.getPath();
-
-		if (this.getOffsetInMillis() >= 0) {
+		
+		if (videoPlayer == null) {
+			logger.error("Video player not initialized for file '" + this.getPath() + "'");
+			return;
+		}
+		
+		if (this.getOffsetInMillis() > 0) {
+			logger.debug("Wait " + this.getOffsetInMillis() + " milliseconds before starting the video file '" + this.getPath() + "'");
+			
 			new java.util.Timer().schedule(new java.util.TimerTask() {
 				@Override
 				public void run() {
 					try {
-						videoPlayer.play(path);
+						videoPlayer.play();
 					} catch (IOException e) {
-						logger.error("Could not play video \"" + path + "\"");
+						logger.error("Could not play video video \"" + path + "\"");
 						logger.error(e.getStackTrace());
 					}
 				}
 			}, this.getOffsetInMillis());
 		} else {
-			videoPlayer.setPositionInMillis(this.getOffsetInMillis() * -1);
-			videoPlayer.play(path);
+			videoPlayer.play();
 		}
 	}
 
@@ -53,5 +69,5 @@ public class VideoFile extends File {
 	public void stop() throws Exception {
 		this.getManager().getVideoPlayer().stop();
 	}
-	
+
 }

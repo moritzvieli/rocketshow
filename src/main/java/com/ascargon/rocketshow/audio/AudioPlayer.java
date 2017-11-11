@@ -2,47 +2,45 @@ package com.ascargon.rocketshow.audio;
 
 import java.io.IOException;
 
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-
 import org.apache.log4j.Logger;
+
+import com.ascargon.rocketshow.song.file.PlayerLoadedListener;
+import com.ascargon.rocketshow.util.ShellManager;
 
 public class AudioPlayer {
 
 	final static Logger logger = Logger.getLogger(AudioPlayer.class);
 	
+	private ShellManager shellManager;
 
-	public void load() throws IOException {
-
+	public void load(PlayerLoadedListener playerLoadedListener, String path, String device) throws IOException {
+		shellManager = new ShellManager();
+		shellManager.sendCommand("mplayer -ao alsa:device=" + device + " " + path);
+		
+		// Send a space to stop playing, as soon as the song has been loaded
+		shellManager.sendCommand("p");
 	}
 
-	public void setPositionInMillis(long position) {
-		// TODO
-	}
-
-	public void play(String path) throws IOException {
-	    try
-	    {
-	        //Clip clip = AudioSystem.getClip(info);
-	        //clip.open(inputStream);
-	        //lip.start();
-	    }
-	    catch (Exception e)
-	    {
-			// TODO
-	    }
+	public void play() throws IOException {
+		shellManager.sendCommand("p");
 	}
 
 	public void pause() throws IOException {
-		// TODO
+		shellManager.sendCommand("p");
 	}
 
 	public void resume() throws IOException {
-		// TODO
+		shellManager.sendCommand("p");
 	}
 
 	public void stop() throws IOException {
-		// TODO
+		shellManager.sendCommand("q");
 	}
 
+	public void close() {
+		if(shellManager != null) {
+			shellManager.close();
+		}
+	}
+	
 }

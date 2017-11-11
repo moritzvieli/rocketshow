@@ -25,6 +25,7 @@ import com.ascargon.rocketshow.midi.MidiInDeviceReceiver;
 import com.ascargon.rocketshow.midi.MidiUtil;
 import com.ascargon.rocketshow.midi.MidiUtil.MidiDirection;
 import com.ascargon.rocketshow.song.SetList;
+import com.ascargon.rocketshow.song.Song;
 import com.ascargon.rocketshow.video.VideoPlayer;
 
 public class Manager {
@@ -63,19 +64,20 @@ public class Manager {
 		midiOutDeviceConnectedListeners.remove(listener);
 	}
 
-	public void loadSetlist(String path) throws Exception {
-		logger.info("Loading setlist " + path + "...");
+	public void loadSetlist(String name) throws Exception {
+		logger.info("Loading setlist " + name + "...");
 
 		// Load a setlist
 		JAXBContext jaxbContext = JAXBContext.newInstance(SetList.class);
 		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-		currentSetList = (SetList) jaxbUnmarshaller.unmarshal(new File(path));
+		currentSetList = (SetList) jaxbUnmarshaller.unmarshal(new File(BASE_PATH + "setlist/" + name));
 		currentSetList.setManager(this);
-		currentSetList.setPath(path);
-		currentSetList.load();
-		currentSetList.setSongIndex(0);
+		currentSetList.setName(name);
+		currentSetList.setCurrentSongIndex(0, false);
 
-		logger.info("Setlist " + path + " successfully loaded");
+		saveSession();
+		
+		logger.info("Setlist '" + name + "' successfully loaded");
 	}
 
 	public void reconnectMidiDevices() throws MidiUnavailableException {
@@ -159,7 +161,6 @@ public class Manager {
 
 		// Initialize the video player
 		videoPlayer = new VideoPlayer();
-		videoPlayer.load();
 
 		// Initialize the image displayer
 		try {
@@ -255,7 +256,7 @@ public class Manager {
 
 	public void saveSession() {
 		if (currentSetList != null) {
-			session.setCurrentSetListPath(currentSetList.getPath());
+			session.setCurrentSetListName(currentSetList.getName());
 			session.setCurrentSongIndex(currentSetList.getCurrentSongIndex());
 		}
 
@@ -288,12 +289,15 @@ public class Manager {
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 			session = (Session) jaxbUnmarshaller.unmarshal(file);
 
-			if (session.getCurrentSetListPath() != null) {
-				loadSetlist(session.getCurrentSetListPath());
+			if (session.getCurrentSetListName() != null) {
+				loadSetlist(session.getCurrentSetListName());
 
 				if (session.getCurrentSongIndex() != null) {
-					currentSetList.setSongIndex(session.getCurrentSongIndex());
+					currentSetList.setCurrentSongIndex(session.getCurrentSongIndex(), false);
 				}
+				
+				// Manually load the song
+				currentSetList.load();
 			}
 
 			logger.info("Session restored");
@@ -301,11 +305,40 @@ public class Manager {
 			e.printStackTrace();
 		}
 	}
+	
+	public void saveSetList(SetList setList) throws JAXBException {
+		File file = new File(BASE_PATH + "setlist/" + setList.getName());
+		JAXBContext jaxbContext = JAXBContext.newInstance(Song.class);
+		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+
+		// output pretty printed
+		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+		jaxbMarshaller.marshal(setList, file);
+
+		logger.info("Setlist '" + setList.getName() + "' saved");
+	}
+	
+	public void saveSong(Song song) throws JAXBException {
+		File file = new File(BASE_PATH + "song/" + song.getName());
+		JAXBContext jaxbContext = JAXBContext.newInstance(Song.class);
+		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+
+		// output pretty printed
+		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+		jaxbMarshaller.marshal(song, file);
+
+		logger.info("Song '" + song.getName() + "' saved");
+	}
 
 	public void close() {
 		logger.info("Close...");
-		midiInDeviceReceiver.close();
-
+		
+		if(midiInDeviceReceiver != null) {
+			midiInDeviceReceiver.close();
+		}
+		
 		if (midiOutDevice != null && midiOutDevice.isOpen()) {
 			midiOutDevice.close();
 		}
@@ -340,6 +373,7 @@ public class Manager {
 
 	public void setCurrentSetList(SetList currentSetList) {
 		this.currentSetList = currentSetList;
+		saveSession();
 	}
 
 	public Settings getSettings() {

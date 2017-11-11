@@ -5,14 +5,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class SetListSong {
 
-	private String path;
+	private String name;
 
-	public String getPath() {
-		return path;
+	public String getName() {
+		return name;
 	}
 
-	public void setPath(String path) {
-		this.path = path;
+	public void setPath(String name) {
+		this.name = name;
 	}
 	
 }

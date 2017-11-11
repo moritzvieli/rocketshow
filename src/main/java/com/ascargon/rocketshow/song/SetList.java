@@ -22,7 +22,7 @@ public class SetList {
 
 	public static final String FILE_EXTENSION = "stl";
 
-	private String path;
+	private String name;
 
 	private List<SetListSong> setListSongList = new ArrayList<SetListSong>();
 
@@ -32,8 +32,21 @@ public class SetList {
 
 	private Song currentSong;
 
-	// Load all songs inside the setlist
+	// Load the current song
 	public void load() throws Exception {
+		if(currentSongIndex > setListSongList.size()) {
+			return;
+		}
+		
+		// Load the song first
+		File file = new File(manager.BASE_PATH + "song/" + setListSongList.get(currentSongIndex).getName());
+		JAXBContext jaxbContext = JAXBContext.newInstance(Song.class);
+		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+		currentSong = (Song) jaxbUnmarshaller.unmarshal(file);
+		currentSong.setName(setListSongList.get(currentSongIndex).getName());
+		currentSong.getMidi2DmxMapping().setParent(manager.getSettings().getMidi2DmxMapping());
+		currentSong.setManager(manager);
+		currentSong.load();
 	}
 
 	// Return only the setlist-relevant information of the song (e.g. to save to
@@ -44,67 +57,80 @@ public class SetList {
 		return setListSongList;
 	}
 
-	public void setSongIndex(int index) {
-		currentSongIndex = index;
-		logger.info("Set song index " + index);
-	}
-
 	public void play() throws Exception {
-		// Load the song first
-		File file = new File(setListSongList.get(currentSongIndex).getPath());
-		JAXBContext jaxbContext = JAXBContext.newInstance(Song.class);
-		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-		currentSong = (Song) jaxbUnmarshaller.unmarshal(file);
-		currentSong.setPath(setListSongList.get(currentSongIndex).getPath());
-		currentSong.getMidi2DmxMapping().setParent(manager.getSettings().getMidi2DmxMapping());
-		currentSong.setManager(manager);
-		currentSong.load();
-
-		currentSong.play();
+		if(currentSong != null) {
+			currentSong.play();
+		}
 	}
 
 	public void pause() throws Exception {
-		currentSong.stop();
+		if(currentSong != null) {
+			currentSong.stop();
+		}
 	}
 
 	public void resume() throws Exception {
-		currentSong.resume();
+		if(currentSong != null) {
+			currentSong.resume();
+		}
 	}
 
 	public void togglePlay() throws Exception {
-		currentSong.togglePlay();
+		if(currentSong != null) {
+			currentSong.togglePlay();
+		}
 	}
 
 	public void stop() throws Exception {
-		currentSong.stop();
+		if(currentSong != null) {
+			currentSong.stop();
+		}
 	}
 
 	public void nextSong() throws Exception {
-		// TODO
-		currentSong.close();
+		int newIndex = currentSongIndex + 1;
+		
+		if(newIndex > setListSongList.size()) {
+			return;
+		}
+		
+		if(currentSong != null) {
+			currentSong.close();
+		}
+		
+		setCurrentSongIndex(newIndex, true);
 	}
 
 	public void previousSong() throws Exception {
-		// TODO
-		currentSong.close();
+		int newIndex = currentSongIndex - 1;
+		
+		if(newIndex < 0) {
+			return;
+		}
+		
+		if(currentSong != null) {
+			currentSong.close();
+		}
+		
+		setCurrentSongIndex(newIndex, true);
 	}
 
 	public void close() throws Exception {
-		// TODO
-		currentSong.close();
+		if(currentSong != null) {
+			currentSong.close();
+		}
 	}
 
 	public void setXmlSongList(List<SetListSong> setListSongList) {
 		this.setListSongList = setListSongList;
 	}
 
-	@XmlTransient
-	public String getPath() {
-		return path;
+	public String getName() {
+		return name;
 	}
 
-	public void setPath(String path) {
-		this.path = path;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@XmlTransient
@@ -121,8 +147,13 @@ public class SetList {
 		return currentSongIndex;
 	}
 
-	public void setCurrentSongIndex(int currentSongIndex) {
+	public void setCurrentSongIndex(int currentSongIndex, boolean doLoad) throws Exception {
 		this.currentSongIndex = currentSongIndex;
+		logger.info("Set song index " + currentSongIndex);
+		
+		if(doLoad) {
+			load();
+		}
 	}
 
 }

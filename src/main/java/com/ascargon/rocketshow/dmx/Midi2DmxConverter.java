@@ -2,7 +2,6 @@ package com.ascargon.rocketshow.dmx;
 
 import java.io.IOException;
 
-import javax.sound.midi.MidiMessage;
 import javax.sound.midi.ShortMessage;
 
 import org.apache.log4j.Logger;

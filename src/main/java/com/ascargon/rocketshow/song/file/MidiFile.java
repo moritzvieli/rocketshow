@@ -1,7 +1,5 @@
 package com.ascargon.rocketshow.song.file;
 
-import java.io.File;
-
 import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.midi.MidiPlayer;
@@ -20,8 +18,10 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 	}
 
 	public void load() throws Exception {
+		this.setLoaded(false);
+		
 		midiPlayer = new MidiPlayer(this.getManager(), midiRouting);
-		midiPlayer.load(new File(this.getPath()));
+		midiPlayer.load(this, this.getPath());
 	}
 
 	@Override
@@ -31,9 +31,9 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 			return;
 		}
 
-		if (this.getOffsetInMillis() >= 0) {
-			logger.debug("Wait " + this.getOffsetInMillis() + " milliseconds before starting the midi file");
-
+		if (this.getOffsetInMillis() > 0) {
+			logger.debug("Wait " + this.getOffsetInMillis() + " milliseconds before starting the MIDI file '" + this.getPath() + "'");
+			
 			new java.util.Timer().schedule(new java.util.TimerTask() {
 				@Override
 				public void run() {
@@ -41,9 +41,6 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 				}
 			}, this.getOffsetInMillis());
 		} else {
-			logger.debug("Set MIDI file offset to " + (this.getOffsetInMillis() * -1000) + " milliseconds");
-
-			midiPlayer.setPositionInMillis(this.getOffsetInMillis() * -1000);
 			midiPlayer.play();
 		}
 	}
@@ -93,5 +90,5 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 	public MidiRouting getMidiRouting() {
 		return midiRouting;
 	}
-
+	
 }
