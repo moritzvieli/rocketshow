@@ -14,6 +14,8 @@ public class AudioFile extends com.ascargon.rocketshow.song.file.File {
 	public final static String AUDIO_PATH = "audio/";
 	
 	private AudioPlayer audioPlayer;
+	
+	private String device;
 
 	private String getPath() {
 		return Manager.BASE_PATH + MEDIA_PATH + AUDIO_PATH + getName();
@@ -28,8 +30,7 @@ public class AudioFile extends com.ascargon.rocketshow.song.file.File {
 		
 		audioPlayer = new AudioPlayer();
 		
-		// TODO Device
-		audioPlayer.load(this, getPath(), "stereo1");
+		audioPlayer.load(this, getPath(), device);
 	}
 
 	@Override
@@ -94,6 +95,14 @@ public class AudioFile extends com.ascargon.rocketshow.song.file.File {
 
 		this.setLoaded(false);
 		audioPlayer.stop();
+	}
+
+	public String getDevice() {
+		return device;
+	}
+
+	public void setDevice(String device) {
+		this.device = device;
 	}
 
 }

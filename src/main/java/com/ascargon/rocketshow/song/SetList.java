@@ -38,6 +38,12 @@ public class SetList {
 			return;
 		}
 		
+		// Stop a current song, if required
+		if(currentSong != null) {
+			currentSong.isPlaying();
+			currentSong.stop();
+		}
+		
 		// Load the song first
 		File file = new File(Manager.BASE_PATH + "song/" + setListSongList.get(currentSongIndex).getName());
 		JAXBContext jaxbContext = JAXBContext.newInstance(Song.class);
@@ -140,6 +146,10 @@ public class SetList {
 
 	public int getCurrentSongIndex() {
 		return currentSongIndex;
+	}
+	
+	public String getCurrentSongName() {
+		return setListSongList.get(currentSongIndex).getName();
 	}
 
 	public void setCurrentSongIndex(int currentSongIndex) throws Exception {
