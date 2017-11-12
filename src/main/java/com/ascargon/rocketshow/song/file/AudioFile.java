@@ -21,7 +21,10 @@ public class AudioFile extends com.ascargon.rocketshow.song.file.File {
 	
 	@Override
 	public void load() throws IOException {
+		logger.debug("Load file '" + this.getName());
+		
 		this.setLoaded(false);
+		this.setLoading(true);
 		
 		audioPlayer = new AudioPlayer();
 		
@@ -30,10 +33,8 @@ public class AudioFile extends com.ascargon.rocketshow.song.file.File {
 	}
 
 	@Override
-	public void close() {
-		if(audioPlayer != null) {
-			audioPlayer.close();
-		}
+	public void close() throws Exception {
+		stop();
 	}
 
 	@Override
@@ -91,6 +92,7 @@ public class AudioFile extends com.ascargon.rocketshow.song.file.File {
 			return;
 		}
 
+		this.setLoaded(false);
 		audioPlayer.stop();
 	}
 

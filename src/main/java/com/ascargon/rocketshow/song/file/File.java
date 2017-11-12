@@ -17,6 +17,7 @@ abstract public class File implements PlayerLoadedListener {
 	private Manager manager;
 	private Song song;
 	
+	private boolean loading = false;
 	private boolean loaded = false;
 
 	// Play offset
@@ -37,6 +38,7 @@ abstract public class File implements PlayerLoadedListener {
 	@Override
 	public void playerLoaded() {
 		loaded = true;
+		loading = false;
 		
 		if(song != null) {
 			song.playerLoaded();
@@ -84,6 +86,14 @@ abstract public class File implements PlayerLoadedListener {
 
 	public void setLoaded(boolean loaded) {
 		this.loaded = loaded;
+	}
+
+	public boolean isLoading() {
+		return loading;
+	}
+
+	public void setLoading(boolean loading) {
+		this.loading = loading;
 	}
 
 }

@@ -76,6 +76,8 @@ public class Song {
 	}
 
 	public void play() throws Exception {
+		boolean allFilesLoaded = true;
+		
 		if (playing) {
 			return;
 		}
@@ -88,8 +90,16 @@ public class Song {
 				// This song is not yet loaded -> start playing, as soon as all
 				// files have been loaded
 				logger.debug("File '" + file.getName() + "' not yet loaded");
-				return;
+				allFilesLoaded = false;
+				
+				if(!file.isLoading()) {
+					file.load();
+				}
 			}
+		}
+		
+		if(!allFilesLoaded) {
+			return;
 		}
 
 		loading = false;

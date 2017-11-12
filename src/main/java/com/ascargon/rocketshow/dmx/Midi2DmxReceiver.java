@@ -29,7 +29,7 @@ public class Midi2DmxReceiver implements Receiver {
 	}
 
 	@Override
-	public void send(MidiMessage message, long timeStamp) {
+	public void send(MidiMessage message, long timeStamp) {		
 		// Map the midi to DMX out
 		if (message instanceof ShortMessage) {
 			ShortMessage shortMessage = (ShortMessage) message;

@@ -25,10 +25,15 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 	}
 
 	public void load() throws Exception {
+		logger.debug("Load file '" + this.getName() + "' with routing to " + midiRouting.getMidiDestination().toString());
+		
 		this.setLoaded(false);
+		this.setLoading(true);
 		
 		midiPlayer = new MidiPlayer(this.getManager(), midiRouting);
 		midiPlayer.load(this, this.getPath());
+		
+		this.midiRouting.load(this.getManager());
 	}
 
 	@Override

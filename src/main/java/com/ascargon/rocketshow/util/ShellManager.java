@@ -1,41 +1,40 @@
 package com.ascargon.rocketshow.util;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
+import java.io.PrintStream;
 
 public class ShellManager {
 
 	private Process process;
+	private PrintStream outStream;
 
-	public ShellManager() throws IOException {
-		process = new ProcessBuilder("sh").redirectErrorStream(true).start();
-	}
-
-	public void sendCommand(String command, boolean newLine) throws IOException {
-		BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
-		bufferedWriter.write(command);
-
-		if (newLine) {
-			bufferedWriter.newLine();
-		}
-
-		bufferedWriter.flush();
+	public ShellManager(String[] command) throws IOException {
+		process = new ProcessBuilder(command).redirectErrorStream(true).start();
+		outStream = new PrintStream(process.getOutputStream());
 	}
 
 	public void sendCommand(String command) throws IOException {
-		sendCommand(command, true);
+		outStream.print(command);
+		outStream.flush();
 	}
-	
+
 	public InputStream getInputStream() {
 		return process.getInputStream();
 	}
-	
+
 	public void close() {
-		if(process != null) {
+		if (process != null) {
 			process.destroy();
 		}
+	}
+
+	public Process getProcess() {
+		return process;
+	}
+
+	public void setProcess(Process process) {
+		this.process = process;
 	}
 
 }

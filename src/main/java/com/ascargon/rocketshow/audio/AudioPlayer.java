@@ -12,41 +12,36 @@ import com.ascargon.rocketshow.util.ShellManager;
 public class AudioPlayer {
 
 	final static Logger logger = Logger.getLogger(AudioPlayer.class);
-	
+
 	private ShellManager shellManager;
 
 	public void load(PlayerLoadedListener playerLoadedListener, String path, String device) throws IOException {
-		shellManager = new ShellManager();
-		shellManager.sendCommand("mplayer -ao alsa:device=" + device + " " + path);
-		
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		// Pause, as soon as the song has been loaded and wait for it to be played
+		shellManager = new ShellManager(new String[] { "mplayer", "-ao", "alsa:device=" + device, path });
+
+		// Pause, as soon as the song has been loaded and wait for it to be
+		// played
 		pause();
-		
+
 		new Thread(new Runnable() {
 			public void run() {
 				BufferedReader reader = new BufferedReader(new InputStreamReader(shellManager.getInputStream()));
 				String line = null;
 				try {
 					while ((line = reader.readLine()) != null) {
-						// TODO playerLoadedListener.playerLoaded();
-						// builder.redirectErrorStream(true);??
-						logger.info("AUDIOPLAYER Line received:" + line);
+						logger.trace("Output from audio player: " + line);
 						
-						if(line.contains("=====  PAUSE  =====")) {
+						if (line.contains("=====  PAUSE  =====")) {
 							logger.debug("Audio player loaded");
 							playerLoadedListener.playerLoaded();
-							break;
 						}
 					}
-				} catch (Exception e) {
-					logger.error("Could not wait for the video player to get loaded", e);
+				} catch (Exception e) {} finally {
+					try {
+						reader.close();
+					} catch (IOException e) {
+						logger.error("Could not close stream reader for video player process", e);
+					}
+					;
 				}
 
 			}
@@ -54,25 +49,27 @@ public class AudioPlayer {
 	}
 
 	public void play() throws IOException {
-		shellManager.sendCommand("p", false);
+		shellManager.sendCommand("p");
 	}
 
 	public void pause() throws IOException {
-		shellManager.sendCommand("p", false);
+		shellManager.sendCommand("p");
 	}
 
 	public void resume() throws IOException {
-		shellManager.sendCommand("p", false);
+		shellManager.sendCommand("p");
 	}
 
-	public void stop() throws IOException {
-		shellManager.sendCommand("q", false);
-	}
-
-	public void close() {
-		if(shellManager != null) {
+	public void stop() throws Exception {
+		if (shellManager != null) {
+			shellManager.sendCommand("q");
+			shellManager.getProcess().waitFor();
 			shellManager.close();
 		}
 	}
-	
+
+	public void close() throws Exception {
+		stop();
+	}
+
 }

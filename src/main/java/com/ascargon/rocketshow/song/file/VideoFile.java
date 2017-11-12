@@ -21,14 +21,18 @@ public class VideoFile extends File {
 	
 	@Override
 	public void load() throws IOException {
+		logger.debug("Load file '" + this.getName());
+		
 		this.setLoaded(false);
+		this.setLoading(true);
 
-		videoPlayer = this.getManager().getVideoPlayer();
+		videoPlayer = new VideoPlayer();
 		videoPlayer.load(this, getPath());
 	}
 
 	@Override
-	public void close() {
+	public void close() throws Exception {
+		stop();
 	}
 
 	@Override
@@ -62,17 +66,33 @@ public class VideoFile extends File {
 
 	@Override
 	public void pause() throws IOException {
-		this.getManager().getVideoPlayer().pause();
+		if (videoPlayer == null) {
+			logger.error("Video player not initialized for file '" + getPath() + "'");
+			return;
+		}
+		
+		videoPlayer.pause();
 	}
 
 	@Override
 	public void resume() throws IOException {
-		this.getManager().getVideoPlayer().resume();
+		if (videoPlayer == null) {
+			logger.error("Video player not initialized for file '" + getPath() + "'");
+			return;
+		}
+		
+		videoPlayer.resume();
 	}
 
 	@Override
 	public void stop() throws Exception {
-		this.getManager().getVideoPlayer().stop();
+		if (videoPlayer == null) {
+			logger.error("Video player not initialized for file '" + getPath() + "'");
+			return;
+		}
+		
+		this.setLoaded(false);
+		videoPlayer.stop();
 	}
 
 }

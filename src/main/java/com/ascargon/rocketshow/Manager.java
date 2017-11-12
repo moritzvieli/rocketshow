@@ -26,7 +26,6 @@ import com.ascargon.rocketshow.midi.MidiUtil;
 import com.ascargon.rocketshow.midi.MidiUtil.MidiDirection;
 import com.ascargon.rocketshow.song.SetList;
 import com.ascargon.rocketshow.song.SongManager;
-import com.ascargon.rocketshow.video.VideoPlayer;
 
 public class Manager {
 
@@ -35,8 +34,7 @@ public class Manager {
 	public final static String BASE_PATH = "/opt/rocketshow/";
 
 	private SongManager songManager;
-	
-	private VideoPlayer videoPlayer;
+
 	private ImageDisplayer imageDisplayer;
 	private MidiInDeviceReceiver midiInDeviceReceiver;
 	private Midi2ActionConverter midi2ActionConverter;
@@ -138,7 +136,7 @@ public class Manager {
 
 		// Initialize the songmanager
 		songManager = new SongManager();
-		
+
 		// Initialize the settings
 		settings = new Settings();
 
@@ -148,9 +146,6 @@ public class Manager {
 		// Initialize the DMX sender
 		dmxSignalSender = new DmxSignalSender(this);
 		midi2DmxConverter = new Midi2DmxConverter(dmxSignalSender);
-
-		// Initialize the video player
-		videoPlayer = new VideoPlayer();
 
 		// Initialize the image displayer
 		try {
@@ -287,14 +282,18 @@ public class Manager {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void loadSetList(String name) throws Exception {
+		if(currentSetList != null) {
+			currentSetList.close();
+		}
+		
 		currentSetList = songManager.loadSetList(name);
 		currentSetList.setManager(this);
 		currentSetList.setName(name);
-		
+
 		currentSetList.load();
-		
+
 		saveSession();
 	}
 
@@ -317,14 +316,6 @@ public class Manager {
 			}
 		}
 
-		if (videoPlayer != null) {
-			try {
-				videoPlayer.close();
-			} catch (Exception e) {
-				logger.error("Could not close video player", e);
-			}
-		}
-
 		if (currentSetList != null) {
 			try {
 				currentSetList.close();
@@ -338,10 +329,6 @@ public class Manager {
 
 	public Midi2DmxConverter getMidi2DmxConverter() {
 		return midi2DmxConverter;
-	}
-
-	public VideoPlayer getVideoPlayer() {
-		return videoPlayer;
 	}
 
 	public SetList getCurrentSetList() {

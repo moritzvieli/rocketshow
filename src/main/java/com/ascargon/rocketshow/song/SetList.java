@@ -65,7 +65,7 @@ public class SetList {
 
 	public void pause() throws Exception {
 		if(currentSong != null) {
-			currentSong.stop();
+			currentSong.pause();
 		}
 	}
 

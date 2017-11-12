@@ -16,37 +16,32 @@ public class VideoPlayer {
 	private ShellManager shellManager;
 
 	public void load(PlayerLoadedListener playerLoadedListener, String path) throws IOException {
-		shellManager = new ShellManager();
-		shellManager.sendCommand("omxplayer " + path);
-		
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		// Pause, as soon as the song has been loaded and wait for it to be played
+		shellManager = new ShellManager(new String[] { "omxplayer", path, "-r", "-b", "-s" });
+
+		// Pause, as soon as the song has been loaded and wait for it to be
+		// played
 		pause();
-		
+
 		new Thread(new Runnable() {
 			public void run() {
 				BufferedReader reader = new BufferedReader(new InputStreamReader(shellManager.getInputStream()));
 				String line = null;
 				try {
 					while ((line = reader.readLine()) != null) {
-						// TODO playerLoadedListener.playerLoaded();
-						// builder.redirectErrorStream(true);??
-						logger.info("VIDEOPLAYER Line received:" + line);
+						logger.trace("Output from video player: " + line);
 						
-						if(line.contains("V:PortSettingsChanged")) {
+						if (line.contains("V:PortSettingsChanged")) {
 							logger.debug("Video player loaded");
 							playerLoadedListener.playerLoaded();
-							break;
 						}
 					}
-				} catch (Exception e) {
-					logger.error("Could not wait for the video player to get loaded", e);
+				} catch (Exception e) {} finally {
+					try {
+						reader.close();
+					} catch (IOException e) {
+						logger.error("Could not close stream reader for video player process", e);
+					}
+					;
 				}
 
 			}
@@ -54,25 +49,27 @@ public class VideoPlayer {
 	}
 
 	public void play() throws IOException {
-		shellManager.sendCommand("p", false);
+		shellManager.sendCommand("p");
 	}
 
 	public void pause() throws IOException {
-		shellManager.sendCommand("p", false);
+		shellManager.sendCommand("p");
 	}
 
 	public void resume() throws IOException {
-		shellManager.sendCommand("p", false);
+		shellManager.sendCommand("p");
 	}
 
-	public void stop() throws IOException {
-		shellManager.sendCommand("q", false);
-	}
-
-	public void close() {
+	public void stop() throws Exception {
 		if (shellManager != null) {
+			shellManager.sendCommand("q");
+			shellManager.getProcess().waitFor();
 			shellManager.close();
 		}
+	}
+
+	public void close() throws Exception {
+		stop();
 	}
 
 }

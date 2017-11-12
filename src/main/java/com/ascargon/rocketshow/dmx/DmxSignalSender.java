@@ -72,8 +72,7 @@ public class DmxSignalSender {
 	}
 
 	public void send(int channel, int value) throws IOException {
-		// logger.debug("Setting DMX channel " + channel + " to value " +
-		// value);
+		logger.trace("Setting DMX channel " + channel + " to value " + value);
 
 		channelValues.put(channel, value);
 

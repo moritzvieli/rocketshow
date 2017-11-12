@@ -9,11 +9,12 @@ public class ImageDisplayer {
 	private ShellManager shellManager;
 	
 	public ImageDisplayer() throws IOException {
-		shellManager = new ShellManager();
+		// TODO
+		//shellManager = new ShellManager(new String[]);
 	}
 	
 	public void display(String path) throws IOException {
-		shellManager.sendCommand("sudo fbi -T 1 -a -noverbose " + path);
+		//shellManager.sendCommand("sudo fbi -T 1 -a -noverbose " + path);
 	}
 	
 }

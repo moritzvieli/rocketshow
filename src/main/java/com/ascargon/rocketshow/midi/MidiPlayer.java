@@ -48,7 +48,7 @@ public class MidiPlayer {
 	}
 
 	public void play() {
-		logger.debug("Starting sequencer from position " + sequencer.getMicrosecondPosition());
+		logger.debug("Starting MIDI player from position " + sequencer.getMicrosecondPosition());
 		sequencer.start();
 	}
 
