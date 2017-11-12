@@ -20,54 +20,81 @@
       </ul>
     </div>
 
-    <button (click)="switchLanguage('de')">de</button>
-    <button (click)="switchLanguage('en')">en</button>
+<!--     <button (click)="switchLanguage('de')">de</button>
+    <button (click)="switchLanguage('en')">en</button> -->
   </nav>
 
-  <div class="container-fluid" @introAppEnters *ngIf="showIntroApp">
-      <div class="row">
-        <div class="col">
-          <div class="card" style="margin-bottom: 15px">
-            <div class="card-body">
-              1h Set
+  <div class="container-fluid" @introAppEnters *ngIf="showIntroApp" style="padding-bottom: 15px;">
+    <div class="row">
+      <div class="col">
+        <div class="card" style="margin-bottom: 15px">
+          <div class="card-body">
+            <div class="row">
+              <div class="col col-auto" style="margin-top: auto; margin-bottom: auto;">
+                <div class="btn-group btn-group-lg" role="group">
+                  <button type="button" class="btn btn-dark">
+                    <i class="fa fa-step-backward" aria-hidden="true"></i>
+                  </button>
+                  <button type="button" class="btn btn-dark">
+                    <i class="fa fa-play" aria-hidden="true"></i>
+                  </button>
+                  <button type="button" class="btn btn-dark">
+                    <i class="fa fa-step-forward" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="col text-center" style="margin-top: auto; margin-bottom: auto;">
+                <h4 class="align-middle" style="margin-bottom: 0">00:00:00 - Dear Mr. Wise Guy</h4>
+                <div class="progress" style="margin-top: 5px; height: 8px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+                  </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
 
     <div class="row">
       <div class="col">
-          <div class="list-group">
-            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
-              <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">List group item heading</h5>
-                <small>3 days ago</small>
-              </div>
-              <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-              <small>Donec id elit non mi porta.</small>
+        <div class="list-group">
+          <div class="list-group-item list-group-item-action flex-column align-items-start bg-dark text-white">
+            <a href="#" class="text-white" d="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <small>1 hour set <i class="fa fa-caret-down" aria-hidden="true"></i></small>
             </a>
-            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-              <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">List group item heading</h5>
-                <small class="text-muted">3 days ago</small>
+
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#">Action</a>
+                <a class="dropdown-item" href="#">Another action</a>
+                <a class="dropdown-item" href="#">Something else here</a>
               </div>
-              <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-              <small class="text-muted">Donec id elit non mi porta.</small>
-            </a>
-            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-              <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">List group item heading</h5>
-                <small class="text-muted">3 days ago</small>
-              </div>
-              <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-              <small class="text-muted">Donec id elit non mi porta.</small>
-            </a>
+
+            <small style="margin-top: 3px" class="float-right">01:24:10</small>
           </div>
+          <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
+            <div class="d-flex w-100 justify-content-between">
+              <p class="mb-1">Rock this Night</p>
+              <small style="margin-top: auto; margin-bottom: auto;">03:21</small>
+            </div>
+          </a>
+          <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="d-flex w-100 justify-content-between">
+              <p class="mb-1">Rock this Night</p>
+              <small style="margin-top: auto; margin-bottom: auto;">02:54</small>
+            </div>
+          </a>
+          <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="d-flex w-100 justify-content-between">
+              <p class="mb-1">Rock this Night</p>
+              <small style="margin-top: auto; margin-bottom: auto;">03:19</small>
+            </div>
+          </a>
+        </div>
       </div>
     </div>
 
-          <!-- The MIDI status -->
-<!--     <div class="row">
+    <!-- The MIDI status -->
+    <!--     <div class="row">
 
 
        <div class="col">
