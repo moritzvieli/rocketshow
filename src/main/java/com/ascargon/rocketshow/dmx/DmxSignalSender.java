@@ -92,7 +92,10 @@ public class DmxSignalSender {
 					logger.error("Could not send the DMX universe", e);
 				}
 
-				timer.cancel();
+				if(timer != null) {
+					timer.cancel();
+				}
+				
 				timer = null;
 			}
 		};

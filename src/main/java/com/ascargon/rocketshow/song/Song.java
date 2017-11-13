@@ -86,7 +86,7 @@ public class Song {
 
 		// Only play, if all files have been finished loading
 		for (File file : fileList) {
-			if (!file.isLoaded()) {
+			if (!file.isLoaded() && file.isActive()) {
 				// This song is not yet loaded -> start playing, as soon as all
 				// files have been loaded
 				logger.debug("File '" + file.getName() + "' not yet loaded");
@@ -108,7 +108,9 @@ public class Song {
 		logger.info("Playing song '" + name + "'");
 
 		for (File file : fileList) {
-			file.play();
+			if(file.isActive()) {
+				file.play();
+			}
 		}
 	}
 
@@ -118,9 +120,10 @@ public class Song {
 		playing = false;
 
 		// Pause the song
-		for (int i = 0; i < fileList.size(); i++) {
-			File file = fileList.get(i);
-			file.pause();
+		for (File file : fileList) {
+			if(file.isActive()) {
+				file.pause();
+			}
 		}
 	}
 
@@ -129,10 +132,11 @@ public class Song {
 
 		playing = true;
 
-		// Pause the song
-		for (int i = 0; i < fileList.size(); i++) {
-			File file = fileList.get(i);
-			file.resume();
+		// Resume the song
+		for (File file : fileList) {
+			if(file.isActive()) {
+				file.resume();
+			}
 		}
 	}
 
@@ -149,10 +153,11 @@ public class Song {
 
 		playing = false;
 
-		// Pause the song
-		for (int i = 0; i < fileList.size(); i++) {
-			File file = fileList.get(i);
-			file.stop();
+		// Stop the song
+		for (File file : fileList) {
+			if(file.isActive()) {
+				file.stop();
+			}
 		}
 	}
 

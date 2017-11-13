@@ -19,6 +19,8 @@ abstract public class File implements PlayerLoadedListener {
 	
 	private boolean loading = false;
 	private boolean loaded = false;
+	
+	private boolean active = true;
 
 	// Play offset
 	private int offsetInMillis = 0;
@@ -94,6 +96,14 @@ abstract public class File implements PlayerLoadedListener {
 
 	public void setLoading(boolean loading) {
 		this.loading = loading;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 }

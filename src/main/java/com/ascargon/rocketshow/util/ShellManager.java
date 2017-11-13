@@ -10,13 +10,22 @@ public class ShellManager {
 	private PrintStream outStream;
 
 	public ShellManager(String[] command) throws IOException {
+		//process = Runtime.getRuntime().exec(command);
 		process = new ProcessBuilder(command).redirectErrorStream(true).start();
 		outStream = new PrintStream(process.getOutputStream());
 	}
 
-	public void sendCommand(String command) throws IOException {
-		outStream.print(command);
+	public void sendCommand(String command, boolean newLine) throws IOException {
+		if (newLine) {
+			outStream.println(command);
+		} else {
+			outStream.print(command);
+		}
 		outStream.flush();
+	}
+
+	public void sendCommand(String command) throws IOException {
+		sendCommand(command, false);
 	}
 
 	public InputStream getInputStream() {

@@ -1,8 +1,6 @@
 package com.ascargon.rocketshow.video;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import org.apache.log4j.Logger;
 
@@ -22,30 +20,15 @@ public class VideoPlayer {
 		// played
 		pause();
 
-		new Thread(new Runnable() {
+		// Wait for the player to get ready, because reading the input stream in
+		// an infinite loop does not work properly (takes too much resources and
+		// exiting the loop as soon as the player is loaded breaks the process)
+		new java.util.Timer().schedule(new java.util.TimerTask() {
+			@Override
 			public void run() {
-				BufferedReader reader = new BufferedReader(new InputStreamReader(shellManager.getInputStream()));
-				String line = null;
-				try {
-					while ((line = reader.readLine()) != null) {
-						logger.trace("Output from video player: " + line);
-						
-						if (line.contains("V:PortSettingsChanged")) {
-							logger.debug("Video player loaded");
-							playerLoadedListener.playerLoaded();
-						}
-					}
-				} catch (Exception e) {} finally {
-					try {
-						reader.close();
-					} catch (IOException e) {
-						logger.error("Could not close stream reader for video player process", e);
-					}
-					;
-				}
-
+				playerLoadedListener.playerLoaded();
 			}
-		}).start();
+		}, 1000 /* TODO Specify in global config */);
 	}
 
 	public void play() throws IOException {

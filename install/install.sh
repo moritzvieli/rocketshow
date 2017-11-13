@@ -99,7 +99,7 @@ iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 80
 iptables-save > /etc/iptables/rules.v4
 
 # Set more memory for the GPU to play larger video files with omxplayer (add this line at the beginning)
-sed -i '1igpu_mem=128\n' /boot/config.txt
+sed -i '1igpu_mem=256\n' /boot/config.txt
 
 # Remove the default root war
 rm -rf /opt/rocketshow/tomcat/webapps/ROOT
