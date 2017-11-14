@@ -1,6 +1,8 @@
 package com.ascargon.rocketshow.video;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 import org.apache.log4j.Logger;
 
@@ -14,7 +16,7 @@ public class VideoPlayer {
 	private ShellManager shellManager;
 
 	public void load(PlayerLoadedListener playerLoadedListener, String path) throws IOException {
-		shellManager = new ShellManager(new String[] { "omxplayer", path, "-r", "-b", "-s" });
+		shellManager = new ShellManager(new String[] { "omxplayer", path, "-r", "-b" });
 
 		// Pause, as soon as the song has been loaded and wait for it to be
 		// played
