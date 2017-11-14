@@ -29,12 +29,12 @@ public class Song {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response create(com.ascargon.rocketshow.song.Song song) throws Exception {
+	public Response save(com.ascargon.rocketshow.song.Song song) throws Exception {
 		Manager manager = (Manager) context.getAttribute("manager");
 		manager.getSongManager().saveSong(song);
 		
-		// If this is the current song, reload it
-		if(manager.getCurrentSetList().getCurrentSongName().equals(song.getName())) {
+		// If this is the current song, and it is already loaded reload it
+		if(manager.getCurrentSetList().getCurrentSongName().equals(song.getName()) && manager.getCurrentSetList().isLoaded()) {
 			manager.getCurrentSetList().load();
 		}
 		

@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.log4j.Logger;
 
+import com.ascargon.rocketshow.audio.AudioPlayer.PlayerType;
 import com.ascargon.rocketshow.dmx.Midi2DmxMapping;
 import com.ascargon.rocketshow.midi.Midi2ActionMapping;
 import com.ascargon.rocketshow.midi.MidiDevice;
@@ -33,9 +34,14 @@ public class Settings {
 	private int dmxSendDelayMillis;
 	
 	private MidiRouting deviceInMidiRouting;
+	
+	private PlayerType audioPlayerType;
 
 	public Settings() {
 		// Initialize default settings
+		
+		audioPlayerType = PlayerType.ALSA_PLAYER;
+		
 		defaultImagePath = null;
 
 		// Global MIDI to action mapping
@@ -153,6 +159,15 @@ public class Settings {
 	public void setDeviceInMidiRouting(MidiRouting deviceInMidiRouting) {
 		deviceInMidiRouting.setMidiSource("input MIDI device");
 		this.deviceInMidiRouting = deviceInMidiRouting;
+	}
+
+	@XmlElement
+	public PlayerType getAudioPlayerType() {
+		return audioPlayerType;
+	}
+
+	public void setAudioPlayerType(PlayerType audioPlayerType) {
+		this.audioPlayerType = audioPlayerType;
 	}
 
 }

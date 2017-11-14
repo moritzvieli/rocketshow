@@ -44,14 +44,16 @@ public class Song {
 
 		// Load all files inside the song
 		for (File file : fileList) {
-			if (file instanceof MidiFile) {
-				MidiFile midiFile = (MidiFile) file;
-				midiFile.getMidiRouting().getMidi2DmxMapping().setParent(midi2DmxMapping);
+			if(file.isActive()) {
+				if (file instanceof MidiFile) {
+					MidiFile midiFile = (MidiFile) file;
+					midiFile.getMidiRouting().getMidi2DmxMapping().setParent(midi2DmxMapping);
+				}
+	
+				file.setManager(manager);
+				file.setSong(this);
+				file.load();
 			}
-
-			file.setManager(manager);
-			file.setSong(this);
-			file.load();
 		}
 	}
 

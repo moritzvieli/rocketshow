@@ -44,6 +44,10 @@ public class MidiPlayer {
 		
 		midiRouting.setTransmitter(sequencer.getTransmitter());
 		
+		// Read the first bytes
+		sequencer.start();
+		sequencer.stop();
+		
 		playerLoadedListener.playerLoaded();
 	}
 

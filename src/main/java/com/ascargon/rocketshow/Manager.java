@@ -177,13 +177,6 @@ public class Manager {
 			}
 		}
 
-		// Restore the session from the file
-		try {
-			restoreSession();
-		} catch (Exception e) {
-			logger.error("Could not restore session", e);
-		}
-
 		// Initialize the MIDI receiver
 		midiInDeviceReceiver = new MidiInDeviceReceiver(this);
 		try {
@@ -199,6 +192,13 @@ public class Manager {
 			logger.error("Could not initialize the MIDI out device", e);
 		}
 
+		// Restore the session from the file
+		try {
+			restoreSession();
+		} catch (Exception e) {
+			logger.error("Could not restore session", e);
+		}
+		
 		logger.info("Finished initializing");
 	}
 
@@ -291,8 +291,6 @@ public class Manager {
 		currentSetList = songManager.loadSetList(name);
 		currentSetList.setManager(this);
 		currentSetList.setName(name);
-
-		currentSetList.load();
 
 		saveSession();
 	}

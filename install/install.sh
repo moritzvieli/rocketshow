@@ -89,6 +89,9 @@ EOF
 chmod 755 /etc/init.d/tomcat
 update-rc.d tomcat defaults
 
+# Get Tomcat some memory (add this line at the beginning)
+sed -i '2iCATALINA_OPTS="-Djava.awt.headless=true -Dfile.encoding=UTF-8 -server -Xms500m -Xmx500m"\n' /opt/rocketshow/tomcat/bin/catalina.sh
+
 # Speedup tomcat start (add this line at the beginning)
 sed -i '2iJAVA_OPTS="-Djava.security.egd=file:/dev/urandom"\n' /opt/rocketshow/tomcat/bin/catalina.sh
 

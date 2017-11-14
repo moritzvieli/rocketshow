@@ -32,18 +32,20 @@ public class SetList {
 
 	private Song currentSong;
 
-	// Load the current song
+	private boolean loaded = false;
+
+	// Preload the current song
 	public void load() throws Exception {
-		if(currentSongIndex >= setListSongList.size()) {
+		if (currentSongIndex >= setListSongList.size()) {
 			return;
 		}
-		
+
 		// Stop a current song, if required
-		if(currentSong != null) {
+		if (currentSong != null) {
 			currentSong.isPlaying();
 			currentSong.stop();
 		}
-		
+
 		// Load the song first
 		File file = new File(Manager.BASE_PATH + "song/" + setListSongList.get(currentSongIndex).getName());
 		JAXBContext jaxbContext = JAXBContext.newInstance(Song.class);
@@ -52,7 +54,9 @@ public class SetList {
 		currentSong.setName(setListSongList.get(currentSongIndex).getName());
 		currentSong.getMidi2DmxMapping().setParent(manager.getSettings().getMidi2DmxMapping());
 		currentSong.setManager(manager);
+
 		currentSong.load();
+		loaded = true;
 	}
 
 	// Return only the setlist-relevant information of the song (e.g. to save to
@@ -64,69 +68,89 @@ public class SetList {
 	}
 
 	public void play() throws Exception {
-		if(currentSong != null) {
+		if (!loaded) {
+			load();
+		}
+
+		if (currentSong != null) {
 			currentSong.play();
 		}
 	}
 
 	public void pause() throws Exception {
-		if(currentSong != null) {
+		if (!loaded) {
+			load();
+		}
+
+		if (currentSong != null) {
 			currentSong.pause();
 		}
 	}
 
 	public void resume() throws Exception {
-		if(currentSong != null) {
+		if (!loaded) {
+			load();
+		}
+
+		if (currentSong != null) {
 			currentSong.resume();
 		}
 	}
 
 	public void togglePlay() throws Exception {
-		if(currentSong != null) {
+		if (!loaded) {
+			load();
+		}
+
+		if (currentSong != null) {
 			currentSong.togglePlay();
 		}
 	}
 
 	public void stop() throws Exception {
-		if(currentSong != null) {
+		if (!loaded) {
+			load();
+		}
+
+		if (currentSong != null) {
 			currentSong.stop();
 		}
 	}
 
 	public void nextSong() throws Exception {
 		int newIndex = currentSongIndex + 1;
-		
-		if(newIndex >= setListSongList.size()) {
+
+		if (newIndex >= setListSongList.size()) {
 			return;
 		}
-		
-		if(currentSong != null) {
+
+		if (currentSong != null) {
 			currentSong.close();
 		}
-		
+
 		setCurrentSongIndex(newIndex);
 	}
 
 	public void previousSong() throws Exception {
 		int newIndex = currentSongIndex - 1;
-		
-		if(newIndex < 0) {
+
+		if (newIndex < 0) {
 			return;
 		}
-		
-		if(currentSong != null) {
+
+		if (currentSong != null) {
 			currentSong.close();
 		}
-		
+
 		setCurrentSongIndex(newIndex);
 	}
 
 	public void close() throws Exception {
-		if(currentSong != null) {
+		if (currentSong != null) {
 			currentSong.close();
 		}
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -147,7 +171,7 @@ public class SetList {
 	public int getCurrentSongIndex() {
 		return currentSongIndex;
 	}
-	
+
 	public String getCurrentSongName() {
 		return setListSongList.get(currentSongIndex).getName();
 	}
@@ -155,7 +179,15 @@ public class SetList {
 	public void setCurrentSongIndex(int currentSongIndex) throws Exception {
 		this.currentSongIndex = currentSongIndex;
 		logger.info("Set song index " + currentSongIndex);
-		load();
+		loaded = false;
+	}
+
+	public boolean isLoaded() {
+		return loaded;
+	}
+
+	public void setLoaded(boolean loaded) {
+		this.loaded = loaded;
 	}
 
 }
