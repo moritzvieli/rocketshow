@@ -5,7 +5,7 @@ import { trigger, state, animate, transition, style, query } from '@angular/anim
 @Component({
   selector: 'body',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  styleUrls: ['./app.component.scss'],
   animations: [
     trigger('preventInitialChildAnimations', [
       transition(':enter', [
@@ -30,9 +30,25 @@ import { trigger, state, animate, transition, style, query } from '@angular/anim
 export class AppComponent {
   showIntroWizard = false;
   showIntroApp = true;
+  files: any[] = [];
 
   constructor(private translate: TranslateService) {
     translate.setDefaultLang('en');
+
+    var file1: any = {};
+    file1.name = 'wise_guy.mid';
+    file1.type = 'midi';
+    this.files.push(file1);
+
+    var file2: any = {};
+    file2.name = 'wise_guy_click.wav';
+    file2.type = 'audio';
+    this.files.push(file2);
+
+    var file3: any = {};
+    file3.name = 'wise_guy.mp4';
+    file3.type = 'video';
+    this.files.push(file3);
   }
 
   switchLanguage(language: string) {

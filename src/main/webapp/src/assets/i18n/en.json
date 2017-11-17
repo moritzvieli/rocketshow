@@ -1,6 +1,7 @@
 {
     "misc": {
         "save": "Save",
+        "cancel": "Cancel",
         "finish": "Finish",
         "nav-next": "Next",
         "nav-back": "Back",
@@ -20,5 +21,8 @@
         "start": "Start",
         "editor": "Editor" ,
         "configuration": "Configuration" 
+    },
+    "song-editor": {
+        "add-file": "Add file"
     }
 }

@@ -1,4 +1,11 @@
-/* To center some parts (like the intro wizard) */
+/* Configure and load Bootstrap SASS */
+$theme-colors: (
+    "primary":#502b7f
+);
+
+@import '../node_modules/bootstrap/scss/bootstrap';
+
+/* To vertically center some parts (like the intro wizard) */
 html, body {
     height: 100%;
 }
@@ -26,18 +33,4 @@ body {
 /* Better navbar spacing for elements below */
 .navbar {
     margin-bottom: 15px;
-}
-
-/* Better primary color buttons */
-.btn-primary {
-    background-color: #502b7f;
-    border-color: #502b7f;
-}
-.btn-primary:hover {
-    background-color: #7c5aaa;
-    border-color: #7c5aaa;
-}
-.btn-primary:active {
-    background-color: #9b7cc4 !important;
-    border-color: #9b7cc4 !important;
 }

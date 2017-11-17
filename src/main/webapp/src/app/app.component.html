@@ -20,12 +20,14 @@
       </ul>
     </div>
 
-<!--     <button (click)="switchLanguage('de')">de</button>
+    <!--     <button (click)="switchLanguage('de')">de</button>
     <button (click)="switchLanguage('en')">en</button> -->
   </nav>
 
   <div class="container-fluid" @introAppEnters *ngIf="showIntroApp" style="padding-bottom: 15px;">
-    <div class="row">
+
+    <!-- Transport -->
+    <!--     <div class="row">
       <div class="col">
         <div class="card" style="margin-bottom: 15px">
           <div class="card-body">
@@ -53,9 +55,10 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
-    <div class="row">
+    <!-- Setlist -->
+    <!--     <div class="row">
       <div class="col">
         <div class="list-group">
           <div class="list-group-item list-group-item-action flex-column align-items-start bg-dark text-white">
@@ -89,6 +92,71 @@
               <small style="margin-top: auto; margin-bottom: auto;">03:19</small>
             </div>
           </a>
+        </div>
+      </div>
+    </div> -->
+
+    <!-- Song editor -->
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <form>
+              <div class="form-group row">
+                <label for="staticEmail" class="col-sm-2 col-form-label">Song name</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="{{ 'intro.default-unit-name' | translate }}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="staticEmail" class="col-sm-2 col-form-label">Notes</label>
+                <div class="col-sm-10">
+                  <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="staticEmail" class="col-sm-2 col-form-label">Files</label>
+                <div class="col-sm-10">
+
+
+                  <div class="list-group" [sortablejs]>
+                    <div class="list-group-item" *ngFor="let file of files">
+                      <div class="row">
+                        <div class="col col-auto list-sort-handle" style="margin-top: auto; margin-bottom: auto; cursor: move; cursor: -webkit-grabbing;">
+                          <i class="fa fa-bars" aria-hidden="true"></i>
+                        </div>
+                        <div class="col col-auto" style="margin-top: auto; margin-bottom: auto; padding-left: 0;">
+                          <i *ngIf="file.type == 'midi'" class="fa fa-music" aria-hidden="true" style="float: left"></i>
+                          <i *ngIf="file.type == 'audio'" class="fa fa-volume-up" aria-hidden="true" style="float: left"></i>
+                          <i *ngIf="file.type == 'video'" class="fa fa-film" aria-hidden="true" style="float: left"></i>
+                        </div>
+                        <div class="col" style="margin-top: auto; margin-bottom: auto; padding-left: 0;">
+                          <a href=""><p style="margin-right: 10px; margin-bottom: 0;">{{ file.name }}</p></a>
+                        </div>
+                        <div class="col" style="margin-top: auto; margin-bottom: auto;">
+                          <a class="btn btn-secondary btn-sm float-right" href="#carouselExampleControls" role="button" (click)="finishIntroWizard()">...</a>
+                        </div>
+                      </div>
+                    </div>
+                    <a href="#" class="list-group-item list-group-item-action text-center">
+                      <i class="fa fa-plus" aria-hidden="true"></i> {{ 'song-editor.add-file' | translate }}
+                    </a>
+                  </div>
+
+
+                </div>
+              </div>
+
+            </form>
+          </div>
+
+          <div class="card-footer text-right">
+            <a class="btn btn-primary" href="#carouselExampleControls" role="button" (click)="finishIntroWizard()">
+              <i class="fa fa-times" aria-hidden="true"></i> {{ 'misc.cancel' | translate }}</a>
+            <a class="btn btn-primary" href="#carouselExampleControls" role="button" (click)="finishIntroWizard()">
+              <i class="fa fa-floppy-o" aria-hidden="true"></i> {{ 'misc.save' | translate }}</a>
+          </div>
         </div>
       </div>
     </div>
