@@ -101,9 +101,11 @@ iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 80
 
 iptables-save > /etc/iptables/rules.v4
 
-# Set more memory for the GPU to play larger video files with omxplayer
-# and enable turbo-mode by default (boot_delay avoids sdcard corruption with turbo-mode)
-sed -i '1igpu_mem=256\nforce_turbo=1\nboot_delay=1' /boot/config.txt
+# Overclock the raspberry to sustain streams without underruns
+# - Set more memory for the GPU to play larger video files with omxplayer
+# - Enable turbo-mode by default (boot_delay avoids sdcard corruption with turbo-mode, warranty is void)
+# - Overclick the sdcard a little bit to prevent bufferunderruns with ALSA
+sed -i '1igpu_mem=256\nforce_turbo=1\nboot_delay=1\ndtoverlay=sdhost,overclock_50=100\n' /boot/config.txt
 
 # Set rocketshows nice priority to 10
 sed -i '1irocketshow soft priority 10' /etc/security/limits.conf

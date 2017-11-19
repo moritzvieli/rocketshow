@@ -32,12 +32,15 @@ public class Song {
 	public Response save(com.ascargon.rocketshow.song.Song song) throws Exception {
 		Manager manager = (Manager) context.getAttribute("manager");
 		manager.getSongManager().saveSong(song);
-		
+
 		// If this is the current song, and it is already loaded reload it
-		if(manager.getCurrentSetList().getCurrentSongName().equals(song.getName()) && manager.getCurrentSetList().isLoaded()) {
+		if (manager.getCurrentSetList() != null
+				&& manager.getCurrentSetList().getCurrentSongName().equals(song.getName())
+				&& manager.getCurrentSetList().isLoaded()) {
+			
 			manager.getCurrentSetList().load();
 		}
-		
+
 		return Response.status(200).build();
 	}
 
