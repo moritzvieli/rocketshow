@@ -23,6 +23,7 @@
         "configuration": "Konfiguration" 
     },
     "song-editor": {
+        "title": "Song Editieren",
         "add-file": "Datei hinzufügen"
     }
 }
