@@ -9,7 +9,7 @@ apt-get update
 
 echo iptables-persistent iptables-persistent/autosave_v4 boolean true | sudo debconf-set-selections
 echo iptables-persistent iptables-persistent/autosave_v6 boolean true | sudo debconf-set-selections
-apt-get -y install iptables-persistent oracle-java8-jdk omxplayer fbi ola
+apt-get -y install iptables-persistent oracle-java8-jdk omxplayer fbi ola mplayer
 
 # Add the rocketshow user
 adduser \

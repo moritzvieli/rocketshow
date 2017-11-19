@@ -64,4 +64,9 @@ export class AppComponent {
       this.showIntroApp = true;
     }, 500);
   }
+
+  sortMove(evt) {
+    // Taken from http://jsbin.com/tuyafe/1/edit?html,js,output
+    return evt.related.className.indexOf('no-sortjs') === -1;
+  }
 }

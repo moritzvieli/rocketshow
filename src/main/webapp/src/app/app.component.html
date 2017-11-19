@@ -120,7 +120,7 @@
                 <div class="col-sm-10">
 
 
-                  <div class="list-group" [sortablejs]>
+                  <div class="list-group" [sortablejs] [sortablejsOptions]="{ onMove: sortMove }">
                     <div class="list-group-item" *ngFor="let file of files">
                       <div class="row">
                         <div class="col col-auto list-sort-handle" style="margin-top: auto; margin-bottom: auto; cursor: move; cursor: -webkit-grabbing;">
@@ -139,12 +139,10 @@
                         </div>
                       </div>
                     </div>
-                    <a href="#" class="list-group-item list-group-item-action text-center">
+                    <a href="#" class="no-sortjs list-group-item list-group-item-action text-center">
                       <i class="fa fa-plus" aria-hidden="true"></i> {{ 'song-editor.add-file' | translate }}
                     </a>
                   </div>
-
-
                 </div>
               </div>
 
