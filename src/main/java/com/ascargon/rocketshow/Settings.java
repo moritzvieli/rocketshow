@@ -1,5 +1,6 @@
 package com.ascargon.rocketshow;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.sound.midi.MidiUnavailableException;
@@ -32,27 +33,25 @@ public class Settings {
 	private Midi2DmxMapping midi2DmxMapping;
 
 	private int dmxSendDelayMillis;
-	
-	private MidiRouting deviceInMidiRouting;
-	
+
+	private List<MidiRouting> deviceInMidiRoutingList = new ArrayList<MidiRouting>();
+	private List<MidiRouting> remoteMidiRoutingList = new ArrayList<MidiRouting>();
+
 	private PlayerType audioPlayerType;
 
 	public Settings() {
 		// Initialize default settings
-		
+
 		audioPlayerType = PlayerType.ALSA_PLAYER;
-		
+
 		defaultImagePath = null;
 
 		// Global MIDI to action mapping
 		midi2ActionMapping = new Midi2ActionMapping();
-		
+
 		// Global MIDI to DMX mapping
 		midi2DmxMapping = new Midi2DmxMapping();
 
-		// The default MIDI input routing
-		setDeviceInMidiRouting(new MidiRouting());
-		
 		try {
 			List<MidiDevice> midiInDeviceList;
 			midiInDeviceList = MidiUtil.getMidiDevices(MidiDirection.IN);
@@ -152,13 +151,27 @@ public class Settings {
 	}
 
 	@XmlElement
-	public MidiRouting getDeviceInMidiRouting() {
-		return deviceInMidiRouting;
+	public List<MidiRouting> getDeviceInMidiRoutingList() {
+		return deviceInMidiRoutingList;
 	}
 
-	public void setDeviceInMidiRouting(MidiRouting deviceInMidiRouting) {
-		deviceInMidiRouting.setMidiSource("input MIDI device");
-		this.deviceInMidiRouting = deviceInMidiRouting;
+	public void setDeviceInMidiRoutingList(List<MidiRouting> deviceInMidiRoutingList) {
+		for (MidiRouting deviceInMidiRouting : deviceInMidiRoutingList) {
+			deviceInMidiRouting.setMidiSource("input MIDI device");
+		}
+		this.deviceInMidiRoutingList = deviceInMidiRoutingList;
+	}
+
+	@XmlElement
+	public List<MidiRouting> getRemoteMidiRoutingList() {
+		return remoteMidiRoutingList;
+	}
+
+	public void setRemoteMidiRoutingList(List<MidiRouting> remoteMidiRoutingList) {
+		for (MidiRouting remoteMidiRouting : remoteMidiRoutingList) {
+			remoteMidiRouting.setMidiSource("remote MIDI");
+		}
+		this.remoteMidiRoutingList = remoteMidiRoutingList;
 	}
 
 	@XmlElement

@@ -1,18 +1,10 @@
 package com.ascargon.rocketshow.midi;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import javax.sound.midi.ShortMessage;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.Manager;
@@ -25,13 +17,8 @@ public class Midi2ActionConverter {
 
 	private Manager manager;
 
-	private HttpClient httpClient;
-
 	public Midi2ActionConverter(Manager manager) {
 		this.manager = manager;
-
-		RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(5000).build();
-		httpClient = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
 	}
 
 	/**
@@ -52,61 +39,35 @@ public class Midi2ActionConverter {
 		return false;
 	}
 
-	private void doPostOnRemoteDevice(String url) throws ClientProtocolException, IOException {
-		HttpPost httpPost = new HttpPost(url);
-		HttpResponse response = httpClient.execute(httpPost);
-
-		// Read the response. The POST connection will not be released otherwise
-		BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-
-		String line = "";
-
-		while ((line = rd.readLine()) != null) {
-			logger.debug("Response from remote device POST: " + line);
-		}
-
-		if (response.getStatusLine().getStatusCode() != 200) {
-			logger.error("Could not execute action on remote device with url '" + url + "'. Reason: '"
-					+ response.getStatusLine().getReasonPhrase() + "'. Body: "
-					+ EntityUtils.toString(response.getEntity()));
-		}
-	}
-
 	private void executeActionOnRemoteDevice(MidiAction action, RemoteDevice remoteDevice)
 			throws ClientProtocolException, IOException {
 
-		String url = "";
-
-		// Build the url for the post request
-		url += "http://";
-
-		// Add the host
-		url += remoteDevice.getHost();
-
-		// Add the api-url
-		url += "/api/";
+		String apiUrl = "";
 
 		switch (action) {
 		case PLAY:
-			url += "transport/play";
+			apiUrl = "transport/play";
 			break;
 		case PAUSE:
-			url += "transport/pause";
+			apiUrl = "transport/pause";
 			break;
 		case TOGGLE_PLAY:
-			url += "transport/toggle-play";
+			apiUrl = "transport/toggle-play";
 			break;
 		case RESUME:
-			url += "transport/resume";
+			apiUrl = "transport/resume";
 			break;
 		case STOP:
-			url += "transport/stop";
+			apiUrl = "transport/stop";
 			break;
 		case NEXT_SONG:
-			url += "transport/next-song";
+			apiUrl = "transport/next-song";
 			break;
 		case PREVIOUS_SONG:
-			url += "transport/previous-song";
+			apiUrl = "transport/previous-song";
+			break;
+		case SET_SONG_INDEX:
+			apiUrl = "transport/set-song-index?index=" + manager.getCurrentSetList().getCurrentSongIndex();
 			break;
 		default:
 			logger.warn("Action '" + action.toString() + "' is unknown for remote devices and cannot be executed");
@@ -114,7 +75,7 @@ public class Midi2ActionConverter {
 		}
 
 		// Execute the post request with the given url
-		doPostOnRemoteDevice(url);
+		remoteDevice.doPost(apiUrl);
 	}
 
 	private void executeActionLocally(MidiAction action) throws Exception {

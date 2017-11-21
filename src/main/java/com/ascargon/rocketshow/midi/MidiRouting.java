@@ -1,10 +1,15 @@
 package com.ascargon.rocketshow.midi;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Receiver;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Transmitter;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -39,6 +44,9 @@ public class MidiRouting implements MidiDeviceConnectedListener {
 
 	private Midi2RemoteReceiver midi2RemoteReceiver;
 
+	// A list of remote device ids in case of destination type = REMOTE
+	private List<Integer> remoteDeviceIdList = new ArrayList<Integer>();
+
 	private Transmitter transmitter;
 	private Receiver receiver;
 
@@ -56,6 +64,7 @@ public class MidiRouting implements MidiDeviceConnectedListener {
 		midi2DmxReceiver.setMidi2DmxMapping(midi2DmxMapping);
 
 		midi2RemoteReceiver = new Midi2RemoteReceiver(manager);
+		midi2RemoteReceiver.setRemoteDeviceIdList(remoteDeviceIdList);
 
 		refreshTransmitterConnection();
 	}
@@ -65,7 +74,7 @@ public class MidiRouting implements MidiDeviceConnectedListener {
 			midi2DmxReceiver.close();
 		}
 
-		if(manager != null) {
+		if (manager != null) {
 			manager.removeMidiOutDeviceConnectedListener(this);
 		}
 	}
@@ -80,7 +89,7 @@ public class MidiRouting implements MidiDeviceConnectedListener {
 			try {
 				logger.info("Connected " + this.midiSource + " to output device "
 						+ midiOutDevice.getDeviceInfo().getName());
-				
+
 				receiver = midiOutDevice.getReceiver();
 			} catch (MidiUnavailableException e) {
 				logger.error("Could not connect transmitter to receiver", e);
@@ -105,6 +114,8 @@ public class MidiRouting implements MidiDeviceConnectedListener {
 	}
 
 	public void sendMidiMessage(int command, int channel, int note, int velocity) {
+		// Send a MIDI message to the current receiver
+
 		if (receiver == null) {
 			return;
 		}
@@ -113,7 +124,6 @@ public class MidiRouting implements MidiDeviceConnectedListener {
 		long timeStamp = -1;
 
 		try {
-			// (ShortMessage.NOTE_ON, 60, 93);
 			midiMsg.setMessage(command, channel, note, velocity);
 		} catch (InvalidMidiDataException e) {
 			logger.error("Could not send MIDI message", e);
@@ -176,6 +186,20 @@ public class MidiRouting implements MidiDeviceConnectedListener {
 
 	public void setMidiSource(String midiSource) {
 		this.midiSource = midiSource;
+	}
+
+	@XmlElement(name = "remoteDeviceIdList")
+	@XmlElementWrapper(name = "remoteDeviceId")
+	public List<Integer> getRemoteDeviceIdList() {
+		return remoteDeviceIdList;
+	}
+
+	public void setRemoteDeviceIdList(List<Integer> remoteDeviceIdList) {
+		this.remoteDeviceIdList = remoteDeviceIdList;
+
+		if (midi2RemoteReceiver != null) {
+			midi2RemoteReceiver.setRemoteDeviceIdList(remoteDeviceIdList);
+		}
 	}
 
 }

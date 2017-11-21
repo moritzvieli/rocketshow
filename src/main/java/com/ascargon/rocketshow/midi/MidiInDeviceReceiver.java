@@ -1,5 +1,6 @@
 package com.ascargon.rocketshow.midi;
 
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -28,12 +29,12 @@ public class MidiInDeviceReceiver implements Receiver {
 
 	private javax.sound.midi.MidiDevice midiReceiver;
 
-	private MidiRouting midiRouting;
+	private List<MidiRouting> midiRoutingList;
 
 	public MidiInDeviceReceiver(Manager manager) {
 		this.manager = manager;
 
-		midiRouting = manager.getSettings().getDeviceInMidiRouting();
+		midiRoutingList = manager.getSettings().getDeviceInMidiRoutingList();
 	}
 
 	/**
@@ -85,8 +86,10 @@ public class MidiInDeviceReceiver implements Receiver {
 
 		midiReceiver.open();
 
-		// Set the MIDI routing receiver
-		midiRouting.setTransmitter(midiReceiver.getTransmitter());
+		// Set the MIDI routing receivers
+		for(MidiRouting midiRouting : midiRoutingList) {
+			midiRouting.setTransmitter(midiReceiver.getTransmitter());
+		}
 
 		// Also set this class as a second receiver to execute the MIDI actions
 		// (midiReceiver.getTransmitter returns a different transmitter each

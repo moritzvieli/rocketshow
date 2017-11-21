@@ -22,6 +22,7 @@ import com.ascargon.rocketshow.image.ImageDisplayer;
 import com.ascargon.rocketshow.midi.Midi2ActionConverter;
 import com.ascargon.rocketshow.midi.MidiDeviceConnectedListener;
 import com.ascargon.rocketshow.midi.MidiInDeviceReceiver;
+import com.ascargon.rocketshow.midi.MidiRouting;
 import com.ascargon.rocketshow.midi.MidiUtil;
 import com.ascargon.rocketshow.midi.MidiUtil.MidiDirection;
 import com.ascargon.rocketshow.song.SetList;
@@ -49,7 +50,7 @@ public class Manager {
 	private Timer connectMidiOutDeviceTimer;
 	private List<MidiDeviceConnectedListener> midiOutDeviceConnectedListeners = new ArrayList<MidiDeviceConnectedListener>();
 
-	private Session session = new Session();
+	private Session session;
 	private Settings settings;
 
 	private SetList currentSetList;
@@ -143,6 +144,9 @@ public class Manager {
 		// Initialize the songmanager
 		songManager = new SongManager();
 
+		// Initialize the session
+		session = new Session();
+		
 		// Initialize the settings
 		settings = new Settings();
 
@@ -175,11 +179,13 @@ public class Manager {
 		}
 
 		// Initialize the required objects inside settings
-		if (settings.getDeviceInMidiRouting() != null) {
-			try {
-				settings.getDeviceInMidiRouting().load(this);
-			} catch (MidiUnavailableException e) {
-				logger.error("Could not initialize the MIDI input device routing");
+		if (settings.getDeviceInMidiRoutingList() != null) {
+			for(MidiRouting deviceInMidiRouting : settings.getDeviceInMidiRoutingList()) {
+				try {
+					deviceInMidiRouting.load(this);
+				} catch (MidiUnavailableException e) {
+					logger.error("Could not initialize the MIDI input device routing");
+				}
 			}
 		}
 
@@ -375,6 +381,10 @@ public class Manager {
 
 	public Updater getUpdater() {
 		return updater;
+	}
+
+	public Session getSession() {
+		return session;
 	}
 
 }

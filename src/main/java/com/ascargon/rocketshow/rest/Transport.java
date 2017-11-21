@@ -4,6 +4,7 @@ import javax.servlet.ServletContext;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -76,6 +77,15 @@ public class Transport {
 	public Response previousSong() throws Exception {
 		Manager manager = (Manager)context.getAttribute("manager");
 		manager.getCurrentSetList().previousSong();
+		return Response.status(200).build();
+	}
+	
+	@Path("set-song-index")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response setSongIndex(@QueryParam("index") int index) throws Exception {
+		Manager manager = (Manager)context.getAttribute("manager");
+		manager.getCurrentSetList().setCurrentSongIndex(index);;
 		return Response.status(200).build();
 	}
 	

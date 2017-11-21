@@ -1,7 +1,20 @@
 package com.ascargon.rocketshow;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Logger;
 
 /**
  * Defines a remote RocketShow device to be triggered by this one.
@@ -11,14 +24,46 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class RemoteDevice {
 
+	final static Logger logger = Logger.getLogger(RemoteDevice.class);
+
+	private HttpClient httpClient;
+
 	// The id of the remote device
 	private int id;
-	
+
 	// The name of the remote device
 	private String name;
 
 	// The host address (IP or hostname) of the remote device
 	private String host;
+
+	public RemoteDevice() {
+		RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(5000).build();
+		httpClient = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
+	}
+
+	public void doPost(String apiUrl) throws ClientProtocolException, IOException {
+		// Build the url for the post request
+		String url = "http://" + host + "/api/" + apiUrl;
+
+		HttpPost httpPost = new HttpPost(url);
+		HttpResponse response = httpClient.execute(httpPost);
+
+		// Read the response. The POST connection will not be released otherwise
+		BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+
+		String line = "";
+
+		while ((line = rd.readLine()) != null) {
+			logger.debug("Response from remote device POST: " + line);
+		}
+
+		if (response.getStatusLine().getStatusCode() != 200) {
+			logger.error("Could not execute action on remote device with url '" + url + "'. Reason: '"
+					+ response.getStatusLine().getReasonPhrase() + "'. Body: "
+					+ EntityUtils.toString(response.getEntity()));
+		}
+	}
 
 	@XmlElement
 	public int getId() {

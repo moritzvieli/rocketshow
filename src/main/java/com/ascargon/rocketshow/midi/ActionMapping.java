@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class ActionMapping {
 
 	public enum MidiAction {
-		PLAY, TOGGLE_PLAY, PAUSE, RESUME, NEXT_SONG, PREVIOUS_SONG, STOP
+		PLAY, TOGGLE_PLAY, PAUSE, RESUME, NEXT_SONG, PREVIOUS_SONG, STOP, SET_SONG_INDEX
 	}
 
 	private MidiAction action;
