@@ -1,8 +1,6 @@
 package com.ascargon.rocketshow.audio;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import org.apache.log4j.Logger;
 
@@ -63,7 +61,7 @@ public class AudioPlayer {
 		if (playerType == PlayerType.MPLAYER) {
 			shellManager.sendCommand("pause", true);
 		} else if (playerType == PlayerType.ALSA_PLAYER) {
-			// buffer-time in microseconds = 10 seconds
+			// Buffer-time in microseconds = 100 seconds
 			shellManager = new ShellManager(new String[] { "aplay", "-D", "plug:" + device, path, "-B", "100000000" });
 		}
 	}
@@ -87,6 +85,8 @@ public class AudioPlayer {
 				shellManager.getProcess().waitFor();
 				shellManager.close();
 			} else if (playerType == PlayerType.ALSA_PLAYER) {
+				shellManager.sendCommand("quit", true);
+				shellManager.getProcess().waitFor();
 				shellManager.close();
 			}
 		}

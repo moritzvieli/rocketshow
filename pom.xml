@@ -9,6 +9,7 @@
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<plugins>
+			<!-- Compile Java -->
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.6.1</version>
@@ -20,6 +21,8 @@
 					</excludes>
 				</configuration>
 			</plugin>
+
+			<!-- Generate a WAR -->
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>3.0.0</version>
@@ -30,6 +33,8 @@
 					</excludes>
 				</configuration>
 			</plugin>
+
+			<!-- Compile the webapp -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
@@ -91,6 +96,27 @@
 										</versionRange>
 										<goals>
 											<goal>exec</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.codehaus.mojo
+										</groupId>
+										<artifactId>
+											properties-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.0.1,)
+										</versionRange>
+										<goals>
+											<goal>
+												write-project-properties
+											</goal>
 										</goals>
 									</pluginExecutionFilter>
 									<action>

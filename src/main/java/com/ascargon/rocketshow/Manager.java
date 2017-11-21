@@ -26,12 +26,15 @@ import com.ascargon.rocketshow.midi.MidiUtil;
 import com.ascargon.rocketshow.midi.MidiUtil.MidiDirection;
 import com.ascargon.rocketshow.song.SetList;
 import com.ascargon.rocketshow.song.SongManager;
+import com.ascargon.rocketshow.util.ShellManager;
 
 public class Manager {
 
 	final static Logger logger = Logger.getLogger(Manager.class);
 
 	public final static String BASE_PATH = "/opt/rocketshow/";
+
+	private Updater updater;
 
 	private SongManager songManager;
 
@@ -134,6 +137,9 @@ public class Manager {
 	public void load() throws IOException {
 		logger.info("Initialize...");
 
+		// Initialize the updater
+		updater = new Updater();
+
 		// Initialize the songmanager
 		songManager = new SongManager();
 
@@ -198,7 +204,7 @@ public class Manager {
 		} catch (Exception e) {
 			logger.error("Could not restore session", e);
 		}
-		
+
 		logger.info("Finished initializing");
 	}
 
@@ -284,10 +290,10 @@ public class Manager {
 	}
 
 	public void loadSetList(String name) throws Exception {
-		if(currentSetList != null) {
+		if (currentSetList != null) {
 			currentSetList.close();
 		}
-		
+
 		currentSetList = songManager.loadSetList(name);
 		currentSetList.setManager(this);
 		currentSetList.setName(name);
@@ -325,6 +331,11 @@ public class Manager {
 		logger.info("Finished closing");
 	}
 
+	public void reboot() throws Exception {
+		ShellManager shellManager = new ShellManager(new String[] { "sudo", "reboot" });
+		shellManager.getProcess().waitFor();
+	}
+
 	public Midi2DmxConverter getMidi2DmxConverter() {
 		return midi2DmxConverter;
 	}
@@ -360,6 +371,10 @@ public class Manager {
 
 	public SongManager getSongManager() {
 		return songManager;
+	}
+
+	public Updater getUpdater() {
+		return updater;
 	}
 
 }

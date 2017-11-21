@@ -20,7 +20,7 @@
     "navigation": {
         "start": "Start",
         "editor": "Editor",
-        "configuration": "Konfiguration" 
+        "settings": "Einstellungen" 
     },
     "song-editor": {
         "title": "Song Editieren",

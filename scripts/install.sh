@@ -38,14 +38,43 @@ mkdir /opt/rocketshow/tomcat
 mkdir /opt/rocketshow/song
 mkdir /opt/rocketshow/setlist
 mkdir /opt/rocketshow/log
+mkdir /opt/rocketshow/update
 mkdir /opt/rocketshow/media
 mkdir /opt/rocketshow/media/midi
 mkdir /opt/rocketshow/media/audio
 mkdir /opt/rocketshow/media/video
 
-chown -R rocketshow:rocketshow /opt/rocketshow
+# Create the update script
+cat <<'EOF' >/opt/rocketshow/update.sh
+#!/bin/bash
+#
 
-# Install Tomcat (https://wolfpaulus.com/java/tomcat-jessie/)
+# Set the execution permissions on the downloaded scripts
+chmod +x /opt/rocketshow/update/before.sh
+chmod +x /opt/rocketshow/update/after.sh
+
+# Execute the before script
+/bin/bash /opt/rocketshow/update/before.sh
+
+cp /opt/rocketshow/update/currentversion.xml /opt/rocketshow/currentversion.xml
+cp /opt/rocketshow/update/current.war /opt/rocketshow/tomcat/webapps/ROOT.war
+
+# Execute the after script
+/bin/bash /opt/rocketshow/update/after.sh
+
+# Cleanup the update folder
+rm -rf /opt/rocketshow/update/*
+
+# Reboot
+sudo reboot
+EOF
+
+# Set the user rocketshow as owner and add execution permissions
+# on the update script
+chown -R rocketshow:rocketshow /opt/rocketshow
+chmod +x /opt/rocketshow/update.sh
+
+# Install Tomcat (credits to https://wolfpaulus.com/java/tomcat-jessie/)
 mkdir -p ~/tmp
 cd ~/tmp
 wget http://mirror.easyname.ch/apache/tomcat/tomcat-8/v8.5.23/bin/apache-tomcat-8.5.23.tar.gz
@@ -113,6 +142,8 @@ sed -i '1irocketshow soft priority 10' /etc/security/limits.conf
 # Remove the default root war
 rm -rf /opt/rocketshow/tomcat/webapps/ROOT
 
-# TODO Download current war and name it ROOT.war
-
-# TODO Init OLA Universe with curl
+# Download current war and versioninfo
+cd /opt/rocketshow/tomcat/webapps
+wget -O ROOT.war http://www.rocketshow.net/update/current.war
+cd /opt/rocketshow
+wget http://www.rocketshow.net/update/currentversion.xml

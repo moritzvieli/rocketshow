@@ -7,8 +7,6 @@ import javax.servlet.ServletContextListener;
 
 import org.apache.log4j.Logger;
 
-import com.ascargon.rocketshow.Manager;
-
 public class ContextListener implements ServletContextListener {
 
 	final static Logger logger = Logger.getLogger(ContextListener.class);
