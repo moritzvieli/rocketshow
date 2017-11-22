@@ -15,22 +15,25 @@ animation-play-stateto not reset the position on stop */
 body {
     background-image: url(assets/img/intro_bg.png);
     background-repeat: repeat;
-    animation: bgMovement 60s linear infinite;
-    animation-play-state: paused;
 }
-/* The movement of the background tiles during the intro wizard */ 
+
+/* Run the background movement during the intro */
+.body-bg-moving {
+    animation: bgMovement 60s linear infinite;
+}
 @keyframes bgMovement {
     100%{
         background-position: 1000px -1000px;
     }
 }
 
-/* Run the background movement */
-.body-bg-moving {
-    animation-play-state: running;
-}
 
 /* Better navbar spacing for elements below */
 .navbar {
     margin-bottom: 15px;
+}
+
+/* Better spacing for container */
+.container-fluid {
+    padding-bottom: 15px;
 }

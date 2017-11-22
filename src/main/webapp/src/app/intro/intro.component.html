@@ -1,0 +1,54 @@
+<div class="container d-flex h-100" [@wizardState]="wizardState">
+  <div class="row justify-content-center align-self-center mx-auto">
+    <div class="col-xl">
+      <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="false">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <div class="card text-center" style="border: none">
+              <img class="card-img-top" src="assets/img/intro_title.png" alt="Card image cap">
+              <div class="card-body" style="min-height: 158px;">
+                <h4 class="card-title">{{ 'intro.welcome' | translate }}</h4>
+                <h6 class="card-subtitle mb-2 text-muted">{{ 'intro.welcome-language' | translate }}</h6>
+
+                <select class="custom-select">
+                  <option selected>{{ 'intro.choose-language' | translate }}</option>
+                  <option value="1">English</option>
+                  <option value="2">Deutsch</option>
+                </select>
+              </div>
+              <div class="card-footer text-muted">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                  <a class="btn btn-primary" href="#carouselExampleControls" role="button" data-slide="next">{{ 'misc.nav-next' | translate }}
+                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <div class="card text-center" style="border: none">
+              <img class="card-img-top" src="assets/img/intro_title.png" alt="Card image cap">
+              <div class="card-body" style="min-height: 158px;">
+                <h4 class="card-title">{{ 'intro.almost-finished' | translate }}</h4>
+                <h6 class="card-subtitle mb-2 text-muted">{{ 'intro.name-unit' | translate }}</h6>
+
+                <input type="text" class="form-control text-center" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="{{ 'intro.default-unit-name' | translate }}">
+              </div>
+              <div class="card-footer text-muted">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                  <a class="btn btn-primary" href="#" role="button" data-slide="prev">
+                    <i class="fa fa-chevron-left" aria-hidden="true"></i> {{ 'misc.nav-back' | translate }}
+                  </a>
+
+                  <a class="btn btn-primary" href="#" role="button" (click)="finish()">
+                    <i class="fa fa-check" aria-hidden="true"></i> {{ 'misc.finish' | translate }}
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

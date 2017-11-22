@@ -1,6 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
+import { RouterModule, Routes } from '@angular/router';
+
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -10,12 +12,36 @@ import { SortablejsModule } from 'angular-sortablejs';
 import { AlertModule } from 'ngx-bootstrap';
 
 import { AppComponent } from './app.component';
+import { IntroComponent } from './intro/intro.component';
+import { PlayComponent } from './play/play.component';
+import { SettingsComponent } from './settings/settings.component';
+import { EditorComponent } from './editor/editor.component';
+
+const appRoutes: Routes = [
+  { path: 'intro', component: IntroComponent },
+  { path: 'play', component: PlayComponent },
+  { path: 'editor', component: EditorComponent },
+  { path: 'settings', component: SettingsComponent },
+  { path: '',
+    redirectTo: '/play',
+    pathMatch: 'full'
+  },
+  /*{ path: '**', component: PlayComponent }*/
+];
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    IntroComponent,
+    PlayComponent,
+    SettingsComponent,
+    EditorComponent
   ],
   imports: [
+    RouterModule.forRoot(
+      appRoutes,
+      { enableTracing: true } // <-- debugging purposes only
+    ),
     BrowserModule,
     HttpClientModule,
     BrowserAnimationsModule,

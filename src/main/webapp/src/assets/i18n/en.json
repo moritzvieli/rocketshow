@@ -18,12 +18,12 @@
         "default-unit-name": "My Rocket Show"
     },
     "navigation": {
-        "start": "Start",
+        "play": "Play",
         "editor": "Editor" ,
         "settings": "Settings" 
     },
-    "song-editor": {
-        "title": "Edit song",
+    "editor": {
+        "title": "Show editor",
         "add-file": "Add file"
     }
 }
