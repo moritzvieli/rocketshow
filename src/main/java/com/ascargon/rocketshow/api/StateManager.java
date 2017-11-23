@@ -1,4 +1,4 @@
-package com.ascargon.rocketshow;
+package com.ascargon.rocketshow.api;
 
 import java.io.IOException;
 import java.util.ArrayList;

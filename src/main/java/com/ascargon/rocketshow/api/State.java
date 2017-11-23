@@ -1,4 +1,4 @@
-package com.ascargon.rocketshow;
+package com.ascargon.rocketshow.api;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;

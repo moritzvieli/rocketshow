@@ -1,4 +1,4 @@
-package com.ascargon.rocketshow.rest;
+package com.ascargon.rocketshow.api;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;

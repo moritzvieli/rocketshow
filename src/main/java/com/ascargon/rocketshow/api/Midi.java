@@ -1,4 +1,4 @@
-package com.ascargon.rocketshow.rest;
+package com.ascargon.rocketshow.api;
 
 import java.util.List;
 
