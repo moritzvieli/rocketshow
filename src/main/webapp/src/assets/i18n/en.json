@@ -7,7 +7,8 @@
         "nav-back": "Back",
         "midi": "MIDI",
         "midi-in": "MIDI in",
-        "midi-out": "MIDI out"
+        "midi-out": "MIDI out",
+        "delete": "Delete"
     },
     "intro": {
         "welcome": "Whoop, whoop!",
@@ -19,11 +20,15 @@
     },
     "navigation": {
         "play": "Play",
-        "editor": "Editor" ,
+        "edit": "Edit" ,
         "settings": "Settings" 
     },
     "editor": {
-        "title": "Show editor",
+        "songs": "Songs",
+        "setlists": "Setlists",
+        "create-song": "Create song",
+        "create-setlist": "Create setlist",
+        "search-songs": "Search...",
         "add-file": "Add file"
     }
 }

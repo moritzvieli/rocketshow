@@ -32,6 +32,7 @@
     "rxjs": "^5.4.2",
     "sortablejs": "^1.7.0",
     "tether": "^1.4.0",
+    "web-animations-js": "^2.3.1",
     "zone.js": "^0.8.14"
   },
   "devDependencies": {

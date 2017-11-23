@@ -75,6 +75,8 @@ public class SetList {
 		if (currentSong != null) {
 			currentSong.play();
 		}
+		
+		manager.getState().notifyClients();
 	}
 
 	public void pause() throws Exception {

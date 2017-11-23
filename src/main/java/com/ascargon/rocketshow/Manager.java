@@ -35,6 +35,9 @@ public class Manager {
 
 	public final static String BASE_PATH = "/opt/rocketshow/";
 
+	// Manage the client states (web GUI)
+	private StateManager stateManager;
+	
 	private Updater updater;
 
 	private SongManager songManager;
@@ -138,6 +141,9 @@ public class Manager {
 	public void load() throws IOException {
 		logger.info("Initialize...");
 
+		// Initialize the client state
+		stateManager = new StateManager();
+		
 		// Initialize the updater
 		updater = new Updater();
 
@@ -385,6 +391,14 @@ public class Manager {
 
 	public Session getSession() {
 		return session;
+	}
+
+	public StateManager getState() {
+		return stateManager;
+	}
+
+	public void setState(StateManager state) {
+		this.stateManager = state;
 	}
 
 }

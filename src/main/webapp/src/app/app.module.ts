@@ -16,6 +16,8 @@ import { IntroComponent } from './intro/intro.component';
 import { PlayComponent } from './play/play.component';
 import { SettingsComponent } from './settings/settings.component';
 import { EditorComponent } from './editor/editor.component';
+import { EditorSongComponent } from './editor/editor-song/editor-song.component';
+import { EditorSetlistComponent } from './editor/editor-setlist/editor-setlist.component';
 
 const appRoutes: Routes = [
   { path: 'intro', component: IntroComponent },
@@ -35,7 +37,9 @@ const appRoutes: Routes = [
     IntroComponent,
     PlayComponent,
     SettingsComponent,
-    EditorComponent
+    EditorComponent,
+    EditorSongComponent,
+    EditorSetlistComponent
   ],
   imports: [
     RouterModule.forRoot(
