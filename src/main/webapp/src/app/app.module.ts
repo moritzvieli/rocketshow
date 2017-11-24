@@ -19,6 +19,8 @@ import { EditorComponent } from './editor/editor.component';
 import { EditorSongComponent } from './editor/editor-song/editor-song.component';
 import { EditorSetlistComponent } from './editor/editor-setlist/editor-setlist.component';
 
+import { ApiService } from './services/api.service';
+
 const appRoutes: Routes = [
   { path: 'intro', component: IntroComponent },
   { path: 'play', component: PlayComponent },
@@ -62,7 +64,9 @@ const appRoutes: Routes = [
     }),
     AlertModule.forRoot()
   ],
-  providers: [],
+  providers: [
+    ApiService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

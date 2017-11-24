@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { trigger, state, animate, transition, style, query } from '@angular/animations';
+import { ApiService, State } from '../services/api.service';
 
 @Component({
   selector: 'app-play',
@@ -8,7 +9,11 @@ import { trigger, state, animate, transition, style, query } from '@angular/anim
 })
 export class PlayComponent implements OnInit {
 
-  constructor() { }
+  constructor(private apiService: ApiService) {
+    apiService.state.subscribe((state: State) => {
+      console.log(state);
+    });
+  }
 
   ngOnInit() {
   }
