@@ -8,7 +8,8 @@
         "midi": "MIDI",
         "midi-in": "MIDI Eingang",
         "midi-out": "MIDI Ausgang",
-        "delete": "Löschen"
+        "delete": "Löschen",
+        "setlist": "Setliste"
     },
     "intro": {
         "welcome": "Whoop, whoop!",

@@ -22,7 +22,6 @@ export class PlayComponent implements OnInit {
     // Subscribe to the state-changed service
     this.apiService.state.subscribe((state: State) => {
       this.currentState = state;
-      console.log(state);
     });
 
     // Load the current state

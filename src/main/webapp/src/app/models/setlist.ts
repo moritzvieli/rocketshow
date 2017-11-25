@@ -1,6 +1,8 @@
+import { Song } from './song'; 
+
 export class SetList {
     name: string;
-    songList: string[];
+    songList: Song[];
     currentSongIndex: number;
 
     constructor(data?: any) {
@@ -14,7 +16,7 @@ export class SetList {
         this.songList = [];
 
         for(let song of data.songList) {
-            this.songList.push(song);
+            this.songList.push(new Song(song));
         }
     }
 }

@@ -46,7 +46,7 @@
       <div class="list-group">
         <div class="list-group-item list-group-item-action flex-column align-items-start">
           <a href="#" class="" d="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            1 hour set
+            {{ 'misc.setlist' | translate }}: {{ currentSetList?.name }}
             <i class="fa fa-caret-down" aria-hidden="true"></i>
           </a>
 
@@ -58,43 +58,17 @@
 
           <span style="margin-top: 3px" class="float-right">01:24:10</span>
         </div>
-        <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
+
+        <!-- Display all songs -->
+        <a *ngFor="let song of currentSetList?.songList" href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
           <div class="d-flex w-100 justify-content-between">
-            <p class="mb-1">Rock this Night</p>
+            <p class="mb-1">{{ song.name }}</p>
             <small style="margin-top: auto; margin-bottom: auto;">03:21</small>
           </div>
         </a>
-        <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-          <div class="d-flex w-100 justify-content-between">
-            <p class="mb-1">Rock this Night</p>
-            <small style="margin-top: auto; margin-bottom: auto;">02:54</small>
-          </div>
-        </a>
-        <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-          <div class="d-flex w-100 justify-content-between">
-            <p class="mb-1">Rock this Night</p>
-            <small style="margin-top: auto; margin-bottom: auto;">03:19</small>
-          </div>
-        </a>
+
       </div>
     </div>
   </div>
-
-  <!-- The MIDI status -->
-  <!--     <div class="row">
-        
-        
-               <div class="col">
-                <div class="card">
-                  <div class="card-body">
-                    <h4 class="card-title">{{ 'misc.midi' | translate }}</h4>
-                    <i class="fa fa-circle-o text-success" aria-hidden="true"></i> {{ 'misc.midi-in' | translate }}
-                    <br />
-                    <i class="fa fa-circle text-danger" aria-hidden="true"></i> {{ 'misc.midi-out' | translate }}
-                  </div>
-                </div>
-              </div>
-        
-            </div> -->
 
 </div>
