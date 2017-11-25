@@ -51,6 +51,9 @@ public class StateManager {
 	@OnError
 	public void onError(Session session, Throwable throwable) {
 		logger.error("Got websocket error", throwable);
+		
+		// Session maybe closed?
+		activeSessions.remove(session);
 	}
 
 	public State getCurrentState() {
@@ -85,7 +88,12 @@ public class StateManager {
 
 		// Send the state to each connected client
 		for (Session activeSession : activeSessions) {
-			activeSession.getBasicRemote().sendText(state);
+			try {
+				activeSession.getBasicRemote().sendText(state);
+			} catch (IOException e) {
+				// Session maybe closed?
+				activeSessions.remove(activeSession);
+			}
 		}
 	}
 
