@@ -144,6 +144,7 @@ public class Manager {
 
 		// Initialize the client state
 		stateManager = new StateManager();
+		stateManager.load(this);
 		
 		// Initialize the updater
 		updater = new Updater();
@@ -398,12 +399,8 @@ public class Manager {
 		return session;
 	}
 
-	public StateManager getState() {
+	public StateManager getStateManager() {
 		return stateManager;
-	}
-
-	public void setState(StateManager state) {
-		this.stateManager = state;
 	}
 
 }

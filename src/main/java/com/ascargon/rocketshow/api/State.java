@@ -3,18 +3,30 @@ package com.ascargon.rocketshow.api;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.ascargon.rocketshow.song.Song.PlayState;
+
 @XmlRootElement
 public class State {
 
-	private boolean playing;
+	private int currentSongIndex;
+	private PlayState playState;
 
 	@XmlElement
-	public boolean isPlaying() {
-		return playing;
+	public int getCurrentSongIndex() {
+		return currentSongIndex;
 	}
 
-	public void setPlaying(boolean playing) {
-		this.playing = playing;
+	public void setCurrentSongIndex(int currentSongIndex) {
+		this.currentSongIndex = currentSongIndex;
+	}
+
+	@XmlElement
+	public PlayState getPlayState() {
+		return playState;
+	}
+
+	public void setPlayState(PlayState playState) {
+		this.playState = playState;
 	}
 	
 }

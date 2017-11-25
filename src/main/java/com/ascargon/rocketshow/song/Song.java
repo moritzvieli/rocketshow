@@ -25,6 +25,17 @@ public class Song {
 
 	public static final String FILE_EXTENSION = "sng";
 
+	
+	public enum PlayState {
+		PLAYING, // Is the song playing?
+		PAUSED, // Is the song paused?
+		STOPPED, // Is the song stopped?
+		LOADING // Is the song waiting for all files to be loaded to start
+				// playing this song?
+	}
+
+	private PlayState playState;
+	
 	private String name;
 
 	private Midi2DmxMapping midi2DmxMapping = new Midi2DmxMapping();
@@ -33,23 +44,17 @@ public class Song {
 
 	private Manager manager;
 
-	// Waiting for all files to be loaded to start playing this song?
-	private boolean loading = false;
-
-	// Is this song playing?
-	private boolean playing = false;
-
 	public void load() throws Exception {
 		logger.info("Loading song '" + name + "'");
 
 		// Load all files inside the song
 		for (File file : fileList) {
-			if(file.isActive()) {
+			if (file.isActive()) {
 				if (file instanceof MidiFile) {
 					MidiFile midiFile = (MidiFile) file;
 					midiFile.getMidiRouting().getMidi2DmxMapping().setParent(midi2DmxMapping);
 				}
-	
+
 				file.setManager(manager);
 				file.setSong(this);
 				file.load();
@@ -58,8 +63,7 @@ public class Song {
 	}
 
 	public void close() throws Exception {
-		loading = false;
-		playing = false;
+		playState = PlayState.STOPPED;
 
 		for (File file : fileList) {
 			file.close();
@@ -68,7 +72,7 @@ public class Song {
 
 	public void playerLoaded() {
 		// Start playing the song, if needed
-		if (loading) {
+		if (playState == PlayState.LOADING) {
 			try {
 				play();
 			} catch (Exception e) {
@@ -79,12 +83,12 @@ public class Song {
 
 	public void play() throws Exception {
 		boolean allFilesLoaded = true;
-		
-		if (playing) {
+
+		if (playState == PlayState.PLAYING) {
 			return;
 		}
 
-		loading = true;
+		playState = PlayState.LOADING;
 
 		// Only play, if all files have been finished loading
 		for (File file : fileList) {
@@ -93,37 +97,38 @@ public class Song {
 				// files have been loaded
 				logger.debug("File '" + file.getName() + "' not yet loaded");
 				allFilesLoaded = false;
-				
-				if(!file.isLoading()) {
+
+				if (!file.isLoading()) {
 					file.load();
 				}
 			}
 		}
-		
-		if(!allFilesLoaded) {
+
+		if (!allFilesLoaded) {
 			return;
 		}
 
-		loading = false;
-		playing = true;
+		playState = PlayState.PLAYING;
 
 		logger.info("Playing song '" + name + "'");
 
 		for (File file : fileList) {
-			if(file.isActive()) {
+			if (file.isActive()) {
 				file.play();
 			}
 		}
+		
+		manager.getStateManager().notifyClients();
 	}
 
 	public void pause() throws Exception {
 		logger.info("Pausing song '" + name + "'");
 
-		playing = false;
+		playState = PlayState.PAUSED;
 
 		// Pause the song
 		for (File file : fileList) {
-			if(file.isActive()) {
+			if (file.isActive()) {
 				file.pause();
 			}
 		}
@@ -132,18 +137,18 @@ public class Song {
 	public void resume() throws Exception {
 		logger.info("Resuming song '" + name + "'");
 
-		playing = true;
+		playState = PlayState.PLAYING;
 
 		// Resume the song
 		for (File file : fileList) {
-			if(file.isActive()) {
+			if (file.isActive()) {
 				file.resume();
 			}
 		}
 	}
 
 	public void togglePlay() throws Exception {
-		if (playing) {
+		if (playState == PlayState.PLAYING) {
 			pause();
 		} else {
 			resume();
@@ -153,11 +158,11 @@ public class Song {
 	public void stop() throws Exception {
 		logger.info("Stopping song '" + name + "'");
 
-		playing = false;
+		playState = PlayState.STOPPED;
 
 		// Stop the song
 		for (File file : fileList) {
-			if(file.isActive()) {
+			if (file.isActive()) {
 				file.stop();
 			}
 		}
@@ -183,7 +188,7 @@ public class Song {
 	public void setFileList(List<File> fileList) {
 		this.fileList = fileList;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -202,12 +207,8 @@ public class Song {
 	}
 
 	@XmlTransient
-	public boolean isPlaying() {
-		return playing;
-	}
-
-	public void setPlaying(boolean playing) {
-		this.playing = playing;
+	public PlayState getPlayState() {
+		return playState;
 	}
 
 }

@@ -25,8 +25,6 @@ public class Transport {
 		if (manager.getCurrentSetList() != null) {
 			manager.getCurrentSetList().play();
 		}
-		// TODO Remove
-		manager.getState().notifyClients();
 		return Response.status(200).build();
 	}
 

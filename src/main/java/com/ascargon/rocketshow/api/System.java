@@ -69,5 +69,13 @@ public class System {
 		manager.getUpdater().update();
 		return Response.status(200).build();
 	}
+
+	@Path("state")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public com.ascargon.rocketshow.api.State getState() throws Exception {
+		Manager manager = (Manager)context.getAttribute("manager");
+		return manager.getStateManager().getCurrentState();
+	}
 	
 }

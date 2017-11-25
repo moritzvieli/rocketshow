@@ -1,14 +1,13 @@
+import { Http, XHRBackend, RequestOptions, Request, RequestOptionsArgs, Response, Headers } from '@angular/http';
+
+import { State } from './../models/state';
 import { Injectable } from '@angular/core';
 import * as Rx from 'rxjs/Rx';
 import { Observable, Subject } from 'rxjs/Rx';
 import { environment } from '../../environments/environment';
 
-export interface State {
-  playing: boolean
-}
-
 @Injectable()
-export class ApiService {
+export class ApiService extends Http {
 
   private stateSubject: Rx.Subject<MessageEvent>;
   public state: Subject<State>;
@@ -19,9 +18,15 @@ export class ApiService {
   // The rest endpoint base url
   private restUrl: string;
 
-  constructor() {
+  constructor(
+    backend: XHRBackend,
+    options: RequestOptions,
+    private http: Http
+  ) {
+    super(backend, options);
+
     // Create the backend-urls
-    if(environment.name == 'dev') {
+    if (environment.name == 'dev') {
       this.restUrl = 'http://' + environment.localBackend + '/';
       this.wsUrl = 'ws://' + environment.localBackend + '/';
     } else {
@@ -35,12 +40,28 @@ export class ApiService {
     // Connect to the websocket backend
     this.state = <Subject<State>>this.connectStateConnection()
       .map((response: MessageEvent): State => {
-        let data = JSON.parse(response.data);
-
-        return {
-          playing: data.playing
-        }
+        return new State(JSON.parse(response.data));
       });
+  }
+
+  getRestUrl(): string {
+    return this.restUrl;
+  }
+
+  get(url: string): Observable<Response> {
+    return super.get(this.restUrl + url);
+  }
+
+  post(url: string, body: any): Observable<Response> {
+    return super.post(this.restUrl + url, body);
+  }
+
+  put(url: string, body: any): Observable<Response> {
+    return super.put(this.restUrl + url, body);
+  }
+
+  delete(url: string): Observable<Response> {
+    return super.delete(this.restUrl + url);
   }
 
   private createStateConnection(): Rx.Subject<MessageEvent> {

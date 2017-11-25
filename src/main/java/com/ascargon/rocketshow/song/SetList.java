@@ -42,8 +42,11 @@ public class SetList {
 
 		// Stop a current song, if required
 		if (currentSong != null) {
-			currentSong.isPlaying();
-			currentSong.stop();
+			if (currentSong.getPlayState() == Song.PlayState.PLAYING
+					|| currentSong.getPlayState() == Song.PlayState.PAUSED) {
+				
+				currentSong.stop();
+			}
 		}
 
 		// Load the song first
@@ -76,7 +79,7 @@ public class SetList {
 			currentSong.play();
 		}
 		
-		manager.getState().notifyClients();
+		manager.getStateManager().notifyClients();
 	}
 
 	public void pause() throws Exception {
@@ -87,6 +90,8 @@ public class SetList {
 		if (currentSong != null) {
 			currentSong.pause();
 		}
+		
+		manager.getStateManager().notifyClients();
 	}
 
 	public void resume() throws Exception {
@@ -97,6 +102,8 @@ public class SetList {
 		if (currentSong != null) {
 			currentSong.resume();
 		}
+		
+		manager.getStateManager().notifyClients();
 	}
 
 	public void togglePlay() throws Exception {
@@ -107,6 +114,8 @@ public class SetList {
 		if (currentSong != null) {
 			currentSong.togglePlay();
 		}
+		
+		manager.getStateManager().notifyClients();
 	}
 
 	public void stop() throws Exception {
@@ -117,6 +126,8 @@ public class SetList {
 		if (currentSong != null) {
 			currentSong.stop();
 		}
+		
+		manager.getStateManager().notifyClients();
 	}
 
 	public void nextSong() throws Exception {
@@ -131,6 +142,8 @@ public class SetList {
 		}
 
 		setCurrentSongIndex(newIndex);
+		
+		manager.getStateManager().notifyClients();
 	}
 
 	public void previousSong() throws Exception {
@@ -145,6 +158,8 @@ public class SetList {
 		}
 
 		setCurrentSongIndex(newIndex);
+		
+		manager.getStateManager().notifyClients();
 	}
 
 	public void close() throws Exception {
@@ -190,6 +205,10 @@ public class SetList {
 
 	public void setLoaded(boolean loaded) {
 		this.loaded = loaded;
+	}
+
+	public Song getCurrentSong() {
+		return currentSong;
 	}
 
 }
