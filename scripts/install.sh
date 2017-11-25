@@ -133,7 +133,7 @@ iptables-save > /etc/iptables/rules.v4
 # Overclock the raspberry to sustain streams without underruns
 # - Set more memory for the GPU to play larger video files with omxplayer
 # - Enable turbo-mode by default (boot_delay avoids sdcard corruption with turbo-mode, warranty is void)
-# - Overclick the sdcard a little bit to prevent bufferunderruns with ALSA
+# - Overclock the sdcard a little bit to prevent bufferunderruns with ALSA
 sed -i '1igpu_mem=256\nforce_turbo=1\nboot_delay=1\ndtoverlay=sdhost,overclock_50=100\n' /boot/config.txt
 
 # Set rocketshows nice priority to 10

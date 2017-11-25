@@ -8,6 +8,7 @@
 
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
+		<finalName>ROOT</finalName>
 		<plugins>
 			<!-- Compile Java -->
 			<plugin>
@@ -63,6 +64,7 @@
 							<arguments>
 								<argument>build</argument>
 								<argument>--base-href=/app/</argument>
+								<argument>--environment=prod</argument>
 							</arguments>
 						</configuration>
 						<goals>

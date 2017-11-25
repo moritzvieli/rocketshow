@@ -317,6 +317,10 @@ public class Manager {
 	public void close() {
 		logger.info("Close...");
 
+		if(connectMidiOutDeviceTimer != null) {
+			connectMidiOutDeviceTimer.cancel();
+		}
+		
 		if (midiInDeviceReceiver != null) {
 			try {
 				midiInDeviceReceiver.close();

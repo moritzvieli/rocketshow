@@ -149,6 +149,10 @@ public class MidiInDeviceReceiver implements Receiver {
 
 	@Override
 	public void close() {
+		if(connectTimer != null) {
+			connectTimer.cancel();
+		}
+		
 		if (midiReceiver != null && midiReceiver.isOpen()) {
 			midiReceiver.close();
 		}

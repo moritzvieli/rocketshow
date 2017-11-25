@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as Rx from 'rxjs/Rx';
 import { Observable, Subject } from 'rxjs/Rx';
+import { environment } from '../../environments/environment';
 
 export interface State {
   playing: boolean
@@ -12,19 +13,38 @@ export class ApiService {
   private stateSubject: Rx.Subject<MessageEvent>;
   public state: Subject<State>;
 
+  // The websocket endpoint url
+  private wsUrl: string;
+
+  // The rest endpoint base url
+  private restUrl: string;
+
   constructor() {
-    this.state = <Subject<State>>this.connect()
-    .map((response: MessageEvent): State => {
+    // Create the backend-urls
+    if(environment.name == 'dev') {
+      this.restUrl = 'http://' + environment.localBackend + '/';
+      this.wsUrl = 'ws://' + environment.localBackend + '/';
+    } else {
+      this.restUrl = '/'
+      this.wsUrl = 'ws://' + location.hostname + '/';
+    }
+
+    this.restUrl += 'api/';
+    this.wsUrl += 'state';
+
+    // Connect to the websocket backend
+    this.state = <Subject<State>>this.connectStateConnection()
+      .map((response: MessageEvent): State => {
         let data = JSON.parse(response.data);
 
         return {
-            playing: data.playing
+          playing: data.playing
         }
-    });
+      });
   }
 
   private createStateConnection(): Rx.Subject<MessageEvent> {
-    let ws = new WebSocket('ws://localhost:8080/RocketShow/state');
+    let ws = new WebSocket(this.wsUrl);
 
     let observable = Rx.Observable.create(
       (obs: Rx.Observer<MessageEvent>) => {
@@ -45,7 +65,7 @@ export class ApiService {
     return Rx.Subject.create(observer, observable);
   }
 
-  public connect(): Rx.Subject<MessageEvent> {
+  public connectStateConnection(): Rx.Subject<MessageEvent> {
     if (!this.stateSubject) {
       this.stateSubject = this.createStateConnection();
     }
