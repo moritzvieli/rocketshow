@@ -1,6 +1,8 @@
 package com.ascargon.rocketshow.song.file;
 
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 
@@ -16,20 +18,23 @@ public class AudioFile extends com.ascargon.rocketshow.song.file.File {
 	private AudioPlayer audioPlayer;
 	
 	private String device;
-
+	
+	private Timer playTimer;
+	
 	private String getPath() {
 		return Manager.BASE_PATH + MEDIA_PATH + AUDIO_PATH + getName();
 	}
 	
 	@Override
-	public void load() throws IOException {
+	public void load() throws Exception {
 		logger.debug("Load file '" + this.getName());
 		
 		this.setLoaded(false);
 		this.setLoading(true);
-		
-		audioPlayer = new AudioPlayer();
-		
+
+		if(audioPlayer == null) {
+			audioPlayer = new AudioPlayer();
+		}
 		audioPlayer.load(this.getManager().getSettings().getAudioPlayerType(), this, getPath(), device);
 	}
 
@@ -50,10 +55,12 @@ public class AudioFile extends com.ascargon.rocketshow.song.file.File {
 		if (this.getOffsetInMillis() > 0) {
 			logger.debug("Wait " + this.getOffsetInMillis() + " milliseconds before starting the audio file '" + this.getPath() + "'");
 			
-			new java.util.Timer().schedule(new java.util.TimerTask() {
+			playTimer = new Timer();
+			playTimer.schedule(new TimerTask() {
 				@Override
 				public void run() {
 					try {
+						playTimer = null;
 						audioPlayer.play();
 					} catch (IOException e) {
 						logger.error("Could not play audio file \"" + path + "\"");
@@ -68,11 +75,16 @@ public class AudioFile extends com.ascargon.rocketshow.song.file.File {
 
 	@Override
 	public void pause() throws IOException {
+		if(playTimer != null) {
+			playTimer.cancel();
+			playTimer = null;
+		}
+		
 		if (audioPlayer == null) {
 			logger.error("Audio player not initialized for file '" + getPath() + "'");
 			return;
 		}
-
+		
 		audioPlayer.pause();
 	}
 
@@ -88,6 +100,11 @@ public class AudioFile extends com.ascargon.rocketshow.song.file.File {
 
 	@Override
 	public void stop() throws Exception {
+		if(playTimer != null) {
+			playTimer.cancel();
+			playTimer = null;
+		}
+		
 		if (audioPlayer == null) {
 			logger.error("Audio player not initialized for file '" + getPath() + "'");
 			return;

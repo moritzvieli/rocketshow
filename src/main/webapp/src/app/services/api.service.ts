@@ -5,18 +5,23 @@ import { Injectable } from '@angular/core';
 import * as Rx from 'rxjs/Rx';
 import { Observable, Subject } from 'rxjs/Rx';
 import { environment } from '../../environments/environment';
+import { $WebSocket, WebSocketSendMode, WebSocketConfig } from 'angular2-websocket/angular2-websocket';
 
 @Injectable()
 export class ApiService extends Http {
 
-  private stateSubject: Rx.Subject<MessageEvent>;
-  public state: Subject<State>;
+  public state: Subject<State> = new Rx.Subject();
 
   // The websocket endpoint url
   private wsUrl: string;
 
   // The rest endpoint base url
   private restUrl: string;
+
+  // The websocket connection
+  private websocket: $WebSocket;
+
+  connected: boolean;
 
   constructor(
     backend: XHRBackend,
@@ -38,10 +43,23 @@ export class ApiService extends Http {
     this.wsUrl += 'state';
 
     // Connect to the websocket backend
-    this.state = <Subject<State>>this.connectStateConnection()
-      .map((response: MessageEvent): State => {
-        return new State(JSON.parse(response.data));
-      });
+    const wsConfig = { reconnectIfNotNormalClose: true } as WebSocketConfig;
+    this.websocket = new $WebSocket(this.wsUrl, null, wsConfig);
+
+    this.websocket.onMessage(
+      (msg: MessageEvent) => {
+        this.state.next(new State(JSON.parse(msg.data)));
+      },
+      { autoApply: false }
+    );
+
+    this.websocket.onOpen(() => {
+      this.connected = true;
+    });
+
+    this.websocket.onClose(() => {
+      this.connected = false;
+    });
   }
 
   getRestUrl(): string {
@@ -62,35 +80,6 @@ export class ApiService extends Http {
 
   delete(url: string): Observable<Response> {
     return super.delete(this.restUrl + url);
-  }
-
-  private createStateConnection(): Rx.Subject<MessageEvent> {
-    let ws = new WebSocket(this.wsUrl);
-
-    let observable = Rx.Observable.create(
-      (obs: Rx.Observer<MessageEvent>) => {
-        ws.onmessage = obs.next.bind(obs);
-        ws.onerror = obs.error.bind(obs);
-        ws.onclose = obs.complete.bind(obs);
-        return ws.close.bind(ws);
-      })
-
-    let observer = {
-      next: (data: Object) => {
-        if (ws.readyState === WebSocket.OPEN) {
-          ws.send(JSON.stringify(data));
-        }
-      }
-    }
-
-    return Rx.Subject.create(observer, observable);
-  }
-
-  public connectStateConnection(): Rx.Subject<MessageEvent> {
-    if (!this.stateSubject) {
-      this.stateSubject = this.createStateConnection();
-    }
-    return this.stateSubject;
   }
 
 }

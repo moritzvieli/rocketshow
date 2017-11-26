@@ -1,3 +1,7 @@
 .loading-transition {
     transition: color 100ms ease-in-out;
 }
+
+.disconnected {
+    background-color: red;
+}

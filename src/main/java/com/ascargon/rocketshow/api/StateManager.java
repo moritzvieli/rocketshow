@@ -51,7 +51,7 @@ public class StateManager {
 	@OnError
 	public void onError(Session session, Throwable throwable) {
 		logger.error("Got websocket error", throwable);
-		
+
 		// Session maybe closed?
 		activeSessions.remove(session);
 	}
@@ -61,7 +61,7 @@ public class StateManager {
 
 		currentState.setPlayState(PlayState.STOPPED);
 		currentState.setCurrentSongIndex(0);
-		
+
 		if (manager != null) {
 			if (manager.getCurrentSetList() != null) {
 				if (manager.getCurrentSetList().getCurrentSong() != null) {
@@ -70,10 +70,10 @@ public class StateManager {
 				currentState.setCurrentSongIndex(manager.getCurrentSetList().getCurrentSongIndex());
 			}
 		}
-		
+
 		return currentState;
 	}
-	
+
 	private String getSerializedState() throws Exception {
 		State currentState = getCurrentState();
 
@@ -89,7 +89,9 @@ public class StateManager {
 		// Send the state to each connected client
 		for (Session activeSession : activeSessions) {
 			try {
-				activeSession.getBasicRemote().sendText(state);
+				if (activeSession.isOpen()) {
+					activeSession.getBasicRemote().sendText(state);
+				}
 			} catch (IOException e) {
 				// Session maybe closed?
 				activeSessions.remove(activeSession);

@@ -1,6 +1,8 @@
 package com.ascargon.rocketshow.audio;
 
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 
@@ -21,9 +23,12 @@ public class AudioPlayer {
 	private String device;
 
 	private PlayerType playerType = PlayerType.MPLAYER;
+	
+	private Timer loadTimer;
 
 	public void load(PlayerType playerType, PlayerLoadedListener playerLoadedListener, String path, String device)
-			throws IOException {
+			throws IOException, InterruptedException {
+
 		this.playerType = playerType;
 		this.path = path;
 		this.device = device;
@@ -40,10 +45,13 @@ public class AudioPlayer {
 			// stream in an infinite loop does not work properly (takes too much
 			// resources and exiting the loop as soon as the player is loaded
 			// breaks the process)
-			new java.util.Timer().schedule(new java.util.TimerTask() {
+			loadTimer = new Timer();
+			loadTimer.schedule(new TimerTask() {
 				@Override
 				public void run() {
 					try {
+						loadTimer = null;
+						
 						// Rewind to the start position
 						shellManager.sendCommand("pausing seek 0 2", true);
 					} catch (IOException e) {
@@ -79,15 +87,19 @@ public class AudioPlayer {
 	}
 
 	public void stop() throws Exception {
+		if(loadTimer != null) {
+			loadTimer.cancel();
+			loadTimer = null;
+		}
+		
 		if (shellManager != null) {
 			if (playerType == PlayerType.MPLAYER) {
 				shellManager.sendCommand("quit", true);
 				shellManager.getProcess().waitFor();
 				shellManager.close();
 			} else if (playerType == PlayerType.ALSA_PLAYER) {
-				shellManager.sendCommand("quit", true);
+				shellManager.getProcess().destroy();
 				shellManager.getProcess().waitFor();
-				shellManager.close();
 			}
 		}
 	}

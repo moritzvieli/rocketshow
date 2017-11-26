@@ -78,8 +78,6 @@ public class SetList {
 		if (currentSong != null) {
 			currentSong.play();
 		}
-		
-		manager.getStateManager().notifyClients();
 	}
 
 	public void pause() throws Exception {
@@ -90,8 +88,6 @@ public class SetList {
 		if (currentSong != null) {
 			currentSong.pause();
 		}
-		
-		manager.getStateManager().notifyClients();
 	}
 
 	public void resume() throws Exception {
@@ -102,8 +98,6 @@ public class SetList {
 		if (currentSong != null) {
 			currentSong.resume();
 		}
-		
-		manager.getStateManager().notifyClients();
 	}
 
 	public void togglePlay() throws Exception {
@@ -114,8 +108,6 @@ public class SetList {
 		if (currentSong != null) {
 			currentSong.togglePlay();
 		}
-		
-		manager.getStateManager().notifyClients();
 	}
 
 	public void stop() throws Exception {
@@ -126,8 +118,6 @@ public class SetList {
 		if (currentSong != null) {
 			currentSong.stop();
 		}
-		
-		manager.getStateManager().notifyClients();
 	}
 
 	public void nextSong() throws Exception {

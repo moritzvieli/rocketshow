@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.sound.midi.MidiUnavailableException;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.log4j.Logger;
@@ -150,7 +151,8 @@ public class Settings {
 		this.midi2DmxMapping = midi2DmxMapping;
 	}
 
-	@XmlElement
+	@XmlElement(name = "deviceInMidiRouting")
+	@XmlElementWrapper(name = "deviceInMidiRoutingList")
 	public List<MidiRouting> getDeviceInMidiRoutingList() {
 		return deviceInMidiRoutingList;
 	}
@@ -162,7 +164,8 @@ public class Settings {
 		this.deviceInMidiRoutingList = deviceInMidiRoutingList;
 	}
 
-	@XmlElement
+	@XmlElement(name = "remoteMidiRouting")
+	@XmlElementWrapper(name = "remoteMidiRoutingList")
 	public List<MidiRouting> getRemoteMidiRoutingList() {
 		return remoteMidiRoutingList;
 	}

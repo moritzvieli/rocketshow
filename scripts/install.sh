@@ -139,8 +139,8 @@ sed -i '1igpu_mem=256\nforce_turbo=1\nboot_delay=1\ndtoverlay=sdhost,overclock_5
 # Set rocketshows nice priority to 10
 sed -i '1irocketshow soft priority 10' /etc/security/limits.conf
 
-# Remove the default root war
-rm -rf /opt/rocketshow/tomcat/webapps/ROOT
+# Remove the default webapps
+rm -rf /opt/rocketshow/tomcat/webapps/*
 
 # Download current war and versioninfo
 cd /opt/rocketshow/tomcat/webapps

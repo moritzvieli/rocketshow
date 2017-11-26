@@ -1,5 +1,8 @@
 package com.ascargon.rocketshow.song.file;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.Manager;
@@ -11,28 +14,33 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 	final static Logger logger = Logger.getLogger(MidiFile.class);
 
 	public final static String MIDI_PATH = "midi/";
-	
+
 	private MidiPlayer midiPlayer;
 
 	private MidiRouting midiRouting;
-	
+
+	private Timer playTimer;
+
 	public MidiFile() {
 		setMidiRouting(new MidiRouting());
 	}
-	
+
 	private String getPath() {
 		return Manager.BASE_PATH + MEDIA_PATH + MIDI_PATH + getName();
 	}
 
 	public void load() throws Exception {
-		logger.debug("Load file '" + this.getName() + "' with routing to " + midiRouting.getMidiDestination().toString());
-		
+		logger.debug(
+				"Load file '" + this.getName() + "' with routing to " + midiRouting.getMidiDestination().toString());
+
 		this.setLoaded(false);
 		this.setLoading(true);
-		
-		midiPlayer = new MidiPlayer(this.getManager(), midiRouting);
+
+		if (midiPlayer == null) {
+			midiPlayer = new MidiPlayer(this.getManager(), midiRouting);
+		}
 		midiPlayer.load(this, this.getPath());
-		
+
 		this.midiRouting.load(this.getManager());
 	}
 
@@ -44,11 +52,14 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 		}
 
 		if (this.getOffsetInMillis() > 0) {
-			logger.debug("Wait " + this.getOffsetInMillis() + " milliseconds before starting the MIDI file '" + this.getPath() + "'");
-			
-			new java.util.Timer().schedule(new java.util.TimerTask() {
+			logger.debug("Wait " + this.getOffsetInMillis() + " milliseconds before starting the MIDI file '"
+					+ this.getPath() + "'");
+
+			playTimer = new Timer();
+			playTimer.schedule(new TimerTask() {
 				@Override
 				public void run() {
+					playTimer = null;
 					midiPlayer.play();
 				}
 			}, this.getOffsetInMillis());
@@ -59,6 +70,11 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 
 	@Override
 	public void pause() {
+		if (playTimer != null) {
+			playTimer.cancel();
+			playTimer = null;
+		}
+
 		if (midiPlayer == null) {
 			logger.error("MIDI player not initialized for file '" + getPath() + "'");
 			return;
@@ -79,6 +95,11 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 
 	@Override
 	public void stop() throws Exception {
+		if (playTimer != null) {
+			playTimer.cancel();
+			playTimer = null;
+		}
+
 		if (midiPlayer == null) {
 			logger.error("MIDI player not initialized for file '" + getPath() + "'");
 			return;
@@ -89,6 +110,11 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 
 	@Override
 	public void close() {
+		if (playTimer != null) {
+			playTimer.cancel();
+			playTimer = null;
+		}
+
 		if (midiPlayer != null) {
 			midiPlayer.close();
 		}
@@ -102,5 +128,5 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 	public MidiRouting getMidiRouting() {
 		return midiRouting;
 	}
-	
+
 }

@@ -15,7 +15,7 @@ export class PlayComponent implements OnInit {
   currentSetList: SetList;
   currentState: State = new State();
 
-  constructor(private apiService: ApiService) {
+  constructor(public apiService: ApiService) {
   }
 
   ngOnInit() {
@@ -43,7 +43,7 @@ export class PlayComponent implements OnInit {
   }
 
   stop() {
-    this.currentState.playState = 'STOPPED';
+    this.currentState.playState = 'STOPPING';
 
     this.apiService.post('transport/stop', null).map((response: Response) => {
     }).subscribe();
