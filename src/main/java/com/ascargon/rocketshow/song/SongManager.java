@@ -1,6 +1,8 @@
 package com.ascargon.rocketshow.song;
 
 import java.io.File;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -65,13 +67,35 @@ public class SongManager {
 	}
 
 	public void saveSong(Song song) throws JAXBException {
+		// Get the duration of each file
+		ExecutorService executor = Executors.newFixedThreadPool(30);
+		
+		for (com.ascargon.rocketshow.song.file.File file : song.getFileList()) {
+			Runnable fileDurationGetter = new FileDurationGetter(file);
+			executor.execute(fileDurationGetter);
+		}
+		
+		executor.shutdown();
+		
+		// Wait until all threads are finish
+		while (!executor.isTerminated()) {}
+		
+		// Set the duration of the song to the maximum duration of the files
+		long maxDuration = 0;
+		
+		for (com.ascargon.rocketshow.song.file.File file : song.getFileList()) {
+			if(file.getDurationMillis() > maxDuration) {
+				maxDuration = file.getDurationMillis();
+			}
+		}
+		song.setDurationMillis(maxDuration);
+		
+		// Save the song in XML
 		File file = new File(Manager.BASE_PATH + SONG_PATH + song.getName());
 		JAXBContext jaxbContext = JAXBContext.newInstance(Song.class);
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 
-		// output pretty printed
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
 		jaxbMarshaller.marshal(song, file);
 
 		logger.info("Song '" + song.getName() + "' saved");

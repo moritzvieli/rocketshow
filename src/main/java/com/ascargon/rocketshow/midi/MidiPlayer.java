@@ -7,6 +7,7 @@ import java.io.InputStream;
 
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
 
 import org.apache.log4j.Logger;
@@ -41,14 +42,27 @@ public class MidiPlayer {
 
 		InputStream is = new BufferedInputStream(new FileInputStream(new File(path)));
 		sequencer.setSequence(is);
-		
+
 		midiRouting.setTransmitter(sequencer.getTransmitter());
-		
+
 		// Read the first bytes
 		sequencer.start();
 		sequencer.stop();
-		
+
 		playerLoadedListener.playerLoaded();
+	}
+
+	public static long getDuration(String path) throws Exception {
+		long duration;
+
+		Sequence sequence = MidiSystem.getSequence(new File(path));
+		Sequencer sequencer = MidiSystem.getSequencer();
+		sequencer.open();
+		sequencer.setSequence(sequence);
+		duration = sequencer.getMicrosecondLength() / 1000;
+		sequencer.close();
+
+		return duration;
 	}
 
 	public void play() {

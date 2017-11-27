@@ -1,7 +1,11 @@
 package com.ascargon.rocketshow.song;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
@@ -38,11 +42,22 @@ public class Song {
 
 	private String name;
 
+	private boolean autoStartNextSong = false;
+	
+	private String notes;
+	
+	private long durationMillis;
+
 	private Midi2DmxMapping midi2DmxMapping = new Midi2DmxMapping();
 
 	private List<File> fileList = new ArrayList<File>();
 
 	private Manager manager;
+
+	private Timer autoStopTimer;
+
+	private LocalDateTime lastStartTime;
+	private long passedMillis;
 
 	public void load() throws Exception {
 		logger.info("Loading song '" + name + "'");
@@ -81,6 +96,46 @@ public class Song {
 		}
 	}
 
+	private void startAutoStopTimer(long passedMillis) {
+		// Start the autostop timer, to automatically stop the song, as soon as
+		// the last file (the longest one, which has the most offset) has been
+		// finished)
+		long maxDurationAndOffset = 0;
+
+		for (File file : fileList) {
+			if (file.isActive()) {
+				if (file.getDurationMillis() + file.getOffsetMillis() > maxDurationAndOffset) {
+					maxDurationAndOffset = file.getDurationMillis() + file.getOffsetMillis();
+				}
+			}
+		}
+		
+		maxDurationAndOffset -= passedMillis;
+		
+		autoStopTimer = new Timer();
+		autoStopTimer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				try {
+					autoStopTimer = null;
+					stop();
+
+					if(autoStartNextSong) {
+						int oldSongIndex = manager.getCurrentSetList().getCurrentSongIndex();
+						manager.getCurrentSetList().nextSong();
+						
+						if(oldSongIndex != manager.getCurrentSetList().getCurrentSongIndex()) {
+							// There really was a next song, it's not the current one
+							manager.getCurrentSetList().play();
+						}
+					}
+				} catch (Exception e) {
+					logger.error("Could not automatically stop song '" + name + "'", e);
+				}
+			}
+		}, maxDurationAndOffset);
+	}
+	
 	public synchronized void play() throws Exception {
 		if (playState == PlayState.PLAYING || playState == PlayState.STOPPING) {
 			return;
@@ -113,6 +168,7 @@ public class Song {
 			return;
 		}
 
+		// All files are loaded -> play the song (start each file)
 		logger.info("Playing song '" + name + "'");
 
 		for (File file : fileList) {
@@ -121,12 +177,26 @@ public class Song {
 			}
 		}
 
+		startAutoStopTimer(0);
+
+		lastStartTime = LocalDateTime.now();
+		passedMillis = 0;
+
 		playState = PlayState.PLAYING;
 
 		manager.getStateManager().notifyClients();
 	}
 
 	public synchronized void pause() throws Exception {
+		// Cancel the auto-stop timer
+		if (autoStopTimer != null) {
+			autoStopTimer.cancel();
+			autoStopTimer = null;
+		}
+		
+		// Save the passed time since the last run
+		passedMillis += lastStartTime.until(LocalDateTime.now(), ChronoUnit.MILLIS);
+		
 		if (playState == PlayState.PAUSED) {
 			return;
 		}
@@ -146,6 +216,10 @@ public class Song {
 	}
 
 	public synchronized void resume() throws Exception {
+		// Restart the auto-stop timer from the last pause
+		startAutoStopTimer(passedMillis);
+		lastStartTime = LocalDateTime.now();
+		
 		if (playState == PlayState.PLAYING) {
 			return;
 		}
@@ -178,6 +252,14 @@ public class Song {
 		}
 
 		playState = PlayState.STOPPING;
+
+		// Cancel the auto-stop timer
+		if (autoStopTimer != null) {
+			autoStopTimer.cancel();
+			autoStopTimer = null;
+		}
+		
+		passedMillis = 0;
 
 		manager.getStateManager().notifyClients();
 
@@ -242,6 +324,30 @@ public class Song {
 	@XmlTransient
 	public PlayState getPlayState() {
 		return playState;
+	}
+
+	public long getDurationMillis() {
+		return durationMillis;
+	}
+
+	public void setDurationMillis(long durationMillis) {
+		this.durationMillis = durationMillis;
+	}
+
+	public boolean isAutoStartNextSong() {
+		return autoStartNextSong;
+	}
+
+	public void setAutoStartNextSong(boolean autoStartNextSong) {
+		this.autoStartNextSong = autoStartNextSong;
+	}
+
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
 	}
 
 }

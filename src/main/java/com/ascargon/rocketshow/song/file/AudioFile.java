@@ -21,7 +21,7 @@ public class AudioFile extends com.ascargon.rocketshow.song.file.File {
 	
 	private Timer playTimer;
 	
-	private String getPath() {
+	public String getPath() {
 		return Manager.BASE_PATH + MEDIA_PATH + AUDIO_PATH + getName();
 	}
 	
@@ -52,8 +52,8 @@ public class AudioFile extends com.ascargon.rocketshow.song.file.File {
 			return;
 		}
 
-		if (this.getOffsetInMillis() > 0) {
-			logger.debug("Wait " + this.getOffsetInMillis() + " milliseconds before starting the audio file '" + this.getPath() + "'");
+		if (this.getOffsetMillis() > 0) {
+			logger.debug("Wait " + this.getOffsetMillis() + " milliseconds before starting the audio file '" + this.getPath() + "'");
 			
 			playTimer = new Timer();
 			playTimer.schedule(new TimerTask() {
@@ -63,11 +63,10 @@ public class AudioFile extends com.ascargon.rocketshow.song.file.File {
 						playTimer = null;
 						audioPlayer.play();
 					} catch (IOException e) {
-						logger.error("Could not play audio file \"" + path + "\"");
-						logger.error(e.getStackTrace());
+						logger.error("Could not play audio file '" + path + "'", e);
 					}
 				}
-			}, this.getOffsetInMillis());
+			}, this.getOffsetMillis());
 		} else {
 			audioPlayer.play();
 		}

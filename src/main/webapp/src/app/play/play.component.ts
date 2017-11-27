@@ -1,9 +1,11 @@
+import { SongService } from './../services/song.service';
+import { StateService } from './../services/state.service';
 import { SetList } from './../models/setlist';
 import { Component, OnInit } from '@angular/core';
-import { Response } from '@angular/http';
 import { trigger, state, animate, transition, style, query } from '@angular/animations';
 import { State } from '../models/state';
 import { ApiService } from '../services/api.service';
+import { TransportService } from '../services/transport.service';
 
 @Component({
   selector: 'app-play',
@@ -15,7 +17,10 @@ export class PlayComponent implements OnInit {
   currentSetList: SetList;
   currentState: State = new State();
 
-  constructor(public apiService: ApiService) {
+  constructor(public apiService: ApiService,
+    private stateService: StateService,
+    private songService: SongService,
+    private transportService: TransportService) {
   }
 
   ngOnInit() {
@@ -25,28 +30,24 @@ export class PlayComponent implements OnInit {
     });
 
     // Load the current state
-    this.apiService.get('system/state').map((response: Response) => {
-      this.currentState = new State(response.json());
-    }).subscribe();
+    this.stateService.getState().subscribe((state: State) => {
+      this.currentState = state;
+    });
 
     // Load the current setlist
-    this.apiService.get('setlist').map((response: Response) => {
-      this.currentSetList = new SetList(response.json());
-    }).subscribe();
+    this.songService.getCurrentSetList().subscribe((setList: SetList) => {
+      this.currentSetList = setList;
+    });
   }
 
   play() {
     this.currentState.playState = 'LOADING';
-
-    this.apiService.post('transport/play', null).map((response: Response) => {
-    }).subscribe();
+    this.transportService.play().subscribe();
   }
 
   stop() {
     this.currentState.playState = 'STOPPING';
-
-    this.apiService.post('transport/stop', null).map((response: Response) => {
-    }).subscribe();
+    this.transportService.stop().subscribe();
   }
 
 }

@@ -19,7 +19,7 @@ public class VideoFile extends File {
 
 	private Timer playTimer;
 	
-	private String getPath() {
+	public String getPath() {
 		return Manager.BASE_PATH + MEDIA_PATH + VIDEO_PATH + getName();
 	}
 	
@@ -50,8 +50,8 @@ public class VideoFile extends File {
 			return;
 		}
 
-		if (this.getOffsetInMillis() > 0) {
-			logger.debug("Wait " + this.getOffsetInMillis() + " milliseconds before starting the video file '"
+		if (this.getOffsetMillis() > 0) {
+			logger.debug("Wait " + this.getOffsetMillis() + " milliseconds before starting the video file '"
 					+ this.getPath() + "'");
 
 			playTimer = new Timer();
@@ -62,11 +62,10 @@ public class VideoFile extends File {
 						playTimer = null;
 						videoPlayer.play();
 					} catch (IOException e) {
-						logger.error("Could not play video video \"" + path + "\"");
-						logger.error(e.getStackTrace());
+						logger.error("Could not play video video '" + path + "'", e);
 					}
 				}
-			}, this.getOffsetInMillis());
+			}, this.getOffsetMillis());
 		} else {
 			videoPlayer.play();
 		}

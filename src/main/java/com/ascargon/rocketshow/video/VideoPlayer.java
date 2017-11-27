@@ -60,6 +60,7 @@ public class VideoPlayer {
 		}
 		
 		// Delay a close as backup, because fast load/short may sometimes fail
+		// TODO Retry, until closed
 		closeTimer = new Timer();
 		closeTimer.schedule(new TimerTask() {
 			@Override

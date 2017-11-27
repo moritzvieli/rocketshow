@@ -25,7 +25,7 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 		setMidiRouting(new MidiRouting());
 	}
 
-	private String getPath() {
+	public String getPath() {
 		return Manager.BASE_PATH + MEDIA_PATH + MIDI_PATH + getName();
 	}
 
@@ -51,8 +51,8 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 			return;
 		}
 
-		if (this.getOffsetInMillis() > 0) {
-			logger.debug("Wait " + this.getOffsetInMillis() + " milliseconds before starting the MIDI file '"
+		if (this.getOffsetMillis() > 0) {
+			logger.debug("Wait " + this.getOffsetMillis() + " milliseconds before starting the MIDI file '"
 					+ this.getPath() + "'");
 
 			playTimer = new Timer();
@@ -62,7 +62,7 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 					playTimer = null;
 					midiPlayer.play();
 				}
-			}, this.getOffsetInMillis());
+			}, this.getOffsetMillis());
 		} else {
 			midiPlayer.play();
 		}

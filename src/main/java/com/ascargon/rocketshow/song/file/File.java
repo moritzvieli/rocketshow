@@ -22,8 +22,10 @@ abstract public class File implements PlayerLoadedListener {
 	
 	private boolean active = true;
 
+	private long durationMillis;
+	
 	// Play offset
-	private int offsetInMillis = 0;
+	private int offsetMillis = 0;
 	
 	abstract public void load() throws Exception;
 	
@@ -55,12 +57,12 @@ abstract public class File implements PlayerLoadedListener {
 	}
 
 	@XmlElement
-	public int getOffsetInMillis() {
-		return offsetInMillis;
+	public int getOffsetMillis() {
+		return offsetMillis;
 	}
 
-	public void setOffsetInMillis(int offsetInMillis) {
-		this.offsetInMillis = offsetInMillis;
+	public void setOffsetMillis(int offsetMillis) {
+		this.offsetMillis = offsetMillis;
 	}
 
 	@XmlTransient
@@ -104,6 +106,14 @@ abstract public class File implements PlayerLoadedListener {
 
 	public void setActive(boolean active) {
 		this.active = active;
+	}
+
+	public long getDurationMillis() {
+		return durationMillis;
+	}
+
+	public void setDurationMillis(long durationMillis) {
+		this.durationMillis = durationMillis;
 	}
 
 }
