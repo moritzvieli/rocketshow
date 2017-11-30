@@ -1,5 +1,7 @@
 package com.ascargon.rocketshow.api;
 
+import java.util.List;
+
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -19,6 +21,14 @@ public class Song {
 	@Context
 	ServletContext context;
 
+	@Path("list")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<com.ascargon.rocketshow.song.Song> getAll() throws Exception {
+		Manager manager = (Manager) context.getAttribute("manager");
+		return manager.getSongManager().getAllSongs();
+	}
+	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public com.ascargon.rocketshow.song.Song get(@QueryParam("name") String name) throws Exception {
@@ -43,5 +53,5 @@ public class Song {
 
 		return Response.status(200).build();
 	}
-
+	
 }

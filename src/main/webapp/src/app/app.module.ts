@@ -1,3 +1,5 @@
+import { Song } from './models/song';
+import { State } from './models/state';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
@@ -21,6 +23,10 @@ import { EditorSongComponent } from './editor/editor-song/editor-song.component'
 import { EditorSetlistComponent } from './editor/editor-setlist/editor-setlist.component';
 
 import { ApiService } from './services/api.service';
+import { StateService } from './services/state.service';
+import { TransportService } from './services/transport.service';
+import { SongService } from './services/song.service';
+import { ConnectionComponent } from './connection/connection.component';
 
 const appRoutes: Routes = [
   { path: 'intro', component: IntroComponent },
@@ -42,7 +48,8 @@ const appRoutes: Routes = [
     SettingsComponent,
     EditorComponent,
     EditorSongComponent,
-    EditorSetlistComponent
+    EditorSetlistComponent,
+    ConnectionComponent
   ],
   imports: [
     HttpModule,
@@ -67,7 +74,10 @@ const appRoutes: Routes = [
     AlertModule.forRoot()
   ],
   providers: [
-    ApiService
+    ApiService,
+    StateService,
+    TransportService,
+    SongService
   ],
   bootstrap: [AppComponent]
 })

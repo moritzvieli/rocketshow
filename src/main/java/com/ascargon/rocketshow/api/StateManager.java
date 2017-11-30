@@ -1,7 +1,9 @@
 package com.ascargon.rocketshow.api;
 
 import java.io.IOException;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.websocket.OnClose;
@@ -68,6 +70,12 @@ public class StateManager {
 					currentState.setPlayState(manager.getCurrentSetList().getCurrentSong().getPlayState());
 				}
 				currentState.setCurrentSongIndex(manager.getCurrentSetList().getCurrentSongIndex());
+				
+				if(manager.getCurrentSetList().getCurrentSong() != null) {
+					currentState.setCurrentSongName(manager.getCurrentSetList().getCurrentSong().getName());
+					currentState.setCurrentSongDurationMillis(manager.getCurrentSetList().getCurrentSong().getDurationMillis());
+					currentState.setLastStartTime(Date.from(manager.getCurrentSetList().getCurrentSong().getLastStartTime().atZone(ZoneId.systemDefault()).toInstant()));
+				}
 			}
 		}
 

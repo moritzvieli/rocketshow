@@ -180,6 +180,10 @@ public class SetList {
 	}
 
 	public String getCurrentSongName() {
+		if(setListSongList.size() == 0) {
+			return null;
+		}
+		
 		return setListSongList.get(currentSongIndex).getName();
 	}
 

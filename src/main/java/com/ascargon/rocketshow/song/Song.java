@@ -350,4 +350,13 @@ public class Song {
 		this.notes = notes;
 	}
 
+	@XmlTransient
+	public LocalDateTime getLastStartTime() {
+		return lastStartTime;
+	}
+
+	public void setLastStartTime(LocalDateTime lastStartTime) {
+		this.lastStartTime = lastStartTime;
+	}
+
 }

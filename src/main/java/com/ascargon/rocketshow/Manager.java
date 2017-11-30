@@ -28,6 +28,7 @@ import com.ascargon.rocketshow.midi.MidiUtil;
 import com.ascargon.rocketshow.midi.MidiUtil.MidiDirection;
 import com.ascargon.rocketshow.song.SetList;
 import com.ascargon.rocketshow.song.SongManager;
+import com.ascargon.rocketshow.song.file.FileManager;
 import com.ascargon.rocketshow.util.ShellManager;
 
 public class Manager {
@@ -42,6 +43,7 @@ public class Manager {
 	private Updater updater;
 
 	private SongManager songManager;
+	private FileManager fileManager;
 
 	private ImageDisplayer imageDisplayer;
 	private MidiInDeviceReceiver midiInDeviceReceiver;
@@ -152,6 +154,9 @@ public class Manager {
 		// Initialize the songmanager
 		songManager = new SongManager();
 
+		// Initialize the filemanager
+		fileManager = new FileManager();
+		
 		// Initialize the session
 		session = new Session();
 		
@@ -401,6 +406,14 @@ public class Manager {
 
 	public StateManager getStateManager() {
 		return stateManager;
+	}
+
+	public FileManager getFileManager() {
+		return fileManager;
+	}
+
+	public void setFileManager(FileManager fileManager) {
+		this.fileManager = fileManager;
 	}
 
 }

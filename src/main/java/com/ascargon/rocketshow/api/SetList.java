@@ -1,5 +1,7 @@
 package com.ascargon.rocketshow.api;
 
+import java.util.List;
+
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -19,6 +21,14 @@ public class SetList {
 	@Context
 	ServletContext context;
     
+	@Path("list")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<com.ascargon.rocketshow.song.SetList> getAll() throws Exception {
+		Manager manager = (Manager) context.getAttribute("manager");
+		return manager.getSongManager().getAllSetLists();
+	}
+	
 	@Path("load")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
