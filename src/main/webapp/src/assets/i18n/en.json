@@ -31,5 +31,10 @@
         "create-setlist": "Create setlist",
         "search-songs": "Search...",
         "add-file": "Add file"
+    },
+    "connection": {
+        "title": "No connection",
+        "description": "It seems like the device can't be reached. Maybe it's switched off or there is a problem with the network connection.",
+        "retry": "Retry"
     }
 }

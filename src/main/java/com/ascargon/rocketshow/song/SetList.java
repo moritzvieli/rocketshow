@@ -14,6 +14,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.Manager;
+import com.ascargon.rocketshow.RemoteDevice;
 
 @XmlRootElement
 public class SetList {
@@ -44,7 +45,7 @@ public class SetList {
 		if (currentSong != null) {
 			if (currentSong.getPlayState() == Song.PlayState.PLAYING
 					|| currentSong.getPlayState() == Song.PlayState.PAUSED) {
-				
+
 				currentSong.stop();
 			}
 		}
@@ -71,6 +72,12 @@ public class SetList {
 	}
 
 	public void play() throws Exception {
+		for (RemoteDevice remoteDevice : manager.getSettings().getRemoteDeviceList()) {
+			if (remoteDevice.isSynchronize()) {
+				remoteDevice.play();
+			}
+		}
+
 		if (!loaded) {
 			load();
 		}
@@ -81,6 +88,12 @@ public class SetList {
 	}
 
 	public void pause() throws Exception {
+		for (RemoteDevice remoteDevice : manager.getSettings().getRemoteDeviceList()) {
+			if (remoteDevice.isSynchronize()) {
+				remoteDevice.pause();
+			}
+		}
+
 		if (!loaded) {
 			load();
 		}
@@ -91,6 +104,12 @@ public class SetList {
 	}
 
 	public void resume() throws Exception {
+		for (RemoteDevice remoteDevice : manager.getSettings().getRemoteDeviceList()) {
+			if (remoteDevice.isSynchronize()) {
+				remoteDevice.resume();
+			}
+		}
+
 		if (!loaded) {
 			load();
 		}
@@ -101,6 +120,12 @@ public class SetList {
 	}
 
 	public void togglePlay() throws Exception {
+		for (RemoteDevice remoteDevice : manager.getSettings().getRemoteDeviceList()) {
+			if (remoteDevice.isSynchronize()) {
+				remoteDevice.togglePlay();
+			}
+		}
+
 		if (!loaded) {
 			load();
 		}
@@ -111,6 +136,12 @@ public class SetList {
 	}
 
 	public void stop() throws Exception {
+		for (RemoteDevice remoteDevice : manager.getSettings().getRemoteDeviceList()) {
+			if (remoteDevice.isSynchronize()) {
+				remoteDevice.stop();
+			}
+		}
+
 		if (!loaded) {
 			load();
 		}
@@ -132,7 +163,7 @@ public class SetList {
 		}
 
 		setCurrentSongIndex(newIndex);
-		
+
 		manager.getStateManager().notifyClients();
 	}
 
@@ -148,7 +179,7 @@ public class SetList {
 		}
 
 		setCurrentSongIndex(newIndex);
-		
+
 		manager.getStateManager().notifyClients();
 	}
 
@@ -180,14 +211,22 @@ public class SetList {
 	}
 
 	public String getCurrentSongName() {
-		if(setListSongList.size() == 0) {
+		if (setListSongList.size() == 0) {
 			return null;
 		}
-		
+
 		return setListSongList.get(currentSongIndex).getName();
 	}
 
 	public void setCurrentSongIndex(int currentSongIndex) throws Exception {
+		if(manager != null) {
+			for (RemoteDevice remoteDevice : manager.getSettings().getRemoteDeviceList()) {
+				if (remoteDevice.isSynchronize()) {
+					remoteDevice.setSongIndex(currentSongIndex);
+				}
+			}
+		}
+
 		this.currentSongIndex = currentSongIndex;
 		logger.info("Set song index " + currentSongIndex);
 		loaded = false;

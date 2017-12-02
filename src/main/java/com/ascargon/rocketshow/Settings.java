@@ -28,7 +28,7 @@ public class Settings {
 	private MidiDevice midiInDevice;
 	private MidiDevice midiOutDevice;
 
-	private List<RemoteDevice> remoteDeviceList;
+	private List<RemoteDevice> remoteDeviceList = new ArrayList<RemoteDevice>();
 
 	private Midi2ActionMapping midi2ActionMapping;
 	private Midi2DmxMapping midi2DmxMapping;
@@ -124,7 +124,8 @@ public class Settings {
 		this.dmxSendDelayMillis = dmxSendDelayMillis;
 	}
 
-	@XmlElement
+	@XmlElement(name = "remoteDevice")
+	@XmlElementWrapper(name = "remoteDeviceList")
 	public List<RemoteDevice> getRemoteDeviceList() {
 		return remoteDeviceList;
 	}

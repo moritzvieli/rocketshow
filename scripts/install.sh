@@ -127,6 +127,7 @@ sed -i '2iJAVA_OPTS="-Djava.security.egd=file:/dev/urandom"\n' /opt/rocketshow/t
 # Set default port to 80
 iptables -A INPUT -i eth0 -p tcp --dport 80 -j ACCEPT
 iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8080
+iptables -A PREROUTING -t nat -i wlan0 -p tcp --dport 80 -j REDIRECT --to-port 8080
 
 iptables-save > /etc/iptables/rules.v4
 
@@ -134,7 +135,7 @@ iptables-save > /etc/iptables/rules.v4
 # - Set more memory for the GPU to play larger video files with omxplayer
 # - Enable turbo-mode by default (boot_delay avoids sdcard corruption with turbo-mode, warranty is void)
 # - Overclock the sdcard a little bit to prevent bufferunderruns with ALSA
-sed -i '1igpu_mem=256\nforce_turbo=1\nboot_delay=1\ndtoverlay=sdhost,overclock_50=100\n' /boot/config.txt
+sed -i '1i# ROCKETSHOWSTART\ngpu_mem=256\nforce_turbo=1\nboot_delay=1\ndtparam=sd_overclock=100\n# ROCKETSHOWEND\n' /boot/config.txt
 
 # Set rocketshows nice priority to 10
 sed -i '1irocketshow soft priority 10' /etc/security/limits.conf

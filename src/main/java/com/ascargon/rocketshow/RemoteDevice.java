@@ -36,6 +36,9 @@ public class RemoteDevice {
 
 	// The host address (IP or hostname) of the remote device
 	private String host;
+	
+	// Synchronize song plays/stops with the local device
+	private boolean synchronize;
 
 	public RemoteDevice() {
 		RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(5000).build();
@@ -64,7 +67,39 @@ public class RemoteDevice {
 					+ EntityUtils.toString(response.getEntity()));
 		}
 	}
+	
+	public void play() throws ClientProtocolException, IOException {
+		doPost("transport/play");
+	}
 
+	public void pause() throws ClientProtocolException, IOException {
+		doPost("transport/pause");
+	}
+
+	public void stop() throws ClientProtocolException, IOException {
+		doPost("transport/stop");
+	}
+	
+	public void togglePlay() throws ClientProtocolException, IOException {
+		doPost("transport/toggle-play");
+	}
+	
+	public void resume() throws ClientProtocolException, IOException {
+		doPost("transport/resume");
+	}
+	
+	public void setNextSong() throws ClientProtocolException, IOException {
+		doPost("transport/next-song");
+	}
+	
+	public void setPreviousSong() throws ClientProtocolException, IOException {
+		doPost("transport/next-song");
+	}
+	
+	public void setSongIndex(int songIndex) throws ClientProtocolException, IOException {
+		doPost("transport/set-song-index?index=" + songIndex);
+	}
+	
 	@XmlElement
 	public int getId() {
 		return id;
@@ -90,6 +125,15 @@ public class RemoteDevice {
 
 	public void setHost(String host) {
 		this.host = host;
+	}
+
+	@XmlElement
+	public boolean isSynchronize() {
+		return synchronize;
+	}
+
+	public void setSynchronize(boolean synchronize) {
+		this.synchronize = synchronize;
 	}
 
 }

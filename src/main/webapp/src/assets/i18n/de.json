@@ -20,7 +20,7 @@
         "default-unit-name": "Meine Rocket Show"
     },
     "navigation": {
-        "play": "Play",
+        "play": "Abspielen",
         "edit": "Bearbeiten",
         "settings": "Einstellungen" 
     },
@@ -31,5 +31,10 @@
         "create-setlist": "Setliste erstellen",
         "search-songs": "Suche...",
         "add-file": "Datei hinzufügen"
+    },
+    "connection": {
+        "title": "Keine Verbindung",
+        "description": "Das Gerät kann nicht erreicht werden. Vielleicht wurde es ausgeschaltet oder es besteht ein Problem mit der Netzwerkverbindung.",
+        "retry": "Wiederholen"
     }
 }

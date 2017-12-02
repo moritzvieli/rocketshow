@@ -42,40 +42,35 @@ public class Midi2ActionConverter {
 	private void executeActionOnRemoteDevice(MidiAction action, RemoteDevice remoteDevice)
 			throws ClientProtocolException, IOException {
 
-		String apiUrl = "";
-
 		switch (action) {
 		case PLAY:
-			apiUrl = "transport/play";
+			remoteDevice.play();
 			break;
 		case PAUSE:
-			apiUrl = "transport/pause";
+			remoteDevice.pause();
 			break;
 		case TOGGLE_PLAY:
-			apiUrl = "transport/toggle-play";
+			remoteDevice.togglePlay();
 			break;
 		case RESUME:
-			apiUrl = "transport/resume";
+			remoteDevice.resume();
 			break;
 		case STOP:
-			apiUrl = "transport/stop";
+			remoteDevice.stop();
 			break;
 		case NEXT_SONG:
-			apiUrl = "transport/next-song";
+			remoteDevice.setNextSong();
 			break;
 		case PREVIOUS_SONG:
-			apiUrl = "transport/previous-song";
+			remoteDevice.setPreviousSong();
 			break;
 		case SET_SONG_INDEX:
-			apiUrl = "transport/set-song-index?index=" + manager.getCurrentSetList().getCurrentSongIndex();
+			remoteDevice.setSongIndex(manager.getCurrentSetList().getCurrentSongIndex());
 			break;
 		default:
 			logger.warn("Action '" + action.toString() + "' is unknown for remote devices and cannot be executed");
-			return;
+			break;
 		}
-
-		// Execute the post request with the given url
-		remoteDevice.doPost(apiUrl);
 	}
 
 	private void executeActionLocally(MidiAction action) throws Exception {

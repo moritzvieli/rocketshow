@@ -1,10 +1,10 @@
 <div class="container-fluid" *ngIf="!stateService.connected">
   <div class="alert alert-warning mb-0 text-center" role="alert">
-    <h3><i class="fa fa-plug" aria-hidden="true"></i> No connection</h3>
-    <p class="">It seems like the device can't be reached. Maybe it's switched off or there is a problem with the network connection.</p>
+    <h3><i class="fa fa-plug" aria-hidden="true"></i> {{ 'connection.title' | translate }}</h3>
+    <p>{{ 'connection.description' | translate }}</p>
 
     <button type="button" (click)="reconnect()" class="btn btn-warning">
-      <i class="fa fa-refresh" aria-hidden="true"></i> Retry
+      <i class="fa fa-refresh" aria-hidden="true"></i> {{ 'connection.retry' | translate }}
     </button>
   </div>
 </div>
