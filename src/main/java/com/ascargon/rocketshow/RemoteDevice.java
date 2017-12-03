@@ -1,14 +1,12 @@
 package com.ascargon.rocketshow;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
@@ -17,7 +15,7 @@ import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 
 /**
- * Defines a remote RocketShow device to be triggered by this one.
+ * Defines a remote RocketShow device to be triggered by the local one one.
  *
  * @author Moritz A. Vieli
  */
@@ -36,7 +34,7 @@ public class RemoteDevice {
 
 	// The host address (IP or hostname) of the remote device
 	private String host;
-	
+
 	// Synchronize song plays/stops with the local device
 	private boolean synchronize;
 
@@ -45,61 +43,67 @@ public class RemoteDevice {
 		httpClient = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
 	}
 
-	public void doPost(String apiUrl) throws ClientProtocolException, IOException {
+	public void doPost(String apiUrl) {
 		// Build the url for the post request
 		String url = "http://" + host + "/api/" + apiUrl;
 
 		HttpPost httpPost = new HttpPost(url);
-		HttpResponse response = httpClient.execute(httpPost);
+		HttpResponse response;
+		try {
+			response = httpClient.execute(httpPost);
 
-		// Read the response. The POST connection will not be released otherwise
-		BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+			// Read the response. The POST connection will not be released
+			// otherwise
+			BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
-		String line = "";
+			String line = "";
 
-		while ((line = rd.readLine()) != null) {
-			logger.debug("Response from remote device POST: " + line);
-		}
+			while ((line = rd.readLine()) != null) {
+				logger.debug("Response from remote device POST: " + line);
+			}
 
-		if (response.getStatusLine().getStatusCode() != 200) {
-			logger.error("Could not execute action on remote device with url '" + url + "'. Reason: '"
-					+ response.getStatusLine().getReasonPhrase() + "'. Body: "
-					+ EntityUtils.toString(response.getEntity()));
+			if (response.getStatusLine().getStatusCode() != 200) {
+				logger.error("Could not execute action on remote device with url '" + url + "'. Reason: '"
+						+ response.getStatusLine().getReasonPhrase() + "'. Body: "
+						+ EntityUtils.toString(response.getEntity()));
+			}
+		} catch (Exception e) {
+			logger.error("Could not execute action on remote device with url '" + url + "'", e);
 		}
 	}
-	
-	public void play() throws ClientProtocolException, IOException {
+
+	public void play() {
 		doPost("transport/play");
 	}
 
-	public void pause() throws ClientProtocolException, IOException {
+	public void pause() {
 		doPost("transport/pause");
 	}
 
-	public void stop() throws ClientProtocolException, IOException {
+	public void stop() {
 		doPost("transport/stop");
 	}
-	
-	public void togglePlay() throws ClientProtocolException, IOException {
+
+	public void togglePlay() {
 		doPost("transport/toggle-play");
 	}
-	
-	public void resume() throws ClientProtocolException, IOException {
+
+	public void resume() {
 		doPost("transport/resume");
 	}
-	
-	public void setNextSong() throws ClientProtocolException, IOException {
+
+	public void setNextSong() {
 		doPost("transport/next-song");
 	}
-	
-	public void setPreviousSong() throws ClientProtocolException, IOException {
+
+	public void setPreviousSong() {
 		doPost("transport/next-song");
 	}
-	
-	public void setSongIndex(int songIndex) throws ClientProtocolException, IOException {
+
+	public void setSongIndex(int songIndex) {
 		doPost("transport/set-song-index?index=" + songIndex);
 	}
-	
+
 	@XmlElement
 	public int getId() {
 		return id;

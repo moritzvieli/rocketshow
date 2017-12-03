@@ -77,10 +77,10 @@ chmod +x /opt/rocketshow/update.sh
 # Install Tomcat (credits to https://wolfpaulus.com/java/tomcat-jessie/)
 mkdir -p ~/tmp
 cd ~/tmp
-wget http://mirror.easyname.ch/apache/tomcat/tomcat-8/v8.5.23/bin/apache-tomcat-8.5.23.tar.gz
-tar xvzf ./apache-tomcat-8.5.23.tar.gz
-rm apache-tomcat-8.5.23.tar.gz
-mv ./apache-tomcat-8.5.23 ./tomcat
+wget http://rocketshow.net/tomcat/apache-tomcat-8.5.24.tar.gz
+tar xvzf ./apache-tomcat-8.5.24.tar.gz
+rm apache-tomcat-8.5.24.tar.gz
+mv ./apache-tomcat-8.5.24 ./tomcat
 mv tomcat /opt/rocketshow
 chown -R rocketshow:rocketshow /opt/rocketshow/tomcat/*
 chmod +x /opt/rocketshow/tomcat/bin/*.sh

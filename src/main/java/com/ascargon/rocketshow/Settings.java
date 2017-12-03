@@ -43,6 +43,9 @@ public class Settings {
 	public Settings() {
 		// Initialize default settings
 
+		midiInDevice = new MidiDevice();
+		midiOutDevice = new MidiDevice();
+		
 		audioPlayerType = PlayerType.ALSA_PLAYER;
 
 		defaultImagePath = null;
