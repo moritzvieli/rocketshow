@@ -48,7 +48,8 @@ public class MidiPlayer {
 		// Read the first bytes
 		sequencer.start();
 		sequencer.stop();
-
+		
+		logger.debug("File '" + path + "' loaded");
 		playerLoadedListener.playerLoaded();
 	}
 

@@ -1,8 +1,9 @@
 package com.ascargon.rocketshow.audio;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Timer;
-import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 
@@ -23,9 +24,9 @@ public class AudioPlayer {
 	private String device;
 
 	private PlayerType playerType = PlayerType.MPLAYER;
-	
-	private Timer loadTimer;
 
+	private Timer loadTimer;
+	
 	public void load(PlayerType playerType, PlayerLoadedListener playerLoadedListener, String path, String device)
 			throws IOException, InterruptedException {
 
@@ -37,30 +38,33 @@ public class AudioPlayer {
 			shellManager = new ShellManager(new String[] { "mplayer", "-ao", "alsa:device=" + device, "-quiet",
 					"-slave", "-cache-min", "99", path });
 
+			new Thread(new Runnable(){
+			    public void run(){
+					BufferedReader reader = new BufferedReader(new InputStreamReader(shellManager.getInputStream()));
+					String line = null;
+					try {
+						while ((line = reader.readLine()) != null) {
+							logger.debug("Output from audio player: " + line);
+							
+							if(line.startsWith("Starting playback...")) {
+								// Rewind to the start position
+								shellManager.sendCommand("pausing seek 0 2", true);
+								
+								logger.debug("File '" + path + "' loaded");
+								playerLoadedListener.playerLoaded();
+							}
+						}
+					} catch (IOException e) {
+						logger.error("Could not read audio player output", e);
+					}
+			    }
+			}).start();
+			
 			// Pause, as soon as the song has been loaded and wait for it to be
 			// played
 			pause();
-
-			// Wait for the player to get ready, because reading the input
-			// stream in an infinite loop does not work properly (takes too much
-			// resources and exiting the loop as soon as the player is loaded
-			// breaks the process)
-			loadTimer = new Timer();
-			loadTimer.schedule(new TimerTask() {
-				@Override
-				public void run() {
-					try {
-						loadTimer = null;
-						
-						// Rewind to the start position
-						shellManager.sendCommand("pausing seek 0 2", true);
-					} catch (IOException e) {
-					}
-
-					playerLoadedListener.playerLoaded();
-				}
-			}, 3000 /* TODO Specify in global config */);
 		} else if (playerType == PlayerType.ALSA_PLAYER) {
+			logger.debug("File '" + path + "' loaded");
 			playerLoadedListener.playerLoaded();
 		}
 	}
@@ -87,11 +91,11 @@ public class AudioPlayer {
 	}
 
 	public void stop() throws Exception {
-		if(loadTimer != null) {
+		if (loadTimer != null) {
 			loadTimer.cancel();
 			loadTimer = null;
 		}
-		
+
 		if (shellManager != null) {
 			if (playerType == PlayerType.MPLAYER) {
 				shellManager.sendCommand("quit", true);

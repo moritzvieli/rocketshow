@@ -46,7 +46,7 @@ public class Settings {
 		midiInDevice = new MidiDevice();
 		midiOutDevice = new MidiDevice();
 		
-		audioPlayerType = PlayerType.ALSA_PLAYER;
+		audioPlayerType = PlayerType.MPLAYER;
 
 		defaultImagePath = null;
 

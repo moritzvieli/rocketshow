@@ -1,11 +1,10 @@
 package com.ascargon.rocketshow.song;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -15,6 +14,7 @@ import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.Manager;
 import com.ascargon.rocketshow.RemoteDevice;
+import com.ascargon.rocketshow.song.Song.PlayState;
 
 @XmlRootElement
 public class SetList {
@@ -32,35 +32,24 @@ public class SetList {
 	private Manager manager;
 
 	private Song currentSong;
+	
+	private ExecutorService playExecutor;
 
-	private boolean loaded = false;
-
-	// Preload the current song
-	public void load() throws Exception {
+	// Read the current song from its file
+	public void readCurrentSong() throws Exception {
 		if (currentSongIndex >= setListSongList.size()) {
 			return;
 		}
 
-		// Stop a current song, if required
+		// Stop the current song (if not already done)
 		if (currentSong != null) {
-			if (currentSong.getPlayState() == Song.PlayState.PLAYING
-					|| currentSong.getPlayState() == Song.PlayState.PAUSED) {
-
-				currentSong.stop();
-			}
+			currentSong.stop();
 		}
 
-		// Load the song first
-		File file = new File(Manager.BASE_PATH + "song/" + setListSongList.get(currentSongIndex).getName());
-		JAXBContext jaxbContext = JAXBContext.newInstance(Song.class);
-		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-		currentSong = (Song) jaxbUnmarshaller.unmarshal(file);
+		currentSong = manager.getSongManager().loadSong(setListSongList.get(currentSongIndex).getName());
 		currentSong.setName(setListSongList.get(currentSongIndex).getName());
 		currentSong.getMidi2DmxMapping().setParent(manager.getSettings().getMidi2DmxMapping());
 		currentSong.setManager(manager);
-
-		currentSong.load();
-		loaded = true;
 	}
 
 	// Return only the setlist-relevant information of the song (e.g. to save to
@@ -71,20 +60,73 @@ public class SetList {
 		return setListSongList;
 	}
 
+	public void load() throws Exception {
+		if (currentSong != null) {
+			currentSong.loadFiles();
+		}
+	}
+
 	public void play() throws Exception {
+		currentSong.setPlayState(PlayState.LOADING);
+		
+		// Make sure all remote devices and the local one have loaded the song
+		// before playing it
+		playExecutor = Executors.newFixedThreadPool(30);
+
+		// Load all remote devices song
+		for (RemoteDevice remoteDevice : manager.getSettings().getRemoteDeviceList()) {
+			if (remoteDevice.isSynchronize()) {
+				playExecutor.execute(new Runnable() {
+					public void run() {
+						remoteDevice.load(true);
+					}
+				});
+			}
+		}
+
+		// Also load the local song files
+		if (currentSong != null) {
+			playExecutor.execute(new Runnable() {
+				public void run() {
+					try {
+						currentSong.loadFiles();
+					} catch (Exception e) {
+						logger.error("Could not load the song files", e);
+					}
+				}
+			});
+		}
+
+		logger.debug("Wait for all devices to be loaded...");
+		
+		// Wait for the songs on all devices to be loaded
+		playExecutor.shutdown();
+
+		while (!playExecutor.isTerminated()) {
+		}
+
+		logger.debug("All devices loaded");
+		
+		if (currentSong.getPlayState() != PlayState.PAUSED) {
+			// Maybe the song stopped meanwhile
+			return;
+		}
+		
+		logger.debug("Start playing on all devices...");
+		
+		// Play the song on all remote devices
 		for (RemoteDevice remoteDevice : manager.getSettings().getRemoteDeviceList()) {
 			if (remoteDevice.isSynchronize()) {
 				remoteDevice.play();
 			}
 		}
 
-		if (!loaded) {
-			load();
-		}
-
+		// Play the song locally
 		if (currentSong != null) {
 			currentSong.play();
 		}
+		
+		logger.debug("Playing on all devices");
 	}
 
 	public void pause() throws Exception {
@@ -92,10 +134,6 @@ public class SetList {
 			if (remoteDevice.isSynchronize()) {
 				remoteDevice.pause();
 			}
-		}
-
-		if (!loaded) {
-			load();
 		}
 
 		if (currentSong != null) {
@@ -110,10 +148,6 @@ public class SetList {
 			}
 		}
 
-		if (!loaded) {
-			load();
-		}
-
 		if (currentSong != null) {
 			currentSong.resume();
 		}
@@ -126,28 +160,42 @@ public class SetList {
 			}
 		}
 
-		if (!loaded) {
-			load();
-		}
-
 		if (currentSong != null) {
 			currentSong.togglePlay();
 		}
 	}
 
 	public void stop() throws Exception {
+		ExecutorService executor = Executors.newFixedThreadPool(30);
+
+		// Stop all remote devices
 		for (RemoteDevice remoteDevice : manager.getSettings().getRemoteDeviceList()) {
 			if (remoteDevice.isSynchronize()) {
-				remoteDevice.stop();
+				executor.execute(new Runnable() {
+					public void run() {
+						remoteDevice.stop();
+					}
+				});
 			}
 		}
 
-		if (!loaded) {
-			load();
+		// Also load the local song files
+		if (currentSong != null) {
+			executor.execute(new Runnable() {
+				public void run() {
+					try {
+						currentSong.stop();
+					} catch (Exception e) {
+						logger.error("Could not load the song files", e);
+					}
+				}
+			});
 		}
 
-		if (currentSong != null) {
-			currentSong.stop();
+		// Wait for all devices to be stopped
+		executor.shutdown();
+
+		while (!executor.isTerminated()) {
 		}
 	}
 
@@ -219,7 +267,7 @@ public class SetList {
 	}
 
 	public void setCurrentSongIndex(int currentSongIndex) throws Exception {
-		if(manager != null) {
+		if (manager != null) {
 			for (RemoteDevice remoteDevice : manager.getSettings().getRemoteDeviceList()) {
 				if (remoteDevice.isSynchronize()) {
 					remoteDevice.setSongIndex(currentSongIndex);
@@ -228,16 +276,9 @@ public class SetList {
 		}
 
 		this.currentSongIndex = currentSongIndex;
+		readCurrentSong();
+
 		logger.info("Set song index " + currentSongIndex);
-		loaded = false;
-	}
-
-	public boolean isLoaded() {
-		return loaded;
-	}
-
-	public void setLoaded(boolean loaded) {
-		this.loaded = loaded;
 	}
 
 	public Song getCurrentSong() {

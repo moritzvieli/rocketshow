@@ -92,6 +92,7 @@ abstract public class File implements PlayerLoadedListener {
 		this.loaded = loaded;
 	}
 
+	@XmlTransient
 	public boolean isLoading() {
 		return loading;
 	}

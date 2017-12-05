@@ -43,12 +43,11 @@ public class Song {
 		Manager manager = (Manager) context.getAttribute("manager");
 		manager.getSongManager().saveSong(song);
 
-		// If this is the current song, and it is already loaded reload it
+		// If this is the current song, read it again
 		if (manager.getCurrentSetList() != null
-				&& manager.getCurrentSetList().getCurrentSongName().equals(song.getName())
-				&& manager.getCurrentSetList().isLoaded()) {
+				&& manager.getCurrentSetList().getCurrentSongName().equals(song.getName())) {
 			
-			manager.getCurrentSetList().load();
+			manager.getCurrentSetList().readCurrentSong();
 		}
 
 		return Response.status(200).build();

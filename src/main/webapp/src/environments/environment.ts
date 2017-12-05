@@ -11,5 +11,5 @@ export const environment = {
   // Uncomment this line for a local tomcat deployment
   //localBackend: "localhost:8080/RocketShow"
   
-  localBackend: "192.168.1.228"
+  localBackend: "192.168.1.70"
 };

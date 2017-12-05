@@ -1,6 +1,8 @@
 package com.ascargon.rocketshow.video;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -14,7 +16,7 @@ public class VideoPlayer {
 	final static Logger logger = Logger.getLogger(VideoPlayer.class);
 
 	private ShellManager shellManager;
-	
+
 	private Timer loadTimer;
 	private Timer closeTimer;
 	private boolean closing;
@@ -25,6 +27,31 @@ public class VideoPlayer {
 		// Pause, as soon as the song has been loaded and wait for it to be
 		// played
 		pause();
+
+		new Thread(new Runnable() {
+			public void run() {
+				BufferedReader reader = new BufferedReader(new InputStreamReader(shellManager.getInputStream()));
+				String line = null;
+				try {
+					while (reader.ready()) {
+						line = reader.readLine();
+
+						if (line == null) {
+							break;
+						}
+
+						logger.debug("Output from video player: " + line);
+
+						if (line.startsWith("V:PortSettingsChanged")) {
+							logger.debug("File '" + path + "' loaded");
+							playerLoadedListener.playerLoaded();
+						}
+					}
+				} catch (IOException e) {
+					logger.error("Could not read video player output", e);
+				}
+			}
+		}).start();
 
 		// Wait for the player to get ready, because reading the input stream in
 		// an infinite loop does not work properly (takes too much resources and
@@ -53,12 +80,12 @@ public class VideoPlayer {
 
 	public void stop() throws Exception {
 		closing = true;
-		
-		if(loadTimer != null) {
+
+		if (loadTimer != null) {
 			loadTimer.cancel();
 			loadTimer = null;
 		}
-		
+
 		// Delay a close as backup, because fast load/short may sometimes fail
 		// TODO Retry, until closed
 		closeTimer = new Timer();
@@ -66,26 +93,27 @@ public class VideoPlayer {
 			@Override
 			public void run() {
 				closeTimer = null;
-				
-				if(closing) {
+
+				if (closing) {
 					try {
 						shellManager.sendCommand("q");
-					} catch (IOException e) {}
+					} catch (IOException e) {
+					}
 				}
 			}
 		}, 500);
-		
+
 		if (shellManager != null) {
 			shellManager.sendCommand("q");
 			shellManager.getProcess().waitFor();
 			shellManager.close();
 		}
-		
-		if(closeTimer != null) {
+
+		if (closeTimer != null) {
 			closeTimer.cancel();
 			closeTimer = null;
 		}
-		
+
 		closing = false;
 	}
 

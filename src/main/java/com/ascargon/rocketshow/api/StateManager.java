@@ -69,13 +69,18 @@ public class StateManager {
 				if (manager.getCurrentSetList().getCurrentSong() != null) {
 					currentState.setPlayState(manager.getCurrentSetList().getCurrentSong().getPlayState());
 				}
-				
+
 				currentState.setCurrentSongIndex(manager.getCurrentSetList().getCurrentSongIndex());
 				currentState.setCurrentSongName(manager.getCurrentSetList().getCurrentSongName());
-				
-				if(manager.getCurrentSetList().getCurrentSong() != null) {
-					currentState.setCurrentSongDurationMillis(manager.getCurrentSetList().getCurrentSong().getDurationMillis());
-					currentState.setLastStartTime(Date.from(manager.getCurrentSetList().getCurrentSong().getLastStartTime().atZone(ZoneId.systemDefault()).toInstant()));
+
+				if (manager.getCurrentSetList().getCurrentSong() != null) {
+					currentState.setCurrentSongDurationMillis(
+							manager.getCurrentSetList().getCurrentSong().getDurationMillis());
+
+					if (manager.getCurrentSetList().getCurrentSong().getLastStartTime() != null) {
+						currentState.setLastStartTime(Date.from(manager.getCurrentSetList().getCurrentSong()
+								.getLastStartTime().atZone(ZoneId.systemDefault()).toInstant()));
+					}
 				}
 			}
 		}

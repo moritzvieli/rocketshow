@@ -39,20 +39,20 @@ public class RemoteDevice {
 	private boolean synchronize;
 
 	public RemoteDevice() {
+		// TODO Add this timeout to the settings
 		RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(5000).build();
 		httpClient = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
 	}
 
-	public void doPost(String apiUrl) {
-		// Build the url for the post request
-		String url = "http://" + host + "/api/" + apiUrl;
-
-		HttpPost httpPost = new HttpPost(url);
-		HttpResponse response;
+	private void executeRequest(String url) {
 		try {
+			HttpPost httpPost = new HttpPost(url);
+			HttpResponse response;
+
 			response = httpClient.execute(httpPost);
 
-			// Read the response. The POST connection will not be released
+			// Read the response. The POST connection will not be
+			// released
 			// otherwise
 			BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
@@ -68,8 +68,34 @@ public class RemoteDevice {
 						+ EntityUtils.toString(response.getEntity()));
 			}
 		} catch (Exception e) {
-			logger.error("Could not execute action on remote device with url '" + url + "'", e);
+			logger.error("Could not execute action on remote device '" + name + "' with url '" + url + "'", e);
 		}
+	}
+
+	public void doPost(String apiUrl, boolean synchronous) {
+		// Build the url for the post request
+		String url = "http://" + host + "/api/" + apiUrl;
+
+		if (synchronous) {
+			executeRequest(url);
+		} else {
+			new Thread(new Runnable() {
+				public void run() {
+					executeRequest(url);
+				}
+			}).start();
+		}
+	}
+
+	public void doPost(String apiUrl) {
+		doPost(apiUrl, false);
+	}
+
+	public void load(boolean synchronous) {
+		doPost("transport/load", synchronous);
+	}
+	public void load() {
+		doPost("transport/load", false);
 	}
 
 	public void play() {

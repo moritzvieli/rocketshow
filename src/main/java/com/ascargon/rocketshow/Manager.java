@@ -224,6 +224,13 @@ public class Manager {
 			logger.error("Could not restore session", e);
 		}
 
+		// Read the current song file
+		try {
+			currentSetList.readCurrentSong();
+		} catch (Exception e) {
+			logger.error("Could not read current song", e);
+		}
+		
 		logger.info("Finished initializing");
 	}
 

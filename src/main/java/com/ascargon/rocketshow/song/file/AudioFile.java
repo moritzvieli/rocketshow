@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.xml.bind.annotation.XmlTransient;
+
 import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.Manager;
@@ -21,13 +23,14 @@ public class AudioFile extends com.ascargon.rocketshow.song.file.File {
 	
 	private Timer playTimer;
 	
+	@XmlTransient
 	public String getPath() {
 		return Manager.BASE_PATH + MEDIA_PATH + AUDIO_PATH + getName();
 	}
 	
 	@Override
 	public void load() throws Exception {
-		logger.debug("Load file '" + this.getName());
+		logger.debug("Loading file '" + this.getName() + "...");
 		
 		this.setLoaded(false);
 		this.setLoading(true);

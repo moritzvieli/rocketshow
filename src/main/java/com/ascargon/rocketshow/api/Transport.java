@@ -16,7 +16,18 @@ public class Transport {
 
 	@Context
 	ServletContext context;
-
+	
+	@Path("load")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response load() throws Exception {
+		Manager manager = (Manager) context.getAttribute("manager");
+		if (manager.getCurrentSetList() != null) {
+			manager.getCurrentSetList().getCurrentSong().loadFiles();
+		}
+		return Response.status(200).build();
+	}
+	
 	@Path("play")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)

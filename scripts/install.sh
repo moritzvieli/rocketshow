@@ -126,8 +126,7 @@ sed -i '2iJAVA_OPTS="-Djava.security.egd=file:/dev/urandom"\n' /opt/rocketshow/t
 
 # Set default port to 80
 iptables -A INPUT -i eth0 -p tcp --dport 80 -j ACCEPT
-iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8080
-iptables -A PREROUTING -t nat -i wlan0 -p tcp --dport 80 -j REDIRECT --to-port 8080
+iptables -A PREROUTING -t nat -p tcp --dport 80 -j REDIRECT --to-port 8080
 
 iptables-save > /etc/iptables/rules.v4
 

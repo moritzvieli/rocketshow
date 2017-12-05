@@ -3,6 +3,8 @@ package com.ascargon.rocketshow.song.file;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.xml.bind.annotation.XmlTransient;
+
 import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.Manager;
@@ -25,13 +27,14 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 		setMidiRouting(new MidiRouting());
 	}
 
+	@XmlTransient
 	public String getPath() {
 		return Manager.BASE_PATH + MEDIA_PATH + MIDI_PATH + getName();
 	}
 
 	public void load() throws Exception {
-		logger.debug(
-				"Load file '" + this.getName() + "' with routing to " + midiRouting.getMidiDestination().toString());
+		logger.debug("Loading file '" + this.getName() + "' with routing to "
+				+ midiRouting.getMidiDestination().toString() + "...");
 
 		this.setLoaded(false);
 		this.setLoading(true);

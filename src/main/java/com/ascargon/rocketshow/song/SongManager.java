@@ -79,7 +79,7 @@ public class SongManager {
 
 		logger.info("Loading song " + name + "...");
 
-		// Load a setlist
+		// Load a song
 		JAXBContext jaxbContext = JAXBContext.newInstance(Song.class);
 		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 		song = (Song) jaxbUnmarshaller.unmarshal(new File(Manager.BASE_PATH + SONG_PATH + name));

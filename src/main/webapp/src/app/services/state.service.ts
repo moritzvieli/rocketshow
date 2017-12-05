@@ -38,20 +38,26 @@ export class StateService {
     this.websocket.onMessage(
       (msg: MessageEvent) => {
         let state: State = new State(JSON.parse(msg.data));
-
-        this.state.next(state);
-        this.currentState = state;
+        this.receiveState(state);
       },
       { autoApply: false }
     );
 
     this.websocket.onOpen(() => {
       this.connected = true;
+      this.getState().subscribe((state: State) => {
+        this.receiveState(this.currentState);
+      });
     });
 
     this.websocket.onClose(() => {
       this.connected = false;
     });
+  }
+
+  receiveState(state: State): void {
+    this.state.next(state);
+    this.currentState = state;
   }
 
   getState(): Observable<State> {

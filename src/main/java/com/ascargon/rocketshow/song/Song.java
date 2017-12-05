@@ -38,14 +38,14 @@ public class Song {
 				// playing this song?
 	}
 
-	private PlayState playState;
+	private PlayState playState = PlayState.STOPPED;
 
 	private String name;
 
 	private boolean autoStartNextSong = false;
-	
+
 	private String notes;
-	
+
 	private long durationMillis;
 
 	private Midi2DmxMapping midi2DmxMapping = new Midi2DmxMapping();
@@ -58,11 +58,53 @@ public class Song {
 
 	private LocalDateTime lastStartTime;
 	private long passedMillis;
+	
+	private boolean filesLoaded = false;
 
-	public void load() throws Exception {
-		logger.info("Loading song '" + name + "'");
+	public void close() throws Exception {
+		for (File file : fileList) {
+			file.close();
+		}
+		
+		filesLoaded = false;
 
-		// Load all files inside the song
+		// Cancel the auto-stop timer
+		if (autoStopTimer != null) {
+			autoStopTimer.cancel();
+			autoStopTimer = null;
+		}
+
+		playState = PlayState.STOPPED;
+	}
+
+	public void playerLoaded() {
+        synchronized(this){
+            notifyAll();
+       }
+	}
+
+	private boolean allFilesLoaded() {
+		for (File file : fileList) {
+			if (file.isActive() && !file.isLoaded()) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	// Load all files but don't start playing
+	public synchronized void loadFiles() throws Exception {
+		if(filesLoaded) {
+			playState = PlayState.PAUSED;
+			return;
+		}
+		
+		playState = PlayState.LOADING;
+		manager.getStateManager().notifyClients();
+		
+		logger.debug("Loading all files for song '" + name + "'...");
+
 		for (File file : fileList) {
 			if (file.isActive()) {
 				if (file instanceof MidiFile) {
@@ -72,28 +114,22 @@ public class Song {
 
 				file.setManager(manager);
 				file.setSong(this);
+
 				file.load();
 			}
 		}
-	}
 
-	public void close() throws Exception {
-		for (File file : fileList) {
-			file.close();
-		}
-
-		playState = PlayState.STOPPED;
-	}
-
-	public void playerLoaded() {
-		// Start playing the song, if needed
-		if (playState == PlayState.LOADING) {
-			try {
-				play();
-			} catch (Exception e) {
-				logger.error("Could not play song '" + name + "'", e);
+		synchronized (this) {
+			while (!allFilesLoaded()) {
+				wait();
 			}
 		}
+		
+		logger.debug("All files for song '" + name + "' loaded");
+		
+		playState = PlayState.PAUSED;
+		
+		filesLoaded = true;
 	}
 
 	private void startAutoStopTimer(long passedMillis) {
@@ -109,9 +145,9 @@ public class Song {
 				}
 			}
 		}
-		
+
 		maxDurationAndOffset -= passedMillis;
-		
+
 		autoStopTimer = new Timer();
 		autoStopTimer.schedule(new TimerTask() {
 			@Override
@@ -120,12 +156,13 @@ public class Song {
 					autoStopTimer = null;
 					stop();
 
-					if(autoStartNextSong) {
+					if (autoStartNextSong) {
 						int oldSongIndex = manager.getCurrentSetList().getCurrentSongIndex();
 						manager.getCurrentSetList().nextSong();
-						
-						if(oldSongIndex != manager.getCurrentSetList().getCurrentSongIndex()) {
-							// There really was a next song, it's not the current one
+
+						if (oldSongIndex != manager.getCurrentSetList().getCurrentSongIndex()) {
+							// There really was a next song, it's not the
+							// current one
 							manager.getCurrentSetList().play();
 						}
 					}
@@ -135,36 +172,17 @@ public class Song {
 			}
 		}, maxDurationAndOffset);
 	}
-	
+
 	public synchronized void play() throws Exception {
-		if (playState == PlayState.PLAYING || playState == PlayState.STOPPING) {
+		if (playState == PlayState.PLAYING || playState == PlayState.STOPPING || playState == PlayState.LOADING) {
 			return;
 		}
 
-		playState = PlayState.LOADING;
+		// Load all files
+		loadFiles();
 
-		boolean allFilesLoaded = true;
-
-		// Only play, if all files have been finished loading
-		for (File file : fileList) {
-			if (!file.isLoaded() && file.isActive()) {
-				// This song is not yet loaded -> start playing, as soon as all
-				// files have been loaded
-				logger.debug("File '" + file.getName() + "' not yet loaded");
-				allFilesLoaded = false;
-
-				if (!file.isLoading()) {
-					file.load();
-				}
-			}
-		}
-
-		if (!allFilesLoaded) {
-			return;
-		}
-
-		if (playState != PlayState.LOADING) {
-			// Maybe stopping meanwhile
+		if (playState != PlayState.PAUSED) {
+			// Maybe the song is stopping meanwhile
 			return;
 		}
 
@@ -181,9 +199,8 @@ public class Song {
 
 		lastStartTime = LocalDateTime.now();
 		passedMillis = 0;
-
+		
 		playState = PlayState.PLAYING;
-
 		manager.getStateManager().notifyClients();
 	}
 
@@ -193,10 +210,10 @@ public class Song {
 			autoStopTimer.cancel();
 			autoStopTimer = null;
 		}
-		
+
 		// Save the passed time since the last run
 		passedMillis += lastStartTime.until(LocalDateTime.now(), ChronoUnit.MILLIS);
-		
+
 		if (playState == PlayState.PAUSED) {
 			return;
 		}
@@ -211,7 +228,6 @@ public class Song {
 		}
 
 		playState = PlayState.PAUSED;
-
 		manager.getStateManager().notifyClients();
 	}
 
@@ -219,7 +235,7 @@ public class Song {
 		// Restart the auto-stop timer from the last pause
 		startAutoStopTimer(passedMillis);
 		lastStartTime = LocalDateTime.now();
-		
+
 		if (playState == PlayState.PLAYING) {
 			return;
 		}
@@ -234,7 +250,6 @@ public class Song {
 		}
 
 		playState = PlayState.PLAYING;
-
 		manager.getStateManager().notifyClients();
 	}
 
@@ -252,16 +267,15 @@ public class Song {
 		}
 
 		playState = PlayState.STOPPING;
-
+		manager.getStateManager().notifyClients();
+		
 		// Cancel the auto-stop timer
 		if (autoStopTimer != null) {
 			autoStopTimer.cancel();
 			autoStopTimer = null;
 		}
-		
-		passedMillis = 0;
 
-		manager.getStateManager().notifyClients();
+		passedMillis = 0;
 
 		logger.info("Stopping song '" + name + "'");
 
@@ -269,17 +283,18 @@ public class Song {
 		for (File file : fileList) {
 			if (file.isActive()) {
 				try {
-					file.stop();
+					file.close();
 				} catch (Exception e) {
 					logger.error("Could not stop file '" + file.getName() + "'");
 				}
 			}
 		}
+		
+		filesLoaded = false;
 
 		logger.info("Song '" + name + "' stopped");
 
 		playState = PlayState.STOPPED;
-
 		manager.getStateManager().notifyClients();
 	}
 
@@ -357,6 +372,10 @@ public class Song {
 
 	public void setLastStartTime(LocalDateTime lastStartTime) {
 		this.lastStartTime = lastStartTime;
+	}
+
+	public void setPlayState(PlayState playState) {
+		this.playState = playState;
 	}
 
 }
