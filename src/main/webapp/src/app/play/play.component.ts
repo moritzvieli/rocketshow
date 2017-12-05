@@ -61,6 +61,17 @@ export class PlayComponent implements OnInit {
     return this.pad(minutes, 2) + ':' + this.pad(seconds, 2) + '.' + this.pad(ms, 3);
   }
 
+  private updatePlayState(): void {
+    let currentTime = new Date();
+    let passedMillis = currentTime.getTime() - this.currentState.lastStartTime.getTime();
+
+    if (passedMillis > 0) {
+      this.playTime = this.msToTime(passedMillis);
+    }
+
+    this.playPercentage = 100 * passedMillis / this.currentState.currentSongDurationMillis;
+  }
+
   private stateChanged(newState: State) {
     if (newState.playState == 'PLAYING' && this.currentState.playState != 'PLAYING') {
       if (this.playUpdateSubscription) {
@@ -69,14 +80,7 @@ export class PlayComponent implements OnInit {
 
       let playUpdater = Observable.timer(0, 10);
       this.playUpdateSubscription = playUpdater.subscribe(() => {
-        let currentTime = new Date();
-        let passedMillis = currentTime.getTime() - this.currentState.lastStartTime.getTime();
-
-        if (passedMillis > 0) {
-          this.playTime = this.msToTime(passedMillis);
-        }
-
-        this.playPercentage = 100 * passedMillis / this.currentState.currentSongDurationMillis;
+        this.updatePlayState();
       });
     }
 
@@ -91,16 +95,28 @@ export class PlayComponent implements OnInit {
     }
 
     this.currentState = newState;
+
+    this.updatePlayState();
   }
 
   play() {
-    this.currentState.playState = 'LOADING';
-    this.transportService.play().subscribe();
+    if(this.currentState.playState = 'PAUSED') {
+      this.transportService.resume().subscribe();
+    }else {
+      this.currentState.playState = 'LOADING';
+      this.transportService.play().subscribe();
+    }
   }
 
   stop() {
     this.currentState.playState = 'STOPPING';
     this.transportService.stop().subscribe();
+  }
+
+  pause() {
+    this.currentState.playState = 'PAUSED';
+    this.transportService.pause().subscribe();
+    this.playUpdateSubscription.unsubscribe();
   }
 
 }
