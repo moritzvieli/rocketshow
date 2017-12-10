@@ -2,6 +2,7 @@ import { Song } from './models/song';
 import { State } from './models/state';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { RouterModule, Routes } from '@angular/router';
 
@@ -67,6 +68,7 @@ const appRoutes: Routes = [
         deps: [HttpClient]
       }
     }),
+    FormsModule,
     SortablejsModule.forRoot({ 
       animation: 300,
       handle: '.list-sort-handle'

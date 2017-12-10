@@ -9,7 +9,11 @@
         "midi-in": "MIDI in",
         "midi-out": "MIDI out",
         "delete": "Delete",
-        "setlist": "Setlist"
+        "setlist": "Set"
+    },
+    "loading": {
+        "title": "Loading...",
+        "description": "Please wait while the application is being loaded." 
     },
     "intro": {
         "welcome": "Whoop, whoop!",
@@ -26,11 +30,16 @@
     },
     "editor": {
         "songs": "Songs",
-        "setlists": "Setlists",
+        "setlists": "Sets",
         "create-song": "Create song",
-        "create-setlist": "Create setlist",
+        "create-setlist": "Create set",
         "search-songs": "Search...",
-        "add-file": "Add file"
+        "add-file": "Add file",
+        "select-song": "Select an existing song or create a new one.",
+        "song-name": "Song name",
+        "default-song-name": "My New Song",
+        "notes": "Notes",
+        "files": "Files"
     },
     "connection": {
         "title": "No connection",

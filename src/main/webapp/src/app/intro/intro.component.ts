@@ -36,8 +36,6 @@ export class IntroComponent implements OnInit {
     setTimeout(() => {  
       this.router.navigate(['/play']);
     }, 500);
-
-    return false;
   }
 
 }

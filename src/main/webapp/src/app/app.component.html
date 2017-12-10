@@ -1,4 +1,24 @@
-<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light" *ngIf="!isIntro">
+<!-- Initial loading -->
+<div class="container d-flex h-100" *ngIf="!loaded">
+  <div class="row justify-content-center align-self-center mx-auto">
+    <div class="col-xl">
+      <div class="card">
+        <div class="card-body text-center">
+          <h4 class="card-title">{{ 'loading.title' | translate }}</h4>
+          <p class="card-text">{{ 'loading.description' | translate }}</p>
+          <div class="progress">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%" aria-valuenow="10"
+              aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Navigation -->
+<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light" *ngIf="loaded && !isIntro">
   <a class="navbar-brand" href="#">Rocket Show</a>
   <button class="navbar-toggler navbar-toggler-left" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,6 +40,8 @@
   </div>
 </nav>
 
-<app-connection></app-connection>
+<!-- Connectivity indicator -->
+<app-connection *ngIf="loaded"></app-connection>
 
-<router-outlet></router-outlet>
+<!-- Main content -->
+<router-outlet *ngIf="loaded"></router-outlet>
