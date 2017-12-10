@@ -128,19 +128,17 @@ public class Midi2ActionConverter {
 		}
 	}
 
-	public void processMidiEvent(int command, int channel, int note, long timeStamp,
-			Midi2ActionMapping midi2ActionMapping) throws Exception {
-
+	public void processMidiEvent(MidiSignal midiSignal, Midi2ActionMapping midi2ActionMapping) throws Exception {
 		// Map the MIDI event and execute the appropriate actions
 
 		// Only react to NOTE_ON events
-		if (command != ShortMessage.NOTE_ON) {
+		if (midiSignal.getCommand() != ShortMessage.NOTE_ON) {
 			return;
 		}
 
 		// Search for and execute all required actions
 		for (ActionMapping actionMapping : midi2ActionMapping.getActionMappingList()) {
-			if (isActionMappingMatch(actionMapping, channel, note)) {
+			if (isActionMappingMatch(actionMapping, midiSignal.getChannel(), midiSignal.getNote())) {
 				executeActionMappingAction(actionMapping);
 			}
 		}

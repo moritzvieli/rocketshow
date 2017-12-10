@@ -87,7 +87,7 @@ public class MidiInDeviceReceiver implements Receiver {
 		midiReceiver.open();
 
 		// Set the MIDI routing receivers
-		for(MidiRouting midiRouting : midiRoutingList) {
+		for (MidiRouting midiRouting : midiRoutingList) {
 			midiRouting.setTransmitter(midiReceiver.getTransmitter());
 		}
 
@@ -116,31 +116,11 @@ public class MidiInDeviceReceiver implements Receiver {
 			return;
 		}
 
-		ShortMessage shortMessage = (ShortMessage) message;
-
-		int command = shortMessage.getCommand();
-		int channel = shortMessage.getChannel();
-		int note = shortMessage.getData1();
-
-		// int velocity = shortMessage.getData2();
-		//
-		// String loggingCommand = "";
-		//
-		// if (command == ShortMessage.NOTE_ON) {
-		// loggingCommand = "ON";
-		// } else if (command == ShortMessage.NOTE_OFF) {
-		// loggingCommand = "OFF";
-		// } else {
-		// loggingCommand = "MISC";
-		// }
-
-		// logger.debug(
-		// "Note " + loggingCommand + ", channel = " + channel + ", note = " +
-		// note + ", velocity = " + velocity);
+		MidiSignal midiSignal = new MidiSignal((ShortMessage) message);
 
 		// Process MIDI events as actions according to the settings
 		try {
-			manager.getMidi2ActionConverter().processMidiEvent(command, channel, note, timeStamp,
+			manager.getMidi2ActionConverter().processMidiEvent(midiSignal,
 					manager.getSettings().getMidi2ActionMapping());
 		} catch (Exception e) {
 			logger.error("Could not execute action from live MIDI", e);
@@ -149,10 +129,10 @@ public class MidiInDeviceReceiver implements Receiver {
 
 	@Override
 	public void close() {
-		if(connectTimer != null) {
+		if (connectTimer != null) {
 			connectTimer.cancel();
 		}
-		
+
 		if (midiReceiver != null && midiReceiver.isOpen()) {
 			midiReceiver.close();
 		}

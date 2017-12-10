@@ -6,7 +6,6 @@ import java.util.List;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Receiver;
-import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Transmitter;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
@@ -25,19 +24,17 @@ import com.ascargon.rocketshow.dmx.Midi2DmxReceiver;
  * @author Moritz A. Vieli
  */
 @XmlRootElement
-public class MidiRouting implements MidiDeviceConnectedListener {
+public class MidiRouting {
 
 	final static Logger logger = Logger.getLogger(MidiRouting.class);
 
 	public enum MidiDestination {
-		OUT_DEVICE, DMX, REMOTE, ACTIONS
+		OUT_DEVICE, DMX, REMOTE
 	}
 
 	private MidiDestination midiDestination = MidiDestination.OUT_DEVICE;
 
-	private Manager manager;
-
-	private javax.sound.midi.MidiDevice midiOutDevice;
+	private MidiMapping midiMapping = new MidiMapping();
 
 	private Midi2DmxReceiver midi2DmxReceiver;
 	private Midi2DmxMapping midi2DmxMapping = new Midi2DmxMapping();
@@ -46,6 +43,8 @@ public class MidiRouting implements MidiDeviceConnectedListener {
 
 	// A list of remote device ids in case of destination type = REMOTE
 	private List<Integer> remoteDeviceIdList = new ArrayList<Integer>();
+
+	private Midi2DeviceOutReceiver midi2DeviceOutReceiver;
 
 	private Transmitter transmitter;
 	private Receiver receiver;
@@ -56,15 +55,16 @@ public class MidiRouting implements MidiDeviceConnectedListener {
 	}
 
 	public void load(Manager manager) throws MidiUnavailableException {
-		this.manager = manager;
-
-		manager.addMidiOutDeviceConnectedListener(this);
-
 		midi2DmxReceiver = new Midi2DmxReceiver(manager);
 		midi2DmxReceiver.setMidi2DmxMapping(midi2DmxMapping);
+		midi2DmxReceiver.setMidiMapping(midiMapping);
 
 		midi2RemoteReceiver = new Midi2RemoteReceiver(manager);
 		midi2RemoteReceiver.setRemoteDeviceIdList(remoteDeviceIdList);
+		midi2RemoteReceiver.setMidiMapping(midiMapping);
+
+		midi2DeviceOutReceiver = new Midi2DeviceOutReceiver(manager);
+		midi2DeviceOutReceiver.setMidiMapping(midiMapping);
 
 		refreshTransmitterConnection();
 	}
@@ -73,27 +73,12 @@ public class MidiRouting implements MidiDeviceConnectedListener {
 		if (midi2DmxReceiver != null) {
 			midi2DmxReceiver.close();
 		}
-
-		if (manager != null) {
-			manager.removeMidiOutDeviceConnectedListener(this);
-		}
 	}
 
 	private void refreshTransmitterConnection() {
 		if (midiDestination == MidiDestination.OUT_DEVICE) {
 			// Connect the transmitter to the out device
-			if (midiOutDevice == null) {
-				return;
-			}
-
-			try {
-				logger.info("Connected " + this.midiSource + " to output device "
-						+ midiOutDevice.getDeviceInfo().getName());
-
-				receiver = midiOutDevice.getReceiver();
-			} catch (MidiUnavailableException e) {
-				logger.error("Could not connect transmitter to receiver", e);
-			}
+			receiver = midi2DeviceOutReceiver;
 		} else if (midiDestination == MidiDestination.DMX) {
 			// Connect the transmitter to the DMX receiver
 			receiver = midi2DmxReceiver;
@@ -113,34 +98,17 @@ public class MidiRouting implements MidiDeviceConnectedListener {
 		transmitter.setReceiver(receiver);
 	}
 
-	public void sendMidiMessage(int command, int channel, int note, int velocity) {
+	public void sendMidiMessage(MidiSignal midiSignal) {
 		// Send a MIDI message to the current receiver
-
 		if (receiver == null) {
 			return;
 		}
 
-		ShortMessage midiMsg = new ShortMessage();
-		long timeStamp = -1;
-
 		try {
-			midiMsg.setMessage(command, channel, note, velocity);
+			receiver.send(midiSignal.getShortMessage(), -1);
 		} catch (InvalidMidiDataException e) {
 			logger.error("Could not send MIDI message", e);
 		}
-
-		receiver.send(midiMsg, timeStamp);
-	}
-
-	@Override
-	public void deviceConnected(javax.sound.midi.MidiDevice midiDevice) {
-		this.midiOutDevice = midiDevice;
-		refreshTransmitterConnection();
-	}
-
-	@Override
-	public void deviceDisconnected(javax.sound.midi.MidiDevice midiDevice) {
-		this.midiOutDevice = null;
 	}
 
 	public Midi2DmxMapping getMidi2DmxMapping() {
@@ -149,6 +117,10 @@ public class MidiRouting implements MidiDeviceConnectedListener {
 
 	public void setMidi2DmxMapping(Midi2DmxMapping midi2DmxMapping) {
 		this.midi2DmxMapping = midi2DmxMapping;
+
+		if (midi2DmxReceiver != null) {
+			midi2DmxReceiver.setMidi2DmxMapping(midi2DmxMapping);
+		}
 	}
 
 	@XmlTransient
@@ -199,6 +171,27 @@ public class MidiRouting implements MidiDeviceConnectedListener {
 
 		if (midi2RemoteReceiver != null) {
 			midi2RemoteReceiver.setRemoteDeviceIdList(remoteDeviceIdList);
+		}
+	}
+
+	public MidiMapping getMidiMapping() {
+		return midiMapping;
+	}
+
+	@XmlElement
+	public void setMidiMapping(MidiMapping midiMapping) {
+		this.midiMapping = midiMapping;
+
+		if (midi2DmxReceiver != null) {
+			midi2DmxReceiver.setMidiMapping(midiMapping);
+		}
+
+		if (midi2RemoteReceiver != null) {
+			midi2RemoteReceiver.setMidiMapping(midiMapping);
+		}
+
+		if (midi2DeviceOutReceiver != null) {
+			midi2DeviceOutReceiver.setMidiMapping(midiMapping);
 		}
 	}
 

@@ -16,7 +16,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.Manager;
-import com.ascargon.rocketshow.dmx.Midi2DmxMapping;
+import com.ascargon.rocketshow.midi.MidiMapping;
 import com.ascargon.rocketshow.midi.MidiRouting;
 import com.ascargon.rocketshow.song.file.AudioFile;
 import com.ascargon.rocketshow.song.file.File;
@@ -49,7 +49,7 @@ public class Song {
 
 	private long durationMillis;
 
-	private Midi2DmxMapping midi2DmxMapping = new Midi2DmxMapping();
+	private MidiMapping midiMapping = new MidiMapping();
 
 	private List<File> fileList = new ArrayList<File>();
 
@@ -112,7 +112,7 @@ public class Song {
 					MidiFile midiFile = (MidiFile) file;
 					
 					for(MidiRouting midiRouting : midiFile.getMidiRoutingList()) {
-						midiRouting.getMidi2DmxMapping().setParent(midi2DmxMapping);
+						midiRouting.getMidiMapping().setParent(midiMapping);
 					}
 				}
 
@@ -303,12 +303,12 @@ public class Song {
 	}
 
 	@XmlTransient
-	public Midi2DmxMapping getMidi2DmxMapping() {
-		return midi2DmxMapping;
+	public MidiMapping getMidiMapping() {
+		return midiMapping;
 	}
 
-	public void setMidi2DmxMapping(Midi2DmxMapping midi2DmxMapping) {
-		this.midi2DmxMapping = midi2DmxMapping;
+	public void setMidiMapping(MidiMapping midiMapping) {
+		this.midiMapping = midiMapping;
 	}
 
 	@XmlElementWrapper(name = "fileList")

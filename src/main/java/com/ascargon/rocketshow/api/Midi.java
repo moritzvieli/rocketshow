@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 import com.ascargon.rocketshow.Manager;
 import com.ascargon.rocketshow.midi.MidiDevice;
 import com.ascargon.rocketshow.midi.MidiRouting;
+import com.ascargon.rocketshow.midi.MidiSignal;
 import com.ascargon.rocketshow.midi.MidiUtil;
 import com.ascargon.rocketshow.midi.MidiUtil.MidiDirection;
 
@@ -47,8 +48,15 @@ public class Midi {
 			@QueryParam("note") int note, @QueryParam("velocity") int velocity) throws Exception {
 		
 		Manager manager = (Manager) context.getAttribute("manager");
+		MidiSignal midiSignal = new MidiSignal();
+		
+		midiSignal.setCommand(command);
+		midiSignal.setChannel(channel);
+		midiSignal.setNote(note);
+		midiSignal.setVelocity(velocity);
+		
 		for(MidiRouting remoteMidiRouting : manager.getSettings().getRemoteMidiRoutingList()) {
-			remoteMidiRouting.sendMidiMessage(command, channel, note, velocity);
+			remoteMidiRouting.sendMidiMessage(midiSignal);
 		}
 		return Response.status(200).build();
 	}

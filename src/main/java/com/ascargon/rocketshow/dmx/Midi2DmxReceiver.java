@@ -10,6 +10,9 @@ import javax.sound.midi.ShortMessage;
 import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.Manager;
+import com.ascargon.rocketshow.midi.MidiMapper;
+import com.ascargon.rocketshow.midi.MidiMapping;
+import com.ascargon.rocketshow.midi.MidiSignal;
 
 /**
  * Receive MIDI messages and map them to DMX signals.
@@ -20,8 +23,8 @@ public class Midi2DmxReceiver implements Receiver {
 
 	final static Logger logger = Logger.getLogger(Midi2DmxReceiver.class);
 
+	private MidiMapping midiMapping;
 	private Midi2DmxMapping midi2DmxMapping;
-
 	private Midi2DmxConverter midi2DmxConverter;
 
 	public Midi2DmxReceiver(Manager manager) throws MidiUnavailableException {
@@ -29,21 +32,24 @@ public class Midi2DmxReceiver implements Receiver {
 	}
 
 	@Override
-	public void send(MidiMessage message, long timeStamp) {		
+	public void send(MidiMessage message, long timeStamp) {
 		// Map the midi to DMX out
-		if (message instanceof ShortMessage) {
-			ShortMessage shortMessage = (ShortMessage) message;
+		if (!(message instanceof ShortMessage)) {
+			return;
+		}
 
-			int command = shortMessage.getCommand();
-			int channel = shortMessage.getChannel();
-			int note = shortMessage.getData1();
-			int velocity = shortMessage.getData2();
+		MidiSignal midiSignal = new MidiSignal((ShortMessage) message);
+		
+		try {
+			MidiMapper.processMidiEvent(midiSignal, midiMapping);
+		} catch (IOException e) {
+			logger.error("Could not map MIDI signal for DMX receiver", e);
+		}
 
-			try {
-				midi2DmxConverter.processMidiEvent(command, channel, note, velocity, timeStamp, midi2DmxMapping);
-			} catch (IOException e) {
-				logger.error("Could not send DMX signal", e);
-			}
+		try {
+			midi2DmxConverter.processMidiEvent(midiSignal, midi2DmxMapping);
+		} catch (IOException e) {
+			logger.error("Could not send DMX signal", e);
 		}
 	}
 
@@ -55,6 +61,14 @@ public class Midi2DmxReceiver implements Receiver {
 		this.midi2DmxMapping = midi2DmxMapping;
 	}
 
+	public MidiMapping getMidiMapping() {
+		return midiMapping;
+	}
+
+	public void setMidiMapping(MidiMapping midiMapping) {
+		this.midiMapping = midiMapping;
+	}
+	
 	@Override
 	public void close() {
 		// Nothing to do at the moment

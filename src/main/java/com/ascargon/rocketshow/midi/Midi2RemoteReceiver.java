@@ -1,5 +1,6 @@
 package com.ascargon.rocketshow.midi;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,8 @@ public class Midi2RemoteReceiver implements Receiver {
 
 	final static Logger logger = Logger.getLogger(Midi2RemoteReceiver.class);
 
+	private MidiMapping midiMapping;
+
 	private List<Integer> remoteDeviceIdList = new ArrayList<Integer>();
 
 	private Manager manager;
@@ -32,26 +35,29 @@ public class Midi2RemoteReceiver implements Receiver {
 
 	@Override
 	public void send(MidiMessage message, long timeStamp) {
-		if (message instanceof ShortMessage) {
-			ShortMessage shortMessage = (ShortMessage) message;
+		if (!(message instanceof ShortMessage)) {
+			return;
+		}
 
-			int command = shortMessage.getCommand();
-			int channel = shortMessage.getChannel();
-			int note = shortMessage.getData1();
-			int velocity = shortMessage.getData2();
+		MidiSignal midiSignal = new MidiSignal((ShortMessage) message);
+		
+		try {
+			MidiMapper.processMidiEvent(midiSignal, midiMapping);
+		} catch (IOException e) {
+			logger.error("Could not map MIDI signal for remote receiver", e);
+		}
 
-			String apiUrl = "midi/send-message?command=" + command + "&channel=" + channel + "&note=" + note
-					+ "&velocity" + velocity;
+		String apiUrl = "midi/send-message?command=" + midiSignal.getCommand() + "&channel=" + midiSignal.getChannel()
+				+ "&note=" + midiSignal.getNote() + "&velocity" + midiSignal.getVelocity();
 
-			for (Integer remoteDeviceId : remoteDeviceIdList) {
-				RemoteDevice remoteDevice = manager.getSettings().getRemoteDeviceById(remoteDeviceId);
+		for (Integer remoteDeviceId : remoteDeviceIdList) {
+			RemoteDevice remoteDevice = manager.getSettings().getRemoteDeviceById(remoteDeviceId);
 
-				try {
-					remoteDevice.doPost(apiUrl);
-				} catch (Exception e) {
-					logger.error("Could not send MIDI message to remote device '" + remoteDevice.getHost() + "' ("
-							+ remoteDeviceId + ")", e);
-				}
+			try {
+				remoteDevice.doPost(apiUrl);
+			} catch (Exception e) {
+				logger.error("Could not send MIDI message to remote device '" + remoteDevice.getHost() + "' ("
+						+ remoteDeviceId + ")", e);
 			}
 		}
 	}
@@ -67,6 +73,14 @@ public class Midi2RemoteReceiver implements Receiver {
 
 	public void setRemoteDeviceIdList(List<Integer> remoteDeviceIdList) {
 		this.remoteDeviceIdList = remoteDeviceIdList;
+	}
+
+	public MidiMapping getMidiMapping() {
+		return midiMapping;
+	}
+
+	public void setMidiMapping(MidiMapping midiMapping) {
+		this.midiMapping = midiMapping;
 	}
 
 }

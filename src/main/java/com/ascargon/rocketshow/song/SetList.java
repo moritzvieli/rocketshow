@@ -48,7 +48,7 @@ public class SetList {
 
 		currentSong = manager.getSongManager().loadSong(setListSongList.get(currentSongIndex).getName());
 		currentSong.setName(setListSongList.get(currentSongIndex).getName());
-		currentSong.getMidi2DmxMapping().setParent(manager.getSettings().getMidi2DmxMapping());
+		currentSong.getMidiMapping().setParent(manager.getSettings().getMidiMapping());
 		currentSong.setManager(manager);
 	}
 
@@ -168,6 +168,9 @@ public class SetList {
 	public void stop() throws Exception {
 		ExecutorService executor = Executors.newFixedThreadPool(30);
 
+		// Reset the DMX universe to clear left out signals
+		manager.getDmxSignalSender().reset();
+		
 		// Stop all remote devices
 		for (RemoteDevice remoteDevice : manager.getSettings().getRemoteDeviceList()) {
 			if (remoteDevice.isSynchronize()) {
