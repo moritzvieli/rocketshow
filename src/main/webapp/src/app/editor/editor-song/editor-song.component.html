@@ -58,11 +58,11 @@
                 <div class="col col-auto list-sort-handle my-auto" style="cursor: move; cursor: -webkit-grabbing;">
                   <i class="fa fa-bars" aria-hidden="true"></i>
                 </div>
-                <div class="col col-auto my-auto pl-0">
+                <a href="#" (click)="toggleActive(file); false" class="col col-auto my-auto pl-0" [class.text-danger]="!file.active">
                   <i *ngIf="isMidiFile(file)" class="fa fa-music fa-fw" aria-hidden="true"></i>
                   <i *ngIf="isAudioFile(file)" class="fa fa-microphone fa-fw" aria-hidden="true"></i>
                   <i *ngIf="isVideoFile(file)" class="fa fa-film fa-fw" aria-hidden="true"></i>
-                </div>
+                </a>
                 <div class="col my-auto pl-0">
                   <a href="">
                     <p class="mb-0">{{ file.name }}</p>

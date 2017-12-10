@@ -34,6 +34,7 @@ sed -i "s/root\sALL=(ALL:ALL) ALL/root    ALL=(ALL:ALL) ALL\n$insert/" $file
 
 # Create the directory structure
 mkdir /opt/rocketshow
+mkdir /opt/rocketshow/bin
 mkdir /opt/rocketshow/tomcat
 mkdir /opt/rocketshow/song
 mkdir /opt/rocketshow/setlist
@@ -77,7 +78,7 @@ chmod +x /opt/rocketshow/update.sh
 # Install Tomcat (credits to https://wolfpaulus.com/java/tomcat-jessie/)
 mkdir -p ~/tmp
 cd ~/tmp
-wget http://rocketshow.net/tomcat/apache-tomcat-8.5.24.tar.gz
+wget http://rocketshow.net/install/tomcat/apache-tomcat-8.5.24.tar.gz
 tar xvzf ./apache-tomcat-8.5.24.tar.gz
 rm apache-tomcat-8.5.24.tar.gz
 mv ./apache-tomcat-8.5.24 ./tomcat
@@ -129,6 +130,12 @@ iptables -A INPUT -i eth0 -p tcp --dport 80 -j ACCEPT
 iptables -A PREROUTING -t nat -p tcp --dport 80 -j REDIRECT --to-port 8080
 
 iptables-save > /etc/iptables/rules.v4
+
+# Download the required binaries
+# USB interface reset according to https://raspberrypi.stackexchange.com/questions/9264/how-do-i-reset-a-usb-device-using-a-script
+cd /opt/rocketshow/bin
+wget http://rocketshow.net/install/bin/usbreset
+chmod +x usbreset
 
 # Overclock the raspberry to sustain streams without underruns
 # - Set more memory for the GPU to play larger video files with omxplayer

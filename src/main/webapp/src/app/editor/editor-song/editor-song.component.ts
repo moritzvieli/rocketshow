@@ -97,6 +97,11 @@ export class EditorSongComponent implements OnInit {
     // TODO
   }
 
+  // Toggle the active state (mute)
+  toggleActive(file: SongFile) {
+    file.active = !file.active;
+  }
+
   // Edit a song file's details
   editSongFileDetails(file: SongFile) {
     // Create a backup of the current song

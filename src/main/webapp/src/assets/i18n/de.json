@@ -39,7 +39,9 @@
         "song-name": "Song Name",
         "default-song-name": "Mein Neuer Song",
         "notes": "Notizen",
-        "files": "Dateien"
+        "files": "Dateien",
+        "mute": "Stumm",
+        "offset-millis": "Verzögerung"
     },
     "connection": {
         "title": "Keine Verbindung",

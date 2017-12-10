@@ -3,10 +3,25 @@
     {{ file?.name }}
   </div>
   <div class="card-body">
-    <div class="form-group">
-      <label for="offsetMillis">{{ 'editor.song-name' | translate }}</label>
-      <input type="text" class="form-control" [ngModel]="file?.offsetMillis" (ngModelChange)="file.offsetMillis = $event" id="offsetMillis" placeholder="{{ 'editor.default-song-name' | translate }}">
-    </div>
+
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-10">
+          <label class="form-check-label">
+            <input type="checkbox" [ngModel]="!file?.active" (ngModelChange)="file.active = !$event" class="form-check-input"> {{ 'editor.mute' | translate }}
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="offsetMillis">{{ 'editor.offset-millis' | translate }}</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" [ngModel]="file?.offsetMillis" (ngModelChange)="file.offsetMillis = $event" id="offsetMillis"
+            placeholder="{{ 'editor.default-song-name' | translate }}">
+        </div>
+      </div>
+
+
   </div>
   <div class="card-footer">
     <button type="submit" class="btn btn-success" (click)="onOk()">
