@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.Manager;
 import com.ascargon.rocketshow.dmx.Midi2DmxMapping;
+import com.ascargon.rocketshow.midi.MidiRouting;
 import com.ascargon.rocketshow.song.file.AudioFile;
 import com.ascargon.rocketshow.song.file.File;
 import com.ascargon.rocketshow.song.file.MidiFile;
@@ -109,7 +110,10 @@ public class Song {
 			if (file.isActive()) {
 				if (file instanceof MidiFile) {
 					MidiFile midiFile = (MidiFile) file;
-					midiFile.getMidiRouting().getMidi2DmxMapping().setParent(midi2DmxMapping);
+					
+					for(MidiRouting midiRouting : midiFile.getMidiRoutingList()) {
+						midiRouting.getMidi2DmxMapping().setParent(midi2DmxMapping);
+					}
 				}
 
 				file.setManager(manager);

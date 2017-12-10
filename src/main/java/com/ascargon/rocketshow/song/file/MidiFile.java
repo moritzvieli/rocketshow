@@ -1,8 +1,12 @@
 package com.ascargon.rocketshow.song.file;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.apache.log4j.Logger;
@@ -19,12 +23,14 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 
 	private MidiPlayer midiPlayer;
 
-	private MidiRouting midiRouting;
+	private List<MidiRouting> midiRoutingList;
 
 	private Timer playTimer;
 
 	public MidiFile() {
-		setMidiRouting(new MidiRouting());
+		List<MidiRouting> midiRoutingList = new ArrayList<MidiRouting>();
+		midiRoutingList.add(new MidiRouting());
+		setMidiRoutingList(midiRoutingList);
 	}
 
 	@XmlTransient
@@ -33,18 +39,19 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 	}
 
 	public void load() throws Exception {
-		logger.debug("Loading file '" + this.getName() + "' with routing to "
-				+ midiRouting.getMidiDestination().toString() + "...");
+		logger.debug("Loading file '" + this.getName() + "'...");
 
 		this.setLoaded(false);
 		this.setLoading(true);
 
 		if (midiPlayer == null) {
-			midiPlayer = new MidiPlayer(this.getManager(), midiRouting);
+			midiPlayer = new MidiPlayer(this.getManager(), midiRoutingList);
 		}
 		midiPlayer.load(this, this.getPath());
 
-		this.midiRouting.load(this.getManager());
+		for (MidiRouting midiRouting : midiRoutingList) {
+			midiRouting.load(this.getManager());	
+		}
 	}
 
 	@Override
@@ -123,13 +130,18 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 		}
 	}
 
-	public void setMidiRouting(MidiRouting midiRouting) {
-		midiRouting.setMidiSource("MIDI file '" + getPath() + "'");
-		this.midiRouting = midiRouting;
+	public void setMidiRoutingList(List<MidiRouting> midiRoutingList) {
+		for (MidiRouting midiRouting : midiRoutingList) {
+			midiRouting.setMidiSource("MIDI file '" + getPath() + "'");
+		}
+		
+		this.midiRoutingList = midiRoutingList;
 	}
 
-	public MidiRouting getMidiRouting() {
-		return midiRouting;
+	@XmlElement(name = "midiRouting")
+	@XmlElementWrapper(name = "midiRoutingList")
+	public List<MidiRouting> getMidiRoutingList() {
+		return midiRoutingList;
 	}
 
 }

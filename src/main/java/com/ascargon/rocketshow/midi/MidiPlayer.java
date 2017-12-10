@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.List;
 
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
@@ -20,10 +21,10 @@ public class MidiPlayer {
 	final static Logger logger = Logger.getLogger(MidiPlayer.class);
 
 	private Sequencer sequencer;
-	private MidiRouting midiRouting;
+	private List<MidiRouting> midiRoutingList;
 
-	public MidiPlayer(Manager manager, MidiRouting midiRouting) throws MidiUnavailableException {
-		this.midiRouting = midiRouting;
+	public MidiPlayer(Manager manager, List<MidiRouting> midiRoutingList) throws MidiUnavailableException {
+		this.midiRoutingList = midiRoutingList;
 	}
 
 	public void setPositionInMillis(long position) {
@@ -43,7 +44,9 @@ public class MidiPlayer {
 		InputStream is = new BufferedInputStream(new FileInputStream(new File(path)));
 		sequencer.setSequence(is);
 
-		midiRouting.setTransmitter(sequencer.getTransmitter());
+		for(MidiRouting midiRouting : midiRoutingList) {
+			midiRouting.setTransmitter(sequencer.getTransmitter());
+		}
 
 		// Read the first bytes
 		sequencer.start();
@@ -82,7 +85,10 @@ public class MidiPlayer {
 
 	public void close() {
 		sequencer.close();
-		midiRouting.close();
+		
+		for(MidiRouting midiRouting : midiRoutingList) {
+			midiRouting.close();
+		}
 	}
 
 }
