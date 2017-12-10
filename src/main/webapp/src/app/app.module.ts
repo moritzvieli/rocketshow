@@ -14,6 +14,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SortablejsModule } from 'angular-sortablejs';
 
 import { AlertModule } from 'ngx-bootstrap';
+import { ModalModule } from 'ngx-bootstrap';
 
 import { AppComponent } from './app.component';
 import { IntroComponent } from './intro/intro.component';
@@ -28,6 +29,7 @@ import { StateService } from './services/state.service';
 import { TransportService } from './services/transport.service';
 import { SongService } from './services/song.service';
 import { ConnectionComponent } from './connection/connection.component';
+import { EditorSongFileComponent } from './editor/editor-song/editor-song-file/editor-song-file.component';
 
 const appRoutes: Routes = [
   { path: 'intro', component: IntroComponent },
@@ -50,7 +52,8 @@ const appRoutes: Routes = [
     EditorComponent,
     EditorSongComponent,
     EditorSetlistComponent,
-    ConnectionComponent
+    ConnectionComponent,
+    EditorSongFileComponent
   ],
   imports: [
     HttpModule,
@@ -73,13 +76,17 @@ const appRoutes: Routes = [
       animation: 300,
       handle: '.list-sort-handle'
     }),
-    AlertModule.forRoot()
+    AlertModule.forRoot(),
+    ModalModule.forRoot()
   ],
   providers: [
     ApiService,
     StateService,
     TransportService,
     SongService
+  ],
+  entryComponents: [
+    EditorSongFileComponent
   ],
   bootstrap: [AppComponent]
 })

@@ -7,7 +7,7 @@ export class Song {
     name: string;
     durationMillis: number;
     isNew: boolean = false;
-    fileList: SongFile[];
+    fileList: SongFile[] = [];
 
     constructor(data?: any) {
         if (!data) {
@@ -17,18 +17,50 @@ export class Song {
         this.name = data.name;
         this.durationMillis = data.durationMillis;
 
-        this.fileList = [];
+        this.fileList = this.parseFileList(data);
+    }
+
+    private parseFileList(data: any): SongFile[] {
+        let fileList: SongFile[] = [];
 
         if (data.fileList) {
             for (let file of data.fileList) {
                 if (file.midiFile) {
-                    this.fileList.push(new SongMidiFile(file.midiFile));
+                    fileList.push(new SongMidiFile(file.midiFile));
                 } else if (file.audioFile) {
-                    this.fileList.push(new SongAudioFile(file.audioFile));
+                    fileList.push(new SongAudioFile(file.audioFile));
                 } else if (file.videoFile) {
-                    this.fileList.push(new SongVideoFile(file.videoFile));
+                    fileList.push(new SongVideoFile(file.videoFile));
                 }
             }
         }
+
+        return fileList;
+    }
+
+    // Stringify the song and it's files correct (JSON would ignore the extended file classes by default)
+    stringify(): string {
+        let songString = JSON.stringify(this);
+        let songObject = JSON.parse(songString);
+
+        songObject.fileList = [];
+
+        for (let file of this.fileList) {
+            if (file instanceof SongMidiFile) {
+                let fileObj: any = {};
+                fileObj.midiFile = file;
+                songObject.fileList.push(fileObj);
+            } else if (file instanceof SongAudioFile) {
+                let fileObj: any = {};
+                fileObj.audioFile = file;
+                songObject.fileList.push(fileObj);
+            } else if (file instanceof SongVideoFile) {
+                let fileObj: any = {};
+                fileObj.videoFile = file;
+                songObject.fileList.push(fileObj);
+            }
+        }
+
+        return JSON.stringify(songObject);
     }
 }

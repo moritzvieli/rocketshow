@@ -30,9 +30,10 @@
   <div class="col-md-8" *ngIf="currentSong && !loadingSong">
     <div class="card">
       <div class="card-header">
-        {{ currentSong?.name }}
+        <span *ngIf="currentSong?.name">{{ currentSong?.name }}</span>
+        <span *ngIf="!currentSong?.name">{{ 'editor.default-song-name' | translate }}</span>
 
-        <a class="float-right" href="#carouselExampleControls" role="button" (click)="finishIntroWizard()">
+        <a class="float-right text-danger" *ngIf="!currentSong?.isNew" href="#" role="button" (click)="deleteSong(); false">
           <i class="fa fa-trash-o" aria-hidden="true"></i> {{ 'misc.delete' | translate }}
         </a>
       </div>
@@ -68,7 +69,7 @@
                   </a>
                 </div>
                 <div class="col my-auto">
-                  <a class="btn btn-secondary btn-sm float-right" href="#" role="button" (click)="editSongFileDetails(file)">...</a>
+                  <a class="btn btn-secondary btn-sm float-right" href="#" role="button" (click)="editSongFileDetails(file); false">...</a>
                 </div>
               </div>
             </div>

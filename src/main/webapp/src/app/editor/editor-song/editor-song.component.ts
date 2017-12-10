@@ -1,3 +1,5 @@
+import { SongFile } from './../../models/song-file';
+import { EditorSongFileComponent } from './editor-song-file/editor-song-file.component';
 import { Song } from './../../models/song';
 import { SongService } from './../../services/song.service';
 import { Component, OnInit } from '@angular/core';
@@ -5,7 +7,8 @@ import { NgModel } from '@angular/forms';
 import { SongVideoFile } from './../../models/song-video-file';
 import { SongMidiFile } from "./../../models/song-midi-file";
 import { SongAudioFile } from "./../../models/song-audio-file";
-import { SongFile } from '../../models/song-file';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 @Component({
   selector: 'app-editor-song',
@@ -23,21 +26,9 @@ export class EditorSongComponent implements OnInit {
   currentSong: Song;
   files: any[] = [];
 
-  constructor(private songService: SongService) {
-    var file1: any = {};
-    file1.name = 'wise_guy.mid';
-    file1.type = 'midi';
-    this.files.push(file1);
-
-    var file2: any = {};
-    file2.name = 'wise_guy_click.wav';
-    file2.type = 'audio';
-    this.files.push(file2);
-
-    var file3: any = {};
-    file3.name = 'wise_guy.mp4';
-    file3.type = 'video';
-    this.files.push(file3);
+  constructor(
+    private songService: SongService,
+    private modalService: BsModalService) {
   }
 
   ngOnInit() {
@@ -55,15 +46,15 @@ export class EditorSongComponent implements OnInit {
 
   // Filter the song list
   filterSongs(searchValue?: string) {
-    if(!searchValue) {
+    if (!searchValue) {
       this.filteredSongs = this.songs;
       return;
     }
 
     this.filteredSongs = [];
 
-    for(let song of this.songs) {
-      if(song.name.toLowerCase().indexOf(searchValue.toLowerCase()) !== -1) {
+    for (let song of this.songs) {
+      if (song.name.toLowerCase().indexOf(searchValue.toLowerCase()) !== -1) {
         this.filteredSongs.push(song);
       }
     }
@@ -96,6 +87,11 @@ export class EditorSongComponent implements OnInit {
     // TODO
   }
 
+  // Delete the song
+  deleteSong(song: Song) {
+    // TODO
+  }
+
   // Add a new file to the song
   addSongFile() {
     // TODO
@@ -103,12 +99,24 @@ export class EditorSongComponent implements OnInit {
 
   // Edit a song file's details
   editSongFileDetails(file: SongFile) {
-    // TODO
+    // Create a backup of the current song
+    let oldSong: Song = new Song(JSON.parse(this.currentSong.stringify()));
+
+    // Show the file details dialog
+    let fileDialog = this.modalService.show(EditorSongFileComponent, { animated: true, keyboard: true, backdrop: true, ignoreBackdropClick: true });
+    (<EditorSongFileComponent>fileDialog.content).file = file;
+
+    (<EditorSongFileComponent>fileDialog.content).onClose.subscribe(result => {
+      if (result !== true) {
+        // Cancel has been pressed -> reset the file before the dialog
+        this.currentSong.fileList = oldSong.fileList;
+      }
+    });
   }
 
   // Test the file types for the template
   isMidiFile(file: SongFile): boolean {
-    if(file instanceof SongMidiFile) {
+    if (file instanceof SongMidiFile) {
       return true;
     }
 
@@ -116,7 +124,7 @@ export class EditorSongComponent implements OnInit {
   }
 
   isAudioFile(file: SongFile): boolean {
-    if(file instanceof SongAudioFile) {
+    if (file instanceof SongAudioFile) {
       return true;
     }
 
@@ -124,7 +132,7 @@ export class EditorSongComponent implements OnInit {
   }
 
   isVideoFile(file: SongFile): boolean {
-    if(file instanceof SongVideoFile) {
+    if (file instanceof SongVideoFile) {
       return true;
     }
 

@@ -1,0 +1,19 @@
+<div class="card">
+  <div class="card-header">
+    {{ file?.name }}
+  </div>
+  <div class="card-body">
+    <div class="form-group">
+      <label for="offsetMillis">{{ 'editor.song-name' | translate }}</label>
+      <input type="text" class="form-control" [ngModel]="file?.offsetMillis" (ngModelChange)="file.offsetMillis = $event" id="offsetMillis" placeholder="{{ 'editor.default-song-name' | translate }}">
+    </div>
+  </div>
+  <div class="card-footer">
+    <button type="submit" class="btn btn-success" (click)="onOk()">
+      Yes
+    </button>
+    <button type="button" class="btn btn-default" (click)="onCancel()">
+      No
+    </button>
+  </div>
+</div>
