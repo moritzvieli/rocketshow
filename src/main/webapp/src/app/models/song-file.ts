@@ -3,6 +3,7 @@ export class SongFile {
     durationMillis: number;
     offsetMillis: number;
     active: boolean;
+    type: string;
 
     constructor(data?: any) {
         if(!data) {

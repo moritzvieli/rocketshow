@@ -8,7 +8,7 @@ import { SongVideoFile } from './../../models/song-video-file';
 import { SongMidiFile } from "./../../models/song-midi-file";
 import { SongAudioFile } from "./../../models/song-audio-file";
 import { BsModalService } from 'ngx-bootstrap/modal';
-import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
+import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
 @Component({
   selector: 'app-editor-song',
@@ -102,46 +102,39 @@ export class EditorSongComponent implements OnInit {
     file.active = !file.active;
   }
 
+  private rebuildFileListBasedOnType() {
+    // Ensure, the file objects are of correct instance based on their type.
+    // The type may be changed in the choose file dialog.
+    let newFileList: SongFile[] = [];
+
+    for(let file of this.currentSong.fileList) {
+      let newFile = Song.getFileObjectByType(JSON.stringify(file));
+      newFileList.push(newFile);
+    }
+
+    this.currentSong.fileList = newFileList;
+  }
+
   // Edit a song file's details
-  editSongFileDetails(file: SongFile) {
+  editSongFileDetails(fileIndex: number) {
     // Create a backup of the current song
-    let oldSong: Song = new Song(JSON.parse(this.currentSong.stringify()));
+    let songCopy: Song = new Song(JSON.parse(this.currentSong.stringify()));
 
     // Show the file details dialog
-    let fileDialog = this.modalService.show(EditorSongFileComponent, { animated: true, keyboard: true, backdrop: true, ignoreBackdropClick: true });
-    (<EditorSongFileComponent>fileDialog.content).file = file;
+    // keyboard = false, because the onClose will not be fired in this case
+    let fileDialog = this.modalService.show(EditorSongFileComponent, { keyboard: true, ignoreBackdropClick: true, class: 'modal-lg' });
+    (<EditorSongFileComponent>fileDialog.content).fileIndex = fileIndex;
+    (<EditorSongFileComponent>fileDialog.content).file = songCopy.fileList[fileIndex];
+    (<EditorSongFileComponent>fileDialog.content).song = songCopy;
 
     (<EditorSongFileComponent>fileDialog.content).onClose.subscribe(result => {
-      if (result !== true) {
-        // Cancel has been pressed -> reset the file before the dialog
-        this.currentSong.fileList = oldSong.fileList;
+      if (result === true) {
+        // OK has been pressed -> save
+        this.currentSong.fileList = songCopy.fileList;
+
+        this.rebuildFileListBasedOnType();
       }
     });
-  }
-
-  // Test the file types for the template
-  isMidiFile(file: SongFile): boolean {
-    if (file instanceof SongMidiFile) {
-      return true;
-    }
-
-    return false;
-  }
-
-  isAudioFile(file: SongFile): boolean {
-    if (file instanceof SongAudioFile) {
-      return true;
-    }
-
-    return false;
-  }
-
-  isVideoFile(file: SongFile): boolean {
-    if (file instanceof SongVideoFile) {
-      return true;
-    }
-
-    return false;
   }
 
 }

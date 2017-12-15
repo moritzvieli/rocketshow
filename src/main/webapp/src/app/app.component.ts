@@ -5,6 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { trigger, state, animate, transition, style, query } from '@angular/animations';
 import { Router, NavigationEnd } from '@angular/router';
 import { Observable } from 'rxjs/Rx';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'body',
@@ -45,6 +46,10 @@ export class AppComponent implements OnInit {
     ).subscribe(() => {
       this.loaded = true;
     });
+
+    if(environment.disconnected) {
+      this.loaded = true;
+    }
   }
 
 }

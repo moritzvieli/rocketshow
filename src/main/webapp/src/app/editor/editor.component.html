@@ -8,12 +8,12 @@
           <!-- Tab navigation -->
           <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="songs-tab" data-toggle="tab" href="#songs" role="tab" aria-controls="profile" aria-selected="true">
+              <a class="nav-link active" id="songs-tab" data-toggle="tab" href="#songs" role="tab">
                 <i class="fa fa-list" aria-hidden="true"></i> {{ 'editor.songs' | translate }}
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="setlists-tab" data-toggle="tab" href="#setlists" role="tab" aria-controls="home" aria-selected="false">
+              <a class="nav-link" id="setlists-tab" data-toggle="tab" href="#setlists" role="tab">
                 <i class="fa fa-volume-up" aria-hidden="true"></i> {{ 'editor.setlists' | translate }}
               </a>
             </li>
@@ -21,10 +21,10 @@
 
           <!-- Tab content -->
           <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="songs" role="tabpanel" aria-labelledby="home-tab">
+            <div class="tab-pane fade show active" id="songs" role="tabpanel">
               <app-editor-song></app-editor-song>
             </div>
-            <div class="tab-pane fade" id="setlists" role="tabpanel" aria-labelledby="profile-tab">
+            <div class="tab-pane fade" id="setlists" role="tabpanel">
               <app-editor-setlist></app-editor-setlist>
             </div>
           </div>

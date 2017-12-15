@@ -26,16 +26,39 @@ export class Song {
         if (data.fileList) {
             for (let file of data.fileList) {
                 if (file.midiFile) {
-                    fileList.push(new SongMidiFile(file.midiFile));
+                    let midiFile = new SongMidiFile(file.midiFile);
+                    midiFile.type = "midi";
+                    fileList.push(midiFile);
                 } else if (file.audioFile) {
-                    fileList.push(new SongAudioFile(file.audioFile));
+                    let audioFile = new SongAudioFile(file.audioFile);
+                    audioFile.type = "audio";
+                    fileList.push(audioFile);
                 } else if (file.videoFile) {
-                    fileList.push(new SongVideoFile(file.videoFile));
+                    let videoFile = new SongVideoFile(file.audioFile);
+                    videoFile.type = "video";
+                    fileList.push(videoFile);
                 }
             }
         }
 
         return fileList;
+    }
+
+    // Return a file object based on its type
+    public static getFileObjectByType(data: any) {
+        if (data.type == 'midi') {
+            let midiFile = new SongMidiFile(data);
+            midiFile.type = "midi";
+            return midiFile;
+        } else if (data.type == 'audio') {
+            let audioFile = new SongAudioFile(data);
+            audioFile.type = "audio";
+            return audioFile;
+        } else if (data.type == 'video') {
+            let videoFile = new SongVideoFile(data);
+            videoFile.type = "video";
+            return videoFile;
+        }
     }
 
     // Stringify the song and it's files correct (JSON would ignore the extended file classes by default)

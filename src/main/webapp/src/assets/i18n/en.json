@@ -9,7 +9,8 @@
         "midi-in": "MIDI in",
         "midi-out": "MIDI out",
         "delete": "Delete",
-        "setlist": "Set"
+        "setlist": "Set",
+        "ok": "OK"
     },
     "loading": {
         "title": "Loading...",
@@ -41,11 +42,34 @@
         "notes": "Notes",
         "files": "Files",
         "mute": "Mute",
-        "offset-millis": "Delay"
+        "offset-millis": "Delay",
+        "midi-destination-dmx": "DMX (light)",
+        "midi-destination-device": "MIDI out",
+        "midi-destination-remote": "Remote devices",
+        "routing": "MIDI Output",
+        "add-routing": "Add output",
+        "edit-file": "Edit file",
+        "choose-file": "Choose file",
+        "upload": "Upload",
+        "media-library": "Media library",
+        "file-settings": "Settings"
     },
     "connection": {
         "title": "No connection",
         "description": "It seems like the device can't be reached. Maybe it's switched off or there is a problem with the network connection.",
         "retry": "Retry"
+    },
+    "routing": {
+        "title": "Output",
+        "description": "Specify, where or how this MIDI file should be played.",
+        "type": "Output",
+        "midi-mapping": "MIDI mapping",
+        "channel-offset": "Channel offset",
+        "note-offset": "Note offset",
+        "dmx-mapping": "DMX mapping",
+        "dmx-mapping-type": "Type",
+        "dmx-mapping-type-simple": "Simple",
+        "remote-devices": "Remote devices",
+        "remote-devices-hint": "You can configure the remote devices in the settings."
     }
 }

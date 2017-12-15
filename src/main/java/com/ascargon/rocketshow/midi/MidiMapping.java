@@ -3,8 +3,8 @@ package com.ascargon.rocketshow.midi;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 @XmlRootElement
 public class MidiMapping {
@@ -19,6 +19,7 @@ public class MidiMapping {
 	// Completely ignore all parent's settings
 	private Boolean overrideParent = false;
 
+	@XmlTransient
 	public MidiMapping getParent() {
 		return parent;
 	}
@@ -27,7 +28,6 @@ public class MidiMapping {
 		this.parent = parent;
 	}
 
-	@XmlElement
 	public Boolean isOverrideParent() {
 		return overrideParent;
 	}
@@ -36,7 +36,6 @@ public class MidiMapping {
 		this.overrideParent = overrideParent;
 	}
 
-	@XmlElement
 	public List<ChannelMapping> getChannelMap() {
 		return channelMap;
 	}
@@ -45,7 +44,6 @@ public class MidiMapping {
 		this.channelMap = channelMap;
 	}
 
-	@XmlElement
 	public Integer getChannelOffset() {
 		return channelOffset;
 	}
@@ -54,7 +52,6 @@ public class MidiMapping {
 		this.channelOffset = channelOffset;
 	}
 
-	@XmlElement
 	public Integer getNoteOffset() {
 		return noteOffset;
 	}

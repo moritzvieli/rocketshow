@@ -53,15 +53,15 @@
           <label>{{ 'editor.files' | translate }}</label>
 
           <div class="list-group" [sortablejs] [sortablejsOptions]="{ onMove: sortMove }">
-            <div class="list-group-item" *ngFor="let file of currentSong?.fileList">
+            <div class="list-group-item" *ngFor="let file of currentSong?.fileList; let i = index">
               <div class="row">
                 <div class="col col-auto list-sort-handle my-auto" style="cursor: move; cursor: -webkit-grabbing;">
                   <i class="fa fa-bars" aria-hidden="true"></i>
                 </div>
                 <a href="#" (click)="toggleActive(file); false" class="col col-auto my-auto pl-0" [class.text-danger]="!file.active">
-                  <i *ngIf="isMidiFile(file)" class="fa fa-music fa-fw" aria-hidden="true"></i>
-                  <i *ngIf="isAudioFile(file)" class="fa fa-microphone fa-fw" aria-hidden="true"></i>
-                  <i *ngIf="isVideoFile(file)" class="fa fa-film fa-fw" aria-hidden="true"></i>
+                  <i *ngIf="file.type == 'midi'" class="fa fa-music fa-fw" aria-hidden="true"></i>
+                  <i *ngIf="file.type == 'audio'" class="fa fa-microphone fa-fw" aria-hidden="true"></i>
+                  <i *ngIf="file.type == 'video'" class="fa fa-film fa-fw" aria-hidden="true"></i>
                 </a>
                 <div class="col my-auto pl-0">
                   <a href="">
@@ -69,7 +69,7 @@
                   </a>
                 </div>
                 <div class="col my-auto">
-                  <a class="btn btn-secondary btn-sm float-right" href="#" role="button" (click)="editSongFileDetails(file); false">...</a>
+                  <a class="btn btn-secondary btn-sm float-right" href="#" role="button" (click)="editSongFileDetails(i); false">...</a>
                 </div>
               </div>
             </div>
@@ -85,7 +85,7 @@
       <div class="card-footer">
         <div class="d-flex float-right">
           <a class="mr-3 my-auto" href="#" role="button" (click)="unselectSong(); false">
-            <i class="fa fa-times" aria-hidden="true"></i> {{ 'misc.cancel' | translate }}
+            {{ 'misc.cancel' | translate }}
           </a>
           <a class="btn btn-primary" href="#" role="button" (click)="saveSong(currentSong); false">
             <i class="fa fa-floppy-o" aria-hidden="true"></i> {{ 'misc.save' | translate }}

@@ -9,7 +9,8 @@
         "midi-in": "MIDI Eingang",
         "midi-out": "MIDI Ausgang",
         "delete": "Löschen",
-        "setlist": "Set"
+        "setlist": "Set",
+        "ok": "OK"
     },
     "loading": {
         "title": "Laden...",
@@ -41,11 +42,34 @@
         "notes": "Notizen",
         "files": "Dateien",
         "mute": "Stumm",
-        "offset-millis": "Verzögerung"
+        "offset-millis": "Verzögerung",
+        "midi-destination-dmx": "DMX (Licht)",
+        "midi-destination-device": "MIDI Ausgang",
+        "midi-destination-remote": "Entfernte Geräte",
+        "routing": "MIDI Ausgänge",
+        "add-routing": "Ausgang hinzufügen",
+        "edit-file": "Datei bearbeiten",
+        "choose-file": "Datei auswählen",
+        "upload": "Hochladen",
+        "media-library": "Mediathek",
+        "file-settings": "Einstellungen"
     },
     "connection": {
         "title": "Keine Verbindung",
         "description": "Das Gerät kann nicht erreicht werden. Vielleicht wurde es ausgeschaltet oder es besteht ein Problem mit der Netzwerkverbindung.",
         "retry": "Wiederholen"
+    },
+    "routing": {
+        "title": "Ausgang",
+        "description": "Stelle ein, wo oder wie diese MIDI Datei ausgegeben werden soll.",
+        "type": "Ausgang",
+        "midi-mapping": "MIDI Mapping",        
+        "channel-offset": "Kanal Versatz",
+        "note-offset": "Noten Versatz",
+        "dmx-mapping": "DMX Mapping",
+        "dmx-mapping-type": "Art",
+        "dmx-mapping-type-simple": "Einfach",
+        "remote-devices": "Entfernte Geräte",
+        "remote-devices-hint": "Du kannst die entfernten Geräte in den Einstellungen konfigurieren."
     }
 }
