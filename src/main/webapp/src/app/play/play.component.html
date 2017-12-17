@@ -88,7 +88,39 @@
   <!-- Setlist -->
   <div class="row" *ngIf="stateService.connected">
     <div class="col" style="display: flex; flex-flow: column;">
-      <div class="list-group" style="flex: 0 0 auto;">
+
+      <!-- For larger screens -->
+      <div class="list-group d-none d-sm-flex" style="flex: 0 0 auto;">
+        <div class="list-group-item list-group-item-action flex-column align-items-start" style="border-top-left-radius: 0.25em; border-top-right-radius: 0.25em; border-bottom-left-radius: 0; border-bottom-right-radius: 0;">
+          <a href="#" class="" d="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{ 'misc.setlist' | translate }}: {{ currentSetList?.name }}
+            <i class="fa fa-caret-down" aria-hidden="true"></i>
+          </a>
+
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+            <a class="dropdown-item" href="#">Something else here</a>
+          </div>
+
+          <span style="margin-top: 3px" class="float-right">01:24:10</span>
+        </div>
+      </div>
+
+      <!-- For larger screens -->
+      <div class="list-group song-list d-none d-sm-flex" style="flex: 0 1 auto; overflow: auto;">
+        <!-- Display all songs -->
+        <a *ngFor="let song of currentSetList?.songList; let i = index" id="song{{ i }}" href="#" (click)="setSongIndex(i); false"
+          class="list-group-item list-group-item-action flex-column align-items-start" [class.active]="currentState?.currentSongIndex == i">
+          <div class="d-flex w-100 justify-content-between">
+            <p class="mb-1">{{ song.name }}</p>
+            <small class="my-auto">{{ msToTime(song.durationMillis) }}</small>
+          </div>
+        </a>
+      </div>
+
+      <!-- For smaller screens -->
+      <div class="list-group d-sm-none" style="flex: 0 0 auto;">
         <div class="list-group-item list-group-item-action flex-column align-items-start pt-2 pb-2" style="border-top-left-radius: 0.25em; border-top-right-radius: 0.25em; border-bottom-left-radius: 0; border-bottom-right-radius: 0;">
           <a href="#" class="" d="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             {{ 'misc.setlist' | translate }}: {{ currentSetList?.name }}
@@ -105,10 +137,11 @@
         </div>
       </div>
 
-      <div class="list-group song-list" style="flex: 0 1 auto; overflow: auto;">
+      <!-- For smaller screens -->
+      <div class="list-group song-list d-sm-none" style="flex: 0 1 auto; overflow: auto;">
         <!-- Display all songs -->
-        <a *ngFor="let song of currentSetList?.songList; let i = index" id="song{{ i }}" href="#" (click)="setSongIndex(i); false" class="list-group-item list-group-item-action flex-column align-items-start pt-1 pb-1"
-          [class.active]="currentState?.currentSongIndex == i">
+        <a *ngFor="let song of currentSetList?.songList; let i = index" id="song{{ i }}" href="#" (click)="setSongIndex(i); false"
+          class="list-group-item list-group-item-action flex-column align-items-start pt-1 pb-1" [class.active]="currentState?.currentSongIndex == i">
           <div class="d-flex w-100 justify-content-between">
             <p class="mb-1">{{ song.name }}</p>
             <small class="my-auto">{{ msToTime(song.durationMillis) }}</small>
