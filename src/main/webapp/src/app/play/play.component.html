@@ -47,7 +47,7 @@
             <!-- The transport buttons -->
             <div class="col-auto my-auto mx-auto">
               <div class="btn-group btn-group-lg" role="group">
-                <button type="button" class="btn btn-dark">
+                <button type="button" (click)="previousSong()" class="btn btn-dark">
                   <i class="fa fa-step-backward fa-fw" aria-hidden="true"></i>
                 </button>
                 <button type="button" (click)="play()" class="btn btn-dark" *ngIf="currentState?.playState == 'STOPPED' || currentState?.playState == 'PAUSED'  || currentState?.playState == 'STOPPING'">
@@ -57,7 +57,7 @@
                   <i class="fa fa-stop fa-fw loading-transition" [class.text-warning]="currentState?.playState == 'LOADING'" [class.text-danger]="currentState?.playState == 'PLAYING'"
                     aria-hidden="true"></i>
                 </button>
-                <button type="button" class="btn btn-dark">
+                <button type="button" (click)="nextSong()" class="btn btn-dark">
                   <i class="fa fa-step-forward fa-fw" aria-hidden="true"></i>
                 </button>
               </div>
@@ -140,7 +140,7 @@
       <!-- For smaller screens -->
       <div class="list-group song-list d-sm-none" style="flex: 0 1 auto; overflow: auto;">
         <!-- Display all songs -->
-        <a *ngFor="let song of currentSetList?.songList; let i = index" id="song{{ i }}" href="#" (click)="setSongIndex(i); false"
+        <a *ngFor="let song of currentSetList?.songList; let i = index" id="songSmall{{ i }}" href="#" (click)="setSongIndex(i); false"
           class="list-group-item list-group-item-action flex-column align-items-start pt-1 pb-1" [class.active]="currentState?.currentSongIndex == i">
           <div class="d-flex w-100 justify-content-between">
             <p class="mb-1">{{ song.name }}</p>

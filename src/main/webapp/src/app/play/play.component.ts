@@ -93,7 +93,11 @@ export class PlayComponent implements OnInit {
     // Scroll the corresponding song into the view
     let songObject = document.querySelector('#song' + newState.currentSongIndex);
     if(songObject) {
-      document.querySelector('#song' + newState.currentSongIndex).scrollIntoView();
+      songObject.scrollIntoView();
+    }
+    let songSmallObject = document.querySelector('#songSmall' + newState.currentSongIndex);
+    if(songObject) {
+      songSmallObject.scrollIntoView();
     }
 
     this.currentState = newState;
