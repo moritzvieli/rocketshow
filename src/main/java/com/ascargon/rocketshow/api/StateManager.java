@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.ascargon.rocketshow.Manager;
+import com.ascargon.rocketshow.midi.MidiSignal;
 import com.ascargon.rocketshow.song.Song.PlayState;
 
 /**
@@ -88,7 +89,8 @@ public class StateManager {
 		return currentState;
 	}
 
-	private String getSerializedState() throws Exception {
+	// Get the current state and add a midi signal, if needed
+	private String getSerializedState(MidiSignal midiSignal) throws Exception {
 		State currentState = getCurrentState();
 
 		// Convert the object to json
@@ -97,8 +99,10 @@ public class StateManager {
 		return mapper.writeValueAsString(currentState);
 	}
 
-	public void notifyClients() throws Exception {
-		String state = getSerializedState();
+	// Notify the clients about the current state and include a midi signal, if
+	// midi learn is activated
+	public void notifyClients(MidiSignal midiSignal) throws Exception {
+		String state = getSerializedState(midiSignal);
 
 		// Send the state to each connected client
 		for (Session activeSession : activeSessions) {
@@ -107,9 +111,13 @@ public class StateManager {
 					activeSession.getBasicRemote().sendText(state);
 				}
 			} catch (IOException e) {
-				logger.error("Could not notify client", e);
+				logger.error("Could not notify client on state", e);
 			}
 		}
+	}
+
+	public void notifyClients() throws Exception {
+		notifyClients(null);
 	}
 
 }

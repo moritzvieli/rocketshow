@@ -2,7 +2,10 @@ package com.ascargon.rocketshow.midi;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.ShortMessage;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
+@XmlRootElement
 public class MidiSignal {
 
 	private int command;
@@ -20,6 +23,7 @@ public class MidiSignal {
 		velocity = shortMessage.getData2();
 	}
 
+	@XmlTransient
 	public ShortMessage getShortMessage() throws InvalidMidiDataException {
 		ShortMessage shortMessage = new ShortMessage();
 		shortMessage.setMessage(command, channel, note, velocity);

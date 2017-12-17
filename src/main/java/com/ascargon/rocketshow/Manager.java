@@ -462,4 +462,8 @@ public class Manager {
 		this.fileManager = fileManager;
 	}
 
+	public MidiInDeviceReceiver getMidiInDeviceReceiver() {
+		return midiInDeviceReceiver;
+	}
+
 }

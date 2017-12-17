@@ -60,5 +60,23 @@ public class Midi {
 		}
 		return Response.status(200).build();
 	}
+	
+	@Path("activate-midi-learn")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response activateMidiLearn() throws Exception {
+		Manager manager = (Manager) context.getAttribute("manager");
+		manager.getMidiInDeviceReceiver().setMidiLearn(true);
+		return Response.status(200).build();
+	}
+	
+	@Path("deactivate-midi-learn")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deactivateMidiLearn() throws Exception {
+		Manager manager = (Manager) context.getAttribute("manager");
+		manager.getMidiInDeviceReceiver().setMidiLearn(false);
+		return Response.status(200).build();
+	}
 
 }

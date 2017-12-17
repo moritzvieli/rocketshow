@@ -31,6 +31,8 @@ public class MidiInDeviceReceiver implements Receiver {
 
 	private List<MidiRouting> midiRoutingList;
 
+	private boolean midiLearn = false;
+
 	public MidiInDeviceReceiver(Manager manager) {
 		this.manager = manager;
 
@@ -118,6 +120,15 @@ public class MidiInDeviceReceiver implements Receiver {
 
 		MidiSignal midiSignal = new MidiSignal((ShortMessage) message);
 
+		// Notify the frontend, if midi learn is activated
+		if (midiLearn) {
+			try {
+				manager.getStateManager().notifyClients(midiSignal);
+			} catch (Exception e) {
+				logger.error("Could not notify the clients about a MIDI learn event", e);
+			}
+		}
+
 		// Process MIDI events as actions according to the settings
 		try {
 			manager.getMidi2ActionConverter().processMidiEvent(midiSignal,
@@ -136,6 +147,14 @@ public class MidiInDeviceReceiver implements Receiver {
 		if (midiReceiver != null && midiReceiver.isOpen()) {
 			midiReceiver.close();
 		}
+	}
+
+	public boolean isMidiLearn() {
+		return midiLearn;
+	}
+
+	public void setMidiLearn(boolean midiLearn) {
+		this.midiLearn = midiLearn;
 	}
 
 }

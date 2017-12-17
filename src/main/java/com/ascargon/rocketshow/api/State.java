@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.ascargon.rocketshow.midi.MidiSignal;
 import com.ascargon.rocketshow.song.Song.PlayState;
 
 @XmlRootElement
@@ -15,6 +16,7 @@ public class State {
 	private String currentSongName;
 	private long currentSongDurationMillis;
 	private Date lastStartTime;
+	private MidiSignal midiSignal;
 	
 	@XmlElement
 	public int getCurrentSongIndex() {
@@ -59,6 +61,15 @@ public class State {
 
 	public void setLastStartTime(Date lastStartTime) {
 		this.lastStartTime = lastStartTime;
+	}
+
+	@XmlElement
+	public MidiSignal getMidiSignal() {
+		return midiSignal;
+	}
+
+	public void setMidiSignal(MidiSignal midiSignal) {
+		this.midiSignal = midiSignal;
 	}
 	
 }
