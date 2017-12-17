@@ -111,4 +111,8 @@ export class PlayComponent implements OnInit {
     this.transportService.previousSong().subscribe();
   }
 
+  setSongIndex(index: number) {
+    this.transportService.setSongIndex(index).subscribe();
+  }
+
 }

@@ -214,8 +214,6 @@ public class SetList {
 		}
 
 		setCurrentSongIndex(newIndex);
-
-		manager.getStateManager().notifyClients();
 	}
 
 	public void previousSong() throws Exception {
@@ -230,8 +228,6 @@ public class SetList {
 		}
 
 		setCurrentSongIndex(newIndex);
-
-		manager.getStateManager().notifyClients();
 	}
 
 	public void close() throws Exception {
@@ -281,6 +277,12 @@ public class SetList {
 		this.currentSongIndex = currentSongIndex;
 		readCurrentSong();
 
+		if(manager != null) {
+			if(manager.getStateManager() != null) {
+				manager.getStateManager().notifyClients();
+			}
+		}
+		
 		logger.info("Set song index " + currentSongIndex);
 	}
 

@@ -32,4 +32,10 @@ export class TransportService {
     });
   }
 
+  setSongIndex(index: number): Observable<null> {
+    return this.apiService.post('transport/set-song-index?index=' + index, null).map((response: Response) => {
+      return null;
+    });
+  }
+
 }
