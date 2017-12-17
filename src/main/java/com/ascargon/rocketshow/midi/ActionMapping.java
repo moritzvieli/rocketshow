@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -68,7 +69,8 @@ public class ActionMapping {
 		this.executeLocally = executeLocally;
 	}
 
-	@XmlElement
+	@XmlElement(name = "remoteDevice")
+	@XmlElementWrapper(name = "remoteDeviceList")
 	public List<Integer> getRemoteDeviceIds() {
 		return remoteDeviceIds;
 	}
