@@ -7,5 +7,6 @@ export const environment = {
   production: false,
   name: "disconnected",
   disconnected: true,
-  localBackend: ""
+  localBackend: "",
+  debug: true
 };

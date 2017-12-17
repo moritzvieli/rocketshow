@@ -64,6 +64,10 @@ export class StateService {
   receiveState(state: State): void {
     this.state.next(state);
     this.currentState = state;
+
+    if (environment.debug) {
+      console.log('Current state', state);
+    }
   }
 
   getState(): Observable<State> {

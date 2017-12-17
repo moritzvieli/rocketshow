@@ -12,7 +12,7 @@
             <!-- The transport buttons -->
             <div class="col-auto my-auto">
               <div class="btn-group btn-group-lg" role="group">
-                <button type="button" class="btn btn-dark">
+                <button type="button" (click)="previousSong()" class="btn btn-dark">
                   <i class="fa fa-step-backward fa-fw" aria-hidden="true"></i>
                 </button>
                 <button type="button" (click)="play()" class="btn btn-dark" *ngIf="currentState?.playState == 'STOPPED' || currentState?.playState == 'PAUSED'  || currentState?.playState == 'STOPPING'">
@@ -22,7 +22,7 @@
                   <i class="fa fa-stop fa-fw loading-transition" [class.text-warning]="currentState?.playState == 'LOADING'" [class.text-danger]="currentState?.playState == 'PLAYING'"
                     aria-hidden="true"></i>
                 </button>
-                <button type="button" class="btn btn-dark">
+                <button type="button" (click)="nextSong()" class="btn btn-dark">
                   <i class="fa fa-step-forward fa-fw" aria-hidden="true"></i>
                 </button>
               </div>
@@ -105,10 +105,10 @@
         </div>
 
         <!-- Display all songs -->
-        <a *ngFor="let song of currentSetList?.songList" href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
+        <a *ngFor="let song of currentSetList?.songList" href="#" class="list-group-item list-group-item-action flex-column align-items-start" [class.active]="currentState?.currentSongName == song.name">
           <div class="d-flex w-100 justify-content-between">
             <p class="mb-1">{{ song.name }}</p>
-            <small class="my-auto">03:21</small>
+            <small class="my-auto">{{ msToTime(song.durationMillis) }}</small>
           </div>
         </a>
 

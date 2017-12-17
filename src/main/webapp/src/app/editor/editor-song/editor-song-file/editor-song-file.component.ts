@@ -30,7 +30,10 @@ export class EditorSongFileComponent implements OnInit {
     private apiService: ApiService) {
 
     this.dropzoneConfig = {
-      url: apiService.getRestUrl + "file/upload"
+      url: apiService.getRestUrl + "file/upload",
+      addRemoveLinks: false,
+      uploadMultiple: false,
+      previewTemplate: '#dz-preview-template'
     };
   }
 

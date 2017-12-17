@@ -1,8 +1,8 @@
 package com.ascargon.rocketshow.video;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -20,38 +20,34 @@ public class VideoPlayer {
 	private Timer loadTimer;
 	private Timer closeTimer;
 	private boolean closing;
+	private boolean loop;
 
-	public void load(PlayerLoadedListener playerLoadedListener, String path) throws IOException, InterruptedException {
-		shellManager = new ShellManager(new String[] { "omxplayer", path, "-r", "-b" });
+	public void load(PlayerLoadedListener playerLoadedListener, String path, boolean autoPlay)
+			throws IOException, InterruptedException {
+
+		logger.debug("Loading video '" + path + "'");
+
+		List<String> params = new ArrayList<String>();
+		params.add("omxplayer");
+		params.add(path);
+
+		// Adjust framerate/resolution to video
+		params.add("-r");
+
+		// Set background to black
+		params.add("-b");
+
+		if (loop) {
+			params.add("--loop");
+		}
+
+		shellManager = new ShellManager(params.toArray(new String[0]));
 
 		// Pause, as soon as the song has been loaded and wait for it to be
 		// played
-		pause();
-
-		new Thread(new Runnable() {
-			public void run() {
-				BufferedReader reader = new BufferedReader(new InputStreamReader(shellManager.getInputStream()));
-				String line = null;
-				try {
-					while (reader.ready()) {
-						line = reader.readLine();
-
-						if (line == null) {
-							break;
-						}
-
-						logger.debug("Output from video player: " + line);
-
-						if (line.startsWith("V:PortSettingsChanged")) {
-							logger.debug("File '" + path + "' loaded");
-							playerLoadedListener.playerLoaded();
-						}
-					}
-				} catch (IOException e) {
-					logger.error("Could not read video player output", e);
-				}
-			}
-		}).start();
+		if (!autoPlay) {
+			pause();
+		}
 
 		// Wait for the player to get ready, because reading the input stream in
 		// an infinite loop does not work properly (takes too much resources and
@@ -61,9 +57,20 @@ public class VideoPlayer {
 			@Override
 			public void run() {
 				loadTimer = null;
-				playerLoadedListener.playerLoaded();
+
+				if (playerLoadedListener != null) {
+					playerLoadedListener.playerLoaded();
+				}
 			}
 		}, 1000 /* TODO Specify in global config */);
+	}
+
+	public void load(PlayerLoadedListener playerLoadedListener, String path) throws IOException, InterruptedException {
+		load(playerLoadedListener, path, false);
+	}
+
+	public void loadAndPlay(String path) throws IOException, InterruptedException {
+		load(null, path, true);
 	}
 
 	public void play() throws IOException {
@@ -105,8 +112,10 @@ public class VideoPlayer {
 
 		if (shellManager != null) {
 			shellManager.sendCommand("q");
+			shellManager.getProcess().destroyForcibly();
 			shellManager.getProcess().waitFor();
 			shellManager.close();
+
 		}
 
 		if (closeTimer != null) {
@@ -119,6 +128,14 @@ public class VideoPlayer {
 
 	public void close() throws Exception {
 		stop();
+	}
+
+	public boolean isLoop() {
+		return loop;
+	}
+
+	public void setLoop(boolean loop) {
+		this.loop = loop;
 	}
 
 }

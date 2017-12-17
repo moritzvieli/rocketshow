@@ -53,7 +53,7 @@ export class PlayComponent implements OnInit {
     return s;
   }
 
-  private msToTime(millis: number): string {
+  msToTime(millis: number): string {
     let ms: number = Math.round(millis % 1000);
     let seconds: number = Math.floor(((millis % 360000) % 60000) / 1000);
     let minutes: number = Math.floor((millis % 3600000) / 60000);
@@ -101,6 +101,14 @@ export class PlayComponent implements OnInit {
   stop() {
     this.currentState.playState = 'STOPPING';
     this.transportService.stop().subscribe();
+  }
+
+  nextSong() {
+    this.transportService.nextSong().subscribe();
+  }
+
+  previousSong() {
+    this.transportService.previousSong().subscribe();
   }
 
 }

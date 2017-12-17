@@ -39,6 +39,8 @@ public class Settings {
 	private List<MidiRouting> remoteMidiRoutingList = new ArrayList<MidiRouting>();
 
 	private PlayerType audioPlayerType;
+	
+	private String idleVideo;
 
 	public Settings() {
 		// Initialize default settings
@@ -188,6 +190,15 @@ public class Settings {
 
 	public void setAudioPlayerType(PlayerType audioPlayerType) {
 		this.audioPlayerType = audioPlayerType;
+	}
+
+	@XmlElement
+	public String getIdleVideo() {
+		return idleVideo;
+	}
+
+	public void setIdleVideo(String idleVideo) {
+		this.idleVideo = idleVideo;
 	}
 
 }

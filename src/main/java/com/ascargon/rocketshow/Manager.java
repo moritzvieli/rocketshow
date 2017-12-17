@@ -29,7 +29,9 @@ import com.ascargon.rocketshow.midi.MidiUtil.MidiDirection;
 import com.ascargon.rocketshow.song.SetList;
 import com.ascargon.rocketshow.song.SongManager;
 import com.ascargon.rocketshow.song.file.FileManager;
+import com.ascargon.rocketshow.song.file.VideoFile;
 import com.ascargon.rocketshow.util.ShellManager;
+import com.ascargon.rocketshow.video.VideoPlayer;
 
 public class Manager {
 
@@ -60,6 +62,8 @@ public class Manager {
 	private Settings settings;
 
 	private SetList currentSetList;
+	
+	private VideoPlayer idleVideoPlayer;
 
 	public void addMidiOutDeviceConnectedListener(MidiDeviceConnectedListener listener) {
 		midiOutDeviceConnectedListeners.add(listener);
@@ -140,6 +144,33 @@ public class Manager {
 		// We found the device and all listeners are connected
 		logger.info("Successfully connected to output MIDI device " + midiOutDevice.getDeviceInfo().getName());
 	}
+	
+	public void playIdleVideo() throws IOException, InterruptedException {
+		if(idleVideoPlayer != null) {
+			return;
+		}
+		
+		if(settings.getIdleVideo() == null || settings.getIdleVideo().length() == 0) {
+			return;
+		}
+		
+		logger.info("Play idle video");
+		
+		idleVideoPlayer = new VideoPlayer();
+		idleVideoPlayer.setLoop(true);
+		idleVideoPlayer.loadAndPlay(Manager.BASE_PATH + com.ascargon.rocketshow.song.file.File.MEDIA_PATH + VideoFile.VIDEO_PATH + settings.getIdleVideo());
+	}
+	
+	public void stopIdleVideo() throws Exception {
+		if(idleVideoPlayer == null) {
+			return;
+		}
+		
+		logger.info("Stop idle video");
+		
+		idleVideoPlayer.close();
+		idleVideoPlayer = null;
+	}
 
 	public void load() throws IOException {
 		logger.info("Initialize...");
@@ -180,7 +211,7 @@ public class Manager {
 		// Load the settings
 		try {
 			loadSettings();
-		} catch (JAXBException e) {
+		} catch (Exception e) {
 			logger.error("Could not load the settings", e);
 		}
 
@@ -247,7 +278,7 @@ public class Manager {
 		logger.info("Settings saved");
 	}
 
-	public void loadSettings() throws JAXBException {
+	public void loadSettings() throws JAXBException, IOException, InterruptedException {
 		File file = new File(BASE_PATH + "settings");
 		if (!file.exists() || file.isDirectory()) {
 			return;
@@ -267,6 +298,8 @@ public class Manager {
 				logger.error(e.getStackTrace());
 			}
 		}
+		
+		playIdleVideo();
 
 		logger.info("Settings loaded");
 	}
@@ -356,6 +389,12 @@ public class Manager {
 			} catch (Exception e) {
 				logger.error("Could not close current set list", e);
 			}
+		}
+		
+		try {
+			stopIdleVideo();
+		} catch (Exception e) {
+			logger.error("Could not stop idle video", e);
 		}
 
 		logger.info("Finished closing");

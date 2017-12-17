@@ -20,4 +20,16 @@ export class TransportService {
     });
   }
 
+  nextSong(): Observable<null> {
+    return this.apiService.post('transport/next-song', null).map((response: Response) => {
+      return null;
+    });
+  }
+
+  previousSong(): Observable<null> {
+    return this.apiService.post('transport/previous-song', null).map((response: Response) => {
+      return null;
+    });
+  }
+
 }

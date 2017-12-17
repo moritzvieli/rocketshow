@@ -51,7 +51,7 @@ public class SetList {
 	public Response create(com.ascargon.rocketshow.song.SetList setList) throws Exception {
 		Manager manager = (Manager)context.getAttribute("manager");
 		manager.getSongManager().saveSetList(setList);
-		manager.setCurrentSetList(setList);
+		manager.loadSetList(setList.getName());
 		return Response.status(200).build();
 	}
 	

@@ -20,7 +20,7 @@ public class VideoFile extends File {
 	private VideoPlayer videoPlayer;
 
 	private Timer playTimer;
-	
+
 	@XmlTransient
 	public String getPath() {
 		return Manager.BASE_PATH + MEDIA_PATH + VIDEO_PATH + getName();
@@ -29,6 +29,8 @@ public class VideoFile extends File {
 	@Override
 	public void load() throws Exception {
 		logger.debug("Loading file '" + this.getName() + "...");
+		
+		this.getManager().stopIdleVideo();
 		
 		this.setLoaded(false);
 		this.setLoading(true);
@@ -114,6 +116,8 @@ public class VideoFile extends File {
 		this.setLoaded(false);
 		this.setLoading(false);
 		videoPlayer.stop();
+		
+		this.getManager().playIdleVideo();
 	}
 
 }

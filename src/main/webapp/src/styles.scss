@@ -37,3 +37,16 @@ body {
 .container-fluid {
     padding-bottom: 15px;
 }
+
+/* Style the dropzone */
+.dz-message {
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 150px !important;
+    display: flex !important;
+}
+
+.dz-text {
+    margin: auto;
+}

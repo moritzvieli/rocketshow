@@ -32,7 +32,7 @@ public class System {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response play() throws Exception {
 		Manager manager = (Manager)context.getAttribute("manager");
-		manager.loadSettings();;
+		manager.loadSettings();
 		return Response.status(200).build();
 	}
 	
