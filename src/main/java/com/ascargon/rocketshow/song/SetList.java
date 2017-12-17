@@ -257,6 +257,7 @@ public class SetList {
 		return currentSongIndex;
 	}
 
+	@XmlTransient
 	public String getCurrentSongName() {
 		if (setListSongList.size() == 0) {
 			return null;
@@ -286,6 +287,7 @@ public class SetList {
 		logger.info("Set song index " + currentSongIndex);
 	}
 
+	@XmlTransient
 	public Song getCurrentSong() {
 		return currentSong;
 	}
