@@ -54,6 +54,10 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 		}
 	}
 
+	public int getFullOffsetMillis() {
+		return this.getOffsetMillis() + this.getManager().getSettings().getOffsetMillisMidi();
+	}
+	
 	@Override
 	public void play() {
 		if (midiPlayer == null) {
@@ -61,8 +65,8 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 			return;
 		}
 
-		if (this.getOffsetMillis() > 0) {
-			logger.debug("Wait " + this.getOffsetMillis() + " milliseconds before starting the MIDI file '"
+		if (this.getFullOffsetMillis() > 0) {
+			logger.debug("Wait " + this.getFullOffsetMillis() + " milliseconds before starting the MIDI file '"
 					+ this.getPath() + "'");
 
 			playTimer = new Timer();
@@ -72,7 +76,7 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 					playTimer = null;
 					midiPlayer.play();
 				}
-			}, this.getOffsetMillis());
+			}, this.getFullOffsetMillis());
 		} else {
 			midiPlayer.play();
 		}

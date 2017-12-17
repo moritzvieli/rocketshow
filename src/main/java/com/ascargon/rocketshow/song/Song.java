@@ -59,14 +59,14 @@ public class Song {
 
 	private LocalDateTime lastStartTime;
 	private long passedMillis;
-	
+
 	private boolean filesLoaded = false;
 
 	public void close() throws Exception {
 		for (File file : fileList) {
 			file.close();
 		}
-		
+
 		filesLoaded = false;
 
 		// Cancel the auto-stop timer
@@ -79,9 +79,9 @@ public class Song {
 	}
 
 	public void playerLoaded() {
-        synchronized(this){
-            notifyAll();
-       }
+		synchronized (this) {
+			notifyAll();
+		}
 	}
 
 	private boolean allFilesLoaded() {
@@ -96,22 +96,22 @@ public class Song {
 
 	// Load all files but don't start playing
 	public synchronized void loadFiles() throws Exception {
-		if(filesLoaded) {
+		if (filesLoaded) {
 			playState = PlayState.PAUSED;
 			return;
 		}
-		
+
 		playState = PlayState.LOADING;
 		manager.getStateManager().notifyClients();
-		
+
 		logger.debug("Loading all files for song '" + name + "'...");
 
 		for (File file : fileList) {
 			if (file.isActive()) {
 				if (file instanceof MidiFile) {
 					MidiFile midiFile = (MidiFile) file;
-					
-					for(MidiRouting midiRouting : midiFile.getMidiRoutingList()) {
+
+					for (MidiRouting midiRouting : midiFile.getMidiRoutingList()) {
 						midiRouting.getMidiMapping().setParent(midiMapping);
 					}
 				}
@@ -128,11 +128,11 @@ public class Song {
 				wait();
 			}
 		}
-		
+
 		logger.debug("All files for song '" + name + "' loaded");
-		
+
 		playState = PlayState.PAUSED;
-		
+
 		filesLoaded = true;
 	}
 
@@ -144,8 +144,18 @@ public class Song {
 
 		for (File file : fileList) {
 			if (file.isActive()) {
-				if (file.getDurationMillis() + file.getOffsetMillis() > maxDurationAndOffset) {
-					maxDurationAndOffset = file.getDurationMillis() + file.getOffsetMillis();
+				int fileOffset = 0;
+
+				if (file instanceof MidiFile) {
+					fileOffset = ((MidiFile) file).getFullOffsetMillis();
+				} else if (file instanceof AudioFile) {
+					fileOffset = ((AudioFile) file).getFullOffsetMillis();
+				} else if (file instanceof VideoFile) {
+					fileOffset = ((VideoFile) file).getFullOffsetMillis();
+				}
+
+				if (file.getDurationMillis() + fileOffset > maxDurationAndOffset) {
+					maxDurationAndOffset = file.getDurationMillis() + fileOffset;
 				}
 			}
 		}
@@ -203,7 +213,7 @@ public class Song {
 
 		lastStartTime = LocalDateTime.now();
 		passedMillis = 0;
-		
+
 		playState = PlayState.PLAYING;
 		manager.getStateManager().notifyClients();
 	}
@@ -272,7 +282,7 @@ public class Song {
 
 		playState = PlayState.STOPPING;
 		manager.getStateManager().notifyClients();
-		
+
 		// Cancel the auto-stop timer
 		if (autoStopTimer != null) {
 			autoStopTimer.cancel();
@@ -293,7 +303,7 @@ public class Song {
 				}
 			}
 		}
-		
+
 		filesLoaded = false;
 
 		logger.info("Song '" + name + "' stopped");

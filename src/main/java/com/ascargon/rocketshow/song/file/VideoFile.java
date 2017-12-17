@@ -46,6 +46,10 @@ public class VideoFile extends File {
 		stop();
 	}
 
+	public int getFullOffsetMillis() {
+		return this.getOffsetMillis() + this.getManager().getSettings().getOffsetMillisVideo();
+	}
+	
 	@Override
 	public void play() throws IOException {
 		String path = getPath();
@@ -55,8 +59,8 @@ public class VideoFile extends File {
 			return;
 		}
 
-		if (this.getOffsetMillis() > 0) {
-			logger.debug("Wait " + this.getOffsetMillis() + " milliseconds before starting the video file '"
+		if (this.getFullOffsetMillis() > 0) {
+			logger.debug("Wait " + this.getFullOffsetMillis() + " milliseconds before starting the video file '"
 					+ this.getPath() + "'");
 
 			playTimer = new Timer();
@@ -70,7 +74,7 @@ public class VideoFile extends File {
 						logger.error("Could not play video video '" + path + "'", e);
 					}
 				}
-			}, this.getOffsetMillis());
+			}, this.getFullOffsetMillis());
 		} else {
 			videoPlayer.play();
 		}

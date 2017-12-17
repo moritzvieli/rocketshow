@@ -34,6 +34,11 @@ public class Settings {
 	private MidiMapping midiMapping;
 
 	private int dmxSendDelayMillis;
+	
+	// Global play offset on file types
+	private int offsetMillisMidi;
+	private int offsetMillisAudio;
+	private int offsetMillisVideo;
 
 	private List<MidiRouting> deviceInMidiRoutingList = new ArrayList<MidiRouting>();
 	private List<MidiRouting> remoteMidiRoutingList = new ArrayList<MidiRouting>();
@@ -81,6 +86,10 @@ public class Settings {
 		}
 
 		dmxSendDelayMillis = 10;
+		
+		offsetMillisMidi = 0;
+		offsetMillisAudio = 0;
+		offsetMillisVideo = 0;
 	}
 
 	public RemoteDevice getRemoteDeviceById(int id) {
@@ -199,6 +208,30 @@ public class Settings {
 
 	public void setIdleVideo(String idleVideo) {
 		this.idleVideo = idleVideo;
+	}
+
+	public int getOffsetMillisMidi() {
+		return offsetMillisMidi;
+	}
+
+	public void setOffsetMillisMidi(int offsetMillisMidi) {
+		this.offsetMillisMidi = offsetMillisMidi;
+	}
+
+	public int getOffsetMillisAudio() {
+		return offsetMillisAudio;
+	}
+
+	public void setOffsetMillisAudio(int offsetMillisAudio) {
+		this.offsetMillisAudio = offsetMillisAudio;
+	}
+
+	public int getOffsetMillisVideo() {
+		return offsetMillisVideo;
+	}
+
+	public void setOffsetMillisVideo(int offsetMillisVideo) {
+		this.offsetMillisVideo = offsetMillisVideo;
 	}
 
 }
