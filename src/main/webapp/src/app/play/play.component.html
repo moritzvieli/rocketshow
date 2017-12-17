@@ -1,7 +1,7 @@
 <div class="container-fluid">
 
   <!-- Transport -->
-  <div class="row" *ngIf="stateService.connected">
+  <div class="row" *ngIf="stateService.connected" style="flex: 0 0 auto;">
     <div class="col">
       <div class="card mb-3">
         <div class="card-body">
@@ -87,9 +87,9 @@
 
   <!-- Setlist -->
   <div class="row" *ngIf="stateService.connected">
-    <div class="col">
-      <div class="list-group">
-        <div class="list-group-item list-group-item-action flex-column align-items-start">
+    <div class="col" style="display: flex; flex-flow: column;">
+      <div class="list-group" style="flex: 0 0 auto;">
+        <div class="list-group-item list-group-item-action flex-column align-items-start pt-2 pb-2" style="border-top-left-radius: 0.25em; border-top-right-radius: 0.25em; border-bottom-left-radius: 0; border-bottom-right-radius: 0;">
           <a href="#" class="" d="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             {{ 'misc.setlist' | translate }}: {{ currentSetList?.name }}
             <i class="fa fa-caret-down" aria-hidden="true"></i>
@@ -103,16 +103,19 @@
 
           <span style="margin-top: 3px" class="float-right">01:24:10</span>
         </div>
+      </div>
 
+      <div class="list-group song-list" style="flex: 0 1 auto; overflow: auto;">
         <!-- Display all songs -->
-        <a *ngFor="let song of currentSetList?.songList; let i = index" href="#" (click)="setSongIndex(i); false" class="list-group-item list-group-item-action flex-column align-items-start" [class.active]="currentState?.currentSongIndex == i">
+        <a *ngFor="let song of currentSetList?.songList; let i = index" id="song{{ i }}" href="#" (click)="setSongIndex(i); false" class="list-group-item list-group-item-action flex-column align-items-start pt-1 pb-1"
+          [class.active]="currentState?.currentSongIndex == i">
           <div class="d-flex w-100 justify-content-between">
             <p class="mb-1">{{ song.name }}</p>
             <small class="my-auto">{{ msToTime(song.durationMillis) }}</small>
           </div>
         </a>
-
       </div>
+
     </div>
   </div>
 

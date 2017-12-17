@@ -2,6 +2,19 @@
     transition: color 100ms ease-in-out;
 }
 
-.disconnected {
-    background-color: red;
+.container-fluid {
+    display: flex;
+    flex-flow: column;
+    height: calc(100% - 71px);
+}
+
+.song-list {
+    border-bottom-left-radius: 0.25em;
+    border-bottom-right-radius: 0.25em;
+}
+
+.list-group-item:first-child {
+    border-top: none;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }

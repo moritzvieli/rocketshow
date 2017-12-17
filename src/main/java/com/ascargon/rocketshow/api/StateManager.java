@@ -107,8 +107,7 @@ public class StateManager {
 					activeSession.getBasicRemote().sendText(state);
 				}
 			} catch (IOException e) {
-				// Session maybe closed?
-				activeSessions.remove(activeSession);
+				logger.error("Could not notify client", e);
 			}
 		}
 	}

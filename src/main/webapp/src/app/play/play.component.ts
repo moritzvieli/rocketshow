@@ -90,6 +90,12 @@ export class PlayComponent implements OnInit {
       this.playPercentage = 0;
     }
 
+    // Scroll the corresponding song into the view
+    let songObject = document.querySelector('#song' + newState.currentSongIndex);
+    if(songObject) {
+      document.querySelector('#song' + newState.currentSongIndex).scrollIntoView();
+    }
+
     this.currentState = newState;
   }
 
