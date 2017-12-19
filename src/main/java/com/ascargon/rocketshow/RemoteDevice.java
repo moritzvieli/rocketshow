@@ -123,7 +123,7 @@ public class RemoteDevice {
 	}
 
 	public void setPreviousSong() {
-		doPost("transport/next-song");
+		doPost("transport/previous-song");
 	}
 
 	public void setSongIndex(int songIndex) {
