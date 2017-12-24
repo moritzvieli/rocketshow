@@ -56,12 +56,12 @@ public class MidiInDeviceReceiver implements Receiver {
 
 		MidiDevice midiDevice = manager.getSettings().getMidiInDevice();
 
-		logger.debug("Try connecting to input MIDI device " + midiDevice.getId() + " \"" + midiDevice.getName() + "\"");
+		logger.trace("Try connecting to input MIDI device " + midiDevice.getId() + " \"" + midiDevice.getName() + "\"");
 
 		midiReceiver = MidiUtil.getHardwareMidiDevice(midiDevice, MidiDirection.IN);
 
 		if (midiReceiver == null) {
-			logger.debug("MIDI input device not found. Try again in 5 seconds.");
+			logger.trace("MIDI input device not found. Try again in 5 seconds.");
 
 			TimerTask timerTask = new TimerTask() {
 				@Override

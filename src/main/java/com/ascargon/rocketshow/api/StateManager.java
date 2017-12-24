@@ -92,6 +92,14 @@ public class StateManager {
 	// Get the current state and add a midi signal, if needed
 	private String getSerializedState(MidiSignal midiSignal) throws Exception {
 		State currentState = getCurrentState();
+		
+		if(midiSignal == null) {
+			midiSignal = new MidiSignal();
+			midiSignal.setNote(3);
+			midiSignal.setChannel(10);
+			midiSignal.setCommand(144);
+		}
+		
 		currentState.setMidiSignal(midiSignal);
 
 		// Convert the object to json

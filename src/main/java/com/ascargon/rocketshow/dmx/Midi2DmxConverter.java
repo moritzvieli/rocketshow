@@ -32,7 +32,7 @@ public class Midi2DmxConverter {
 			dmxSignalSender.send(midiSignal.getNote(), valueTo);
 		} else if (midiSignal.getCommand() == ShortMessage.NOTE_OFF) {
 			int valueTo = 0;
-			dmxSignalSender.send(midiSignal.getChannel(), valueTo);
+			dmxSignalSender.send(midiSignal.getNote(), valueTo);
 		}
 	}
 

@@ -6,6 +6,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 @XmlRootElement
 public class MidiSignal {
 
@@ -24,11 +26,15 @@ public class MidiSignal {
 		velocity = shortMessage.getData2();
 	}
 
+	// Also use the @JsonIgnore annotation, because the state including this
+	// class is serialized with a JSON serializer in contrast to the rest of the
+	// app.
 	@XmlTransient
+	@JsonIgnore
 	public ShortMessage getShortMessage() throws InvalidMidiDataException {
 		ShortMessage shortMessage = new ShortMessage();
 		shortMessage.setMessage(command, channel, note, velocity);
-		
+
 		return shortMessage;
 	}
 

@@ -131,8 +131,9 @@ public class Midi2ActionConverter {
 	public void processMidiEvent(MidiSignal midiSignal, Midi2ActionMapping midi2ActionMapping) throws Exception {
 		// Map the MIDI event and execute the appropriate actions
 
-		// Only react to NOTE_ON events
-		if (midiSignal.getCommand() != ShortMessage.NOTE_ON) {
+		// Only react to NOTE_ON events with a velocity higher than 0
+		// TODO Disable velocity check in settings
+		if (midiSignal.getCommand() != ShortMessage.NOTE_ON || midiSignal.getVelocity() == 0) {
 			return;
 		}
 

@@ -46,6 +46,7 @@ public class VideoFile extends File {
 		stop();
 	}
 
+	@XmlTransient
 	public int getFullOffsetMillis() {
 		return this.getOffsetMillis() + this.getManager().getSettings().getOffsetMillisVideo();
 	}

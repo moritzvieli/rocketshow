@@ -46,6 +46,7 @@ public class AudioFile extends com.ascargon.rocketshow.song.file.File {
 		stop();
 	}
 
+	@XmlTransient
 	public int getFullOffsetMillis() {
 		return this.getOffsetMillis() + this.getManager().getSettings().getOffsetMillisAudio();
 	}

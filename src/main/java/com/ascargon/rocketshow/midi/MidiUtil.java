@@ -84,7 +84,7 @@ public class MidiUtil {
 
 		// Return the default device, if no device has been found or no settings
 		// have been specified
-		logger.debug(
+		logger.trace(
 				"No settings provided or no device found for the provided settings. Return default MIDI device, if available");
 
 		for (int i = 0; i < midiDeviceInfos.length; i++) {
@@ -96,7 +96,7 @@ public class MidiUtil {
 			}
 		}
 
-		logger.debug("No MIDI device found");
+		logger.trace("No MIDI device found");
 		return null;
 	}
 

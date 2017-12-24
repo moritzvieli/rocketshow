@@ -50,14 +50,15 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 		midiPlayer.load(this, this.getPath());
 
 		for (MidiRouting midiRouting : midiRoutingList) {
-			midiRouting.load(this.getManager());	
+			midiRouting.load(this.getManager());
 		}
 	}
 
+	@XmlTransient
 	public int getFullOffsetMillis() {
 		return this.getOffsetMillis() + this.getManager().getSettings().getOffsetMillisMidi();
 	}
-	
+
 	@Override
 	public void play() {
 		if (midiPlayer == null) {
@@ -138,7 +139,7 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 		for (MidiRouting midiRouting : midiRoutingList) {
 			midiRouting.setMidiSource("MIDI file '" + getPath() + "'");
 		}
-		
+
 		this.midiRoutingList = midiRoutingList;
 	}
 

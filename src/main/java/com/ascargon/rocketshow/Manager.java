@@ -103,13 +103,13 @@ public class Manager {
 
 		com.ascargon.rocketshow.midi.MidiDevice midiDevice = settings.getMidiOutDevice();
 
-		logger.debug(
+		logger.trace(
 				"Try connecting to output MIDI device " + midiDevice.getId() + " \"" + midiDevice.getName() + "\"");
 
 		midiOutDevice = MidiUtil.getHardwareMidiDevice(midiDevice, MidiDirection.OUT);
 
 		if (midiOutDevice == null) {
-			logger.debug("MIDI output device not found. Try again in 5 seconds.");
+			logger.trace("MIDI output device not found. Try again in 5 seconds.");
 
 			TimerTask timerTask = new TimerTask() {
 				@Override
