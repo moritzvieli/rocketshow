@@ -82,14 +82,14 @@ export class SongService {
       });
   }
 
-  getSongs(): Observable<Song[]> {
+  getSongs(clearCache: boolean = false): Observable<Song[]> {
     if(environment.disconnected) {
       this.songs = [];
       this.songs.push(new Song(JSON.parse(this.mockSong)));
       return Observable.of(this.songs);
     }
 
-    if (this.songs) {
+    if (this.songs && !clearCache) {
       return Observable.of(this.songs);
     }
 
@@ -131,6 +131,14 @@ export class SongService {
       .map((response: Response) => {
         return new Song(response.json());
       });
+  }
+
+  saveSong(song: Song): Observable<Response> {
+    return this.apiService.post('song', song.stringify());
+  }
+
+  deleteSong(name: string): Observable<Response> {
+    return this.apiService.post('song/delete?name=' + name, undefined);
   }
 
 }

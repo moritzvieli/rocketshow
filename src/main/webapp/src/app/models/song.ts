@@ -84,6 +84,8 @@ export class Song {
             }
         }
 
+        songObject.isNew = undefined;
+
         return JSON.stringify(songObject);
     }
 }

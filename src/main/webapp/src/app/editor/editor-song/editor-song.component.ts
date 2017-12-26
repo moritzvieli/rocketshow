@@ -26,13 +26,19 @@ export class EditorSongComponent implements OnInit {
   currentSong: Song;
   files: any[] = [];
 
+  initialSongName: string = '';
+
   constructor(
     private songService: SongService,
     private modalService: BsModalService) {
   }
 
   ngOnInit() {
-    this.songService.getSongs().subscribe((songs: Song[]) => {
+    this.loadSongs();
+  }
+
+  private loadSongs() {
+    this.songService.getSongs(true).subscribe((songs: Song[]) => {
       this.songs = songs;
       this.filterSongs();
     });
@@ -67,6 +73,7 @@ export class EditorSongComponent implements OnInit {
 
     this.songService.loadSong(song.name).subscribe((song: Song) => {
       this.currentSong = song;
+      this.initialSongName = song.name;
       this.loadingSong = false;
     });
   }
@@ -84,7 +91,15 @@ export class EditorSongComponent implements OnInit {
 
   // Save a new song
   saveSong(song: Song) {
-    // TODO
+    // Delete the old song, if the name changed
+    this.songService.deleteSong(this.initialSongName).map(() => {
+      this.songService.saveSong(song).map(() => {
+        this.loadSongs();
+        this.initialSongName = song.name;
+
+        // TODO Show a toast with the success status
+      }).subscribe();
+    }).subscribe();
   }
 
   // Delete the song
@@ -107,7 +122,7 @@ export class EditorSongComponent implements OnInit {
     // The type may be changed in the choose file dialog.
     let newFileList: SongFile[] = [];
 
-    for(let file of this.currentSong.fileList) {
+    for (let file of this.currentSong.fileList) {
       let newFile = Song.getFileObjectByType(JSON.stringify(file));
       newFileList.push(newFile);
     }

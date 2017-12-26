@@ -1,6 +1,8 @@
 package com.ascargon.rocketshow.song;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -30,32 +32,36 @@ public class SongManager {
 		File[] fileList = folder.listFiles();
 		List<Song> songList = new ArrayList<Song>();
 
-		for (File file : fileList) {
-			if (file.isFile()) {
-				Song song = new Song();
-				song.setName(file.getName());
-				
-				songList.add(song);
+		if (fileList != null) {
+			for (File file : fileList) {
+				if (file.isFile()) {
+					Song song = new Song();
+					song.setName(file.getName());
+
+					songList.add(song);
+				}
 			}
 		}
-		
+
 		return songList;
 	}
-	
+
 	public List<SetList> getAllSetLists() throws Exception {
 		File folder = new File(Manager.BASE_PATH + SETLIST_PATH);
 		File[] fileList = folder.listFiles();
 		List<SetList> setListList = new ArrayList<SetList>();
 
-		for (File file : fileList) {
-			if (file.isFile()) {
-				SetList setList = new SetList();
-				setList.setName(file.getName());
-				
-				setListList.add(setList);
+		if (fileList != null) {
+			for (File file : fileList) {
+				if (file.isFile()) {
+					SetList setList = new SetList();
+					setList.setName(file.getName());
+
+					setListList.add(setList);
+				}
 			}
 		}
-		
+
 		return setListList;
 	}
 
@@ -135,7 +141,31 @@ public class SongManager {
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 		jaxbMarshaller.marshal(song, file);
 
+		updateSetLists();
+		
 		logger.info("Song '" + song.getName() + "' saved");
+	}
+
+	public void deleteSong(String name) throws Exception {
+		// Delete the song
+		File file = new File(Manager.BASE_PATH + SONG_PATH + name);
+		
+		if(!file.exists()) {
+			return;
+		}
+		
+		file.delete();
+		
+		updateSetLists();
+		
+		// TODO What do we do, if this is the current song?
+		
+		logger.info("Song '" + name + "' deleted");
+	}
+
+	private void updateSetLists() {
+		// Update all setlists (remove deleted files, update playing times)
+		// TODO
 	}
 
 }

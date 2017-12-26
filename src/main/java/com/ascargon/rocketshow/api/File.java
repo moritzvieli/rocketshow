@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -23,6 +24,13 @@ public class File {
 	public List<com.ascargon.rocketshow.song.file.File> getAll() throws Exception {
 		Manager manager = (Manager) context.getAttribute("manager");
 		return manager.getFileManager().getAllFiles();
+	}
+
+	@Path("upload")
+	@POST
+	public void upload() throws Exception {
+		Manager manager = (Manager) context.getAttribute("manager");
+		//return manager.getFileManager().getAllFiles();
 	}
 	
 }

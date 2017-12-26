@@ -38,7 +38,9 @@ export class ApiService extends Http {
   }
 
   post(url: string, body: any): Observable<Response> {
-    return super.post(this.restUrl + url, body);
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    return super.post(this.restUrl + url, body, {headers: headers});
   }
 
   put(url: string, body: any): Observable<Response> {

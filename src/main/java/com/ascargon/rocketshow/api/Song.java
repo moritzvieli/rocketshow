@@ -53,4 +53,13 @@ public class Song {
 		return Response.status(200).build();
 	}
 	
+	@Path("delete")
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response delete(@QueryParam("name") String name) throws Exception {
+		Manager manager = (Manager) context.getAttribute("manager");
+		manager.getSongManager().deleteSong(name);
+		return Response.status(200).build();
+	}
+	
 }
