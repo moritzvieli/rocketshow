@@ -1,3 +1,4 @@
+import { TranslateService } from '@ngx-translate/core';
 import { SongFile } from './../../../models/song-file';
 import { MidiRouting } from './../../../models/midi-routing';
 import { Component, OnInit } from '@angular/core';
@@ -23,18 +24,38 @@ export class EditorSongFileComponent implements OnInit {
   onClose: Subject<boolean>;
 
   dropzoneConfig: DropzoneConfigInterface;
+  uploadMessage: string;
 
   constructor(
     private bsModalRef: BsModalRef,
     private modalService: BsModalService,
-    private apiService: ApiService) {
+    private apiService: ApiService,
+    private translateService: TranslateService) {
 
     this.dropzoneConfig = {
-      url: apiService.getRestUrl + "file/upload",
+      url: apiService.getRestUrl() + "file/upload",
       addRemoveLinks: false,
-      uploadMultiple: false,
-      previewTemplate: '#dz-preview-template'
+      previewTemplate: `
+      <div class="dz-preview dz-file-preview">
+        <!-- The attachment details -->
+        <div class="dz-details" style="text-align: left">
+          <i class="fa fa-file-o"></i> <span data-dz-name></span> <small><span class="label label-default file-size" data-dz-size></span></small>
+        </div>
+        
+        <!--div class="mt-5">
+          <span data-dz-errormessage></span>
+        </div-->
+        
+        <div class="progress mt-4 mb-1" style="height: 10px">
+          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width:0%;" data-dz-uploadprogress></div>
+        </div>
+      </div>
+      `
     };
+
+    translateService.get('editor.dropzone-message').map(result => {
+      this.uploadMessage = '<h3 class="mb-0"><i class="fa fa-cloud-upload"></i></h3>' + result;
+    }).subscribe();
   }
 
   ngOnInit() {
@@ -73,6 +94,16 @@ export class EditorSongFileComponent implements OnInit {
   // Taken from http://jsbin.com/tuyafe/1/edit?html,js,output
   sortMove(evt) {
     return evt.related.className.indexOf('no-sortjs') === -1;
+  }
+
+  public onUploadError(args: any) {
+    console.log('onUploadError:', args);
+  }
+
+  public onUploadSuccess(args: any) {
+    console.log('onUploadSuccess:', args);
+
+    args[0].previewElement.hidden = true;
   }
 
 }

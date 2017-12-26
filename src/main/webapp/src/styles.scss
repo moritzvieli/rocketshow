@@ -39,6 +39,10 @@ body {
 }
 
 /* Style the dropzone */
+dropzone.dz-wrapper>.dropzone {
+    overflow: visible !important;
+}
+
 .dz-message {
     margin: 0 !important;
     width: 100% !important;
@@ -49,4 +53,17 @@ body {
 
 .dz-text {
     margin: auto;
+}
+
+.dropzone .dz-preview {
+    margin: 0 !important;
+    margin-top: 10px !important;
+    width: 100%;
+    min-height: 0 !important;
+}
+
+dropzone.dz-wrapper>.dropzone .dz-preview .dz-details {
+    padding: 0 !important;
+    padding-left: 3px !important;
+    padding-top: 3px !important;
 }
