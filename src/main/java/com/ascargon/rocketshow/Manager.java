@@ -14,6 +14,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.api.StateManager;
@@ -41,7 +42,7 @@ public class Manager {
 
 	// Manage the client states (web GUI)
 	private StateManager stateManager;
-	
+
 	private Updater updater;
 
 	private SongManager songManager;
@@ -62,7 +63,7 @@ public class Manager {
 	private Settings settings;
 
 	private SetList currentSetList;
-	
+
 	private VideoPlayer idleVideoPlayer;
 
 	public void addMidiOutDeviceConnectedListener(MidiDeviceConnectedListener listener) {
@@ -144,30 +145,31 @@ public class Manager {
 		// We found the device and all listeners are connected
 		logger.info("Successfully connected to output MIDI device " + midiOutDevice.getDeviceInfo().getName());
 	}
-	
+
 	public void playIdleVideo() throws IOException, InterruptedException {
-		if(idleVideoPlayer != null) {
+		if (idleVideoPlayer != null) {
 			return;
 		}
-		
-		if(settings.getIdleVideo() == null || settings.getIdleVideo().length() == 0) {
+
+		if (settings.getIdleVideo() == null || settings.getIdleVideo().length() == 0) {
 			return;
 		}
-		
+
 		logger.info("Play idle video");
-		
+
 		idleVideoPlayer = new VideoPlayer();
 		idleVideoPlayer.setLoop(true);
-		idleVideoPlayer.loadAndPlay(Manager.BASE_PATH + com.ascargon.rocketshow.song.file.File.MEDIA_PATH + VideoFile.VIDEO_PATH + settings.getIdleVideo());
+		idleVideoPlayer.loadAndPlay(Manager.BASE_PATH + com.ascargon.rocketshow.song.file.File.MEDIA_PATH
+				+ VideoFile.VIDEO_PATH + settings.getIdleVideo());
 	}
-	
+
 	public void stopIdleVideo() throws Exception {
-		if(idleVideoPlayer == null) {
+		if (idleVideoPlayer == null) {
 			return;
 		}
-		
+
 		logger.info("Stop idle video");
-		
+
 		idleVideoPlayer.close();
 		idleVideoPlayer = null;
 	}
@@ -178,7 +180,7 @@ public class Manager {
 		// Initialize the client state
 		stateManager = new StateManager();
 		stateManager.load(this);
-		
+
 		// Initialize the updater
 		updater = new Updater();
 
@@ -187,10 +189,10 @@ public class Manager {
 
 		// Initialize the filemanager
 		fileManager = new FileManager();
-		
+
 		// Initialize the session
 		session = new Session();
-		
+
 		// Initialize the settings
 		settings = new Settings();
 
@@ -222,9 +224,29 @@ public class Manager {
 			logger.error("Could not save settings", e);
 		}
 
+		// Set the proper logging level (map from the log4j enum to our own
+		// enum)
+		switch (settings.getLoggingLevel()) {
+		case INFO:
+			logger.setLevel(Level.INFO);
+			break;
+		case WARN:
+			logger.setLevel(Level.WARN);
+			break;
+		case ERROR:
+			logger.setLevel(Level.ERROR);
+			break;
+		case DEBUG:
+			logger.setLevel(Level.DEBUG);
+			break;
+		case TRACE:
+			logger.setLevel(Level.TRACE);
+			break;
+		}
+
 		// Initialize the required objects inside settings
 		if (settings.getDeviceInMidiRoutingList() != null) {
-			for(MidiRouting deviceInMidiRouting : settings.getDeviceInMidiRoutingList()) {
+			for (MidiRouting deviceInMidiRouting : settings.getDeviceInMidiRoutingList()) {
 				try {
 					deviceInMidiRouting.load(this);
 				} catch (MidiUnavailableException e) {
@@ -256,14 +278,14 @@ public class Manager {
 		}
 
 		// Read the current song file
-		if(currentSetList != null) {
+		if (currentSetList != null) {
 			try {
 				currentSetList.readCurrentSong();
 			} catch (Exception e) {
 				logger.error("Could not read current song", e);
 			}
 		}
-		
+
 		logger.info("Finished initializing");
 	}
 
@@ -300,7 +322,7 @@ public class Manager {
 				logger.error(e.getStackTrace());
 			}
 		}
-		
+
 		playIdleVideo();
 
 		logger.info("Settings loaded");
@@ -365,10 +387,10 @@ public class Manager {
 	public void close() {
 		logger.info("Close...");
 
-		if(connectMidiOutDeviceTimer != null) {
+		if (connectMidiOutDeviceTimer != null) {
 			connectMidiOutDeviceTimer.cancel();
 		}
-		
+
 		if (midiInDeviceReceiver != null) {
 			try {
 				midiInDeviceReceiver.close();
@@ -392,7 +414,7 @@ public class Manager {
 				logger.error("Could not close current set list", e);
 			}
 		}
-		
+
 		try {
 			stopIdleVideo();
 		} catch (Exception e) {

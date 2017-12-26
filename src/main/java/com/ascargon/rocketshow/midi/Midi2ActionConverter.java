@@ -75,6 +75,8 @@ public class Midi2ActionConverter {
 
 	private void executeActionLocally(MidiAction action) throws Exception {
 		// Execute the action locally
+		logger.info("Execute action from MIDI event");
+		
 		switch (action) {
 		case PLAY:
 			manager.getCurrentSetList().play();

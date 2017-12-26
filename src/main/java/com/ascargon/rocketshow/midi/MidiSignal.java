@@ -8,6 +8,11 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
+/**
+ * A MIDI event. Can be converted from and to Java ShortMessages.
+ *
+ * @author Moritz A. Vieli
+ */
 @XmlRootElement
 public class MidiSignal {
 

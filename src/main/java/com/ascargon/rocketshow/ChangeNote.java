@@ -5,6 +5,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.log4j.Logger;
 
+/**
+ * Release change notes for the app.
+ *
+ * @author Moritz A. Vieli
+ */
 @XmlRootElement
 public class ChangeNote {
 

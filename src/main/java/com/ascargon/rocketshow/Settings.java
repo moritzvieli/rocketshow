@@ -23,6 +23,11 @@ public class Settings {
 
 	final static Logger logger = Logger.getLogger(Settings.class);
 
+	// Create an own logging enum to save it in the settings xml
+	public enum LoggingLevel {
+		ERROR, WARN, INFO, DEBUG, TRACE
+	}
+
 	private String defaultImagePath;
 
 	private MidiDevice midiInDevice;
@@ -34,7 +39,7 @@ public class Settings {
 	private MidiMapping midiMapping;
 
 	private int dmxSendDelayMillis;
-	
+
 	// Global play offset on file types
 	private int offsetMillisMidi;
 	private int offsetMillisAudio;
@@ -44,15 +49,17 @@ public class Settings {
 	private List<MidiRouting> remoteMidiRoutingList = new ArrayList<MidiRouting>();
 
 	private PlayerType audioPlayerType;
-	
+
 	private String idleVideo;
+
+	private LoggingLevel loggingLevel;
 
 	public Settings() {
 		// Initialize default settings
 
 		midiInDevice = new MidiDevice();
 		midiOutDevice = new MidiDevice();
-		
+
 		audioPlayerType = PlayerType.MPLAYER;
 
 		defaultImagePath = null;
@@ -86,10 +93,13 @@ public class Settings {
 		}
 
 		dmxSendDelayMillis = 10;
-		
+
 		offsetMillisMidi = 0;
 		offsetMillisAudio = 0;
 		offsetMillisVideo = 0;
+
+		// Set to info, as soon as the version is stable
+		loggingLevel = LoggingLevel.DEBUG;
 	}
 
 	public RemoteDevice getRemoteDeviceById(int id) {
@@ -210,6 +220,7 @@ public class Settings {
 		this.idleVideo = idleVideo;
 	}
 
+	@XmlElement
 	public int getOffsetMillisMidi() {
 		return offsetMillisMidi;
 	}
@@ -218,6 +229,7 @@ public class Settings {
 		this.offsetMillisMidi = offsetMillisMidi;
 	}
 
+	@XmlElement
 	public int getOffsetMillisAudio() {
 		return offsetMillisAudio;
 	}
@@ -226,12 +238,22 @@ public class Settings {
 		this.offsetMillisAudio = offsetMillisAudio;
 	}
 
+	@XmlElement
 	public int getOffsetMillisVideo() {
 		return offsetMillisVideo;
 	}
 
 	public void setOffsetMillisVideo(int offsetMillisVideo) {
 		this.offsetMillisVideo = offsetMillisVideo;
+	}
+
+	@XmlElement
+	public LoggingLevel getLoggingLevel() {
+		return loggingLevel;
+	}
+
+	public void setLoggingLevel(LoggingLevel loggingLevel) {
+		this.loggingLevel = loggingLevel;
 	}
 
 }

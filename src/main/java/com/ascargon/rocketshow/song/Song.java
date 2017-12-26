@@ -269,9 +269,9 @@ public class Song {
 
 	public synchronized void togglePlay() throws Exception {
 		if (playState == PlayState.PLAYING) {
-			pause();
+			stop();
 		} else {
-			resume();
+			play();
 		}
 	}
 

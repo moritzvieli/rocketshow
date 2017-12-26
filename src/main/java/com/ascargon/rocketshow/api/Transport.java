@@ -9,11 +9,15 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.log4j.Logger;
+
 import com.ascargon.rocketshow.Manager;
 
 @Path("/transport")
 public class Transport {
 
+	final static Logger logger = Logger.getLogger(Transport.class);
+	
 	@Context
 	ServletContext context;
 	
@@ -21,6 +25,8 @@ public class Transport {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response load() throws Exception {
+		logger.info("Received API request for transport/load");
+		
 		Manager manager = (Manager) context.getAttribute("manager");
 		if (manager.getCurrentSetList() != null) {
 			manager.getCurrentSetList().getCurrentSong().loadFiles();
@@ -32,6 +38,8 @@ public class Transport {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response play() throws Exception {
+		logger.info("Received API request for transport/play");
+		
 		Manager manager = (Manager) context.getAttribute("manager");
 		if (manager.getCurrentSetList() != null) {
 			manager.getCurrentSetList().play();
@@ -43,6 +51,8 @@ public class Transport {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response pause() throws Exception {
+		logger.info("Received API request for transport/pause");
+		
 		Manager manager = (Manager) context.getAttribute("manager");
 		if (manager.getCurrentSetList() != null) {
 			manager.getCurrentSetList().pause();
@@ -54,6 +64,8 @@ public class Transport {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response resume() throws Exception {
+		logger.info("Received API request for transport/resume");
+		
 		Manager manager = (Manager) context.getAttribute("manager");
 		if (manager.getCurrentSetList() != null) {
 			manager.getCurrentSetList().resume();
@@ -65,6 +77,8 @@ public class Transport {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response togglePlay() throws Exception {
+		logger.info("Received API request for transport/toggle-play");
+		
 		Manager manager = (Manager) context.getAttribute("manager");
 		if (manager.getCurrentSetList() != null) {
 			manager.getCurrentSetList().togglePlay();
@@ -76,6 +90,8 @@ public class Transport {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response stop() throws Exception {
+		logger.info("Received API request for transport/stop");
+		
 		Manager manager = (Manager) context.getAttribute("manager");
 		if (manager.getCurrentSetList() != null) {
 			manager.getCurrentSetList().stop();
@@ -87,6 +103,8 @@ public class Transport {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response nextSong() throws Exception {
+		logger.info("Received API request for transport/next-song");
+		
 		Manager manager = (Manager) context.getAttribute("manager");
 		if (manager.getCurrentSetList() != null) {
 			manager.getCurrentSetList().nextSong();
@@ -98,6 +116,8 @@ public class Transport {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response previousSong() throws Exception {
+		logger.info("Received API request for transport/previous-song");
+		
 		Manager manager = (Manager) context.getAttribute("manager");
 		if (manager.getCurrentSetList() != null) {
 			manager.getCurrentSetList().previousSong();
@@ -109,6 +129,8 @@ public class Transport {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response setSongIndex(@QueryParam("index") int index) throws Exception {
+		logger.info("Received API request for transport/set-song-index");
+		
 		Manager manager = (Manager) context.getAttribute("manager");
 		if (manager.getCurrentSetList() != null) {
 			manager.getCurrentSetList().setCurrentSongIndex(index);

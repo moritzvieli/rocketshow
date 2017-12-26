@@ -23,6 +23,8 @@ export class PlayComponent implements OnInit {
   playTime: string = '00:00.000';
   playUpdateSubscription: Subscription;
 
+  manualSongSelection: boolean = false;
+
   constructor(public apiService: ApiService,
     private stateService: StateService,
     private songService: SongService,
@@ -90,14 +92,20 @@ export class PlayComponent implements OnInit {
       this.playPercentage = 0;
     }
 
-    // Scroll the corresponding song into the view
-    let songObject = document.querySelector('#song' + newState.currentSongIndex);
-    if(songObject) {
-      songObject.scrollIntoView();
-    }
-    let songSmallObject = document.querySelector('#songSmall' + newState.currentSongIndex);
-    if(songObject) {
-      songSmallObject.scrollIntoView();
+    // Scroll the corresponding song into the view, except the user selected the
+    // song here in the app.
+    if (this.manualSongSelection) {
+      // The next time, we receive a new song state, we should scroll into the view again
+      this.manualSongSelection = false;
+    } else {
+      let songObject = document.querySelector('#song' + newState.currentSongIndex);
+      if (songObject) {
+        songObject.scrollIntoView();
+      }
+      let songSmallObject = document.querySelector('#songSmall' + newState.currentSongIndex);
+      if (songObject) {
+        songSmallObject.scrollIntoView();
+      }
     }
 
     this.currentState = newState;
@@ -122,6 +130,7 @@ export class PlayComponent implements OnInit {
   }
 
   setSongIndex(index: number) {
+    this.manualSongSelection = true;
     this.transportService.setSongIndex(index).subscribe();
   }
 
