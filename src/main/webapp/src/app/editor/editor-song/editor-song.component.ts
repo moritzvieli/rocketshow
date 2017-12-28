@@ -123,7 +123,7 @@ export class EditorSongComponent implements OnInit {
     let newFileList: SongFile[] = [];
 
     for (let file of this.currentSong.fileList) {
-      let newFile = Song.getFileObjectByType(JSON.stringify(file));
+      let newFile = Song.getFileObjectByType(file);
       newFileList.push(newFile);
     }
 
@@ -135,12 +135,15 @@ export class EditorSongComponent implements OnInit {
     // Create a backup of the current song
     let songCopy: Song = new Song(JSON.parse(this.currentSong.stringify()));
 
-    let newFile: SongFile = new SongFile();
-    newFile.isNew = true;
-    songCopy.fileList.push(newFile);
+    if(addNew) {
+      // Add a new file, if necessary
+      let newFile: SongFile = new SongFile();
+      newFile.isNew = true;
+      songCopy.fileList.push(newFile);
+      fileIndex = songCopy.fileList.length - 1;
+    }
 
     // Show the file details dialog
-    // keyboard = false, because the onClose will not be fired in this case
     let fileDialog = this.modalService.show(EditorSongFileComponent, { keyboard: true, ignoreBackdropClick: true, class: 'modal-lg' });
     (<EditorSongFileComponent>fileDialog.content).fileIndex = fileIndex;
     (<EditorSongFileComponent>fileDialog.content).file = songCopy.fileList[fileIndex];
@@ -149,7 +152,7 @@ export class EditorSongComponent implements OnInit {
     (<EditorSongFileComponent>fileDialog.content).onClose.subscribe(result => {
       if (result === true) {
         // OK has been pressed -> save
-        this.currentSong.fileList = songCopy.fileList;
+        this.currentSong.fileList[fileIndex] = (<EditorSongFileComponent>fileDialog.content).file;
 
         this.rebuildFileListBasedOnType();
       }

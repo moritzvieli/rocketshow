@@ -74,19 +74,26 @@ export class EditorSongFileComponent implements OnInit {
   }
 
   // Edit the routing details
-  editRouting(midiRoutingIndex: number) {
+  editRouting(midiRoutingIndex: number, addNew: boolean = false) {
     // Create a backup of the current song
     let songCopy: Song = new Song(JSON.parse(this.song.stringify()));
 
+    if (addNew) {
+      // Add a new routing, if necessary
+      let newRouting: MidiRouting = new MidiRouting();
+      newRouting.midiDestination = 'OUT_DEVICE';
+      (<SongMidiFile>songCopy.fileList[this.fileIndex]).midiRoutingList.push(newRouting);
+      midiRoutingIndex = (<SongMidiFile>songCopy.fileList[this.fileIndex]).midiRoutingList.length - 1;
+    }
+
     // Show the routing details dialog
-    // Keyboard = false, because the onClose will not be fired in this case
     let routingDialog = this.modalService.show(RoutingDetailsComponent, { keyboard: true, animated: true, backdrop: false, ignoreBackdropClick: true, class: "" });
     (<RoutingDetailsComponent>routingDialog.content).midiRouting = (<SongMidiFile>songCopy.fileList[this.fileIndex]).midiRoutingList[midiRoutingIndex];
 
     (<RoutingDetailsComponent>routingDialog.content).onClose.subscribe(result => {
       if (result === true) {
         // OK has been pressed -> save
-        (<SongMidiFile>this.song.fileList[this.fileIndex]).midiRoutingList = (<SongMidiFile>songCopy.fileList[this.fileIndex]).midiRoutingList;
+        (<SongMidiFile>this.song.fileList[this.fileIndex]).midiRoutingList[midiRoutingIndex] = (<SongMidiFile>songCopy.fileList[this.fileIndex]).midiRoutingList[midiRoutingIndex];
       }
     });
   }
