@@ -10,6 +10,10 @@ import com.ascargon.rocketshow.song.Song;
 @XmlRootElement
 abstract public class File implements PlayerLoadedListener {
 
+	public enum FileType {
+		MIDI, AUDIO, VIDEO, UNKNOWN
+	}
+	
 	public final static String MEDIA_PATH = "media/";
 	
 	private String name;
@@ -115,6 +119,10 @@ abstract public class File implements PlayerLoadedListener {
 
 	public void setDurationMillis(long durationMillis) {
 		this.durationMillis = durationMillis;
+	}
+	
+	public FileType getType() {
+		return FileType.UNKNOWN;
 	}
 
 }

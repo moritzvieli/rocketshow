@@ -124,5 +124,9 @@ public class VideoFile extends File {
 		
 		this.getManager().playIdleVideo();
 	}
+	
+	public FileType getType() {
+		return FileType.VIDEO;
+	}
 
 }

@@ -53,7 +53,8 @@
         "upload": "Upload",
         "media-library": "Media library",
         "file-settings": "Settings",
-        "dropzone-message": "Drop files here or click to upload"
+        "dropzone-message": "Drop files here or click to upload",
+        "no-file-selected": "No file selected"
     },
     "connection": {
         "title": "No connection",

@@ -12,7 +12,15 @@
           <!-- Selected file -->
           <div class="card mb-3">
             <div class="card-body">
-              sdfsdf
+              <!-- No file selected -->
+              <div *ngIf="!file?.name">
+                {{ 'editor.no-file-selected' | translate }}
+              </div>
+              
+              <!-- A file is selected -->
+              <div *ngIf="file?.name">
+
+              </div>
             </div>
           </div>
 
@@ -80,7 +88,7 @@
               </div>
 
               <!-- MIDI routing -->
-              <div class="form-group" *ngIf="file?.type == 'midi'">
+              <div class="form-group" *ngIf="file?.type == 'MIDI'">
                 <label class="col-form-label" for="offsetMillis">{{ 'editor.routing' | translate }}</label>
 
                 <div class="list-group" [sortablejs] [sortablejsOptions]="{ onMove: sortMove }">

@@ -27,15 +27,12 @@ export class Song {
             for (let file of data.fileList) {
                 if (file.midiFile) {
                     let midiFile = new SongMidiFile(file.midiFile);
-                    midiFile.type = "midi";
                     fileList.push(midiFile);
                 } else if (file.audioFile) {
                     let audioFile = new SongAudioFile(file.audioFile);
-                    audioFile.type = "audio";
                     fileList.push(audioFile);
                 } else if (file.videoFile) {
                     let videoFile = new SongVideoFile(file.audioFile);
-                    videoFile.type = "video";
                     fileList.push(videoFile);
                 }
             }
@@ -46,17 +43,14 @@ export class Song {
 
     // Return a file object based on its type
     public static getFileObjectByType(data: any) {
-        if (data.type == 'midi') {
+        if (data.type == 'MIDI') {
             let midiFile = new SongMidiFile(data);
-            midiFile.type = "midi";
             return midiFile;
-        } else if (data.type == 'audio') {
+        } else if (data.type == 'AUDIO') {
             let audioFile = new SongAudioFile(data);
-            audioFile.type = "audio";
             return audioFile;
-        } else if (data.type == 'video') {
+        } else if (data.type == 'VIDEO') {
             let videoFile = new SongVideoFile(data);
-            videoFile.type = "video";
             return videoFile;
         }
     }

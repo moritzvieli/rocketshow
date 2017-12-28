@@ -15,6 +15,7 @@ export class SongFile {
         this.durationMillis = data.durationMillis;
         this.offsetMillis = data.offsetMillis;
         this.active = data.active;
+        this.type = data.type;
     }
 
     stringify(): string {

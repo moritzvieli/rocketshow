@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.Manager;
 import com.ascargon.rocketshow.audio.AudioPlayer;
+import com.ascargon.rocketshow.song.file.File.FileType;
 
 public class AudioFile extends com.ascargon.rocketshow.song.file.File {
 
@@ -127,6 +128,10 @@ public class AudioFile extends com.ascargon.rocketshow.song.file.File {
 
 	public void setDevice(String device) {
 		this.device = device;
+	}
+	
+	public FileType getType() {
+		return FileType.AUDIO;
 	}
 
 }

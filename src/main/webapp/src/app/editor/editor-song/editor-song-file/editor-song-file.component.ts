@@ -33,8 +33,9 @@ export class EditorSongFileComponent implements OnInit {
     private translateService: TranslateService) {
 
     this.dropzoneConfig = {
-      url: apiService.getRestUrl() + "file/upload",
+      url: apiService.getRestUrl() + 'file/upload',
       addRemoveLinks: false,
+      acceptedFiles: 'audio/*,video/*',
       previewTemplate: `
       <div class="dz-preview dz-file-preview">
         <!-- The attachment details -->
@@ -97,13 +98,15 @@ export class EditorSongFileComponent implements OnInit {
   }
 
   public onUploadError(args: any) {
-    console.log('onUploadError:', args);
+    console.log('Upload error', args);
   }
 
   public onUploadSuccess(args: any) {
-    console.log('onUploadSuccess:', args);
-
+    // Hide the preview element
     args[0].previewElement.hidden = true;
+
+    // Select this file
+    this.file = new SongFile(args[1]);
   }
 
 }

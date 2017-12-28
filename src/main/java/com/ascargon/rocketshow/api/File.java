@@ -34,11 +34,11 @@ public class File {
 	@POST
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
-	public void upload(@FormDataParam("file") InputStream uploadedInputStream,
+	public com.ascargon.rocketshow.song.file.File upload(@FormDataParam("file") InputStream uploadedInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDetail) throws Exception {
 
 		Manager manager = (Manager) context.getAttribute("manager");
-		manager.getFileManager().saveFile(uploadedInputStream, fileDetail.getFileName());
+		return manager.getFileManager().saveFile(uploadedInputStream, fileDetail.getFileName());
 	}
 
 }

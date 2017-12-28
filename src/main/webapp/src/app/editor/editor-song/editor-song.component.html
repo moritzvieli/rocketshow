@@ -59,9 +59,9 @@
                   <i class="fa fa-bars" aria-hidden="true"></i>
                 </div>
                 <a href="#" (click)="toggleActive(file); false" class="col col-auto my-auto pl-0" [class.text-danger]="!file.active">
-                  <i *ngIf="file.type == 'midi'" class="fa fa-music fa-fw" aria-hidden="true"></i>
-                  <i *ngIf="file.type == 'audio'" class="fa fa-microphone fa-fw" aria-hidden="true"></i>
-                  <i *ngIf="file.type == 'video'" class="fa fa-film fa-fw" aria-hidden="true"></i>
+                  <i *ngIf="file.type == 'MIDI'" class="fa fa-music fa-fw" aria-hidden="true"></i>
+                  <i *ngIf="file.type == 'AUDIO'" class="fa fa-microphone fa-fw" aria-hidden="true"></i>
+                  <i *ngIf="file.type == 'VIDEO'" class="fa fa-film fa-fw" aria-hidden="true"></i>
                 </a>
                 <div class="col my-auto pl-0">
                   <a href="">

@@ -62,10 +62,12 @@ public class FileManager {
 		return returnFileList;
 	}
 
-	public void saveFile(InputStream uploadedInputStream, String fileName) {
+	public com.ascargon.rocketshow.song.file.File saveFile(InputStream uploadedInputStream, String fileName) {
 		String[] midiFormats = { "midi", "mid" };
 		String[] audioFormats = { "wav", "wave", "mp3", "aac", "ogg", "oga", "mogg", "wma" };
 		String[] videoFormats = { "avi", "mpg", "mpeg", "mkv", "mp4", "mov", "m4a" };
+
+		com.ascargon.rocketshow.song.file.File file = null;
 
 		// Compute the path according to the file extension
 		String extension = FilenameUtils.getExtension(fileName).toLowerCase().trim();
@@ -73,12 +75,22 @@ public class FileManager {
 
 		if (Arrays.asList(midiFormats).contains(extension)) {
 			path += MidiFile.MIDI_PATH;
+			file = new MidiFile();
 		} else if (Arrays.asList(audioFormats).contains(extension)) {
 			path += AudioFile.AUDIO_PATH;
+			file = new AudioFile();
 		} else if (Arrays.asList(videoFormats).contains(extension)) {
 			path += VideoFile.VIDEO_PATH;
+			file = new VideoFile();
 		}
-		
+
+		if (file == null) {
+			// We could not determine the file type -> don't store the file
+			return null;
+		}
+
+		file.setName(fileName);
+
 		path += fileName;
 
 		try {
@@ -87,7 +99,7 @@ public class FileManager {
 			byte[] bytes = new byte[1024];
 
 			out = new FileOutputStream(new File(path));
-			
+
 			while ((read = uploadedInputStream.read(bytes)) != -1) {
 				out.write(bytes, 0, read);
 			}
@@ -97,6 +109,8 @@ public class FileManager {
 		} catch (IOException e) {
 			logger.error("Could not save file '" + fileName + "'", e);
 		}
+
+		return file;
 	}
 
 }

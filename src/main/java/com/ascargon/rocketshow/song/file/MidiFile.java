@@ -149,4 +149,8 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 		return midiRoutingList;
 	}
 
+	public FileType getType() {
+		return FileType.MIDI;
+	}
+	
 }
