@@ -63,29 +63,29 @@ export class Song {
 
     // Stringify the song and it's files correct (JSON would ignore the extended file classes by default)
     stringify(): string {
-        let songString = JSON.stringify(this);
-        let songObject = JSON.parse(songString);
+        let string = JSON.stringify(this);
+        let object = JSON.parse(string);
 
-        songObject.fileList = [];
+        object.fileList = [];
 
         for (let file of this.fileList) {
             if (file instanceof SongMidiFile) {
                 let fileObj: any = {};
                 fileObj.midiFile = file;
-                songObject.fileList.push(fileObj);
+                object.fileList.push(fileObj);
             } else if (file instanceof SongAudioFile) {
                 let fileObj: any = {};
                 fileObj.audioFile = file;
-                songObject.fileList.push(fileObj);
+                object.fileList.push(fileObj);
             } else if (file instanceof SongVideoFile) {
                 let fileObj: any = {};
                 fileObj.videoFile = file;
-                songObject.fileList.push(fileObj);
+                object.fileList.push(fileObj);
             }
         }
 
-        songObject.isNew = undefined;
+        object.isNew = undefined;
 
-        return JSON.stringify(songObject);
+        return JSON.stringify(object);
     }
 }

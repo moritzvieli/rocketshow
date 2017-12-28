@@ -24,7 +24,6 @@ export class EditorSongComponent implements OnInit {
   private songs: Song[];
   filteredSongs: Song[];
   currentSong: Song;
-  files: any[] = [];
 
   initialSongName: string = '';
 
@@ -81,6 +80,7 @@ export class EditorSongComponent implements OnInit {
   // Unselect a song
   unselectSong() {
     this.currentSong = undefined;
+    this.initialSongName = '';
   }
 
   // Create a new song
@@ -109,7 +109,7 @@ export class EditorSongComponent implements OnInit {
 
   // Add a new file to the song
   addSongFile() {
-    // TODO
+    this.editSongFileDetails(0, true);
   }
 
   // Toggle the active state (mute)
@@ -131,9 +131,13 @@ export class EditorSongComponent implements OnInit {
   }
 
   // Edit a song file's details
-  editSongFileDetails(fileIndex: number) {
+  editSongFileDetails(fileIndex: number, addNew: boolean = false) {
     // Create a backup of the current song
     let songCopy: Song = new Song(JSON.parse(this.currentSong.stringify()));
+
+    let newFile: SongFile = new SongFile();
+    newFile.isNew = true;
+    songCopy.fileList.push(newFile);
 
     // Show the file details dialog
     // keyboard = false, because the onClose will not be fired in this case

@@ -64,7 +64,7 @@
         "title": "Ausgang",
         "description": "Stelle ein, wo oder wie diese MIDI Datei ausgegeben werden soll.",
         "type": "Ausgang",
-        "midi-mapping": "MIDI Mapping",        
+        "midi-transformation": "MIDI transformation",        
         "channel-offset": "Kanal Versatz",
         "note-offset": "Noten Versatz",
         "dmx-mapping": "DMX Mapping",
