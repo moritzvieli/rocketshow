@@ -6,7 +6,6 @@
 export const environment = {
   production: false,
   name: "dev",
-  disconnected: false,
   
   // Add the local backend to test
   // Uncomment this line for a local tomcat deployment

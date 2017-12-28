@@ -51,14 +51,8 @@ export class StateService {
     });
 
     this.websocket.onClose(() => {
-      if(!environment.disconnected) {
-        this.connected = false;
-      }
+      this.connected = false;
     });
-
-    if(environment.disconnected) {
-      this.connected = true;
-    }
   }
 
   receiveState(state: State): void {

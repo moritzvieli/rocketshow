@@ -33,6 +33,7 @@ public class File {
 	@Path("upload")
 	@POST
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.APPLICATION_JSON)
 	public void upload(@FormDataParam("file") InputStream uploadedInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDetail) throws Exception {
 

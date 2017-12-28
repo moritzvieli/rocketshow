@@ -13,26 +13,6 @@ export class RemoteDeviceService {
   constructor(private apiService: ApiService) { }
 
   getRemoteDevices(): Observable<RemoteDevice[]> {
-    if(environment.disconnected) {
-      this.remoteDeviceList = [];
-
-      let remoteDevice;
-
-      remoteDevice = new RemoteDevice()
-      remoteDevice.id = 1;
-      remoteDevice.name = "Test 1";
-      remoteDevice.host = "192.168.1.90";
-      this.remoteDeviceList.push(remoteDevice);
-
-      remoteDevice = new RemoteDevice()
-      remoteDevice.id = 2;
-      remoteDevice.name = "Test 2";
-      remoteDevice.host = "192.168.1.90";
-      this.remoteDeviceList.push(remoteDevice);
-
-      return Observable.of(this.remoteDeviceList);
-    }
-
     if (this.remoteDeviceList) {
       return Observable.of(this.remoteDeviceList);
     }

@@ -14,60 +14,6 @@ export class SongService {
 
   private currentSetList: SetList;
 
-  private mockSong: string = `{
-      "name": "Dear Mr. Wise Guy",
-      "autoStartNextSong": false,
-      "notes": null,
-      "durationMillis": 53000,
-      "fileList": [
-          {
-              "midiFile": {
-                  "name": "wise_guy.mid",
-                  "active": true,
-                  "durationMillis": 50791,
-                  "offsetMillis": 1000,
-                  "midiRoutingList": [
-                      {
-                          "midiDestination": "DMX",
-                          "midiMapping": {
-                              "channelMap": [],
-                              "channelOffset": null,
-                              "noteOffset": 10,
-                              "overrideParent": false
-                          },
-                          "midi2DmxMapping": {
-                              "mappingType": "SIMPLE"
-                          },
-                          "remoteDeviceId": []
-                      },
-                      {
-                          "midiDestination": "OUT_DEVICE",
-                          "midiMapping": {
-                              "channelMap": [],
-                              "channelOffset": null,
-                              "noteOffset": 10,
-                              "overrideParent": false
-                          },
-                          "midi2DmxMapping": {
-                              "mappingType": "SIMPLE"
-                          },
-                          "remoteDeviceId": []
-                      }
-                  ]
-              }
-          },
-          {
-              "audioFile": {
-                  "name": "wise_guy.wav",
-                  "active": true,
-                  "durationMillis": 53000,
-                  "offsetMillis": 0,
-                  "device": "stereo1"
-              }
-          }
-      ]
-  }`;
-
   constructor(private apiService: ApiService) { }
 
   getCurrentSetList(): Observable<SetList> {
@@ -83,12 +29,6 @@ export class SongService {
   }
 
   getSongs(clearCache: boolean = false): Observable<Song[]> {
-    if(environment.disconnected) {
-      this.songs = [];
-      this.songs.push(new Song(JSON.parse(this.mockSong)));
-      return Observable.of(this.songs);
-    }
-
     if (this.songs && !clearCache) {
       return Observable.of(this.songs);
     }
@@ -123,10 +63,6 @@ export class SongService {
   }
 
   loadSong(songName: string): Observable<Song> {
-    if(environment.disconnected) {
-      return Observable.of(new Song(JSON.parse(this.mockSong)));
-    }
-
     return this.apiService.get('song?name=' + songName)
       .map((response: Response) => {
         return new Song(response.json());

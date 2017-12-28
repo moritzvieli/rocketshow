@@ -46,10 +46,6 @@ export class AppComponent implements OnInit {
     ).subscribe(() => {
       this.loaded = true;
     });
-
-    if(environment.disconnected) {
-      this.loaded = true;
-    }
   }
 
 }
