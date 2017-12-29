@@ -6,7 +6,6 @@ import { SongFile } from "./song-file";
 export class Song {
     name: string;
     durationMillis: number;
-    isNew: boolean = false;
     fileList: SongFile[] = [];
 
     constructor(data?: any) {
@@ -63,6 +62,8 @@ export class Song {
         object.fileList = [];
 
         for (let file of this.fileList) {
+            file.type = undefined;
+
             if (file instanceof SongMidiFile) {
                 let fileObj: any = {};
                 fileObj.midiFile = file;
@@ -77,8 +78,6 @@ export class Song {
                 object.fileList.push(fileObj);
             }
         }
-
-        object.isNew = undefined;
 
         return JSON.stringify(object);
     }

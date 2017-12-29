@@ -1,5 +1,7 @@
 package com.ascargon.rocketshow.api;
 
+import java.util.List;
+
 import javax.servlet.ServletContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -10,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.ascargon.rocketshow.Manager;
+import com.ascargon.rocketshow.RemoteDevice;
 import com.ascargon.rocketshow.VersionInfo;
 
 @Path("/system")
@@ -76,6 +79,14 @@ public class System {
 	public com.ascargon.rocketshow.api.State getState() throws Exception {
 		Manager manager = (Manager)context.getAttribute("manager");
 		return manager.getStateManager().getCurrentState();
+	}
+	
+	@Path("remote-device")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<RemoteDevice> getRemoteDevices() throws Exception {
+		Manager manager = (Manager)context.getAttribute("manager");
+		return manager.getSettings().getRemoteDeviceList();
 	}
 	
 }

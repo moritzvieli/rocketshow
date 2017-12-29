@@ -53,7 +53,8 @@
         "upload": "Hochladen",
         "media-library": "Mediathek",
         "file-settings": "Einstellungen",
-        "dropzone-message": "Ziehe Dateien hier hinein oder klicke, um hochzuladen"
+        "dropzone-message": "Ziehe Dateien hier hinein oder klicke, um hochzuladen",
+        "no-file-selected": "Keine Datei ausgewählt"
     },
     "connection": {
         "title": "Keine Verbindung",

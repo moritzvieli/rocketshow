@@ -86,20 +86,28 @@ export class EditorSongComponent implements OnInit {
   // Create a new song
   createSong() {
     this.currentSong = new Song();
-    this.currentSong.isNew = true;
+    this.initialSongName = '';
+  }
+
+  private saveSongApi(song: Song) {
+    this.songService.saveSong(song).map(() => {
+      this.loadSongs();
+      this.initialSongName = song.name;
+
+      // TODO Show a toast with the success status
+    }).subscribe();
   }
 
   // Save a new song
   saveSong(song: Song) {
     // Delete the old song, if the name changed
-    this.songService.deleteSong(this.initialSongName).map(() => {
-      this.songService.saveSong(song).map(() => {
-        this.loadSongs();
-        this.initialSongName = song.name;
-
-        // TODO Show a toast with the success status
+    if(this.initialSongName != song.name && this.initialSongName.length > 0) {
+      this.songService.deleteSong(this.initialSongName).map(() => {
+        this.saveSongApi(song);
       }).subscribe();
-    }).subscribe();
+    } else {
+      this.saveSongApi(song);
+    }
   }
 
   // Delete the song
@@ -138,7 +146,6 @@ export class EditorSongComponent implements OnInit {
     if(addNew) {
       // Add a new file, if necessary
       let newFile: SongFile = new SongFile();
-      newFile.isNew = true;
       songCopy.fileList.push(newFile);
       fileIndex = songCopy.fileList.length - 1;
     }

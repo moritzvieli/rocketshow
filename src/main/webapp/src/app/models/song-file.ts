@@ -4,7 +4,6 @@ export class SongFile {
     offsetMillis: number;
     active: boolean = true;
     type: string;
-    isNew: boolean = false;
 
     constructor(data?: any) {
         if(!data) {
@@ -21,8 +20,6 @@ export class SongFile {
     stringify(): string {
         let string = JSON.stringify(this);
         let object = JSON.parse(string);
-
-        object.isNew = undefined;
 
         return JSON.stringify(object);
     }
