@@ -14,8 +14,8 @@
       <label class="col-sm-4 col-form-label">{{ 'routing.type' | translate }}</label>
       <div class="col-sm-8">
         <select class="custom-select" [ngModel]="midiRouting?.midiDestination" (ngModelChange)="midiRouting.midiDestination = $event">
-          <option value="DMX">{{ 'editor.midi-destination-dmx' | translate }}</option>
           <option value="OUT_DEVICE">{{ 'editor.midi-destination-device' | translate }}</option>
+          <option value="DMX">{{ 'editor.midi-destination-dmx' | translate }}</option>
           <option value="REMOTE">{{ 'editor.midi-destination-remote' | translate }}</option>
         </select>
       </div>

@@ -132,7 +132,16 @@ export class EditorSongFileComponent implements OnInit {
     args[0].previewElement.hidden = true;
 
     // Select this file
+    let midiRoutingList;
+    if(this.file && this.file.type == 'MIDI') {
+      midiRoutingList = (<SongMidiFile>this.file).midiRoutingList;
+    }
+
     this.file = Song.getFileObjectByType(args[1]);
+
+    if(this.file.type == 'MIDI' && midiRoutingList) {
+      (<SongMidiFile>this.file).midiRoutingList = midiRoutingList;
+    }
   }
 
   // Filter the existing files
@@ -152,7 +161,21 @@ export class EditorSongFileComponent implements OnInit {
   }
 
   selectExistingFile(existingFile: SongFile) {
+    if(this.file.name == existingFile.name && this.file.type == existingFile.type) {
+      // This file is already selected
+      return;
+    }
+
+    let midiRoutingList;
+    if(this.file && this.file.type == 'MIDI') {
+      midiRoutingList = (<SongMidiFile>this.file).midiRoutingList;
+    }
+
     this.file = existingFile;
+
+    if(this.file.type == 'MIDI' && midiRoutingList) {
+      (<SongMidiFile>this.file).midiRoutingList = midiRoutingList;
+    }
   }
 
 }
