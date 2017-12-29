@@ -62,8 +62,6 @@ export class Song {
         object.fileList = [];
 
         for (let file of this.fileList) {
-            file.type = undefined;
-
             if (file instanceof SongMidiFile) {
                 let fileObj: any = {};
                 fileObj.midiFile = file;

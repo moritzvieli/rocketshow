@@ -124,5 +124,9 @@ abstract public class File implements PlayerLoadedListener {
 	public FileType getType() {
 		return FileType.UNKNOWN;
 	}
+	
+	// For API consistency
+	public void setType(FileType fileType) {
+	}
 
 }
