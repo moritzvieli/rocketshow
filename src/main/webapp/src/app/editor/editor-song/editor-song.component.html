@@ -32,10 +32,6 @@
       <div class="card-header">
         <span *ngIf="currentSong?.name">{{ currentSong?.name }}</span>
         <span *ngIf="!currentSong?.name">{{ 'editor.default-song-name' | translate }}</span>
-
-        <a class="float-right text-danger" *ngIf="!currentSong?.isNew" href="#" role="button" (click)="deleteSong(); false">
-          <i class="fa fa-trash-o" aria-hidden="true"></i> {{ 'misc.delete' | translate }}
-        </a>
       </div>
       <div class="card-body">
 
@@ -64,7 +60,7 @@
                   <i *ngIf="file.type == 'VIDEO'" class="fa fa-film fa-fw" aria-hidden="true"></i>
                 </a>
                 <div class="col my-auto pl-0">
-                  <a href="">
+                  <a href="#" (click)="editSongFileDetails(i); false">
                     <p class="mb-0">{{ file.name }}</p>
                   </a>
                 </div>
@@ -82,8 +78,12 @@
 
       </div>
 
-      <div class="card-footer">
-        <div class="d-flex float-right">
+      <div class="card-footer d-flex" style="justify-content: space-between;">
+        <a class="mr-3 my-auto text-danger" *ngIf="!currentSong?.isNew" href="#" role="button" (click)="delete(); false">
+          <i class="fa fa-trash-o" aria-hidden="true"></i> {{ 'misc.delete' | translate }}
+        </a>
+
+        <div class="d-flex">
           <a class="mr-3 my-auto" href="#" role="button" (click)="unselectSong(); false">
             {{ 'misc.cancel' | translate }}
           </a>

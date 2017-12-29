@@ -16,10 +16,13 @@
               <div *ngIf="!file?.name">
                 {{ 'editor.no-file-selected' | translate }}
               </div>
-              
+
               <!-- A file is selected -->
               <div *ngIf="file?.name">
-
+                <i *ngIf="file?.type == 'MIDI'" class="fa fa-music fa-fw" aria-hidden="true"></i>
+                <i *ngIf="file?.type == 'AUDIO'" class="fa fa-microphone fa-fw" aria-hidden="true"></i>
+                <i *ngIf="file?.type == 'VIDEO'" class="fa fa-film fa-fw" aria-hidden="true"></i>
+                {{ file?.name }}
               </div>
             </div>
           </div>
@@ -39,8 +42,11 @@
           </ul>
 
           <div class="tab-content mb-3" id="myTabContent">
+
+            <!-- Upload -->
             <div class="tab-pane fade show active" id="upload" role="tabpanel">
-              <dropzone [config]="dropzoneConfig" [useDropzoneClass]="'false'" [message]="uploadMessage" (error)="onUploadError($event)" (success)="onUploadSuccess($event)"></dropzone>
+              <dropzone [config]="dropzoneConfig" [useDropzoneClass]="'false'" [message]="uploadMessage" (error)="onUploadError($event)"
+                (success)="onUploadSuccess($event)"></dropzone>
 
               <div id="dz-preview-template" class="dz-preview dz-file-preview">
                 <div class="dz-details">
@@ -55,9 +61,30 @@
                 </div>
               </div>
             </div>
+
+            <!-- Media library -->
             <div class="tab-pane fade" id="media-library" role="tabpanel">
-              <!-- TODO -->
+              <input type="text" class="form-control input-block mb-3" id="searchSongList" placeholder="{{ 'editor.search-files' | translate }}"
+                (input)="filterExistingFiles($event.target.value)">
+
+              <div class="card" style="height: 300px; overflow-y: scroll;">
+                <div class="card-body p-0">
+                  <div class="list-group list-group-flush">
+                    <a *ngFor="let existingFile of filteredExistingFiles" (click)="selectExistingFile(existingFile); false" href="#" class="list-group-item list-group-item-action flex-column align-items-start p-2"
+                      [class.active]="file?.name == existingFile.name && file?.type == existingFile.type">
+
+                      <p class="mb-0">
+                        <i *ngIf="existingFile.type == 'MIDI'" class="fa fa-music fa-fw" aria-hidden="true"></i>
+                        <i *ngIf="existingFile.type == 'AUDIO'" class="fa fa-microphone fa-fw" aria-hidden="true"></i>
+                        <i *ngIf="existingFile.type == 'VIDEO'" class="fa fa-film fa-fw" aria-hidden="true"></i>
+                        {{ existingFile.name }}
+                      </p>
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
+
           </div>
         </div>
 
@@ -97,14 +124,16 @@
                       <div class="col col-auto list-sort-handle my-auto" style="cursor: move; cursor: -webkit-grabbing;">
                         <i class="fa fa-bars" aria-hidden="true"></i>
                       </div>
-                      <div class="col col-auto my-auto pl-0">
-                        <span *ngIf="routing.midiDestination == 'DMX'">
-                          <i class="fa fa-lightbulb-o fa-fw" aria-hidden="true"></i> {{ 'editor.midi-destination-dmx' | translate }}</span>
-                        <span *ngIf="routing.midiDestination == 'OUT_DEVICE'">
-                          <i class="fa fa fa-sign-out fa-fw" aria-hidden="true"></i> {{ 'editor.midi-destination-device' | translate }}</span>
-                        <span *ngIf="routing.midiDestination == 'REMOTE'">
-                          <i class="fa fa-sitemap fa-fw" aria-hidden="true"></i> {{ 'editor.midi-destination-remote' | translate }}</span>
-                      </div>
+                      <a href="#" (click)="editRouting(i); false">
+                        <div class="col col-auto my-auto pl-0">
+                          <span *ngIf="routing.midiDestination == 'DMX'">
+                            <i class="fa fa-lightbulb-o fa-fw" aria-hidden="true"></i> {{ 'editor.midi-destination-dmx' | translate }}</span>
+                          <span *ngIf="routing.midiDestination == 'OUT_DEVICE'">
+                            <i class="fa fa fa-sign-out fa-fw" aria-hidden="true"></i> {{ 'editor.midi-destination-device' | translate }}</span>
+                          <span *ngIf="routing.midiDestination == 'REMOTE'">
+                            <i class="fa fa-sitemap fa-fw" aria-hidden="true"></i> {{ 'editor.midi-destination-remote' | translate }}</span>
+                        </div>
+                      </a>
                       <div class="col my-auto">
                         <a class="btn btn-secondary btn-sm float-right" href="#" role="button" (click)="editRouting(i); false">...</a>
                       </div>
@@ -125,15 +154,20 @@
 
     </div>
 
-    <div class="card-footer">
-      <div class="d-flex float-right">
-        <a class="mr-3 my-auto" href="#" role="button" (click)="onCancel(); false">
+    <div class="card-footer d-flex" style="justify-content: space-between;">
+      <a class="mr-3 my-auto text-danger" href="#" role="button" (click)="delete(); false">
+        <i class="fa fa-trash-o" aria-hidden="true"></i> {{ 'misc.delete' | translate }}
+      </a>
+
+      <div class="d-flex">
+        <a class="mr-3 my-auto" href="#" role="button" (click)="cancel(); false">
           {{ 'misc.cancel' | translate }}
         </a>
-        <a class="btn btn-primary" href="#" role="button" (click)="onOk(); false">
-          {{ 'misc.ok' | translate }}
+        <a class="btn btn-primary" href="#" role="button" (click)="ok(); false">
+          <i class="fa fa-floppy-o" aria-hidden="true"></i> {{ 'misc.ok' | translate }}
         </a>
       </div>
     </div>
+
   </div>
 </div>

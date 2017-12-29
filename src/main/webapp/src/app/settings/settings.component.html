@@ -1,118 +1,46 @@
 <div class="container-fluid">
 
-  <div class="row mb-3">
+  <div class="row">
     <div class="col">
       <div class="card">
-        <div class="card-header">
-          System
-        </div>
-
         <div class="card-body">
-          <form>
-            <div class="form-group row">
-              <label for="staticEmail" class="col-sm-2 col-form-label">Language</label>
-              <div class="col-sm-10">
-                <select class="custom-select">
-                  <option selected>{{ 'intro.choose-language' | translate }}</option>
-                  <option value="1">English</option>
-                  <option value="2">Deutsch</option>
-                </select>
+          <div class="row">
+
+            <div class="col-md-3 mb-3">
+              <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist">
+                <a class="nav-link active" data-toggle="pill" href="#system" role="tab">System</a>
+                <a class="nav-link" data-toggle="pill" href="#network" role="tab">Network</a>
+                <a class="nav-link" data-toggle="pill" href="#audio" role="tab">Audio</a>
+                <a class="nav-link" data-toggle="pill" href="#video" role="tab">Video</a>
               </div>
             </div>
 
-            <div class="form-group row">
-              <label for="inputPassword" class="col-sm-2 col-form-label">Device name</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" id="inputPassword" placeholder="Device name">
+            <div class="col-md-9">
+              <div class="card">
+                <div class="card-body">
+                  <div class="tab-content" id="v-pills-tabContent">
+                    <div class="tab-pane fade show active" id="system" role="tabpanel">
+                      <app-settings-system></app-settings-system>
+                    </div>
+                    <div class="tab-pane fade" id="network" role="tabpanel">...</div>
+                    <div class="tab-pane fade" id="audio" role="tabpanel">...</div>
+                    <div class="tab-pane fade" id="video" role="tabpanel">...</div>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="d-flex float-right">
+                    <a class="mr-3 my-auto" href="#" role="button" (click)="unselectSong(); false">
+                      {{ 'misc.cancel' | translate }}
+                    </a>
+                    <a class="btn btn-primary" href="#" role="button" (click)="saveSong(currentSong); false">
+                      <i class="fa fa-floppy-o" aria-hidden="true"></i> {{ 'misc.save' | translate }}
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div class="form-group row">
-              <label for="inputPassword" class="col-sm-2 col-form-label">USB interface</label>
-              <div class="col-sm-10">
-                <label class="form-check-label mt-2">
-                  <input type="checkbox" class="form-check-input"> Reset after boot
-                </label>
-              </div>
-            </div>
-
-            <div class="form-group row">
-              <label for="inputPassword" class="col-sm-2 col-form-label">Version</label>
-              <div class="col-sm-10">
-                1.0.0
-                <br />
-                <br />
-                <a href="#" class="btn btn-primary btn-sm">
-                  <i class="fa fa-refresh fa-fw" aria-hidden="true"></i> Check for updates</a>
-              </div>
-            </div>
-
-            <div class="form-group row mb-0">
-              <div class="col-sm-2"></div>
-              <div class="col-sm-10">
-                <a href="#" class="btn btn-primary btn-sm">
-                  <i class="fa fa-power-off fa-fw" aria-hidden="true"></i> Reboot device</a>
-              </div>
-            </div>
-
-          </form>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="row mb-3">
-    <div class="col">
-      <div class="card">
-        <div class="card-header">
-          Network
-        </div>
-
-        <div class="card-body">
-
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row mb-3">
-    <div class="col">
-      <div class="card">
-        <div class="card-header">
-          Audio
-        </div>
-
-        <div class="card-body">
-
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row mb-3">
-    <div class="col">
-      <div class="card">
-        <div class="card-header">
-          MIDI
-        </div>
-
-        <div class="card-body">
-
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row mb-3">
-    <div class="col">
-      <div class="card">
-        <div class="card-header">
-          DMX (light controlling)
-        </div>
-
-        <div class="card-body">
-
+          </div>
         </div>
       </div>
     </div>

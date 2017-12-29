@@ -1,0 +1,45 @@
+<div class="form-group row">
+  <label for="staticEmail" class="col-lg-2 col-form-label">Language</label>
+  <div class="col-lg-10">
+    <select class="custom-select">
+      <option selected>{{ 'intro.choose-language' | translate }}</option>
+      <option value="1">English</option>
+      <option value="2">Deutsch</option>
+    </select>
+  </div>
+</div>
+
+<div class="form-group row">
+  <label for="inputPassword" class="col-lg-2 col-form-label">Device name</label>
+  <div class="col-lg-10">
+    <input type="text" class="form-control" id="inputPassword" placeholder="Device name">
+  </div>
+</div>
+
+<div class="form-group row">
+  <label for="inputPassword" class="col-lg-2 col-form-label">USB interface</label>
+  <div class="col-lg-10">
+    <label class="form-check-label mt-2">
+      <input type="checkbox" class="form-check-input"> Reset after boot
+    </label>
+  </div>
+</div>
+
+<div class="form-group row">
+  <label for="inputPassword" class="col-lg-2 col-form-label">Version</label>
+  <div class="col-lg-10">
+    1.0.0
+    <br />
+    <br />
+    <a href="#" class="btn btn-primary btn-sm">
+      <i class="fa fa-refresh fa-fw" aria-hidden="true"></i> Check for updates</a>
+  </div>
+</div>
+
+<div class="form-group row mb-0">
+  <div class="col-lg-2"></div>
+  <div class="col-lg-10">
+    <a href="#" class="btn btn-primary btn-sm">
+      <i class="fa fa-power-off fa-fw" aria-hidden="true"></i> Reboot device</a>
+  </div>
+</div>

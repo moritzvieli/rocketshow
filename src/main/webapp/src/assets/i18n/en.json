@@ -35,6 +35,7 @@
         "create-song": "Create song",
         "create-setlist": "Create set",
         "search-songs": "Search...",
+        "search-files": "Search...",
         "add-file": "Add file",
         "select-song": "Select an existing song or create a new one.",
         "song-name": "Song name",

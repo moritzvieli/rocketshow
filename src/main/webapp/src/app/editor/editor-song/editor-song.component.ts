@@ -111,8 +111,14 @@ export class EditorSongComponent implements OnInit {
   }
 
   // Delete the song
-  deleteSong(song: Song) {
-    // TODO
+  delete(song: Song) {
+    // TODO Show a yes-no-modal
+    this.songService.deleteSong(this.initialSongName).map(() => {
+      this.unselectSong();
+      this.loadSongs();
+
+      // TODO Show a toast with success status
+    }).subscribe();
   }
 
   // Add a new file to the song
@@ -157,11 +163,14 @@ export class EditorSongComponent implements OnInit {
     (<EditorSongFileComponent>fileDialog.content).song = songCopy;
 
     (<EditorSongFileComponent>fileDialog.content).onClose.subscribe(result => {
-      if (result === true) {
+      if (result === 1) {
         // OK has been pressed -> save
         this.currentSong.fileList[fileIndex] = (<EditorSongFileComponent>fileDialog.content).file;
 
         this.rebuildFileListBasedOnType();
+      } else if(result === 3) {
+        // Delete has been pressed -> delete
+        this.currentSong.fileList.splice(fileIndex, 1);
       }
     });
   }

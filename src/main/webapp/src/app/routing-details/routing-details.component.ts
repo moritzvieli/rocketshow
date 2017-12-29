@@ -14,7 +14,7 @@ import { RemoteDevice } from '../models/remote-device';
 export class RoutingDetailsComponent implements OnInit {
 
   midiRouting: MidiRouting;
-  onClose: Subject<boolean>;
+  onClose: Subject<number>;
   remoteDevices: RemoteDevice[];
 
   constructor(
@@ -29,13 +29,19 @@ export class RoutingDetailsComponent implements OnInit {
     });
   }
 
-  public onOk(): void {
-    this.onClose.next(true);
+  public delete(): void {
+    // TODO Show yes-no-dialog
+    this.onClose.next(3);
     this.bsModalRef.hide();
   }
 
-  public onCancel(): void {
-    this.onClose.next(false);
+  public ok(): void {
+    this.onClose.next(1);
+    this.bsModalRef.hide();
+  }
+
+  public cancel(): void {
+    this.onClose.next(2);
     this.bsModalRef.hide();
   }
 

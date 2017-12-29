@@ -1,3 +1,4 @@
+import { FileService } from './../../../services/file.service';
 import { TranslateService } from '@ngx-translate/core';
 import { SongFile } from './../../../models/song-file';
 import { MidiRouting } from './../../../models/midi-routing';
@@ -21,7 +22,10 @@ export class EditorSongFileComponent implements OnInit {
   fileIndex: number;
   file: SongFile;
   song: Song;
-  onClose: Subject<boolean>;
+  onClose: Subject<number>;
+
+  existingFiles: SongFile[] = [];
+  filteredExistingFiles: SongFile[] = [];
 
   dropzoneConfig: DropzoneConfigInterface;
   uploadMessage: string;
@@ -30,7 +34,8 @@ export class EditorSongFileComponent implements OnInit {
     private bsModalRef: BsModalRef,
     private modalService: BsModalService,
     private apiService: ApiService,
-    private translateService: TranslateService) {
+    private translateService: TranslateService,
+    private fileService: FileService) {
 
     this.dropzoneConfig = {
       url: apiService.getRestUrl() + 'file/upload',
@@ -57,19 +62,30 @@ export class EditorSongFileComponent implements OnInit {
     translateService.get('editor.dropzone-message').map(result => {
       this.uploadMessage = '<h3 class="mb-0"><i class="fa fa-cloud-upload"></i></h3>' + result;
     }).subscribe();
+
+    fileService.getFiles().map(result => {
+      this.existingFiles = result;
+      this.filterExistingFiles();
+    }).subscribe();
   }
 
   ngOnInit() {
     this.onClose = new Subject();
   }
 
-  public onOk(): void {
-    this.onClose.next(true);
+  public delete(): void {
+    // TODO Show yes-no-dialog
+    this.onClose.next(3);
     this.bsModalRef.hide();
   }
 
-  public onCancel(): void {
-    this.onClose.next(false);
+  public ok(): void {
+    this.onClose.next(1);
+    this.bsModalRef.hide();
+  }
+
+  public cancel(): void {
+    this.onClose.next(2);
     this.bsModalRef.hide();
   }
 
@@ -82,7 +98,9 @@ export class EditorSongFileComponent implements OnInit {
       // Add a new routing, if necessary
       let newRouting: MidiRouting = new MidiRouting();
       newRouting.midiDestination = 'OUT_DEVICE';
+      console.log('AAA', songCopy.fileList[this.fileIndex]);
       (<SongMidiFile>songCopy.fileList[this.fileIndex]).midiRoutingList.push(newRouting);
+      console.log('BBB');
       midiRoutingIndex = (<SongMidiFile>songCopy.fileList[this.fileIndex]).midiRoutingList.length - 1;
     }
 
@@ -91,9 +109,12 @@ export class EditorSongFileComponent implements OnInit {
     (<RoutingDetailsComponent>routingDialog.content).midiRouting = (<SongMidiFile>songCopy.fileList[this.fileIndex]).midiRoutingList[midiRoutingIndex];
 
     (<RoutingDetailsComponent>routingDialog.content).onClose.subscribe(result => {
-      if (result === true) {
+      if (result === 1) {
         // OK has been pressed -> save
         (<SongMidiFile>this.song.fileList[this.fileIndex]).midiRoutingList[midiRoutingIndex] = (<SongMidiFile>songCopy.fileList[this.fileIndex]).midiRoutingList[midiRoutingIndex];
+      }else if(result === 3) {
+        // Delete has been pressed -> delete
+        (<SongMidiFile>this.song.fileList[this.fileIndex]).midiRoutingList.splice(midiRoutingIndex, 1);
       }
     });
   }
@@ -114,6 +135,26 @@ export class EditorSongFileComponent implements OnInit {
 
     // Select this file
     this.file = new SongFile(args[1]);
+  }
+
+  // Filter the existing files
+  filterExistingFiles(searchValue?: string) {
+    if (!searchValue) {
+      this.filteredExistingFiles = this.existingFiles;
+      return;
+    }
+
+    this.filteredExistingFiles = [];
+
+    for (let song of this.existingFiles) {
+      if (song.name.toLowerCase().indexOf(searchValue.toLowerCase()) !== -1) {
+        this.filteredExistingFiles.push(song);
+      }
+    }
+  }
+
+  selectExistingFile(existingFile: SongFile) {
+    this.file = existingFile;
   }
 
 }

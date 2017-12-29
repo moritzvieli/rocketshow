@@ -20,6 +20,7 @@ import { AppComponent } from './app.component';
 import { IntroComponent } from './intro/intro.component';
 import { PlayComponent } from './play/play.component';
 import { SettingsComponent } from './settings/settings.component';
+import { SettingsSystemComponent } from './settings/settings-system/settings-system.component';
 import { EditorComponent } from './editor/editor.component';
 import { EditorSongComponent } from './editor/editor-song/editor-song.component';
 import { EditorSetlistComponent } from './editor/editor-setlist/editor-setlist.component';
@@ -32,6 +33,7 @@ import { StateService } from './services/state.service';
 import { TransportService } from './services/transport.service';
 import { SongService } from './services/song.service';
 import { RemoteDeviceService } from './services/remote-device.service';
+import { FileService } from './services/file.service';
 
 const appRoutes: Routes = [
   { path: 'intro', component: IntroComponent },
@@ -59,7 +61,8 @@ const DROPZONE_CONFIG: DropzoneConfigInterface = {
     EditorSetlistComponent,
     ConnectionComponent,
     EditorSongFileComponent,
-    RoutingDetailsComponent
+    RoutingDetailsComponent,
+    SettingsSystemComponent
   ],
   imports: [
     HttpModule,
@@ -91,7 +94,8 @@ const DROPZONE_CONFIG: DropzoneConfigInterface = {
     StateService,
     TransportService,
     SongService,
-    RemoteDeviceService
+    RemoteDeviceService,
+    FileService
   ],
   entryComponents: [
     EditorSongFileComponent,
