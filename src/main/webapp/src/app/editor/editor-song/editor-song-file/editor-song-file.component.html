@@ -163,9 +163,9 @@
         <a class="mr-3 my-auto" href="#" role="button" (click)="cancel(); false">
           {{ 'misc.cancel' | translate }}
         </a>
-        <a class="btn btn-primary" href="#" role="button" (click)="ok(); false">
+        <button type="button" class="btn btn-primary" [disabled]="!file?.name || file?.name.length === 0" (click)="ok(); false">
           <i class="fa fa-floppy-o" aria-hidden="true"></i> {{ 'misc.ok' | translate }}
-        </a>
+        </button>
       </div>
     </div>
 

@@ -64,7 +64,7 @@
     },
     "routing": {
         "title": "Output",
-        "description": "Specify, where or how this MIDI file should be played.",
+        "description": "Specify, where and how this MIDI file should be played.",
         "type": "Output",
         "midi-transformation": "MIDI transformation",
         "channel-offset": "Channel offset",
