@@ -18,7 +18,7 @@ export class FileService {
         let files: SongFile[] = [];
 
         for (let file of response.json()) {
-          files.push(new SongFile(file));
+          files.push(Song.getFileObjectByType(file));
         }
 
         return files;

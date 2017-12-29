@@ -124,8 +124,8 @@
                       <div class="col col-auto list-sort-handle my-auto" style="cursor: move; cursor: -webkit-grabbing;">
                         <i class="fa fa-bars" aria-hidden="true"></i>
                       </div>
-                      <a href="#" (click)="editRouting(i); false">
-                        <div class="col col-auto my-auto pl-0">
+                      <a href="#" class="my-auto" (click)="editRouting(i); false">
+                        <div class="col col-auto pl-0">
                           <span *ngIf="routing.midiDestination == 'DMX'">
                             <i class="fa fa-lightbulb-o fa-fw" aria-hidden="true"></i> {{ 'editor.midi-destination-dmx' | translate }}</span>
                           <span *ngIf="routing.midiDestination == 'OUT_DEVICE'">

@@ -29,7 +29,6 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 
 	public MidiFile() {
 		List<MidiRouting> midiRoutingList = new ArrayList<MidiRouting>();
-		midiRoutingList.add(new MidiRouting());
 		setMidiRoutingList(midiRoutingList);
 	}
 

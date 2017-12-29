@@ -1,3 +1,4 @@
+import { SongMidiFile } from './../../../models/song-midi-file';
 import { FileService } from './../../../services/file.service';
 import { TranslateService } from '@ngx-translate/core';
 import { SongFile } from './../../../models/song-file';
@@ -8,7 +9,6 @@ import { BsModalRef } from 'ngx-bootstrap';
 import { Subject } from 'rxjs/Subject';
 import { Song } from '../../../models/song';
 import { RoutingDetailsComponent } from '../../../routing-details/routing-details.component';
-import { SongMidiFile } from '../../../models/song-midi-file';
 import { DropzoneConfigInterface } from 'ngx-dropzone-wrapper/dist/lib/dropzone.interfaces';
 import { ApiService } from '../../../services/api.service';
 
@@ -91,30 +91,28 @@ export class EditorSongFileComponent implements OnInit {
 
   // Edit the routing details
   editRouting(midiRoutingIndex: number, addNew: boolean = false) {
-    // Create a backup of the current song
-    let songCopy: Song = new Song(JSON.parse(this.song.stringify()));
+    // Create a backup of the current file
+    let fileCopy: SongMidiFile = new SongMidiFile(JSON.parse(JSON.stringify(this.file)));
 
     if (addNew) {
       // Add a new routing, if necessary
       let newRouting: MidiRouting = new MidiRouting();
       newRouting.midiDestination = 'OUT_DEVICE';
-      console.log('AAA', songCopy.fileList[this.fileIndex]);
-      (<SongMidiFile>songCopy.fileList[this.fileIndex]).midiRoutingList.push(newRouting);
-      console.log('BBB');
-      midiRoutingIndex = (<SongMidiFile>songCopy.fileList[this.fileIndex]).midiRoutingList.length - 1;
+      fileCopy.midiRoutingList.push(newRouting);
+      midiRoutingIndex = fileCopy.midiRoutingList.length - 1;
     }
 
     // Show the routing details dialog
     let routingDialog = this.modalService.show(RoutingDetailsComponent, { keyboard: true, animated: true, backdrop: false, ignoreBackdropClick: true, class: "" });
-    (<RoutingDetailsComponent>routingDialog.content).midiRouting = (<SongMidiFile>songCopy.fileList[this.fileIndex]).midiRoutingList[midiRoutingIndex];
+    (<RoutingDetailsComponent>routingDialog.content).midiRouting = fileCopy.midiRoutingList[midiRoutingIndex];
 
     (<RoutingDetailsComponent>routingDialog.content).onClose.subscribe(result => {
       if (result === 1) {
         // OK has been pressed -> save
-        (<SongMidiFile>this.song.fileList[this.fileIndex]).midiRoutingList[midiRoutingIndex] = (<SongMidiFile>songCopy.fileList[this.fileIndex]).midiRoutingList[midiRoutingIndex];
-      }else if(result === 3) {
+        (<SongMidiFile>this.file).midiRoutingList[midiRoutingIndex] = fileCopy.midiRoutingList[midiRoutingIndex];
+      } else if (result === 3) {
         // Delete has been pressed -> delete
-        (<SongMidiFile>this.song.fileList[this.fileIndex]).midiRoutingList.splice(midiRoutingIndex, 1);
+        (<SongMidiFile>this.file).midiRoutingList.splice(midiRoutingIndex, 1);
       }
     });
   }
@@ -134,7 +132,7 @@ export class EditorSongFileComponent implements OnInit {
     args[0].previewElement.hidden = true;
 
     // Select this file
-    this.file = new SongFile(args[1]);
+    this.file = Song.getFileObjectByType(args[1]);
   }
 
   // Filter the existing files
