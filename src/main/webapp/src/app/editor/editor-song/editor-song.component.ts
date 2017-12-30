@@ -67,6 +67,10 @@ export class EditorSongComponent implements OnInit {
 
   // Select a song
   selectSong(song: Song) {
+    if(this.currentSong && this.currentSong.name == song.name) {
+      return;
+    }
+
     // Load the details of the selected song
     this.loadingSong = true;
 
