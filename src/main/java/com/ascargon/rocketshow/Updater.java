@@ -16,6 +16,10 @@ import org.apache.log4j.Logger;
 @XmlRootElement
 public class Updater {
 
+	public enum UpdateState {
+		DOWNLOADING, INSTALLING, REBOOTING
+	}
+
 	final static Logger logger = Logger.getLogger(Updater.class);
 
 	public final static String UPDATE_PATH = "update/";
@@ -26,7 +30,10 @@ public class Updater {
 	public final static String UPDATE_URL = "http://www.rocketshow.net/update/";
 	public final static String UPDATE_SCRIPT = "update.sh";
 
-	public Updater() {
+	private Manager manager;
+
+	public Updater(Manager manager) {
+		this.manager = manager;
 	}
 
 	public VersionInfo getCurrentVersionInfo() throws Exception {
@@ -67,15 +74,27 @@ public class Updater {
 
 		logger.info("Downloading new version...");
 
+		manager.getStateManager().notifyClients(UpdateState.DOWNLOADING);
+
 		// Download the new version
 		downloadUpdateFile(CURRENT_VERSION);
 		downloadUpdateFile(WAR_NAME);
 		downloadUpdateFile(BEFORE_SCRIPT_NAME);
 		downloadUpdateFile(AFTER_SCRIPT_NAME);
 
+		manager.getStateManager().notifyClients(UpdateState.INSTALLING);
+
 		// Execute the script
 		logger.info("Files downloaded. Execute update...");
 		executeScript(new String[] { Manager.BASE_PATH + UPDATE_SCRIPT });
+
+		manager.getStateManager().notifyClients(UpdateState.REBOOTING);
+
+		// After the reboot, the new status will be update finished and this
+		// status should be dismissed
+		manager.getSession().setUpdateFinished(true);
+		manager.saveSession();
+		manager.reboot();
 	}
 
 }

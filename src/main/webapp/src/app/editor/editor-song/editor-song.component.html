@@ -42,7 +42,7 @@
 
         <div class="form-group">
           <label for="songNotes">{{ 'editor.notes' | translate }}</label>
-          <textarea class="form-control" id="songNotes" rows="3"></textarea>
+          <textarea [(ngModel)]="currentSong.notes" class="form-control" id="songNotes" rows="3"></textarea>
         </div>
 
         <div class="form-group">

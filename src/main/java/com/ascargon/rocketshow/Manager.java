@@ -182,7 +182,7 @@ public class Manager {
 		stateManager.load(this);
 
 		// Initialize the updater
-		updater = new Updater();
+		updater = new Updater(this);
 
 		// Initialize the songmanager
 		songManager = new SongManager();

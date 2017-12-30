@@ -1,10 +1,8 @@
 <div class="form-group row">
-  <label for="staticEmail" class="col-lg-2 col-form-label">Language</label>
+  <label for="staticEmail" class="col-lg-2 col-form-label">{{ 'settings.language' | translate }}</label>
   <div class="col-lg-10">
-    <select class="custom-select">
-      <option selected>{{ 'intro.choose-language' | translate }}</option>
-      <option value="1">English</option>
-      <option value="2">Deutsch</option>
+    <select class="custom-select" [ngModel]="settings?.language" (ngModelChange)="switchLanguage($event)">
+      <option *ngFor="let language of settingsService?.languages" [ngValue]="language.key">{{ language.name }}</option>
     </select>
   </div>
 </div>

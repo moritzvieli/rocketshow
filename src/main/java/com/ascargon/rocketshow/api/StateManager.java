@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.ascargon.rocketshow.Manager;
+import com.ascargon.rocketshow.Updater.UpdateState;
 import com.ascargon.rocketshow.midi.MidiSignal;
 import com.ascargon.rocketshow.song.Song.PlayState;
 
@@ -90,28 +91,20 @@ public class StateManager {
 	}
 
 	// Get the current state and add a midi signal, if needed
-	private String getSerializedState(MidiSignal midiSignal) throws Exception {
+	private String getSerializedState(MidiSignal midiSignal, UpdateState updateState) throws Exception {
 		State currentState = getCurrentState();
-		
-		if(midiSignal == null) {
-			midiSignal = new MidiSignal();
-			midiSignal.setNote(3);
-			midiSignal.setChannel(10);
-			midiSignal.setCommand(144);
-		}
-		
-		currentState.setMidiSignal(midiSignal);
 
+		currentState.setMidiSignal(midiSignal);
+		currentState.setUpdateState(updateState);
+		
 		// Convert the object to json
 		ObjectMapper mapper = new ObjectMapper();
 
 		return mapper.writeValueAsString(currentState);
 	}
-
-	// Notify the clients about the current state and include a midi signal, if
-	// midi learn is activated
-	public void notifyClients(MidiSignal midiSignal) throws Exception {
-		String state = getSerializedState(midiSignal);
+	
+	private void notifyClients(MidiSignal midiSignal, UpdateState updateState) throws Exception {
+		String state = getSerializedState(midiSignal, updateState);
 
 		// Send the state to each connected client
 		for (Session activeSession : activeSessions) {
@@ -125,8 +118,20 @@ public class StateManager {
 		}
 	}
 
+	// Notify the clients about the current state and include a midi signal, if
+	// midi learn is activated
+	public void notifyClients(MidiSignal midiSignal) throws Exception {
+		notifyClients(midiSignal, null);
+	}
+	
+	// Notify the clients about the current state and include update
+	// information, if an update is running
+	public void notifyClients(UpdateState updateState) throws Exception {
+		notifyClients(null, updateState);
+	}
+
 	public void notifyClients() throws Exception {
-		notifyClients(null);
+		notifyClients(null, null);
 	}
 
 }

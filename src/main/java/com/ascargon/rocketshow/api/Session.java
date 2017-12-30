@@ -27,9 +27,19 @@ public class Session {
 	@Path("wizard-finished")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response update() throws Exception {
+	public Response setWizardFinished() throws Exception {
 		Manager manager = (Manager)context.getAttribute("manager");
 		manager.getSession().setFirstStart(false);
+		manager.saveSession();
+		return Response.status(200).build();
+	}
+	
+	@Path("dismiss-update-finished")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response dismissUpdateFinished() throws Exception {
+		Manager manager = (Manager)context.getAttribute("manager");
+		manager.getSession().setUpdateFinished(false);
 		manager.saveSession();
 		return Response.status(200).build();
 	}

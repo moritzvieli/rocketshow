@@ -8,6 +8,7 @@ public class Session {
 
 	private String currentSetListName;
 	private boolean firstStart = true;
+	private boolean updateFinished = false;
 	
 	public Session() {
 	}
@@ -28,6 +29,15 @@ public class Session {
 
 	public void setFirstStart(boolean firstStart) {
 		this.firstStart = firstStart;
+	}
+
+	@XmlElement
+	public boolean isUpdateFinished() {
+		return updateFinished;
+	}
+
+	public void setUpdateFinished(boolean updateFinished) {
+		this.updateFinished = updateFinished;
 	}
 	
 }

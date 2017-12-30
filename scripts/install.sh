@@ -65,9 +65,6 @@ cp /opt/rocketshow/update/current.war /opt/rocketshow/tomcat/webapps/ROOT.war
 
 # Cleanup the update folder
 rm -rf /opt/rocketshow/update/*
-
-# Reboot
-sudo reboot
 EOF
 
 # Set the user rocketshow as owner and add execution permissions

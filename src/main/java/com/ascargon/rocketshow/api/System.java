@@ -13,6 +13,7 @@ import javax.ws.rs.core.Response;
 
 import com.ascargon.rocketshow.Manager;
 import com.ascargon.rocketshow.RemoteDevice;
+import com.ascargon.rocketshow.Settings;
 import com.ascargon.rocketshow.VersionInfo;
 
 @Path("/system")
@@ -87,6 +88,14 @@ public class System {
 	public List<RemoteDevice> getRemoteDevices() throws Exception {
 		Manager manager = (Manager)context.getAttribute("manager");
 		return manager.getSettings().getRemoteDeviceList();
+	}
+	
+	@Path("settings")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Settings getSettings() throws Exception {
+		Manager manager = (Manager)context.getAttribute("manager");
+		return manager.getSettings();
 	}
 	
 }

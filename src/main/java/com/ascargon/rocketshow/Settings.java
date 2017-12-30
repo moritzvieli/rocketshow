@@ -53,6 +53,8 @@ public class Settings {
 	private String idleVideo;
 
 	private LoggingLevel loggingLevel;
+	
+	private String language = "en";
 
 	public Settings() {
 		// Initialize default settings
@@ -254,6 +256,15 @@ public class Settings {
 
 	public void setLoggingLevel(LoggingLevel loggingLevel) {
 		this.loggingLevel = loggingLevel;
+	}
+
+	@XmlElement
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 
 }

@@ -74,5 +74,9 @@
         "dmx-mapping-type-simple": "Einfach",
         "remote-devices": "Entfernte Geräte",
         "remote-devices-hint": "Du kannst die entfernten Geräte in den Einstellungen konfigurieren."
+    },
+    "settings": {
+        "system": "System",
+        "language": "Sprache"
     }
 }

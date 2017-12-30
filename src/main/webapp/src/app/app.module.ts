@@ -34,6 +34,7 @@ import { TransportService } from './services/transport.service';
 import { SongService } from './services/song.service';
 import { RemoteDeviceService } from './services/remote-device.service';
 import { FileService } from './services/file.service';
+import { SettingsService } from './services/settings.service';
 
 const appRoutes: Routes = [
   { path: 'intro', component: IntroComponent },
@@ -95,7 +96,8 @@ const DROPZONE_CONFIG: DropzoneConfigInterface = {
     TransportService,
     SongService,
     RemoteDeviceService,
-    FileService
+    FileService,
+    SettingsService
   ],
   entryComponents: [
     EditorSongFileComponent,

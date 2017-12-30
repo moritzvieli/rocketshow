@@ -74,5 +74,9 @@
         "dmx-mapping-type-simple": "Simple",
         "remote-devices": "Remote devices",
         "remote-devices-hint": "You can configure the remote devices in the settings."
+    },
+    "settings": {
+        "system": "System",
+        "language": "Language"
     }
 }
