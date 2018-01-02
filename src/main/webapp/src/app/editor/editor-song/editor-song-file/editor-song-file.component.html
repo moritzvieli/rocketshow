@@ -19,9 +19,7 @@
 
               <!-- A file is selected -->
               <div *ngIf="file?.name">
-                <i *ngIf="file?.type == 'MIDI'" class="fa fa-music fa-fw" aria-hidden="true"></i>
-                <i *ngIf="file?.type == 'AUDIO'" class="fa fa-microphone fa-fw" aria-hidden="true"></i>
-                <i *ngIf="file?.type == 'VIDEO'" class="fa fa-film fa-fw" aria-hidden="true"></i>
+                <i class="fa fa-fw" [ngClass]="file.getFontAwesomeIconClass()" aria-hidden="true"></i>
                 {{ file?.name }}
               </div>
             </div>
@@ -74,9 +72,7 @@
                       [class.active]="file?.name == existingFile.name && file?.type == existingFile.type">
 
                       <p class="mb-0">
-                        <i *ngIf="existingFile.type == 'MIDI'" class="fa fa-music fa-fw" aria-hidden="true"></i>
-                        <i *ngIf="existingFile.type == 'AUDIO'" class="fa fa-microphone fa-fw" aria-hidden="true"></i>
-                        <i *ngIf="existingFile.type == 'VIDEO'" class="fa fa-film fa-fw" aria-hidden="true"></i>
+                        <i class="fa fa-fw" [ngClass]="existingFile.getFontAwesomeIconClass()" aria-hidden="true"></i>
                         {{ existingFile.name }}
                       </p>
                     </a>

@@ -25,6 +25,8 @@ export class PlayComponent implements OnInit {
 
   manualSongSelection: boolean = false;
 
+  totalPlayTime: string = '';
+
   constructor(public apiService: ApiService,
     private stateService: StateService,
     private songService: SongService,
@@ -46,6 +48,14 @@ export class PlayComponent implements OnInit {
     // Load the current setlist
     this.songService.getCurrentSetList().subscribe((setList: SetList) => {
       this.currentSetList = setList;
+
+      let totalDurationMillis: number = 0;
+
+      for(let song of setList.songList) {
+        totalDurationMillis += song.durationMillis;
+      }
+
+      this.totalPlayTime = this.msToTime(totalDurationMillis);
     });
   }
 

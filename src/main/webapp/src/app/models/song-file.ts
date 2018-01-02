@@ -6,10 +6,10 @@ export class SongFile {
     type: string;
 
     constructor(data?: any) {
-        if(!data) {
-        	return;
+        if (!data) {
+            return;
         }
-        
+
         this.name = data.name;
         this.durationMillis = data.durationMillis;
         this.offsetMillis = data.offsetMillis;
@@ -17,11 +17,21 @@ export class SongFile {
         this.type = data.type;
     }
 
-    stringify(): string {
-        let string = JSON.stringify(this);
-        let object = JSON.parse(string);
-
-        return JSON.stringify(object);
+    getFontAwesomeIconClass() {
+        switch (this.type) {
+            case 'MIDI': {
+                return 'fa-music';
+            }
+            case 'AUDIO': {
+                return 'fa-microphone';
+            }
+            case 'VIDEO': {
+                return 'fa-film';
+            }
+            default: {
+                return 'fa-question';
+            }
+        }
     }
 
 }
