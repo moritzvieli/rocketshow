@@ -35,6 +35,9 @@ import { SongService } from './services/song.service';
 import { RemoteDeviceService } from './services/remote-device.service';
 import { FileService } from './services/file.service';
 import { SettingsService } from './services/settings.service';
+import { WarningDialogService } from './services/warning-dialog.service';
+import { WarningDialogComponent } from './warning-dialog/warning-dialog.component';
+import { ChangeWarningDialogService } from './services/change-warning-dialog.service';
 
 const appRoutes: Routes = [
   { path: 'intro', component: IntroComponent },
@@ -63,7 +66,9 @@ const DROPZONE_CONFIG: DropzoneConfigInterface = {
     ConnectionComponent,
     EditorSongFileComponent,
     RoutingDetailsComponent,
-    SettingsSystemComponent
+    SettingsSystemComponent,
+    WarningDialogComponent,
+    WarningDialogComponent
   ],
   imports: [
     HttpModule,
@@ -97,11 +102,14 @@ const DROPZONE_CONFIG: DropzoneConfigInterface = {
     SongService,
     RemoteDeviceService,
     FileService,
-    SettingsService
+    SettingsService,
+    WarningDialogService,
+    ChangeWarningDialogService
   ],
   entryComponents: [
     EditorSongFileComponent,
-    RoutingDetailsComponent
+    RoutingDetailsComponent,
+    WarningDialogComponent
   ],
   bootstrap: [AppComponent]
 })

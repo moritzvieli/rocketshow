@@ -10,7 +10,8 @@
         "midi-out": "MIDI out",
         "delete": "Delete",
         "setlist": "Set",
-        "ok": "OK"
+        "ok": "OK",
+        "warning": "Warning"
     },
     "loading": {
         "title": "Loading...",
@@ -55,7 +56,9 @@
         "media-library": "Media library",
         "file-settings": "Settings",
         "dropzone-message": "Drop files here or click to upload",
-        "no-file-selected": "No file selected"
+        "no-file-selected": "No file selected",
+        "warning-song-changes": "This song contains unsaved changes. Do you really want to proceed?",
+        "warning-delete-song": "Do you really want to delete this song?"
     },
     "connection": {
         "title": "No connection",

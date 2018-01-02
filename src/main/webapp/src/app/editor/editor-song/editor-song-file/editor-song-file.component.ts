@@ -22,6 +22,7 @@ export class EditorSongFileComponent implements OnInit {
   fileIndex: number;
   file: SongFile;
   song: Song;
+  
   onClose: Subject<number>;
 
   existingFiles: SongFile[] = [];

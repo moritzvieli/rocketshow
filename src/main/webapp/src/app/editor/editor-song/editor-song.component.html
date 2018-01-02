@@ -17,7 +17,7 @@
       <div class="card-body p-0">
         <div class="list-group list-group-flush">
           <a *ngFor="let song of filteredSongs" (click)="selectSong(song); false" href="#" class="list-group-item list-group-item-action flex-column align-items-start"
-            [class.active]="initialSongName == song.name">
+            [class.active]="initialSong?.name == song.name">
 
             <p class="mb-0">{{ song.name }}</p>
           </a>

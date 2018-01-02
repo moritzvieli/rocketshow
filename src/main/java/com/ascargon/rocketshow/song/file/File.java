@@ -52,6 +52,8 @@ abstract public class File implements PlayerLoadedListener {
 			song.playerLoaded();
 		}
 	}
+	
+	@XmlElement
 	public String getName() {
 		return name;
 	}

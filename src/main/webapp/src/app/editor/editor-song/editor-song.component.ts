@@ -1,3 +1,4 @@
+import { WarningDialogService } from './../../services/warning-dialog.service';
 import { SongFile } from './../../models/song-file';
 import { EditorSongFileComponent } from './editor-song-file/editor-song-file.component';
 import { Song } from './../../models/song';
@@ -9,6 +10,7 @@ import { SongMidiFile } from "./../../models/song-midi-file";
 import { SongAudioFile } from "./../../models/song-audio-file";
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import { ChangeWarningDialogService } from '../../services/change-warning-dialog.service';
 
 @Component({
   selector: 'app-editor-song',
@@ -25,11 +27,14 @@ export class EditorSongComponent implements OnInit {
   filteredSongs: Song[];
   currentSong: Song;
 
-  initialSongName: string = '';
+  // The song, as it was when we loaded it
+  initialSong: Song;
 
   constructor(
     private songService: SongService,
-    private modalService: BsModalService) {
+    private modalService: BsModalService,
+    private warningDialogService: WarningDialogService,
+    private changeWarningDialogService: ChangeWarningDialogService) {
   }
 
   ngOnInit() {
@@ -65,38 +70,52 @@ export class EditorSongComponent implements OnInit {
     }
   }
 
+  private copyInitialSong() {
+    this.initialSong = new Song(JSON.parse(this.currentSong.stringify()));
+  }
+
   // Select a song
   selectSong(song: Song) {
-    if(this.currentSong && this.currentSong.name == song.name) {
+    if (this.currentSong && this.currentSong.name == song.name) {
       return;
     }
 
-    // Load the details of the selected song
-    this.loadingSong = true;
+    this.changeWarningDialogService.check(this.initialSong, this.currentSong).map(result => {
+      if (result) {
+        // Load the details of the selected song
+        this.loadingSong = true;
 
-    this.songService.loadSong(song.name).subscribe((song: Song) => {
-      this.currentSong = song;
-      this.initialSongName = song.name;
-      this.loadingSong = false;
-    });
+        this.songService.loadSong(song.name).subscribe((song: Song) => {
+          this.currentSong = song;
+          this.copyInitialSong();
+          this.loadingSong = false;
+        });
+      }
+    }).subscribe();
   }
 
   // Unselect a song
   unselectSong() {
     this.currentSong = undefined;
-    this.initialSongName = '';
+    this.initialSong = undefined;
   }
 
   // Create a new song
   createSong() {
     this.currentSong = new Song();
-    this.initialSongName = '';
+    this.copyInitialSong();
+    console.log('A', this.currentSong);
+    console.log('B', this.initialSong);
   }
 
   private saveSongApi(song: Song) {
     this.songService.saveSong(song).map(() => {
       this.loadSongs();
-      this.initialSongName = song.name;
+      this.copyInitialSong();
+
+      // Make sure, the current song also has all required attributes, if saved for
+      // the first time
+      this.currentSong = this.initialSong;
 
       // TODO Show a toast with the success status
     }).subscribe();
@@ -105,8 +124,8 @@ export class EditorSongComponent implements OnInit {
   // Save a new song
   saveSong(song: Song) {
     // Delete the old song, if the name changed
-    if(this.initialSongName != song.name && this.initialSongName.length > 0) {
-      this.songService.deleteSong(this.initialSongName).map(() => {
+    if (this.initialSong && this.initialSong.name && this.initialSong.name != song.name && this.initialSong.name.length > 0) {
+      this.songService.deleteSong(this.initialSong.name).map(() => {
         this.saveSongApi(song);
       }).subscribe();
     } else {
@@ -116,12 +135,15 @@ export class EditorSongComponent implements OnInit {
 
   // Delete the song
   delete(song: Song) {
-    // TODO Show a yes-no-modal
-    this.songService.deleteSong(this.initialSongName).map(() => {
-      this.unselectSong();
-      this.loadSongs();
+    this.warningDialogService.show('editor.warning-delete-song').map(result => {
+      if (result) {
+        this.songService.deleteSong(this.initialSong.name).map(() => {
+          this.unselectSong();
+          this.loadSongs();
 
-      // TODO Show a toast with success status
+          // TODO Show a toast with success status
+        }).subscribe();
+      }
     }).subscribe();
   }
 
@@ -153,7 +175,7 @@ export class EditorSongComponent implements OnInit {
     // Create a backup of the current song
     let songCopy: Song = new Song(JSON.parse(this.currentSong.stringify()));
 
-    if(addNew) {
+    if (addNew) {
       // Add a new file, if necessary
       let newFile: SongFile = new SongFile();
       songCopy.fileList.push(newFile);
@@ -172,7 +194,7 @@ export class EditorSongComponent implements OnInit {
         this.currentSong.fileList[fileIndex] = (<EditorSongFileComponent>fileDialog.content).file;
 
         this.rebuildFileListBasedOnType();
-      } else if(result === 3) {
+      } else if (result === 3) {
         // Delete has been pressed -> delete
         this.currentSong.fileList.splice(fileIndex, 1);
       }

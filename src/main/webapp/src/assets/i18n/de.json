@@ -10,7 +10,8 @@
         "midi-out": "MIDI Ausgang",
         "delete": "Löschen",
         "setlist": "Set",
-        "ok": "OK"
+        "ok": "OK",
+        "warning": "Achtung"
     },
     "loading": {
         "title": "Laden...",
@@ -55,7 +56,9 @@
         "media-library": "Mediathek",
         "file-settings": "Einstellungen",
         "dropzone-message": "Ziehe Dateien hier hinein oder klicke, um hochzuladen",
-        "no-file-selected": "Keine Datei ausgewählt"
+        "no-file-selected": "Keine Datei ausgewählt",
+        "warning-song-changes": "Dieser Song enthält noch nicht gespeicherte Änderungen. Möchtest du wirklich fortfahren?",
+        "warning-delete-song": "Möchtest du diesen Song wirklich löschen?"
     },
     "connection": {
         "title": "Keine Verbindung",
