@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
-export class ChangeWarningDialogService {
+export class PendingChangesDialogService {
 
   constructor(
     private modalService: BsModalService,
@@ -14,7 +14,7 @@ export class ChangeWarningDialogService {
 
   // Checks the equality of two objects, shows a warning dialog if they don't match and
   // returns, whether the changes can be discarded
-  check(objectOld: any, objectNew: any): Observable<boolean> {
+  check(objectOld: any, objectNew: any, message: string): Observable<boolean> {
     if(!objectOld) {
       // There is no old object (e.g. the user created a new one)
       return Observable.of(true);
@@ -25,7 +25,7 @@ export class ChangeWarningDialogService {
       return Observable.of(true);
     }
 
-    return this.warningDialogService.show('editor.warning-song-changes');
+    return this.warningDialogService.show(message);
   }
 
 }

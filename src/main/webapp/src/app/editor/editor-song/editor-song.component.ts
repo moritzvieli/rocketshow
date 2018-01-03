@@ -10,7 +10,7 @@ import { SongMidiFile } from "./../../models/song-midi-file";
 import { SongAudioFile } from "./../../models/song-audio-file";
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
-import { ChangeWarningDialogService } from '../../services/change-warning-dialog.service';
+import { PendingChangesDialogService } from '../../services/pending-changes-dialog.service';
 
 @Component({
   selector: 'app-editor-song',
@@ -34,7 +34,7 @@ export class EditorSongComponent implements OnInit {
     private songService: SongService,
     private modalService: BsModalService,
     private warningDialogService: WarningDialogService,
-    private changeWarningDialogService: ChangeWarningDialogService) {
+    private pendingChangesDialogService: PendingChangesDialogService) {
   }
 
   ngOnInit() {
@@ -80,7 +80,7 @@ export class EditorSongComponent implements OnInit {
       return;
     }
 
-    this.changeWarningDialogService.check(this.initialSong, this.currentSong).map(result => {
+    this.pendingChangesDialogService.check(this.initialSong, this.currentSong, 'editor.warning-song-changes').map(result => {
       if (result) {
         // Load the details of the selected song
         this.loadingSong = true;

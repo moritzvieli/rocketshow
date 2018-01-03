@@ -9,6 +9,7 @@ import { Language } from '../models/language';
 export class SettingsService {
 
   languages: Language[] = [];
+  settings: Settings;
 
   constructor(private apiService: ApiService) {
     let language: Language;
@@ -24,10 +25,16 @@ export class SettingsService {
     this.languages.push(language);
   }
 
-  getSettings(): Observable<Settings> {
+  getSettings(clearCache: boolean = false): Observable<Settings> {
+    if (this.settings && !clearCache) {
+      return Observable.of(this.settings);
+    }
+
     return this.apiService.get('system/settings')
       .map((response: Response) => {
-        return new Settings(response.json());
+        this.settings = new Settings(response.json());
+
+        return this.settings;
       });
   }
 

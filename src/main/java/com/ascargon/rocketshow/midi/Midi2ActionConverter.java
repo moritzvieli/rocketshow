@@ -67,6 +67,9 @@ public class Midi2ActionConverter {
 		case SET_SONG_INDEX:
 			remoteDevice.setSongIndex(manager.getCurrentSetList().getCurrentSongIndex());
 			break;
+		case REBOOT:
+			remoteDevice.reboot();
+			break;
 		default:
 			logger.warn("Action '" + action.toString() + "' is unknown for remote devices and cannot be executed");
 			break;
@@ -98,6 +101,9 @@ public class Midi2ActionConverter {
 			break;
 		case PREVIOUS_SONG:
 			manager.getCurrentSetList().previousSong();
+			break;
+		case REBOOT:
+			manager.reboot();
 			break;
 		default:
 			logger.warn("Action '" + action.toString() + "' is locally unknown and cannot be executed");

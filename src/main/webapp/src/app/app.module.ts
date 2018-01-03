@@ -37,8 +37,9 @@ import { FileService } from './services/file.service';
 import { SettingsService } from './services/settings.service';
 import { WarningDialogService } from './services/warning-dialog.service';
 import { WarningDialogComponent } from './warning-dialog/warning-dialog.component';
-import { ChangeWarningDialogService } from './services/change-warning-dialog.service';
+import { PendingChangesDialogService } from './services/pending-changes-dialog.service';
 
+//TODO https://stackoverflow.com/questions/35922071/warn-user-of-unsaved-changes-before-leaving-page/41187919#41187919
 const appRoutes: Routes = [
   { path: 'intro', component: IntroComponent },
   { path: 'play', component: PlayComponent },
@@ -48,7 +49,7 @@ const appRoutes: Routes = [
     redirectTo: '/play',
     pathMatch: 'full'
   },
-  /*{ path: '**', component: PlayComponent }*/
+  { path: '**', component: PlayComponent }
 ];
 
 const DROPZONE_CONFIG: DropzoneConfigInterface = {
@@ -104,7 +105,7 @@ const DROPZONE_CONFIG: DropzoneConfigInterface = {
     FileService,
     SettingsService,
     WarningDialogService,
-    ChangeWarningDialogService
+    PendingChangesDialogService
   ],
   entryComponents: [
     EditorSongFileComponent,

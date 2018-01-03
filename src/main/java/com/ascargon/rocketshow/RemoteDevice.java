@@ -91,6 +91,10 @@ public class RemoteDevice {
 		doPost(apiUrl, false);
 	}
 
+	public void reboot() {
+		doPost("system/reboot");
+	}
+	
 	public void load(boolean synchronous) {
 		doPost("transport/load", synchronous);
 	}

@@ -425,6 +425,12 @@ public class Manager {
 	}
 
 	public void reboot() throws Exception {
+		for (RemoteDevice remoteDevice : settings.getRemoteDeviceList()) {
+			if (remoteDevice.isSynchronize()) {
+				remoteDevice.reboot();
+			}
+		}
+		
 		ShellManager shellManager = new ShellManager(new String[] { "sudo", "reboot" });
 		shellManager.getProcess().waitFor();
 	}

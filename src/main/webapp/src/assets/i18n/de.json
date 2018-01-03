@@ -9,6 +9,7 @@
         "midi-in": "MIDI Eingang",
         "midi-out": "MIDI Ausgang",
         "delete": "Löschen",
+        "discard": "Verwerfen",
         "setlist": "Set",
         "ok": "OK",
         "warning": "Achtung"
@@ -31,20 +32,21 @@
         "settings": "Einstellungen" 
     },
     "editor": {
-        "songs": "Songs",
+        "songs": "Kompositionen",
         "setlists": "Sets",
-        "create-song": "Song erstellen",
+        "create-song": "Komposition erstellen",
         "create-setlist": "Set erstellen",
         "search-songs": "Suche...",
         "search-files": "Suche...",
         "add-file": "Datei hinzufügen",
-        "select-song": "Wähle einen bestehenden Song aus oder erstelle einen neuen.",
-        "song-name": "Song Name",
-        "default-song-name": "Mein Neuer Song",
+        "select-song": "Wähle eine bestehende Komposition aus oder erstelle eine neue.",
+        "song-name": "Komposition Name",
+        "default-song-name": "Meine Neue Komposition",
         "notes": "Notizen",
         "files": "Dateien",
         "mute": "Stumm",
-        "offset-millis": "Verzögerung",
+        "offset-millis": "Verzögerung in Millisekunden",
+        "offset-placeholder": "Verzögerung in Millisekunden",
         "midi-destination-dmx": "DMX (Licht)",
         "midi-destination-device": "MIDI Ausgang",
         "midi-destination-remote": "Entfernte Geräte",
@@ -57,8 +59,8 @@
         "file-settings": "Einstellungen",
         "dropzone-message": "Ziehe Dateien hier hinein oder klicke, um hochzuladen",
         "no-file-selected": "Keine Datei ausgewählt",
-        "warning-song-changes": "Dieser Song enthält noch nicht gespeicherte Änderungen. Möchtest du wirklich fortfahren?",
-        "warning-delete-song": "Möchtest du diesen Song wirklich löschen?"
+        "warning-song-changes": "Diese Komposition enthält noch nicht gespeicherte Änderungen. Möchtest du wirklich fortfahren?",
+        "warning-delete-song": "Möchtest du diese Komposition wirklich löschen?"
     },
     "connection": {
         "title": "Keine Verbindung",
@@ -80,6 +82,8 @@
     },
     "settings": {
         "system": "System",
-        "language": "Sprache"
+        "language": "Sprache",
+        "warning-reboot": "Möchtest du das Gerät wirklich neu starten?",
+        "name-unit": "Name des Geräts"
     }
 }

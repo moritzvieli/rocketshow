@@ -8,9 +8,9 @@
 </div>
 
 <div class="form-group row">
-  <label for="inputPassword" class="col-lg-2 col-form-label">Device name</label>
+  <label for="inputPassword" class="col-lg-2 col-form-label">{{ 'settings.name-unit' | translate }}</label>
   <div class="col-lg-10">
-    <input type="text" class="form-control" id="inputPassword" placeholder="Device name">
+    <input type="text" class="form-control" placeholder="{{ 'intro.default-unit-name' | translate }}">
   </div>
 </div>
 
@@ -37,7 +37,7 @@
 <div class="form-group row mb-0">
   <div class="col-lg-2"></div>
   <div class="col-lg-10">
-    <a href="#" class="btn btn-primary btn-sm">
+    <a href="#" class="btn btn-primary btn-sm" (click)="reboot(); false;">
       <i class="fa fa-power-off fa-fw" aria-hidden="true"></i> Reboot device</a>
   </div>
 </div>

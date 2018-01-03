@@ -9,6 +9,7 @@
         "midi-in": "MIDI in",
         "midi-out": "MIDI out",
         "delete": "Delete",
+        "discard": "Discard",
         "setlist": "Set",
         "ok": "OK",
         "warning": "Warning"
@@ -31,20 +32,21 @@
         "settings": "Settings" 
     },
     "editor": {
-        "songs": "Songs",
+        "songs": "Compositions",
         "setlists": "Sets",
-        "create-song": "Create song",
+        "create-song": "Create composition",
         "create-setlist": "Create set",
         "search-songs": "Search...",
         "search-files": "Search...",
         "add-file": "Add file",
-        "select-song": "Select an existing song or create a new one.",
-        "song-name": "Song name",
-        "default-song-name": "My New Song",
+        "select-song": "Select an existing composition or create a new one.",
+        "song-name": "Composition name",
+        "default-song-name": "My New Composition",
         "notes": "Notes",
         "files": "Files",
         "mute": "Mute",
-        "offset-millis": "Delay",
+        "offset-millis": "Delay in milliseconds",
+        "offset-placeholder": "Delay in milliseconds",
         "midi-destination-dmx": "DMX (light)",
         "midi-destination-device": "MIDI out",
         "midi-destination-remote": "Remote devices",
@@ -57,8 +59,8 @@
         "file-settings": "Settings",
         "dropzone-message": "Drop files here or click to upload",
         "no-file-selected": "No file selected",
-        "warning-song-changes": "This song contains unsaved changes. Do you really want to proceed?",
-        "warning-delete-song": "Do you really want to delete this song?"
+        "warning-song-changes": "This composition contains unsaved changes. Do you really want to proceed?",
+        "warning-delete-song": "Do you really want to delete this composition?"
     },
     "connection": {
         "title": "No connection",
@@ -80,6 +82,8 @@
     },
     "settings": {
         "system": "System",
-        "language": "Language"
+        "language": "Language",
+        "warning-reboot": "Do you really want to reboot the device?",
+        "name-unit": "Device name"
     }
 }

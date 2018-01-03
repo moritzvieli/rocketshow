@@ -1,7 +1,7 @@
 export class SongFile {
     name: string;
     durationMillis: number;
-    offsetMillis: number;
+    offsetMillis: number = 0;
     active: boolean = true;
     type: string;
 
