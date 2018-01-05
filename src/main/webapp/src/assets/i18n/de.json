@@ -12,7 +12,10 @@
         "discard": "Verwerfen",
         "setlist": "Set",
         "ok": "OK",
-        "warning": "Achtung"
+        "warning": "Achtung",
+        "setlist-without-songs": "Dieses Set enthält keine Kompositionen. Klicke hier, um den Editor zu öffnen.",
+        "no-setlists-title": "Keine Sets",
+        "no-setlists": "Klicke hier, um Kompositionen und dein erstes Set zu erstellen."
     },
     "loading": {
         "title": "Laden...",
@@ -84,6 +87,7 @@
         "system": "System",
         "language": "Sprache",
         "warning-reboot": "Möchtest du das Gerät wirklich neu starten?",
-        "name-unit": "Name des Geräts"
+        "name-unit": "Name des Geräts",
+        "warning-settings-changes": "Die Einstellungen enthalten noch nicht gespeicherte Änderungen. Möchtest du wirklich fortfahren?"
     }
 }

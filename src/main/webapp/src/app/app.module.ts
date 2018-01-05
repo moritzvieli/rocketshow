@@ -16,6 +16,8 @@ import { ModalModule } from 'ngx-bootstrap';
 import { DropzoneModule } from 'ngx-dropzone-wrapper';
 import { DropzoneConfigInterface } from 'ngx-dropzone-wrapper';
 
+import { PendingChangesGuard } from './pending-changes.guard';
+
 import { AppComponent } from './app.component';
 import { IntroComponent } from './intro/intro.component';
 import { PlayComponent } from './play/play.component';
@@ -39,13 +41,13 @@ import { WarningDialogService } from './services/warning-dialog.service';
 import { WarningDialogComponent } from './warning-dialog/warning-dialog.component';
 import { PendingChangesDialogService } from './services/pending-changes-dialog.service';
 
-//TODO https://stackoverflow.com/questions/35922071/warn-user-of-unsaved-changes-before-leaving-page/41187919#41187919
 const appRoutes: Routes = [
   { path: 'intro', component: IntroComponent },
   { path: 'play', component: PlayComponent },
-  { path: 'editor', component: EditorComponent },
-  { path: 'settings', component: SettingsComponent },
-  { path: '',
+  { path: 'editor', component: EditorComponent, canDeactivate: [PendingChangesGuard] },
+  { path: 'settings', component: SettingsComponent, canDeactivate: [PendingChangesGuard] },
+  {
+    path: '',
     redirectTo: '/play',
     pathMatch: 'full'
   },
@@ -88,7 +90,7 @@ const DROPZONE_CONFIG: DropzoneConfigInterface = {
       }
     }),
     FormsModule,
-    SortablejsModule.forRoot({ 
+    SortablejsModule.forRoot({
       animation: 300,
       handle: '.list-sort-handle'
     }),
@@ -97,6 +99,7 @@ const DROPZONE_CONFIG: DropzoneConfigInterface = {
     DropzoneModule.forRoot(DROPZONE_CONFIG)
   ],
   providers: [
+    PendingChangesGuard,
     ApiService,
     StateService,
     TransportService,
@@ -117,5 +120,5 @@ const DROPZONE_CONFIG: DropzoneConfigInterface = {
 export class AppModule { }
 
 export function HttpLoaderFactory(http: HttpClient) {
-	return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
+  return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
 }

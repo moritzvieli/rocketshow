@@ -47,21 +47,27 @@ export class PlayComponent implements OnInit {
 
     // Load the current setlist
     this.songService.getCurrentSetList().subscribe((setList: SetList) => {
-      this.currentSetList = setList;
+      if(setList) {
+        this.currentSetList = setList;
 
-      let totalDurationMillis: number = 0;
+        let totalDurationMillis: number = 0;
 
-      for(let song of setList.songList) {
-        totalDurationMillis += song.durationMillis;
+        for(let song of setList.songList) {
+          totalDurationMillis += song.durationMillis;
+        }
+
+        this.totalPlayTime = this.msToTime(totalDurationMillis);
       }
-
-      this.totalPlayTime = this.msToTime(totalDurationMillis);
     });
   }
 
   private pad(num: number, size: number): string {
-    let s = num + "";
-    while (s.length < size) s = "0" + s;
+    if(!num) {
+      return '';
+    }
+
+    let s = num + '';
+    while (s.length < size) s = '0' + s;
     return s;
   }
 

@@ -2,7 +2,7 @@ import { Song } from './song';
 
 export class SetList {
     name: string;
-    songList: Song[];
+    songList: Song[] = [];
     currentSongIndex: number;
 
     constructor(data?: any) {
@@ -15,8 +15,10 @@ export class SetList {
 
         this.songList = [];
 
-        for(let song of data.songList) {
-            this.songList.push(new Song(song));
+        if(data.songList) {
+            for(let song of data.songList) {
+                this.songList.push(new Song(song));
+            }
         }
     }
 }

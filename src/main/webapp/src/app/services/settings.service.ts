@@ -10,6 +10,7 @@ export class SettingsService {
 
   languages: Language[] = [];
   settings: Settings;
+  observable: Observable<Settings>;
 
   constructor(private apiService: ApiService) {
     let language: Language;
@@ -26,16 +27,28 @@ export class SettingsService {
   }
 
   getSettings(clearCache: boolean = false): Observable<Settings> {
-    if (this.settings && !clearCache) {
+    if(clearCache) {
+      this.settings = undefined;
+      this.observable = undefined;
+    }
+
+    if (this.settings) {
       return Observable.of(this.settings);
     }
 
-    return this.apiService.get('system/settings')
-      .map((response: Response) => {
-        this.settings = new Settings(response.json());
+    if(this.observable) {
+      return this.observable;
+    }
 
-        return this.settings;
-      });
+    this.observable = this.apiService.get('system/settings')
+    .map((response: Response) => {
+      this.settings = new Settings(response.json());
+      this.observable = undefined;
+
+      return this.settings;
+    });
+
+    return this.observable;
   }
 
 }

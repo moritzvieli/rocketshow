@@ -12,24 +12,24 @@
             <!-- The transport buttons -->
             <div class="col-auto my-auto">
               <div class="btn-group btn-group-lg" role="group">
-                <button type="button" (click)="previousSong()" class="btn btn-dark">
+                <button type="button" [disabled]="!currentState?.currentSongName" (click)="previousSong()" class="btn btn-dark">
                   <i class="fa fa-step-backward fa-fw" aria-hidden="true"></i>
                 </button>
-                <button type="button" (click)="play()" class="btn btn-dark" *ngIf="currentState?.playState == 'STOPPED' || currentState?.playState == 'PAUSED'  || currentState?.playState == 'STOPPING'">
+                <button type="button" [disabled]="!currentState?.currentSongName" (click)="play()" class="btn btn-dark" *ngIf="currentState?.playState == 'STOPPED' || currentState?.playState == 'PAUSED'  || currentState?.playState == 'STOPPING'">
                   <i class="fa fa-play fa-fw loading-transition" [class.text-warning]="currentState?.playState == 'STOPPING'" aria-hidden="true"></i>
                 </button>
-                <button type="button" (click)="stop()" class="btn btn-dark" *ngIf="currentState?.playState == 'LOADING' || currentState?.playState == 'PLAYING'">
+                <button type="button" [disabled]="!currentState?.currentSongName" (click)="stop()" class="btn btn-dark" *ngIf="currentState?.playState == 'LOADING' || currentState?.playState == 'PLAYING'">
                   <i class="fa fa-stop fa-fw loading-transition" [class.text-warning]="currentState?.playState == 'LOADING'" [class.text-danger]="currentState?.playState == 'PLAYING'"
                     aria-hidden="true"></i>
                 </button>
-                <button type="button" (click)="nextSong()" class="btn btn-dark">
+                <button type="button" [disabled]="!currentState?.currentSongName" (click)="nextSong()" class="btn btn-dark">
                   <i class="fa fa-step-forward fa-fw" aria-hidden="true"></i>
                 </button>
               </div>
             </div>
 
             <!-- The current song -->
-            <div class="col-sm my-auto">
+            <div class="col-sm my-auto" *ngIf="currentState?.currentSongName">
               <h4 class="align-middle float-left mb-0" style="width: 120px;">{{ playTime }}</h4>
               <h4> - {{ currentState?.currentSongName }}</h4>
 
@@ -47,24 +47,24 @@
             <!-- The transport buttons -->
             <div class="col-auto my-auto mx-auto">
               <div class="btn-group btn-group-lg" role="group">
-                <button type="button" (click)="previousSong()" class="btn btn-dark">
+                <button type="button" [disabled]="!currentState?.currentSongName" (click)="previousSong()" class="btn btn-dark">
                   <i class="fa fa-step-backward fa-fw" aria-hidden="true"></i>
                 </button>
-                <button type="button" (click)="play()" class="btn btn-dark" *ngIf="currentState?.playState == 'STOPPED' || currentState?.playState == 'PAUSED'  || currentState?.playState == 'STOPPING'">
+                <button type="button" [disabled]="!currentState?.currentSongName" (click)="play()" class="btn btn-dark" *ngIf="currentState?.playState == 'STOPPED' || currentState?.playState == 'PAUSED'  || currentState?.playState == 'STOPPING'">
                   <i class="fa fa-play fa-fw loading-transition" [class.text-warning]="currentState?.playState == 'STOPPING'" aria-hidden="true"></i>
                 </button>
-                <button type="button" (click)="stop()" class="btn btn-dark" *ngIf="currentState?.playState == 'LOADING' || currentState?.playState == 'PLAYING'">
+                <button type="button" [disabled]="!currentState?.currentSongName" (click)="stop()" class="btn btn-dark" *ngIf="currentState?.playState == 'LOADING' || currentState?.playState == 'PLAYING'">
                   <i class="fa fa-stop fa-fw loading-transition" [class.text-warning]="currentState?.playState == 'LOADING'" [class.text-danger]="currentState?.playState == 'PLAYING'"
                     aria-hidden="true"></i>
                 </button>
-                <button type="button" (click)="nextSong()" class="btn btn-dark">
+                <button type="button" [disabled]="!currentState?.currentSongName" (click)="nextSong()" class="btn btn-dark">
                   <i class="fa fa-step-forward fa-fw" aria-hidden="true"></i>
                 </button>
               </div>
             </div>
 
             <!-- The current song -->
-            <div class="col-sm pt-3">
+            <div class="col-sm pt-3" *ngIf="currentState?.currentSongName">
               <div class="d-flex">
                 <div class="mx-auto">
                   <h5 class="align-middle float-left mb-0 d-flex" style="width: 100px;">{{ playTime }}</h5>
@@ -86,7 +86,7 @@
   </div>
 
   <!-- Setlist -->
-  <div class="row" *ngIf="stateService.connected">
+  <div class="row" *ngIf="stateService.connected && currentSetList?.name">
     <div class="col" style="display: flex; flex-flow: column;">
 
       <!-- For larger screens -->
@@ -107,7 +107,6 @@
         </div>
       </div>
 
-      <!-- For larger screens -->
       <div class="list-group song-list d-none d-sm-flex" style="flex: 0 1 auto; overflow: auto;">
         <!-- Display all songs -->
         <a *ngFor="let song of currentSetList?.songList; let i = index" id="song{{ i }}" href="#" (click)="setSongIndex(i); false"
@@ -115,6 +114,12 @@
           <div class="d-flex w-100 justify-content-between">
             <p class="mb-1">{{ song.name }}</p>
             <small class="my-auto">{{ msToTime(song.durationMillis) }}</small>
+          </div>
+        </a>
+
+        <a *ngIf="!currentState?.currentSongName" id="song0" href="#" routerLink="/editor" class="list-group-item list-group-item-action flex-column align-items-start active">
+          <div class="d-flex w-100 justify-content-between">
+            <p class="mb-1">{{ 'misc.setlist-without-songs' | translate }}</p>
           </div>
         </a>
       </div>
@@ -137,7 +142,6 @@
         </div>
       </div>
 
-      <!-- For smaller screens -->
       <div class="list-group song-list d-sm-none" style="flex: 0 1 auto; overflow: auto;">
         <!-- Display all songs -->
         <a *ngFor="let song of currentSetList?.songList; let i = index" id="songSmall{{ i }}" href="#" (click)="setSongIndex(i); false"
@@ -147,9 +151,24 @@
             <small class="my-auto">{{ msToTime(song.durationMillis) }}</small>
           </div>
         </a>
+
+        <a *ngIf="!currentState?.currentSongName" id="songSmall0" href="#" routerLink="/editor" class="list-group-item list-group-item-action flex-column align-items-start pt-1 pb-1 active">
+          <div class="d-flex w-100 justify-content-between">
+            <p class="mb-1">{{ 'misc.setlist-without-songs' | translate }}</p>
+          </div>
+        </a>
       </div>
 
     </div>
+  </div>
+
+  <!-- No setlists -->
+  <div *ngIf="!currentSetList?.name" class="alert alert-warning mb-0 text-center" role="alert">
+    <h3>
+      <i class="fa fa-list" aria-hidden="true"></i> {{ 'misc.no-setlists-title' | translate }}</h3>
+    <p class="mb-0">
+      <a href="#" routerLink="/editor">{{ 'misc.no-setlists' | translate }}</a>
+    </p>
   </div>
 
 </div>

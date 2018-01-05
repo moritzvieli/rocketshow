@@ -12,7 +12,10 @@
         "discard": "Discard",
         "setlist": "Set",
         "ok": "OK",
-        "warning": "Warning"
+        "warning": "Warning",
+        "setlist-without-songs": "This set does not contain any compositions. Click here to open the editor.",
+        "no-setlists-title": "No sets",
+        "no-setlists": "Click here to create Compositions and your first set."
     },
     "loading": {
         "title": "Loading...",
@@ -84,6 +87,7 @@
         "system": "System",
         "language": "Language",
         "warning-reboot": "Do you really want to reboot the device?",
-        "name-unit": "Device name"
+        "name-unit": "Device name",
+        "warning-settings-changes": "The settings contain unsaved changes. Do you really want to proceed?"
     }
 }

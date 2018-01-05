@@ -11,6 +11,7 @@ import { SongAudioFile } from "./../../models/song-audio-file";
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { PendingChangesDialogService } from '../../services/pending-changes-dialog.service';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-editor-song',
@@ -74,13 +75,17 @@ export class EditorSongComponent implements OnInit {
     this.initialSong = new Song(JSON.parse(this.currentSong.stringify()));
   }
 
+  checkPendingChanges(): Observable<boolean> {
+    return this.pendingChangesDialogService.check(this.initialSong, this.currentSong, 'editor.warning-song-changes');
+  }
+
   // Select a song
   selectSong(song: Song) {
     if (this.currentSong && this.currentSong.name == song.name) {
       return;
     }
 
-    this.pendingChangesDialogService.check(this.initialSong, this.currentSong, 'editor.warning-song-changes').map(result => {
+    this.checkPendingChanges().map(result => {
       if (result) {
         // Load the details of the selected song
         this.loadingSong = true;
