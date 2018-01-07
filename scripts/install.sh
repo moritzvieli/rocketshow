@@ -32,18 +32,11 @@ file="/etc/sudoers"
 
 sed -i "s/root\sALL=(ALL:ALL) ALL/root    ALL=(ALL:ALL) ALL\n$insert/" $file
 
-# Create the directory structure
-mkdir /opt/rocketshow
-mkdir /opt/rocketshow/bin
-mkdir /opt/rocketshow/tomcat
-mkdir /opt/rocketshow/song
-mkdir /opt/rocketshow/setlist
-mkdir /opt/rocketshow/log
-mkdir /opt/rocketshow/update
-mkdir /opt/rocketshow/media
-mkdir /opt/rocketshow/media/midi
-mkdir /opt/rocketshow/media/audio
-mkdir /opt/rocketshow/media/video
+# Download the initial directory structure including samples
+cd /opt
+wget http://rocketshow.net/install/directory.tar.gz
+tar xvzf ./directory.tar.gz
+rm directory.tar.gz
 
 # Create the update script
 cat <<'EOF' >/opt/rocketshow/update.sh

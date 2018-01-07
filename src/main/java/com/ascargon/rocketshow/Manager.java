@@ -362,7 +362,17 @@ public class Manager {
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 			session = (Session) jaxbUnmarshaller.unmarshal(file);
 
-			if (session.getCurrentSetListName() != null) {
+			if (session.getCurrentSetListName() == null) {
+				// Load the first available setList
+				List<SetList> setLists = songManager.getAllSetLists();
+				
+				if(setLists != null) {
+					if(setLists.size() > 0) {
+						loadSetList(setLists.get(0).getName());
+					}
+				}
+			} else {
+				// Load the last setlist
 				loadSetList(session.getCurrentSetListName());
 			}
 

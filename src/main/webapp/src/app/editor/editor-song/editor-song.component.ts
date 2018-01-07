@@ -55,6 +55,12 @@ export class EditorSongComponent implements OnInit {
     return evt.related.className.indexOf('no-sortjs') === -1;
   }
 
+  sortEnd(evt) {
+    console.log(this);
+    console.log(this.currentSong);
+    this.currentSong.fileList.splice(evt.newIndex, 0, this.currentSong.fileList.splice(evt.oldIndex, 1)[0]);
+  }
+
   // Filter the song list
   filterSongs(searchValue?: string) {
     if (!searchValue) {
@@ -92,6 +98,7 @@ export class EditorSongComponent implements OnInit {
 
         this.songService.loadSong(song.name).subscribe((song: Song) => {
           this.currentSong = song;
+
           this.copyInitialSong();
           this.loadingSong = false;
         });
