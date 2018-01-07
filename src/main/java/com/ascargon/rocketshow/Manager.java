@@ -352,6 +352,8 @@ public class Manager {
 	private void restoreSession() throws Exception {
 		File file = new File(BASE_PATH + "session");
 		if (!file.exists() || file.isDirectory()) {
+			// Create a default session
+			saveSession();
 			return;
 		}
 
@@ -362,9 +364,11 @@ public class Manager {
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 			session = (Session) jaxbUnmarshaller.unmarshal(file);
 
-			if (session.getCurrentSetListName() == null) {
+			if (session.getCurrentSetListName() == null || session.getCurrentSetListName().length() == 0) {
 				// Load the first available setList
 				List<SetList> setLists = songManager.getAllSetLists();
+				
+				logger.info("Load the first setlist from available " + setLists.size());
 				
 				if(setLists != null) {
 					if(setLists.size() > 0) {

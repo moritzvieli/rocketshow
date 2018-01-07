@@ -33,7 +33,7 @@ export class Song {
                     let audioFile = new SongAudioFile(file.audioFile);
                     fileList.push(audioFile);
                 } else if (file.videoFile) {
-                    let videoFile = new SongVideoFile(file.audioFile);
+                    let videoFile = new SongVideoFile(file.videoFile);
                     fileList.push(videoFile);
                 }
             }

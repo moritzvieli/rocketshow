@@ -63,15 +63,18 @@ export class PlayComponent implements OnInit {
 
   private pad(num: number, size: number): string {
     if(!num) {
-      return '';
+      num = 0;
     }
 
-    let s = num + '';
-    while (s.length < size) s = '0' + s;
-    return s;
+    let padded: string = num.toString();
+    while (padded.length < size) {
+      padded = '0' + padded;
+    }
+
+    return padded;
   }
 
-  msToTime(millis: number): string {
+  private msToTime(millis: number): string {
     let ms: number = Math.round(millis % 1000);
     let seconds: number = Math.floor(((millis % 360000) % 60000) / 1000);
     let minutes: number = Math.floor((millis % 3600000) / 60000);

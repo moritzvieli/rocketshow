@@ -13,46 +13,49 @@ abstract public class File implements PlayerLoadedListener {
 	public enum FileType {
 		MIDI, AUDIO, VIDEO, UNKNOWN
 	}
-	
+
 	public final static String MEDIA_PATH = "media/";
-	
+
 	private String name;
-	
+
 	private Manager manager;
 	private Song song;
-	
+
 	private boolean loading = false;
 	private boolean loaded = false;
-	
+
 	private boolean active = true;
 
 	private long durationMillis;
-	
+
+	public File() {
+	}
+
 	// Play offset
 	private int offsetMillis = 0;
-	
+
 	abstract public void load() throws Exception;
-	
+
 	abstract public void close() throws Exception;
-	
+
 	abstract public void play() throws Exception;
-	
+
 	abstract public void pause() throws Exception;
-	
+
 	abstract public void resume() throws Exception;
-	
+
 	abstract public void stop() throws Exception;
-	
+
 	@Override
 	public void playerLoaded() {
 		loaded = true;
 		loading = false;
-		
-		if(song != null) {
+
+		if (song != null) {
 			song.playerLoaded();
 		}
 	}
-	
+
 	@XmlElement
 	public String getName() {
 		return name;
@@ -122,11 +125,11 @@ abstract public class File implements PlayerLoadedListener {
 	public void setDurationMillis(long durationMillis) {
 		this.durationMillis = durationMillis;
 	}
-	
+
 	public FileType getType() {
 		return FileType.UNKNOWN;
 	}
-	
+
 	// For API consistency
 	public void setType(FileType fileType) {
 	}

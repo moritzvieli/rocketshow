@@ -12,6 +12,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { PendingChangesDialogService } from '../../services/pending-changes-dialog.service';
 import { Observable } from 'rxjs/Observable';
+import { SortablejsOptions } from 'angular-sortablejs/dist';
 
 @Component({
   selector: 'app-editor-song',
@@ -30,6 +31,15 @@ export class EditorSongComponent implements OnInit {
 
   // The song, as it was when we loaded it
   initialSong: Song;
+
+  sortableJsOptions: SortablejsOptions = {
+    onEnd: (event: any) => {
+      this.sortEnd(event);
+    },
+    onMove: (event: any) => {
+      return this.sortMove(event);
+    }
+  };
 
   constructor(
     private songService: SongService,
@@ -56,9 +66,10 @@ export class EditorSongComponent implements OnInit {
   }
 
   sortEnd(evt) {
-    console.log(this);
-    console.log(this.currentSong);
+    console.log(this.currentSong.fileList);
+    console.log(evt.oldIndex, evt.newIndex);
     this.currentSong.fileList.splice(evt.newIndex, 0, this.currentSong.fileList.splice(evt.oldIndex, 1)[0]);
+console.log(this.currentSong.fileList);
   }
 
   // Filter the song list
