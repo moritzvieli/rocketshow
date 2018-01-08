@@ -48,7 +48,7 @@
         <div class="form-group">
           <label>{{ 'editor.files' | translate }}</label>
 
-          <div class="list-group" [sortablejs]="currentSong?.fileList" [sortablejsOptions]="sortableJsOptions">
+          <div class="list-group" [sortablejs]="currentSong?.fileList" [sortablejsOptions]="{ onMove: sortMove }">
             <div class="list-group-item" *ngFor="let file of currentSong?.fileList; let i = index">
               <div class="row">
                 <div class="col col-auto list-sort-handle my-auto" style="cursor: move; cursor: -webkit-grabbing;">

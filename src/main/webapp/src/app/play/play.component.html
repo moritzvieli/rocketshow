@@ -93,14 +93,12 @@
       <div class="list-group d-none d-sm-flex" style="flex: 0 0 auto;">
         <div class="list-group-item list-group-item-action flex-column align-items-start" style="border-top-left-radius: 0.25em; border-top-right-radius: 0.25em; border-bottom-left-radius: 0; border-bottom-right-radius: 0;">
           <a href="#" class="" d="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            {{ 'misc.setlist' | translate }}: {{ currentSetList?.name }}
+            {{ currentSetList?.name }}
             <i class="fa fa-caret-down" aria-hidden="true"></i>
           </a>
 
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <a class="dropdown-item" href="#">Something else here</a>
+            <a *ngFor="let setList of setLists" class="dropdown-item" href="#" (click)="selectSetList(setList); false;">{{ setList.name }}</a>
           </div>
 
           <span style="margin-top: 3px" class="float-right">{{ totalPlayTime }}</span>
@@ -128,14 +126,12 @@
       <div class="list-group d-sm-none" style="flex: 0 0 auto;">
         <div class="list-group-item list-group-item-action flex-column align-items-start pt-2 pb-2" style="border-top-left-radius: 0.25em; border-top-right-radius: 0.25em; border-bottom-left-radius: 0; border-bottom-right-radius: 0;">
           <a href="#" class="" d="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            {{ 'misc.setlist' | translate }}: {{ currentSetList?.name }}
+            {{ currentSetList?.name }}
             <i class="fa fa-caret-down" aria-hidden="true"></i>
           </a>
 
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <a class="dropdown-item" href="#">Something else here</a>
+            <a *ngFor="let setList of setLists" class="dropdown-item" href="#" (click)="selectSetList(setList); false;">{{ setList.name }}</a>
           </div>
 
           <span style="margin-top: 3px" class="float-right">{{ totalPlayTime }}</span>

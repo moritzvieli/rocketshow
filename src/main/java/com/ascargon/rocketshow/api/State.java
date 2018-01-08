@@ -19,6 +19,7 @@ public class State {
 	private Date lastStartTime;
 	private MidiSignal midiSignal;
 	private UpdateState updateState;
+	private String currentSetListName;
 	
 	@XmlElement
 	public int getCurrentSongIndex() {
@@ -81,6 +82,15 @@ public class State {
 
 	public void setUpdateState(UpdateState updateState) {
 		this.updateState = updateState;
+	}
+
+	@XmlElement
+	public String getCurrentSetListName() {
+		return currentSetListName;
+	}
+
+	public void setCurrentSetListName(String currentSetListName) {
+		this.currentSetListName = currentSetListName;
 	}
 	
 }

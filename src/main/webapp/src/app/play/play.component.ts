@@ -19,6 +19,8 @@ export class PlayComponent implements OnInit {
   currentSetList: SetList;
   currentState: State = new State();
 
+  setLists: SetList[];
+
   playPercentage: number = 0;
   playTime: string = '00:00.000';
   playUpdateSubscription: Subscription;
@@ -45,8 +47,18 @@ export class PlayComponent implements OnInit {
       this.currentState = state;
     });
 
+    this.loadCurrentSetList();
+
+    // Load all setlists
+    this.songService.getSetLists().map(result => {
+      this.setLists = result;
+    })
+    .subscribe();
+  }
+
+  private loadCurrentSetList() {
     // Load the current setlist
-    this.songService.getCurrentSetList().subscribe((setList: SetList) => {
+    this.songService.getCurrentSetList(true).subscribe((setList: SetList) => {
       if(setList) {
         this.currentSetList = setList;
 
@@ -60,6 +72,11 @@ export class PlayComponent implements OnInit {
       }
     });
   }
+
+  selectSetList(setList: SetList) {
+    //this.currentSetList = setList;
+    this.songService.loadSetList(setList.name).subscribe();
+  } 
 
   private pad(num: number, size: number): string {
     if(!num) {
@@ -125,6 +142,11 @@ export class PlayComponent implements OnInit {
       if (songObject) {
         songSmallObject.scrollIntoView();
       }
+    }
+
+    // The current setlist changed
+    if (newState.currentSetListName != this.currentState.currentSetListName) {
+      this.loadCurrentSetList();
     }
 
     this.currentState = newState;

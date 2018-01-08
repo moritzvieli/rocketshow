@@ -4,6 +4,7 @@ export class State {
     currentSongName: string = "";
     currentSongDurationMillis: number = 0;
     lastStartTime: Date;
+    currentSetListName: string;
 
     constructor(data?: any) {
         if(!data) {
@@ -15,5 +16,6 @@ export class State {
         this.currentSongName = data.currentSongName;
         this.currentSongDurationMillis = data.currentSongDurationMillis;
         this.lastStartTime = new Date(data.lastStartTime);
+        this.currentSetListName = data.currentSetListName;
     }
 }

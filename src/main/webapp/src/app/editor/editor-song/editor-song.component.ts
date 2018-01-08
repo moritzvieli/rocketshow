@@ -32,15 +32,6 @@ export class EditorSongComponent implements OnInit {
   // The song, as it was when we loaded it
   initialSong: Song;
 
-  sortableJsOptions: SortablejsOptions = {
-    onEnd: (event: any) => {
-      this.sortEnd(event);
-    },
-    onMove: (event: any) => {
-      return this.sortMove(event);
-    }
-  };
-
   constructor(
     private songService: SongService,
     private modalService: BsModalService,
@@ -63,13 +54,6 @@ export class EditorSongComponent implements OnInit {
   // Taken from http://jsbin.com/tuyafe/1/edit?html,js,output
   sortMove(evt) {
     return evt.related.className.indexOf('no-sortjs') === -1;
-  }
-
-  sortEnd(evt) {
-    console.log(this.currentSong.fileList);
-    console.log(evt.oldIndex, evt.newIndex);
-    this.currentSong.fileList.splice(evt.newIndex, 0, this.currentSong.fileList.splice(evt.oldIndex, 1)[0]);
-console.log(this.currentSong.fileList);
   }
 
   // Filter the song list

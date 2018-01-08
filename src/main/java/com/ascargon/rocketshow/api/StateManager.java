@@ -68,6 +68,8 @@ public class StateManager {
 
 		if (manager != null) {
 			if (manager.getCurrentSetList() != null) {
+				currentState.setCurrentSetListName(manager.getCurrentSetList().getName());
+				
 				if (manager.getCurrentSetList().getCurrentSong() != null) {
 					currentState.setPlayState(manager.getCurrentSetList().getCurrentSong().getPlayState());
 				}

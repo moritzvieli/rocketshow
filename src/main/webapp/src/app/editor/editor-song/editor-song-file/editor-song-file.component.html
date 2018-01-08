@@ -114,7 +114,7 @@
               <div class="form-group" *ngIf="file?.type == 'MIDI'">
                 <label class="col-form-label" for="offsetMillis">{{ 'editor.routing' | translate }}</label>
 
-                <div class="list-group" [sortablejs] [sortablejsOptions]="{ onMove: sortMove }">
+                <div class="list-group" [sortablejs]="file?.midiRoutingList" [sortablejsOptions]="{ onMove: sortMove }">
                   <div class="list-group-item" *ngFor="let routing of file?.midiRoutingList; let i = index">
                     <div class="row">
                       <div class="col col-auto list-sort-handle my-auto" style="cursor: move; cursor: -webkit-grabbing;">

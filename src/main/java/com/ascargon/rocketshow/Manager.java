@@ -395,6 +395,8 @@ public class Manager {
 		currentSetList.setManager(this);
 		currentSetList.setName(name);
 
+		stateManager.notifyClients();
+		
 		saveSession();
 	}
 

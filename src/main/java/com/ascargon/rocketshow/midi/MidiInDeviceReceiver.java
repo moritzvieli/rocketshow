@@ -103,12 +103,6 @@ public class MidiInDeviceReceiver implements Receiver {
 	}
 
 	public void load() throws MidiUnavailableException {
-		MidiDevice midiDevice = manager.getSettings().getMidiInDevice();
-
-		// Get the incoming MIDI device
-		logger.info(
-				"Setting up listener to input MIDI device " + midiDevice.getId() + " \"" + midiDevice.getName() + "\"");
-
 		connectMidiReceiver();
 	}
 

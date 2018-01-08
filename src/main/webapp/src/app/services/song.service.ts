@@ -16,8 +16,8 @@ export class SongService {
 
   constructor(private apiService: ApiService) { }
 
-  getCurrentSetList(): Observable<SetList> {
-    if (this.currentSetList) {
+  getCurrentSetList(clearCache: boolean = false): Observable<SetList> {
+    if (this.currentSetList && !clearCache) {
       return Observable.of(this.currentSetList);
     }
 
@@ -67,6 +67,10 @@ export class SongService {
       .map((response: Response) => {
         return new Song(response.json());
       });
+  }
+
+  loadSetList(name: string): Observable<Response> {
+    return this.apiService.post('setlist/load?name=' + name, undefined);
   }
 
   saveSong(song: Song): Observable<Response> {
