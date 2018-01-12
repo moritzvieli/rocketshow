@@ -365,16 +365,7 @@ public class Manager {
 			session = (Session) jaxbUnmarshaller.unmarshal(file);
 
 			if (session.getCurrentSetListName() == null || session.getCurrentSetListName().length() == 0) {
-				// Load the first available setList
-				List<SetList> setLists = songManager.getAllSetLists();
-				
-				logger.info("Load the first setlist from available " + setLists.size());
-				
-				if(setLists != null) {
-					if(setLists.size() > 0) {
-						loadSetList(setLists.get(0).getName());
-					}
-				}
+				loadFirstSetList();
 			} else {
 				// Load the last setlist
 				loadSetList(session.getCurrentSetListName());
@@ -398,6 +389,19 @@ public class Manager {
 		stateManager.notifyClients();
 		
 		saveSession();
+	}
+	
+	public void loadFirstSetList() throws Exception {
+		// Load the first available setList
+		List<SetList> setLists = songManager.getAllSetLists();
+		
+		logger.info("Load the first setlist from available " + setLists.size());
+		
+		if(setLists != null) {
+			if(setLists.size() > 0) {
+				loadSetList(setLists.get(0).getName());
+			}
+		}
 	}
 
 	public void close() {

@@ -183,6 +183,17 @@ public class SongManager {
 
 		logger.info("Song '" + name + "' deleted");
 	}
+	
+	public void deleteSetList(String name) throws Exception {
+		// Delete the setlist
+		File file = new File(Manager.BASE_PATH + SETLIST_PATH + name);
+
+		if (file.exists()) {
+			file.delete();
+		}
+
+		logger.info("SetList '" + name + "' deleted");
+	}
 
 	private void updateSetLists() throws Exception {
 		// Update all setlists (remove deleted files, update playing times),

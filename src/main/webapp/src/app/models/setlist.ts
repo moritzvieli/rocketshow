@@ -1,17 +1,19 @@
 import { Song } from './song'; 
 
 export class SetList {
-    name: string;
+    currentSongIndex: number = 0;
     songList: Song[] = [];
-    currentSongIndex: number;
+    name: string;
+    notes: string;
 
     constructor(data?: any) {
         if(!data) {
         	return;
         }
         
-        this.name = data.name;
         this.currentSongIndex = data.currentSongIndex;
+        this.notes = data.notes;
+        this.name = data.name;
 
         this.songList = [];
 
@@ -20,5 +22,22 @@ export class SetList {
                 this.songList.push(new Song(song));
             }
         }
+    }
+
+    stringify(): string {
+        let string = JSON.stringify(this);
+        let object = JSON.parse(string);
+
+        object.songList = [];
+
+        for (let song of this.songList) {
+            let songObj: any = {};
+            songObj.name = song.name;
+            songObj.durationMillis = song.durationMillis;
+
+            object.songList.push(songObj);
+        }
+
+        return JSON.stringify(object);
     }
 }

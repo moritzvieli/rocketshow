@@ -35,6 +35,8 @@ public class SetList {
 	
 	private ExecutorService playExecutor;
 
+	private String notes;
+	
 	// Read the current song from its file
 	public void readCurrentSong() throws Exception {
 		if (currentSongIndex >= setListSongList.size()) {
@@ -292,4 +294,12 @@ public class SetList {
 		return currentSong;
 	}
 
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
+	
 }

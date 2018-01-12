@@ -1,3 +1,4 @@
+import { Subject } from 'rxjs/Subject';
 import { Song } from './../models/song';
 import { Observable } from 'rxjs/Rx';
 import { SetList } from './../models/setlist';
@@ -13,6 +14,9 @@ export class SongService {
   private setLists: SetList[];
 
   private currentSetList: SetList;
+
+  // Fires, when songs have changed (new ones, deleted)
+  songsChanged: Subject<void> = new Subject<void>();
 
   constructor(private apiService: ApiService) { }
 
@@ -45,8 +49,8 @@ export class SongService {
       });
   }
 
-  getSetLists(): Observable<SetList[]> {
-    if (this.setLists) {
+  getSetLists(clearCache: boolean = false): Observable<SetList[]> {
+    if (this.setLists && !clearCache) {
       return Observable.of(this.setLists);
     }
 
@@ -62,15 +66,24 @@ export class SongService {
       });
   }
 
-  loadSong(songName: string): Observable<Song> {
+  getSong(songName: string): Observable<Song> {
     return this.apiService.get('song?name=' + songName)
       .map((response: Response) => {
         return new Song(response.json());
       });
   }
 
+  // Load a setlist on the device
   loadSetList(name: string): Observable<Response> {
     return this.apiService.post('setlist/load?name=' + name, undefined);
+  }
+
+  // Get a setlist from the device
+  getSetList(setListName: string): Observable<SetList> {
+    return this.apiService.get('setlist/details?name=' + setListName)
+      .map((response: Response) => {
+        return new SetList(response.json());
+      });
   }
 
   saveSong(song: Song): Observable<Response> {
@@ -79,6 +92,14 @@ export class SongService {
 
   deleteSong(name: string): Observable<Response> {
     return this.apiService.post('song/delete?name=' + name, undefined);
+  }
+
+  saveSetList(setList: SetList): Observable<Response> {
+    return this.apiService.post('setlist', setList.stringify());
+  }
+
+  deleteSetList(name: string): Observable<Response> {
+    return this.apiService.post('setlist/delete?name=' + name, undefined);
   }
 
 }

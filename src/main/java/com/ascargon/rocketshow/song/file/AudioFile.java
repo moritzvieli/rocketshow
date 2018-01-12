@@ -68,6 +68,7 @@ public class AudioFile extends com.ascargon.rocketshow.song.file.File {
 				@Override
 				public void run() {
 					try {
+						playTimer.cancel();
 						playTimer = null;
 						audioPlayer.play();
 					} catch (IOException e) {

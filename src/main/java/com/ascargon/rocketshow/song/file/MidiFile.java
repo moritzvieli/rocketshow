@@ -73,6 +73,7 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 			playTimer.schedule(new TimerTask() {
 				@Override
 				public void run() {
+					playTimer.cancel();
 					playTimer = null;
 					midiPlayer.play();
 				}

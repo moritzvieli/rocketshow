@@ -98,7 +98,7 @@
           </a>
 
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a *ngFor="let setList of setLists" class="dropdown-item" href="#" (click)="selectSetList(setList); false;">{{ setList.name }}</a>
+            <a *ngFor="let setList of setLists" class="dropdown-item" [class.active]="setList.name == currentSetList?.name" href="#" (click)="selectSetList(setList); false;">{{ setList.name }}</a>
           </div>
 
           <span style="margin-top: 3px" class="float-right">{{ totalPlayTime }}</span>
@@ -131,7 +131,7 @@
           </a>
 
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a *ngFor="let setList of setLists" class="dropdown-item" href="#" (click)="selectSetList(setList); false;">{{ setList.name }}</a>
+            <a *ngFor="let setList of setLists" class="dropdown-item" [class.active]="setList.name == currentSetList?.name" href="#" (click)="selectSetList(setList); false;">{{ setList.name }}</a>
           </div>
 
           <span style="margin-top: 3px" class="float-right">{{ totalPlayTime }}</span>

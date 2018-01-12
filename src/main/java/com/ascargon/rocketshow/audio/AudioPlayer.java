@@ -3,7 +3,6 @@ package com.ascargon.rocketshow.audio;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Timer;
 
 import org.apache.log4j.Logger;
 
@@ -24,8 +23,6 @@ public class AudioPlayer {
 	private String device;
 
 	private PlayerType playerType = PlayerType.MPLAYER;
-
-	private Timer loadTimer;
 	
 	public void load(PlayerType playerType, PlayerLoadedListener playerLoadedListener, String path, String device)
 			throws IOException, InterruptedException {
@@ -91,11 +88,6 @@ public class AudioPlayer {
 	}
 
 	public void stop() throws Exception {
-		if (loadTimer != null) {
-			loadTimer.cancel();
-			loadTimer = null;
-		}
-
 		if (shellManager != null) {
 			if (playerType == PlayerType.MPLAYER) {
 				shellManager.sendCommand("quit", true);

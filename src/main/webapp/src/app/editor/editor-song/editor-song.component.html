@@ -71,7 +71,6 @@
               <i class="fa fa-plus" aria-hidden="true"></i> {{ 'editor.add-file' | translate }}
             </a>
           </div>
-
         </div>
 
       </div>
@@ -82,10 +81,10 @@
         </a>
 
         <div class="d-flex">
-          <a class="mr-3 my-auto" href="#" role="button" (click)="unselectSong(); false">
+          <a class="mr-3 my-auto" href="#" role="button" (click)="unselect(); false">
             {{ 'misc.cancel' | translate }}
           </a>
-          <a class="btn btn-primary" href="#" role="button" (click)="saveSong(currentSong); false">
+          <a class="btn btn-primary" href="#" role="button" (click)="save(currentSong); false">
             <i class="fa fa-floppy-o" aria-hidden="true"></i> {{ 'misc.save' | translate }}
           </a>
         </div>

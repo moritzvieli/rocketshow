@@ -69,6 +69,7 @@ public class VideoFile extends File {
 				@Override
 				public void run() {
 					try {
+						playTimer.cancel();
 						playTimer = null;
 						videoPlayer.play();
 					} catch (IOException e) {

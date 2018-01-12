@@ -13,6 +13,8 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { PendingChangesDialogService } from '../../services/pending-changes-dialog.service';
 import { Observable } from 'rxjs/Observable';
 import { SortablejsOptions } from 'angular-sortablejs/dist';
+import { ToastrService } from 'ngx-toastr';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-editor-song',
@@ -36,7 +38,9 @@ export class EditorSongComponent implements OnInit {
     private songService: SongService,
     private modalService: BsModalService,
     private warningDialogService: WarningDialogService,
-    private pendingChangesDialogService: PendingChangesDialogService) {
+    private pendingChangesDialogService: PendingChangesDialogService,
+    private toastrService: ToastrService,
+    private translateService: TranslateService) {
   }
 
   ngOnInit() {
@@ -91,7 +95,7 @@ export class EditorSongComponent implements OnInit {
         // Load the details of the selected song
         this.loadingSong = true;
 
-        this.songService.loadSong(song.name).subscribe((song: Song) => {
+        this.songService.getSong(song.name).subscribe((song: Song) => {
           this.currentSong = song;
 
           this.copyInitialSong();
@@ -102,7 +106,7 @@ export class EditorSongComponent implements OnInit {
   }
 
   // Unselect a song
-  unselectSong() {
+  unselect() {
     this.currentSong = undefined;
     this.initialSong = undefined;
   }
@@ -111,32 +115,30 @@ export class EditorSongComponent implements OnInit {
   createSong() {
     this.currentSong = new Song();
     this.copyInitialSong();
-    console.log('A', this.currentSong);
-    console.log('B', this.initialSong);
   }
 
-  private saveSongApi(song: Song) {
+  private saveApi(song: Song) {
     this.songService.saveSong(song).map(() => {
       this.loadSongs();
       this.copyInitialSong();
 
-      // Make sure, the current song also has all required attributes, if saved for
-      // the first time
-      this.currentSong = this.initialSong;
+      this.songService.songsChanged.next();
 
-      // TODO Show a toast with the success status
+      this.translateService.get(['editor.toast-song-save-success', 'editor.toast-save-success-title']).subscribe(result => {
+        this.toastrService.success(result['editor.toast-song-save-success'], result['editor.toast-save-success-title']);
+      });
     }).subscribe();
   }
 
   // Save a new song
-  saveSong(song: Song) {
+  save(song: Song) {
     // Delete the old song, if the name changed
     if (this.initialSong && this.initialSong.name && this.initialSong.name != song.name && this.initialSong.name.length > 0) {
       this.songService.deleteSong(this.initialSong.name).map(() => {
-        this.saveSongApi(song);
+        this.saveApi(song);
       }).subscribe();
     } else {
-      this.saveSongApi(song);
+      this.saveApi(song);
     }
   }
 
@@ -145,10 +147,14 @@ export class EditorSongComponent implements OnInit {
     this.warningDialogService.show('editor.warning-delete-song').map(result => {
       if (result) {
         this.songService.deleteSong(this.initialSong.name).map(() => {
-          this.unselectSong();
+          this.unselect();
           this.loadSongs();
 
-          // TODO Show a toast with success status
+          this.songService.songsChanged.next();
+
+          this.translateService.get(['editor.toast-song-delete-success', 'editor.toast-delete-success-title']).subscribe(result => {
+            this.toastrService.success(result['editor.toast-song-delete-success'], result['editor.toast-delete-success-title']);
+          });
         }).subscribe();
       }
     }).subscribe();

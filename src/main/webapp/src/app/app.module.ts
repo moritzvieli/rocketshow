@@ -15,6 +15,7 @@ import { AlertModule } from 'ngx-bootstrap';
 import { ModalModule } from 'ngx-bootstrap';
 import { DropzoneModule } from 'ngx-dropzone-wrapper';
 import { DropzoneConfigInterface } from 'ngx-dropzone-wrapper';
+import { ToastrModule } from 'ngx-toastr';
 
 import { PendingChangesGuard } from './pending-changes.guard';
 
@@ -96,7 +97,10 @@ const DROPZONE_CONFIG: DropzoneConfigInterface = {
     }),
     AlertModule.forRoot(),
     ModalModule.forRoot(),
-    DropzoneModule.forRoot(DROPZONE_CONFIG)
+    DropzoneModule.forRoot(DROPZONE_CONFIG),
+    ToastrModule.forRoot({
+      newestOnTop: true
+    })
   ],
   providers: [
     PendingChangesGuard,

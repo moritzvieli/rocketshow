@@ -97,7 +97,6 @@ public class Song {
 	// Load all files but don't start playing
 	public synchronized void loadFiles() throws Exception {
 		if (filesLoaded) {
-			playState = PlayState.PAUSED;
 			return;
 		}
 
@@ -167,6 +166,7 @@ public class Song {
 			@Override
 			public void run() {
 				try {
+					autoStopTimer.cancel();
 					autoStopTimer = null;
 					stop();
 

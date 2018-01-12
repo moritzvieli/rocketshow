@@ -40,18 +40,43 @@ public class SetList {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public com.ascargon.rocketshow.song.SetList get() throws Exception {
+	public com.ascargon.rocketshow.song.SetList getCurrent() throws Exception {
 		Manager manager = (Manager)context.getAttribute("manager");
 		return manager.getCurrentSetList();
+	}
+	
+	@Path("details")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public com.ascargon.rocketshow.song.SetList getByName(@QueryParam("name") String name) throws Exception {
+		Manager manager = (Manager)context.getAttribute("manager");
+		return manager.getSongManager().loadSetList(name);
 	}
 
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response create(com.ascargon.rocketshow.song.SetList setList) throws Exception {
+	public Response save(com.ascargon.rocketshow.song.SetList setList) throws Exception {
 		Manager manager = (Manager)context.getAttribute("manager");
 		manager.getSongManager().saveSetList(setList);
 		manager.loadSetList(setList.getName());
+		return Response.status(200).build();
+	}
+	
+	@Path("delete")
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response delete(@QueryParam("name") String name) throws Exception {
+		Manager manager = (Manager) context.getAttribute("manager");
+		manager.getSongManager().deleteSetList(name);
+		
+		// Load another setlist (if possible), if the current setlist has been deleted
+		if(manager.getCurrentSetList() != null) {
+			if(manager.getCurrentSetList().getName().equals(name)) {
+				manager.loadFirstSetList();
+			}
+		}
+		
 		return Response.status(200).build();
 	}
 	
