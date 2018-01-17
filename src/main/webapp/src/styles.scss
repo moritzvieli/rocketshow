@@ -67,3 +67,12 @@ dropzone.dz-wrapper>.dropzone .dz-preview .dz-details {
     padding-left: 3px !important;
     padding-top: 3px !important;
 }
+
+/* Enable a column taking up the left space */
+.flex-grow {
+    flex: 1 0;
+}
+
+.text-break-word {
+    word-break: break-word;
+}

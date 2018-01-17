@@ -22,7 +22,7 @@ export class EditorSongFileComponent implements OnInit {
   fileIndex: number;
   file: SongFile;
   song: Song;
-  
+
   onClose: Subject<number>;
 
   existingFiles: SongFile[] = [];
@@ -74,12 +74,6 @@ export class EditorSongFileComponent implements OnInit {
     this.onClose = new Subject();
   }
 
-  public delete(): void {
-    // TODO Show yes-no-dialog
-    this.onClose.next(3);
-    this.bsModalRef.hide();
-  }
-
   public ok(): void {
     this.onClose.next(1);
     this.bsModalRef.hide();
@@ -111,9 +105,6 @@ export class EditorSongFileComponent implements OnInit {
       if (result === 1) {
         // OK has been pressed -> save
         (<SongMidiFile>this.file).midiRoutingList[midiRoutingIndex] = fileCopy.midiRoutingList[midiRoutingIndex];
-      } else if (result === 3) {
-        // Delete has been pressed -> delete
-        (<SongMidiFile>this.file).midiRoutingList.splice(midiRoutingIndex, 1);
       }
     });
   }
@@ -134,13 +125,13 @@ export class EditorSongFileComponent implements OnInit {
 
     // Select this file
     let midiRoutingList;
-    if(this.file && this.file.type == 'MIDI') {
+    if (this.file && this.file.type == 'MIDI') {
       midiRoutingList = (<SongMidiFile>this.file).midiRoutingList;
     }
 
     this.file = Song.getFileObjectByType(args[1]);
 
-    if(this.file.type == 'MIDI' && midiRoutingList) {
+    if (this.file.type == 'MIDI' && midiRoutingList) {
       (<SongMidiFile>this.file).midiRoutingList = midiRoutingList;
     }
   }
@@ -162,21 +153,25 @@ export class EditorSongFileComponent implements OnInit {
   }
 
   selectExistingFile(existingFile: SongFile) {
-    if(this.file.name == existingFile.name && this.file.type == existingFile.type) {
+    if (this.file.name == existingFile.name && this.file.type == existingFile.type) {
       // This file is already selected
       return;
     }
 
     let midiRoutingList;
-    if(this.file && this.file.type == 'MIDI') {
+    if (this.file && this.file.type == 'MIDI') {
       midiRoutingList = (<SongMidiFile>this.file).midiRoutingList;
     }
 
     this.file = existingFile;
 
-    if(this.file.type == 'MIDI' && midiRoutingList) {
+    if (this.file.type == 'MIDI' && midiRoutingList) {
       (<SongMidiFile>this.file).midiRoutingList = midiRoutingList;
     }
+  }
+
+  deleteRouting(midiRoutingIndex: number) {
+    (<SongMidiFile>this.file).midiRoutingList.splice(midiRoutingIndex, 1);
   }
 
 }

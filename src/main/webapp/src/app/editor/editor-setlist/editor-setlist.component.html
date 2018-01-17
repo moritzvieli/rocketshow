@@ -83,16 +83,16 @@
                   <div class="list-group list-group-flush" [sortablejs]="currentSetList?.songList">
                     <div class="list-group-item" *ngFor="let song of currentSetList?.songList">
                       <div class="row">
-                        <div class="col-2 list-sort-handle my-auto" style="cursor: move; cursor: -webkit-grabbing;">
+                        <div class="col-auto list-sort-handle my-auto" style="cursor: move; cursor: -webkit-grabbing;">
                           <i class="fa fa-bars" aria-hidden="true"></i>
                         </div>
-                        <a href="#" class="col-1 pl-0 my-auto" (click)="toggleAutoStartNextSong(song); false" [class.text-danger]="song.autoStartNextSong">
+                        <a href="#" class="col-auto pl-0 my-auto" (click)="toggleAutoStartNextSong(song); false" [class.text-danger]="song.autoStartNextSong">
                           <i class="fa fa-level-down" aria-hidden="true"></i>
                         </a>
-                        <div class="col-7 col-auto my-auto pl-0">
+                        <div class="col-auto flex-grow text-break-word col-auto my-auto pl-0">
                           <p class="mb-0">{{ song.name }}</p>
                         </div>
-                        <div class="col-2 my-auto">
+                        <div class="col-auto my-auto">
                           <a class="btn btn-primary btn-sm float-right" href="#" role="button" (click)="removeSong(song); false">
                             <i class="fa fa-minus" aria-hidden="true"></i>
                           </a>

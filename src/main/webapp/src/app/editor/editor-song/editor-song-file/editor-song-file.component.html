@@ -125,10 +125,10 @@
                 <div class="list-group" [sortablejs]="file?.midiRoutingList" [sortablejsOptions]="{ onMove: sortMove }">
                   <div class="list-group-item" *ngFor="let routing of file?.midiRoutingList; let i = index">
                     <div class="row">
-                      <div class="col col-auto list-sort-handle my-auto" style="cursor: move; cursor: -webkit-grabbing;">
+                      <div class="col-auto list-sort-handle my-auto" style="cursor: move; cursor: -webkit-grabbing;">
                         <i class="fa fa-bars" aria-hidden="true"></i>
                       </div>
-                      <a href="#" class="my-auto" (click)="editRouting(i); false">
+                      <a href="#" class="col-auto flex-grow text-break-word my-auto pl-0" (click)="editRouting(i); false">
                         <div class="col col-auto pl-0">
                           <span *ngIf="routing.midiDestination == 'DMX'">
                             <i class="fa fa-lightbulb-o fa-fw" aria-hidden="true"></i> {{ 'editor.midi-destination-dmx' | translate }}</span>
@@ -138,8 +138,13 @@
                             <i class="fa fa-sitemap fa-fw" aria-hidden="true"></i> {{ 'editor.midi-destination-remote' | translate }}</span>
                         </div>
                       </a>
-                      <div class="col my-auto">
-                        <a class="btn btn-secondary btn-sm float-right" href="#" role="button" (click)="editRouting(i); false">...</a>
+                      <div class="col-auto my-auto pl-0 pr-0">
+                        <a class="text-danger float-right" href="#" role="button" (click)="deleteRouting(i); false">
+                          <i class="fa fa-trash-o" aria-hidden="true"></i>
+                        </a>
+                      </div>
+                      <div class="col-auto my-auto">
+                        <a class="btn btn-secondary btn-sm" href="#" role="button" (click)="editRouting(i); false">...</a>
                       </div>
                     </div>
                   </div>
@@ -158,12 +163,8 @@
 
     </div>
 
-    <div class="card-footer d-flex" style="justify-content: space-between;">
-      <a class="mr-3 my-auto text-danger" href="#" role="button" (click)="delete(); false">
-        <i class="fa fa-trash-o" aria-hidden="true"></i> {{ 'misc.delete' | translate }}
-      </a>
-
-      <div class="d-flex">
+    <div class="card-footer">
+      <div class="d-flex float-right">
         <a class="mr-3 my-auto" href="#" role="button" (click)="cancel(); false">
           {{ 'misc.cancel' | translate }}
         </a>

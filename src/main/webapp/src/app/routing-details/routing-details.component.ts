@@ -29,12 +29,6 @@ export class RoutingDetailsComponent implements OnInit {
     });
   }
 
-  public delete(): void {
-    // TODO Show yes-no-dialog
-    this.onClose.next(3);
-    this.bsModalRef.hide();
-  }
-
   public ok(): void {
     this.onClose.next(1);
     this.bsModalRef.hide();

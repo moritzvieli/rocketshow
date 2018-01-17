@@ -86,12 +86,8 @@
 
   </div>
 
-  <div class="card-footer d-flex" style="justify-content: space-between;">
-    <a class="mr-3 my-auto text-danger" href="#" role="button" (click)="delete(); false">
-      <i class="fa fa-trash-o" aria-hidden="true"></i> {{ 'misc.delete' | translate }}
-    </a>
-
-    <div class="d-flex">
+  <div class="card-footer">
+    <div class="d-flex float-right">
       <a class="mr-3 my-auto" href="#" role="button" (click)="cancel(); false">
         {{ 'misc.cancel' | translate }}
       </a>

@@ -183,6 +183,10 @@ export class EditorSongComponent implements OnInit {
     this.currentSong.fileList = newFileList;
   }
 
+  deleteFile(fileIndex: number) {
+    this.currentSong.fileList.splice(fileIndex, 1);
+  }
+
   // Edit a song file's details
   editSongFileDetails(fileIndex: number, addNew: boolean = false) {
     // Create a backup of the current song
@@ -207,9 +211,6 @@ export class EditorSongComponent implements OnInit {
         this.currentSong.fileList[fileIndex] = (<EditorSongFileComponent>fileDialog.content).file;
 
         this.rebuildFileListBasedOnType();
-      } else if (result === 3) {
-        // Delete has been pressed -> delete
-        this.currentSong.fileList.splice(fileIndex, 1);
       }
     });
   }
