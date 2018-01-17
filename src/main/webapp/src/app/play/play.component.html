@@ -111,7 +111,7 @@
           class="list-group-item list-group-item-action flex-column align-items-start" [class.active]="currentState?.currentSongIndex == i">
           <div class="d-flex w-100 justify-content-between">
             <p class="mb-1">{{ song.name }}</p>
-            <small class="my-auto">{{ msToTime(song.durationMillis) }}</small>
+            <small class="my-auto">{{ msToTime(song.durationMillis, false) }}</small>
           </div>
         </a>
 
@@ -144,7 +144,7 @@
           class="list-group-item list-group-item-action flex-column align-items-start pt-1 pb-1" [class.active]="currentState?.currentSongIndex == i">
           <div class="d-flex w-100 justify-content-between">
             <p class="mb-1">{{ song.name }}</p>
-            <small class="my-auto">{{ msToTime(song.durationMillis) }}</small>
+            <small class="my-auto">{{ msToTime(song.durationMillis, false) }}</small>
           </div>
         </a>
 

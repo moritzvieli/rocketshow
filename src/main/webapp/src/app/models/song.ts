@@ -8,6 +8,7 @@ export class Song {
     durationMillis: number;
     fileList: SongFile[] = [];
     notes: string;
+    autoStartNextSong: boolean = false;
 
     constructor(data?: any) {
         if (!data) {
@@ -17,6 +18,7 @@ export class Song {
         this.name = data.name;
         this.durationMillis = data.durationMillis;
         this.notes = data.notes;
+        this.autoStartNextSong = data.autoStartNextSong;
 
         this.fileList = this.parseFileList(data);
     }
@@ -62,6 +64,9 @@ export class Song {
         let object = JSON.parse(string);
 
         object.fileList = [];
+
+        // These properties belongs to the setlist songs -> remove them
+        object.autoStartNextSong = undefined;
 
         for (let file of this.fileList) {
             if (file instanceof SongMidiFile) {

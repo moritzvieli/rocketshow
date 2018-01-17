@@ -28,11 +28,11 @@ import com.ascargon.rocketshow.midi.MidiRouting;
 import com.ascargon.rocketshow.midi.MidiUtil;
 import com.ascargon.rocketshow.midi.MidiUtil.MidiDirection;
 import com.ascargon.rocketshow.song.SetList;
+import com.ascargon.rocketshow.song.Song;
 import com.ascargon.rocketshow.song.SongManager;
 import com.ascargon.rocketshow.song.file.FileManager;
-import com.ascargon.rocketshow.song.file.VideoFile;
+import com.ascargon.rocketshow.util.ResetUsb;
 import com.ascargon.rocketshow.util.ShellManager;
-import com.ascargon.rocketshow.video.VideoPlayer;
 
 public class Manager {
 
@@ -64,7 +64,7 @@ public class Manager {
 
 	private SetList currentSetList;
 
-	private VideoPlayer idleVideoPlayer;
+	private Song idleSong;
 
 	public void addMidiOutDeviceConnectedListener(MidiDeviceConnectedListener listener) {
 		midiOutDeviceConnectedListeners.add(listener);
@@ -94,6 +94,12 @@ public class Manager {
 	 * @throws MidiUnavailableException
 	 */
 	public void connectMidiSender() throws MidiUnavailableException {
+		// Cancel an eventually existing timer
+		if (connectMidiOutDeviceTimer != null) {
+			connectMidiOutDeviceTimer.cancel();
+			connectMidiOutDeviceTimer = null;
+		}
+
 		if (midiOutDevice != null && midiOutDevice.isOpen()) {
 			// We already have an open sender -> close this one
 			try {
@@ -146,32 +152,33 @@ public class Manager {
 		logger.info("Successfully connected to output MIDI device " + midiOutDevice.getDeviceInfo().getName());
 	}
 
-	public void playIdleVideo() throws IOException, InterruptedException {
-		if (idleVideoPlayer != null) {
+	public void playIdleSong() throws Exception {
+		if (idleSong != null) {
+			// The idle song is already initialized
 			return;
 		}
 
-		if (settings.getIdleVideo() == null || settings.getIdleVideo().length() == 0) {
+		if (settings.getIdleSong() == null || settings.getIdleSong().length() == 0) {
 			return;
 		}
 
-		logger.info("Play idle video");
+		logger.info("Play idle song");
 
-		idleVideoPlayer = new VideoPlayer();
-		idleVideoPlayer.setLoop(true);
-		idleVideoPlayer.loadAndPlay(Manager.BASE_PATH + com.ascargon.rocketshow.song.file.File.MEDIA_PATH
-				+ VideoFile.VIDEO_PATH + settings.getIdleVideo());
+		idleSong = songManager.loadSong(settings.getIdleSong());
+		idleSong.setManager(this);
+		idleSong.setIdleSong(true);
+		idleSong.play();
 	}
 
 	public void stopIdleVideo() throws Exception {
-		if (idleVideoPlayer == null) {
+		if (idleSong == null) {
 			return;
 		}
 
-		logger.info("Stop idle video");
+		logger.info("Stop idle song");
 
-		idleVideoPlayer.close();
-		idleVideoPlayer = null;
+		idleSong.stop();
+		idleSong = null;
 	}
 
 	public void load() throws IOException {
@@ -277,15 +284,6 @@ public class Manager {
 			logger.error("Could not restore session", e);
 		}
 
-		// Read the current song file
-		if (currentSetList != null) {
-			try {
-				currentSetList.readCurrentSong();
-			} catch (Exception e) {
-				logger.error("Could not read current song", e);
-			}
-		}
-
 		logger.info("Finished initializing");
 	}
 
@@ -302,7 +300,7 @@ public class Manager {
 		logger.info("Settings saved");
 	}
 
-	public void loadSettings() throws JAXBException, IOException, InterruptedException {
+	public void loadSettings() throws Exception {
 		File file = new File(BASE_PATH + "settings");
 		if (!file.exists() || file.isDirectory()) {
 			return;
@@ -314,16 +312,18 @@ public class Manager {
 		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 		settings = (Settings) jaxbUnmarshaller.unmarshal(file);
 
-		if (settings.getDefaultImagePath() != null) {
-			try {
-				imageDisplayer.display(settings.getDefaultImagePath());
-			} catch (IOException e) {
-				logger.error("Could not display default image \"" + settings.getDefaultImagePath() + "\"");
-				logger.error(e.getStackTrace());
+		// Reset the USB interface, if needed
+		try {
+			if (settings.isResetUsbAfterBoot()) {
+				logger.info("Resetting all USB devices");
+				ResetUsb.resetAllInterfaces();
 			}
+		} catch (Exception e) {
+			logger.error("Could not reset the USB devices", e);
 		}
-
-		playIdleVideo();
+		
+		// Play the idle song, if set
+		playIdleSong();
 
 		logger.info("Settings loaded");
 	}
@@ -387,18 +387,25 @@ public class Manager {
 		currentSetList.setName(name);
 
 		stateManager.notifyClients();
-		
+
 		saveSession();
+
+		// Read the current song file
+		try {
+			currentSetList.readCurrentSong();
+		} catch (Exception e) {
+			logger.error("Could not read current song", e);
+		}
 	}
-	
+
 	public void loadFirstSetList() throws Exception {
 		// Load the first available setList
 		List<SetList> setLists = songManager.getAllSetLists();
-		
+
 		logger.info("Load the first setlist from available " + setLists.size());
-		
-		if(setLists != null) {
-			if(setLists.size() > 0) {
+
+		if (setLists != null) {
+			if (setLists.size() > 0) {
 				loadSetList(setLists.get(0).getName());
 			}
 		}
@@ -450,7 +457,7 @@ public class Manager {
 				remoteDevice.reboot();
 			}
 		}
-		
+
 		ShellManager shellManager = new ShellManager(new String[] { "sudo", "reboot" });
 		shellManager.getProcess().waitFor();
 	}

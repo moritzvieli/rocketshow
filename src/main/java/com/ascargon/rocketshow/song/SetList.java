@@ -43,15 +43,18 @@ public class SetList {
 			return;
 		}
 
+		SetListSong currentSetListSong = setListSongList.get(currentSongIndex);
+		
 		// Stop the current song (if not already done)
 		if (currentSong != null) {
 			currentSong.stop();
 		}
 
-		currentSong = manager.getSongManager().loadSong(setListSongList.get(currentSongIndex).getName());
-		currentSong.setName(setListSongList.get(currentSongIndex).getName());
+		currentSong = manager.getSongManager().loadSong(currentSetListSong.getName());
+		currentSong.setName(currentSetListSong.getName());
 		currentSong.getMidiMapping().setParent(manager.getSettings().getMidiMapping());
 		currentSong.setManager(manager);
+		currentSong.setAutoStartNextSong(currentSetListSong.isAutoStartNextSong());
 	}
 
 	// Return only the setlist-relevant information of the song (e.g. to save to
@@ -70,6 +73,8 @@ public class SetList {
 
 	public void play() throws Exception {
 		currentSong.setPlayState(PlayState.LOADING);
+		
+		manager.stopIdleVideo();
 		
 		// Make sure all remote devices and the local one have loaded the song
 		// before playing it
@@ -156,6 +161,8 @@ public class SetList {
 	}
 
 	public void togglePlay() throws Exception {
+		manager.stopIdleVideo();
+		
 		for (RemoteDevice remoteDevice : manager.getSettings().getRemoteDeviceList()) {
 			if (remoteDevice.isSynchronize()) {
 				remoteDevice.togglePlay();

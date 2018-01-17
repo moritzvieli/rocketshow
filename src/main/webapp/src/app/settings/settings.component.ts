@@ -4,6 +4,7 @@ import { Settings } from '../models/settings';
 import { SettingsService } from '../services/settings.service';
 import { PendingChangesDialogService } from '../services/pending-changes-dialog.service';
 import { TranslateService } from '@ngx-translate/core';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-settings',
@@ -18,7 +19,8 @@ export class SettingsComponent implements OnInit {
   constructor(
     private settingsService: SettingsService,
     private pendingChangesDialogService: PendingChangesDialogService,
-    private translate: TranslateService,) { }
+    private translateService: TranslateService,
+    private toastrService: ToastrService) { }
 
   ngOnInit() {
     this.settingsService.getSettings(true).map(result => {
@@ -35,12 +37,36 @@ export class SettingsComponent implements OnInit {
       return this.pendingChangesDialogService.check(this.initialSettings, result, 'settings.warning-settings-changes');
     });
   }
-  
+
+  discard() {
+    this.settingsService.getSettings(true).map(result => {
+      this.copyInitialSettings(result);
+      this.settingsService.settingsChanged.next();
+
+      this.translateService.get(['settings.toast-discard-success', 'settings.toast-discard-success-title']).subscribe(result => {
+        this.toastrService.success(result['settings.toast-discard-success'], result['settings.toast-discard-success-title']);
+      });
+    }).subscribe();
+  }
+
   save() {
     this.settingsService.getSettings().map(result => {
-      // TODO Save the settings
-      this.copyInitialSettings(result);
-      this.translate.use(result.language);
+      this.translateService.get('intro.default-unit-name').subscribe((defaultUnitName) => {
+
+        if (!result.deviceName) {
+          result.deviceName = defaultUnitName;
+        }
+        this.settingsService.saveSettings(result).subscribe();
+
+        this.copyInitialSettings(result);
+        this.translateService.use(result.language);
+
+        this.settingsService.settingsChanged.next();
+
+        this.translateService.get(['settings.toast-save-success', 'settings.toast-save-success-title']).subscribe(result => {
+          this.toastrService.success(result['settings.toast-save-success'], result['settings.toast-save-success-title']);
+        });
+      });
     }).subscribe();
   }
 }

@@ -34,6 +34,7 @@ export class SetList {
             let songObj: any = {};
             songObj.name = song.name;
             songObj.durationMillis = song.durationMillis;
+            songObj.autoStartNextSong = song.autoStartNextSong;
 
             object.songList.push(songObj);
         }

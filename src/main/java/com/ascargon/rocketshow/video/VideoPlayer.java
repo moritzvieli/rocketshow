@@ -22,9 +22,7 @@ public class VideoPlayer {
 	private boolean closing;
 	private boolean loop;
 
-	public void load(PlayerLoadedListener playerLoadedListener, String path, boolean autoPlay)
-			throws IOException, InterruptedException {
-
+	public void load(PlayerLoadedListener playerLoadedListener, String path) throws IOException, InterruptedException {
 		logger.debug("Loading video '" + path + "'");
 
 		List<String> params = new ArrayList<String>();
@@ -43,12 +41,8 @@ public class VideoPlayer {
 
 		shellManager = new ShellManager(params.toArray(new String[0]));
 
-		// Pause, as soon as the song has been loaded and wait for it to be
-		// played
-		if (!autoPlay) {
-			pause();
-		}
-
+        pause();
+		
 		// Wait for the player to get ready, because reading the input stream in
 		// an infinite loop does not work properly (takes too much resources and
 		// exiting the loop as soon as the player is loaded breaks the process)
@@ -64,14 +58,6 @@ public class VideoPlayer {
 				}
 			}
 		}, 1000 /* TODO Specify in global config */);
-	}
-
-	public void load(PlayerLoadedListener playerLoadedListener, String path) throws IOException, InterruptedException {
-		load(playerLoadedListener, path, false);
-	}
-
-	public void loadAndPlay(String path) throws IOException, InterruptedException {
-		load(null, path, true);
 	}
 
 	public void play() throws IOException {

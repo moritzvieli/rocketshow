@@ -68,13 +68,12 @@ export class PlayComponent implements OnInit {
           totalDurationMillis += song.durationMillis;
         }
 
-        this.totalPlayTime = this.msToTime(totalDurationMillis);
+        this.totalPlayTime = this.msToTime(totalDurationMillis, false);
       }
     });
   }
 
   selectSetList(setList: SetList) {
-    //this.currentSetList = setList;
     this.songService.loadSetList(setList.name).subscribe();
   } 
 
@@ -91,12 +90,16 @@ export class PlayComponent implements OnInit {
     return padded;
   }
 
-  private msToTime(millis: number): string {
+  private msToTime(millis: number, includeMillis: boolean = true): string {
     let ms: number = Math.round(millis % 1000);
     let seconds: number = Math.floor(((millis % 360000) % 60000) / 1000);
     let minutes: number = Math.floor((millis % 3600000) / 60000);
 
-    return this.pad(minutes, 2) + ':' + this.pad(seconds, 2) + '.' + this.pad(ms, 3);
+    if(includeMillis) {
+      return this.pad(minutes, 2) + ':' + this.pad(seconds, 2) + '.' + this.pad(ms, 3);
+    } else {
+      return this.pad(minutes, 2) + ':' + this.pad(seconds, 2);
+    }
   }
 
   private stateChanged(newState: State) {

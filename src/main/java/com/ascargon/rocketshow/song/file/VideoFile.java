@@ -30,14 +30,13 @@ public class VideoFile extends File {
 	public void load() throws Exception {
 		logger.debug("Loading file '" + this.getName() + "...");
 		
-		this.getManager().stopIdleVideo();
-		
 		this.setLoaded(false);
 		this.setLoading(true);
 
 		if(videoPlayer == null) {
 			videoPlayer = new VideoPlayer();
 		}
+		videoPlayer.setLoop(this.isLoop());
 		videoPlayer.load(this, getPath());
 	}
 
@@ -122,8 +121,6 @@ public class VideoFile extends File {
 		this.setLoaded(false);
 		this.setLoading(false);
 		videoPlayer.stop();
-		
-		this.getManager().playIdleVideo();
 	}
 	
 	public FileType getType() {

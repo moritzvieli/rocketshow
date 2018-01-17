@@ -22,6 +22,7 @@ public class MidiPlayer {
 
 	private Sequencer sequencer;
 	private List<MidiRouting> midiRoutingList;
+	private boolean loop = false;
 
 	public MidiPlayer(Manager manager, List<MidiRouting> midiRoutingList) throws MidiUnavailableException {
 		this.midiRoutingList = midiRoutingList;
@@ -44,14 +45,19 @@ public class MidiPlayer {
 		InputStream is = new BufferedInputStream(new FileInputStream(new File(path)));
 		sequencer.setSequence(is);
 
-		for(MidiRouting midiRouting : midiRoutingList) {
+		for (MidiRouting midiRouting : midiRoutingList) {
 			midiRouting.setTransmitter(sequencer.getTransmitter());
 		}
 
-		// Read the first bytes
+		// Set the sequencer to looped, if necessary
+		if(loop) {
+			sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
+		}
+		
+		// Read the first bytes but pause immediately for better synched start
 		sequencer.start();
 		sequencer.stop();
-		
+
 		logger.debug("File '" + path + "' loaded");
 		playerLoadedListener.playerLoaded();
 	}
@@ -85,10 +91,18 @@ public class MidiPlayer {
 
 	public void close() {
 		sequencer.close();
-		
-		for(MidiRouting midiRouting : midiRoutingList) {
+
+		for (MidiRouting midiRouting : midiRoutingList) {
 			midiRouting.close();
 		}
+	}
+
+	public boolean isLoop() {
+		return loop;
+	}
+
+	public void setLoop(boolean loop) {
+		this.loop = loop;
 	}
 
 }

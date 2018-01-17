@@ -27,7 +27,7 @@
         "choose-language": "Wähle deine Sprache",
         "almost-finished": "Bald geht's los!",
         "name-unit": "Wie soll dieses Gerät heissen?",
-        "default-unit-name": "Meine Rocket Show"
+        "default-unit-name": "Mein Gerät"
     },
     "navigation": {
         "play": "Abspielen",
@@ -56,6 +56,7 @@
         "mute": "Stumm",
         "offset-millis": "Verzögerung in Millisekunden",
         "offset-placeholder": "Verzögerung in Millisekunden",
+        "loop": "Wiederholen",
         "midi-destination-dmx": "DMX (Licht)",
         "midi-destination-device": "MIDI Ausgang",
         "midi-destination-remote": "Entfernte Geräte",
@@ -72,10 +73,10 @@
         "warning-setlist-changes": "Dieses Set enthält noch nicht gespeicherte Änderungen. Möchtest du wirklich fortfahren?",
         "warning-delete-song": "Möchtest du diese Komposition wirklich löschen?",
         "warning-delete-setlist": "Möchtest du dieses Set wirklich löschen?",
-        "toast-song-save-success": "Die Komposition wurde erfolgreich gespeichert.",
-        "toast-setlist-save-success": "Das Set wurde erfolgreich gespeichert.",
-        "toast-song-delete-success": "Die Komposition wurde erfolgreich gelöscht.",
-        "toast-setlist-delete-success": "Das Set wurde erfolgreich gelöscht.",
+        "toast-song-save-success": "Die Komposition wurde gespeichert.",
+        "toast-setlist-save-success": "Das Set wurde gespeichert.",
+        "toast-song-delete-success": "Die Komposition wurde gelöscht.",
+        "toast-setlist-delete-success": "Das Set wurde gelöscht.",
         "toast-save-success-title": "Gespeichert",
         "toast-delete-success-title": "Gelöscht",
         "toast-error-title": "Error",
@@ -102,9 +103,23 @@
     },
     "settings": {
         "system": "System",
+        "network": "Netzwerk",
+        "audio": "Audio",
+        "video": "Video",
+        "advanced": "Erweitert",
         "language": "Sprache",
         "warning-reboot": "Möchtest du das Gerät wirklich neu starten?",
         "name-unit": "Name des Geräts",
-        "warning-settings-changes": "Die Einstellungen enthalten noch nicht gespeicherte Änderungen. Möchtest du wirklich fortfahren?"
+        "warning-settings-changes": "Die Einstellungen enthalten noch nicht gespeicherte Änderungen. Möchtest du wirklich fortfahren?",
+        "usb-interface": "USB Schnittstelle",
+        "reset-after-boot": "Nach dem Aufstarten neu initialisieren",
+        "version": "Version",
+        "check-version": "Aktualisierungen suchen",
+        "reboot-device": "Gerät neu starten",
+        "idle-song": "Leerlauf-Komposition",
+        "toast-save-success-title": "Gespeichert",
+        "toast-save-success": "Die Einstellungen wurden gespeichert.",
+        "toast-discard-success-title": "Verworfen",
+        "toast-discard-success": "Die Einstellungen wurden verworfen."
     }
 }

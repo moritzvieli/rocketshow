@@ -8,6 +8,7 @@ public class SetListSong {
 
 	private String name;
 	private long durationMillis;
+	private boolean autoStartNextSong = false;
 	
 	@XmlElement
 	public String getName() {
@@ -25,6 +26,15 @@ public class SetListSong {
 
 	public void setDurationMillis(long durationMillis) {
 		this.durationMillis = durationMillis;
+	}
+
+	@XmlElement
+	public boolean isAutoStartNextSong() {
+		return autoStartNextSong;
+	}
+
+	public void setAutoStartNextSong(boolean autoStartNextSong) {
+		this.autoStartNextSong = autoStartNextSong;
 	}
 
 }

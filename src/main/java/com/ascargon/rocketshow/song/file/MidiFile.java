@@ -46,6 +46,7 @@ public class MidiFile extends com.ascargon.rocketshow.song.file.File {
 		if (midiPlayer == null) {
 			midiPlayer = new MidiPlayer(this.getManager(), midiRoutingList);
 		}
+		midiPlayer.setLoop(this.isLoop());
 		midiPlayer.load(this, this.getPath());
 
 		for (MidiRouting midiRouting : midiRoutingList) {

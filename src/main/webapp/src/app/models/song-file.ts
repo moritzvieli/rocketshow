@@ -4,6 +4,7 @@ export class SongFile {
     offsetMillis: number = 0;
     active: boolean = true;
     type: string;
+    loop: boolean;
 
     constructor(data?: any) {
         if (!data) {
@@ -15,6 +16,7 @@ export class SongFile {
         this.offsetMillis = data.offsetMillis;
         this.active = data.active;
         this.type = data.type;
+        this.loop = data.loop;
     }
 
     getFontAwesomeIconClass() {

@@ -46,6 +46,12 @@ public class MidiInDeviceReceiver implements Receiver {
 	 * @throws MidiUnavailableException
 	 */
 	public void connectMidiReceiver() throws MidiUnavailableException {
+		// Cancel an eventually existing timer
+		if(connectTimer != null) {
+			connectTimer.cancel();
+			connectTimer = null;
+		}
+		
 		if (midiReceiver != null && midiReceiver.isOpen()) {
 			// We already have an open receiver -> close this one
 			try {

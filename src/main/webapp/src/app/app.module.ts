@@ -35,12 +35,13 @@ import { ApiService } from './services/api.service';
 import { StateService } from './services/state.service';
 import { TransportService } from './services/transport.service';
 import { SongService } from './services/song.service';
-import { RemoteDeviceService } from './services/remote-device.service';
 import { FileService } from './services/file.service';
 import { SettingsService } from './services/settings.service';
+import { SessionService } from './services/session.service';
 import { WarningDialogService } from './services/warning-dialog.service';
 import { WarningDialogComponent } from './warning-dialog/warning-dialog.component';
 import { PendingChangesDialogService } from './services/pending-changes-dialog.service';
+import { SettingsAdvancedComponent } from './settings/settings-advanced/settings-advanced.component';
 
 const appRoutes: Routes = [
   { path: 'intro', component: IntroComponent },
@@ -72,7 +73,8 @@ const DROPZONE_CONFIG: DropzoneConfigInterface = {
     RoutingDetailsComponent,
     SettingsSystemComponent,
     WarningDialogComponent,
-    WarningDialogComponent
+    WarningDialogComponent,
+    SettingsAdvancedComponent
   ],
   imports: [
     HttpModule,
@@ -108,9 +110,9 @@ const DROPZONE_CONFIG: DropzoneConfigInterface = {
     StateService,
     TransportService,
     SongService,
-    RemoteDeviceService,
     FileService,
     SettingsService,
+    SessionService,
     WarningDialogService,
     PendingChangesDialogService
   ],

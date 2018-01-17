@@ -9,15 +9,16 @@
             <div class="col-md-3 mb-3">
               <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist">
                 <a class="nav-link active" data-toggle="pill" href="#system" role="tab">{{ 'settings.system' | translate }}</a>
-                <a class="nav-link" data-toggle="pill" href="#network" role="tab">Network</a>
-                <a class="nav-link" data-toggle="pill" href="#audio" role="tab">Audio</a>
-                <a class="nav-link" data-toggle="pill" href="#video" role="tab">Video</a>
+                <a class="nav-link" data-toggle="pill" href="#network" role="tab">{{ 'settings.network' | translate }}</a>
+                <a class="nav-link" data-toggle="pill" href="#audio" role="tab">{{ 'settings.audio' | translate }}</a>
+                <a class="nav-link" data-toggle="pill" href="#video" role="tab">{{ 'settings.video' | translate }}</a>
+                <a class="nav-link" data-toggle="pill" href="#advanced" role="tab">{{ 'settings.advanced' | translate }}</a>
               </div>
             </div>
 
             <div class="col-md-9">
               <div class="card">
-                <div class="card-body">
+                <div class="card-body pb-0">
                   <div class="tab-content" id="v-pills-tabContent">
                     <div class="tab-pane fade show active" id="system" role="tabpanel">
                       <app-settings-system></app-settings-system>
@@ -25,6 +26,9 @@
                     <div class="tab-pane fade" id="network" role="tabpanel">...</div>
                     <div class="tab-pane fade" id="audio" role="tabpanel">...</div>
                     <div class="tab-pane fade" id="video" role="tabpanel">...</div>
+                    <div class="tab-pane fade" id="advanced" role="tabpanel">
+                      <app-settings-advanced></app-settings-advanced>
+                    </div>
                   </div>
                 </div>
               </div>

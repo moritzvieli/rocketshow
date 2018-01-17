@@ -27,6 +27,8 @@ abstract public class File implements PlayerLoadedListener {
 	private boolean active = true;
 
 	private long durationMillis;
+	
+	private boolean loop = false;
 
 	public File() {
 	}
@@ -132,6 +134,14 @@ abstract public class File implements PlayerLoadedListener {
 
 	// For API consistency
 	public void setType(FileType fileType) {
+	}
+
+	public boolean isLoop() {
+		return loop;
+	}
+
+	public void setLoop(boolean loop) {
+		this.loop = loop;
 	}
 
 }

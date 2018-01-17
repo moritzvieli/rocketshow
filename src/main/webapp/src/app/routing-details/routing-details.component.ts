@@ -1,10 +1,10 @@
-import { RemoteDeviceService } from './../services/remote-device.service';
 import { MidiRouting } from './../models/midi-routing';
 import { Component, OnInit } from '@angular/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap';
 import { Subject } from 'rxjs/Subject';
 import { RemoteDevice } from '../models/remote-device';
+import { SettingsService } from '../services/settings.service';
 
 @Component({
   selector: 'app-routing-details',
@@ -19,13 +19,13 @@ export class RoutingDetailsComponent implements OnInit {
 
   constructor(
     private bsModalRef: BsModalRef,
-    private remoteDeviceService: RemoteDeviceService) { }
+    private settingsService: SettingsService) { }
 
   ngOnInit() {
     this.onClose = new Subject();
 
-    this.remoteDeviceService.getRemoteDevices().subscribe((remoteDevices: RemoteDevice[]) =>  {
-      this.remoteDevices = remoteDevices;
+    this.settingsService.getSettings().subscribe((result) =>  {
+      this.remoteDevices = result.remoteDeviceList;
     });
   }
 

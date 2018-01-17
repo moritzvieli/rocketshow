@@ -1,6 +1,6 @@
 <div class="form-group row">
-  <label for="staticEmail" class="col-lg-2 col-form-label">{{ 'settings.language' | translate }}</label>
-  <div class="col-lg-10">
+  <label for="staticEmail" class="col-lg-3 col-form-label">{{ 'settings.language' | translate }}</label>
+  <div class="col-lg-9">
     <select class="custom-select" [ngModel]="settings?.language" (ngModelChange)="switchLanguage($event)">
       <option *ngFor="let language of settingsService?.languages" [ngValue]="language.key">{{ language.name }}</option>
     </select>
@@ -8,36 +8,34 @@
 </div>
 
 <div class="form-group row">
-  <label for="inputPassword" class="col-lg-2 col-form-label">{{ 'settings.name-unit' | translate }}</label>
-  <div class="col-lg-10">
-    <input type="text" class="form-control" placeholder="{{ 'intro.default-unit-name' | translate }}">
+  <label class="col-lg-3 col-form-label">{{ 'settings.name-unit' | translate }}</label>
+  <div class="col-lg-9">
+    <input type="text" class="form-control" [ngModel]="settings?.deviceName" (ngModelChange)="settings.deviceName = $event" placeholder="{{ 'intro.default-unit-name' | translate }}">
   </div>
 </div>
 
 <div class="form-group row">
-  <label for="inputPassword" class="col-lg-2 col-form-label">USB interface</label>
-  <div class="col-lg-10">
-    <label class="form-check-label mt-2">
-      <input type="checkbox" class="form-check-input"> Reset after boot
-    </label>
+    <label class="col-lg-3 col-form-label">{{ 'settings.idle-song' | translate }}</label>
+    <div class="col-lg-9">
+      <input type="text" class="form-control" [ngModel]="settings?.deviceName" (ngModelChange)="settings.deviceName = $event" placeholder="{{ 'intro.default-unit-name' | translate }}">
+    </div>
   </div>
-</div>
 
 <div class="form-group row">
-  <label for="inputPassword" class="col-lg-2 col-form-label">Version</label>
-  <div class="col-lg-10">
+  <label class="col-lg-3 col-form-label">{{ 'settings.version' | translate }}</label>
+  <div class="col-lg-9">
     1.0.0
     <br />
     <br />
     <a href="#" class="btn btn-primary btn-sm">
-      <i class="fa fa-refresh fa-fw" aria-hidden="true"></i> Check for updates</a>
+      <i class="fa fa-refresh fa-fw" aria-hidden="true"></i> {{ 'settings.check-version' | translate }}</a>
   </div>
 </div>
 
-<div class="form-group row mb-0">
-  <div class="col-lg-2"></div>
-  <div class="col-lg-10">
+<div class="form-group row">
+  <div class="col-lg-3"></div>
+  <div class="col-lg-9">
     <a href="#" class="btn btn-primary btn-sm" (click)="reboot(); false;">
-      <i class="fa fa-power-off fa-fw" aria-hidden="true"></i> Reboot device</a>
+      <i class="fa fa-power-off fa-fw" aria-hidden="true"></i> {{ 'settings.reboot-device' | translate }}</a>
   </div>
 </div>

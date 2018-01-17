@@ -62,6 +62,9 @@ public class Song {
 
 	private boolean filesLoaded = false;
 
+	// Is this the idle song?
+	private boolean idleSong = false;
+
 	public void close() throws Exception {
 		for (File file : fileList) {
 			file.close();
@@ -145,6 +148,12 @@ public class Song {
 			if (file.isActive()) {
 				int fileOffset = 0;
 
+				if (file.isLoop()) {
+					// At least one file is looped -> don't stop the song
+					// automatically
+					return;
+				}
+
 				if (file instanceof MidiFile) {
 					fileOffset = ((MidiFile) file).getFullOffsetMillis();
 				} else if (file instanceof AudioFile) {
@@ -168,7 +177,6 @@ public class Song {
 				try {
 					autoStopTimer.cancel();
 					autoStopTimer = null;
-					stop();
 
 					if (autoStartNextSong) {
 						int oldSongIndex = manager.getCurrentSetList().getCurrentSongIndex();
@@ -177,8 +185,22 @@ public class Song {
 						if (oldSongIndex != manager.getCurrentSetList().getCurrentSongIndex()) {
 							// There really was a next song, it's not the
 							// current one
+
+							// Stop but don't play the idle song
+							stop(false);
+
+							// Play the next song
 							manager.getCurrentSetList().play();
+						} else {
+							// Stop and play the idle song
+							stop();
 						}
+					} else {
+						// Select the next song automatically
+						manager.getCurrentSetList().nextSong();
+						
+						// Stop and play the idle song
+						stop();
 					}
 				} catch (Exception e) {
 					logger.error("Could not automatically stop song '" + name + "'", e);
@@ -275,7 +297,7 @@ public class Song {
 		}
 	}
 
-	public synchronized void stop() throws Exception {
+	public synchronized void stop(boolean playIdleSong) throws Exception {
 		if (playState == PlayState.STOPPED || playState == PlayState.STOPPING) {
 			return;
 		}
@@ -310,6 +332,15 @@ public class Song {
 
 		playState = PlayState.STOPPED;
 		manager.getStateManager().notifyClients();
+
+		// Play the idle song, if necessary
+		if (!idleSong && playIdleSong) {
+			manager.playIdleSong();
+		}
+	}
+
+	public synchronized void stop() throws Exception {
+		stop(true);
 	}
 
 	@XmlTransient
@@ -363,6 +394,7 @@ public class Song {
 		this.durationMillis = durationMillis;
 	}
 
+	@XmlTransient
 	public boolean isAutoStartNextSong() {
 		return autoStartNextSong;
 	}
@@ -390,6 +422,15 @@ public class Song {
 
 	public void setPlayState(PlayState playState) {
 		this.playState = playState;
+	}
+
+	@XmlTransient
+	public boolean isIdleSong() {
+		return idleSong;
+	}
+
+	public void setIdleSong(boolean idleSong) {
+		this.idleSong = idleSong;
 	}
 
 }

@@ -27,7 +27,7 @@
         "choose-language": "Choose your language",
         "almost-finished": "We're almost ready!",
         "name-unit": "Please name this device.",
-        "default-unit-name": "My Rocket Show"
+        "default-unit-name": "My Device"
     },
     "navigation": {
         "play": "Play",
@@ -56,6 +56,7 @@
         "mute": "Mute",
         "offset-millis": "Delay in milliseconds",
         "offset-placeholder": "Delay in milliseconds",
+        "loop": "Loop",
         "midi-destination-dmx": "DMX (light)",
         "midi-destination-device": "MIDI out",
         "midi-destination-remote": "Remote devices",
@@ -72,10 +73,10 @@
         "warning-setlist-changes": "This set contains unsaved changes. Do you really want to proceed?",
         "warning-delete-song": "Do you really want to delete this composition?",
         "warning-delete-setlist": "Do you really want to delete this set?",
-        "toast-song-save-success": "The composition has been saved successfully.",
-        "toast-setlist-save-success": "The set has been saved successfully.",
-        "toast-song-delete-success": "The composition has been deleted successfully.",
-        "toast-setlist-delete-success": "The set has been deleted successfully.",
+        "toast-song-save-success": "The composition has been saved.",
+        "toast-setlist-save-success": "The set has been saved.",
+        "toast-song-delete-success": "The composition has been deleted.",
+        "toast-setlist-delete-success": "The set has been deleted.",
         "toast-save-success-title": "Saved",
         "toast-delete-success-title": "Deleted",
         "toast-error-title": "Error",
@@ -102,9 +103,23 @@
     },
     "settings": {
         "system": "System",
+        "network": "Network",
+        "audio": "Audio",
+        "video": "Video",
+        "advanced": "Advanced",
         "language": "Language",
         "warning-reboot": "Do you really want to reboot the device?",
         "name-unit": "Device name",
-        "warning-settings-changes": "The settings contain unsaved changes. Do you really want to proceed?"
+        "warning-settings-changes": "The settings contain unsaved changes. Do you really want to proceed?",
+        "usb-interface": "USB interface",
+        "reset-after-boot": "Reset after boot",
+        "version": "Version",
+        "check-version": "Search for updates",
+        "reboot-device": "Reboot device",
+        "idle-song": "Idle composition",
+        "toast-save-success-title": "Saved",
+        "toast-save-success": "The settings have been saved.",
+        "toast-discard-success-title": "Discarded",
+        "toast-discard-success": "The settings have been discarded."
     }
 }

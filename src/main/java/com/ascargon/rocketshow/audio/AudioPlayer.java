@@ -3,6 +3,8 @@ package com.ascargon.rocketshow.audio;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -21,6 +23,7 @@ public class AudioPlayer {
 
 	private String path;
 	private String device;
+	private boolean loop;
 
 	private PlayerType playerType = PlayerType.MPLAYER;
 	
@@ -32,8 +35,36 @@ public class AudioPlayer {
 		this.device = device;
 
 		if (playerType == PlayerType.MPLAYER) {
-			shellManager = new ShellManager(new String[] { "mplayer", "-ao", "alsa:device=" + device, "-quiet",
-					"-slave", "-cache-min", "99", path });
+			List<String> params = new ArrayList<String>();
+			
+			params.add("mplayer");
+			
+			// Set the ALSA out device
+			params.add("-ao");
+			params.add("alsa:device=" + device);
+			
+			// Don't fill the buffer with unnecessary stuff
+			params.add("-quiet");
+			
+			// Start in slave-mode to process the input easier
+			params.add("-slave");
+			
+			// Set the cache
+			params.add("-cache-min");
+			params.add("99");
+			
+			// Set the player looped, if necessary
+			if(loop) {
+				params.add("-loop");
+				
+				// 0 = infinite
+				params.add("0");
+			}
+			
+			// Add the path
+			params.add(path);
+			
+			shellManager = new ShellManager(params.toArray(new String[0]));
 
 			new Thread(new Runnable(){
 			    public void run(){
@@ -102,6 +133,14 @@ public class AudioPlayer {
 
 	public void close() throws Exception {
 		stop();
+	}
+
+	public boolean isLoop() {
+		return loop;
+	}
+
+	public void setLoop(boolean loop) {
+		this.loop = loop;
 	}
 
 }

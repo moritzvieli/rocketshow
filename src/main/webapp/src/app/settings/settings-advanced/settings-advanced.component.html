@@ -1,0 +1,8 @@
+<div class="form-group row">
+  <label for="inputPassword" class="col-lg-3 col-form-label">{{ 'settings.usb-interface' | translate }}</label>
+  <div class="col-lg-9">
+    <label class="form-check-label mt-2">
+      <input type="checkbox" [ngModel]="settings?.resetUsbAfterBoot" (ngModelChange)="settings.resetUsbAfterBoot = $event" class="form-check-input"> {{ 'settings.reset-after-boot' | translate }}
+    </label>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-package com.ascargon.rocketshow.song;
+package com.ascargon.rocketshow.util;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

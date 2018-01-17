@@ -28,8 +28,6 @@ public class Settings {
 		ERROR, WARN, INFO, DEBUG, TRACE
 	}
 
-	private String defaultImagePath;
-
 	private MidiDevice midiInDevice;
 	private MidiDevice midiOutDevice;
 
@@ -50,12 +48,16 @@ public class Settings {
 
 	private PlayerType audioPlayerType;
 
-	private String idleVideo;
+	private String idleSong;
 
 	private LoggingLevel loggingLevel;
 	
 	private String language = "en";
+	
+	private String deviceName;
 
+	private boolean resetUsbAfterBoot = false;
+	
 	public Settings() {
 		// Initialize default settings
 
@@ -64,12 +66,10 @@ public class Settings {
 
 		audioPlayerType = PlayerType.MPLAYER;
 
-		defaultImagePath = null;
-
 		// Global MIDI to action mapping
 		midi2ActionMapping = new Midi2ActionMapping();
 
-		// Global MIDI to DMX mapping
+		// Global MIDI mapping
 		midiMapping = new MidiMapping();
 
 		try {
@@ -112,15 +112,6 @@ public class Settings {
 		}
 
 		return null;
-	}
-
-	@XmlElement
-	public String getDefaultImagePath() {
-		return defaultImagePath;
-	}
-
-	public void setDefaultImagePath(String defaultImagePath) {
-		this.defaultImagePath = defaultImagePath;
 	}
 
 	@XmlElement
@@ -214,12 +205,12 @@ public class Settings {
 	}
 
 	@XmlElement
-	public String getIdleVideo() {
-		return idleVideo;
+	public String getIdleSong() {
+		return idleSong;
 	}
 
-	public void setIdleVideo(String idleVideo) {
-		this.idleVideo = idleVideo;
+	public void setIdleSong(String idleSong) {
+		this.idleSong = idleSong;
 	}
 
 	@XmlElement
@@ -265,6 +256,24 @@ public class Settings {
 
 	public void setLanguage(String language) {
 		this.language = language;
+	}
+
+	@XmlElement
+	public String getDeviceName() {
+		return deviceName;
+	}
+
+	public void setDeviceName(String deviceName) {
+		this.deviceName = deviceName;
+	}
+
+	@XmlElement
+	public boolean isResetUsbAfterBoot() {
+		return resetUsbAfterBoot;
+	}
+
+	public void setResetUsbAfterBoot(boolean resetUsbAfterBoot) {
+		this.resetUsbAfterBoot = resetUsbAfterBoot;
 	}
 
 }

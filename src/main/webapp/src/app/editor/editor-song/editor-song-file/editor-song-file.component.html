@@ -110,6 +110,14 @@
                   placeholder="{{ 'editor.offset-placeholder' | translate }}">
               </div>
 
+              <!-- Loop -->
+              <div class="form-group">
+                <label class="col-form-label"></label>
+                <label class="form-check-label">
+                  <input type="checkbox" [ngModel]="file?.loop" (ngModelChange)="file.loop = $event" class="form-check-input"> {{ 'editor.loop' | translate }}
+                </label>
+              </div>
+
               <!-- MIDI routing -->
               <div class="form-group" *ngIf="file?.type == 'MIDI'">
                 <label class="col-form-label" for="offsetMillis">{{ 'editor.routing' | translate }}</label>

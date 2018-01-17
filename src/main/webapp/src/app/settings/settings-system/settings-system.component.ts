@@ -19,10 +19,18 @@ export class SettingsSystemComponent implements OnInit {
     private warningDialogService: WarningDialogService,
     private apiService: ApiService) { }
 
-  ngOnInit() {
-    this.settingsService.getSettings(true).map(result => {
+  private loadSettings() {
+    this.settingsService.getSettings().map(result => {
       this.settings = result;
     }).subscribe();
+  }
+
+  ngOnInit() {
+    this.loadSettings();
+
+    this.settingsService.settingsChanged.subscribe(() => {
+      this.loadSettings();
+    });
   }
 
   switchLanguage(language: string) {

@@ -1,3 +1,4 @@
+import { Subject } from 'rxjs/Rx';
 import { Settings } from './../models/settings';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
@@ -7,6 +8,9 @@ import { Language } from '../models/language';
 
 @Injectable()
 export class SettingsService {
+
+  // Fires, when the settings have changed
+  settingsChanged: Subject<void> = new Subject<void>();
 
   languages: Language[] = [];
   settings: Settings;
@@ -42,13 +46,19 @@ export class SettingsService {
 
     this.observable = this.apiService.get('system/settings')
     .map((response: Response) => {
-      this.settings = new Settings(response.json());
+      if(!this.settings) {
+        this.settings = new Settings(response.json());
+      }
       this.observable = undefined;
 
       return this.settings;
     });
 
     return this.observable;
+  }
+
+  saveSettings(settings: Settings): Observable<Response> {
+    return this.apiService.post('system/settings', JSON.stringify(settings));
   }
 
 }

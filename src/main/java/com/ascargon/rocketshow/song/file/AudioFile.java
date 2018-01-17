@@ -38,6 +38,7 @@ public class AudioFile extends com.ascargon.rocketshow.song.file.File {
 		if(audioPlayer == null) {
 			audioPlayer = new AudioPlayer();
 		}
+		audioPlayer.setLoop(this.isLoop());
 		audioPlayer.load(this.getManager().getSettings().getAudioPlayerType(), this, getPath(), device);
 	}
 

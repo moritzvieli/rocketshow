@@ -14,6 +14,7 @@ import javax.xml.bind.Unmarshaller;
 import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.Manager;
+import com.ascargon.rocketshow.util.FileDurationGetter;
 
 public class SongManager {
 

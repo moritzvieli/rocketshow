@@ -149,6 +149,7 @@ export class EditorSetlistComponent implements OnInit {
 
   // Save a new song
   save(setList: SetList) {
+    console.log(setList);
     // Delete the old song, if the name changed
     if (this.initialSetList && this.initialSetList.name && this.initialSetList.name != setList.name && this.initialSetList.name.length > 0) {
       this.songService.deleteSetList(this.initialSetList.name).map(() => {
@@ -195,6 +196,10 @@ export class EditorSetlistComponent implements OnInit {
         this.currentSetList.songList.splice(i, 1);
       }
     }
+  }
+
+  toggleAutoStartNextSong(song: Song) {
+    song.autoStartNextSong = !song.autoStartNextSong;
   }
 
 }
