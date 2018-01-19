@@ -12,9 +12,7 @@ export class WarningDialogComponent implements OnInit {
 
   message: string;
 
-  constructor(
-    private bsModalRef: BsModalRef
-  ) { }
+  constructor(private bsModalRef: BsModalRef) { }
 
   ngOnInit() {
     this.onClose = new Subject();

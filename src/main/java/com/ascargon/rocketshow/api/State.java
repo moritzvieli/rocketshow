@@ -20,6 +20,7 @@ public class State {
 	private MidiSignal midiSignal;
 	private UpdateState updateState;
 	private String currentSetListName;
+	private boolean updateFinished;
 	
 	@XmlElement
 	public int getCurrentSongIndex() {
@@ -91,6 +92,15 @@ public class State {
 
 	public void setCurrentSetListName(String currentSetListName) {
 		this.currentSetListName = currentSetListName;
+	}
+
+	@XmlElement
+	public boolean isUpdateFinished() {
+		return updateFinished;
+	}
+
+	public void setUpdateFinished(boolean updateFinished) {
+		this.updateFinished = updateFinished;
 	}
 	
 }

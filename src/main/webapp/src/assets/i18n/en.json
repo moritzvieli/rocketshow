@@ -15,7 +15,8 @@
         "warning": "Warning",
         "setlist-without-songs": "This set does not contain any compositions. Click here to open the editor.",
         "no-setlists-title": "No sets",
-        "no-setlists": "Click here to create Compositions and your first set."
+        "no-setlists": "Click here to create Compositions and your first set.",
+        "update": "Update"
     },
     "loading": {
         "title": "Loading...",
@@ -85,8 +86,7 @@
     },
     "connection": {
         "title": "No connection",
-        "description": "It seems like the device can't be reached. Maybe it's switched off or there is a problem with the network connection.",
-        "retry": "Retry"
+        "description": "It seems like the device can't be reached. Maybe it's switched off or there is a problem with the network connection."
     },
     "routing": {
         "title": "Output",
@@ -113,10 +113,25 @@
         "warning-settings-changes": "The settings contain unsaved changes. Do you really want to proceed?",
         "usb-interface": "USB interface",
         "reset-after-boot": "Reset after boot",
-        "version": "Version",
-        "check-version": "Search for updates",
+        "version": "Current version",
+        "remote-version": "Latest version",
+        "check-version": "Search for updates...",
+        "retreive-remote-version": "Searching for the latest version....",
+        "retreive-remote-version-internet": "Please make sure, the device is connected to the internet.",
+        "retreive-remote-version-retry": "Retry",
+        "retreive-remote-version-error": "An error occured while searching for the latest version. Please make sure, the device is connected to the internet.",
+        "do-update": "Start update",
+        "new-version": "A new version with the following changes is available:",
+        "already-up-to-date": "The latest version is already installed.",
+        "update-hint": "The update is processing. This may take a while...",
+        "update-start": "Starting update...",
+        "update-download": "Downloading new version...",
+        "update-install": "Installing...",
+        "update-reboot": "Rebooting...",
+        "update-finished": "Hooray! The update has finished successfully.",
         "reboot-device": "Reboot device",
         "idle-song": "Idle composition",
+        "no-idle-song": "None",
         "toast-save-success-title": "Saved",
         "toast-save-success": "The settings have been saved.",
         "toast-discard-success-title": "Discarded",

@@ -30,6 +30,8 @@ import { EditorSetlistComponent } from './editor/editor-setlist/editor-setlist.c
 import { ConnectionComponent } from './connection/connection.component';
 import { EditorSongFileComponent } from './editor/editor-song/editor-song-file/editor-song-file.component';
 import { RoutingDetailsComponent } from './routing-details/routing-details.component';
+import { SettingsAdvancedComponent } from './settings/settings-advanced/settings-advanced.component';
+import { UpdateDialogComponent } from './update-dialog/update-dialog.component';
 
 import { ApiService } from './services/api.service';
 import { StateService } from './services/state.service';
@@ -41,7 +43,7 @@ import { SessionService } from './services/session.service';
 import { WarningDialogService } from './services/warning-dialog.service';
 import { WarningDialogComponent } from './warning-dialog/warning-dialog.component';
 import { PendingChangesDialogService } from './services/pending-changes-dialog.service';
-import { SettingsAdvancedComponent } from './settings/settings-advanced/settings-advanced.component';
+import { UpdateService } from './services/update.service';
 
 const appRoutes: Routes = [
   { path: 'intro', component: IntroComponent },
@@ -74,7 +76,8 @@ const DROPZONE_CONFIG: DropzoneConfigInterface = {
     SettingsSystemComponent,
     WarningDialogComponent,
     WarningDialogComponent,
-    SettingsAdvancedComponent
+    SettingsAdvancedComponent,
+    UpdateDialogComponent
   ],
   imports: [
     HttpModule,
@@ -114,12 +117,14 @@ const DROPZONE_CONFIG: DropzoneConfigInterface = {
     SettingsService,
     SessionService,
     WarningDialogService,
-    PendingChangesDialogService
+    PendingChangesDialogService,
+    UpdateService
   ],
   entryComponents: [
     EditorSongFileComponent,
     RoutingDetailsComponent,
-    WarningDialogComponent
+    WarningDialogComponent,
+    UpdateDialogComponent
   ],
   bootstrap: [AppComponent]
 })

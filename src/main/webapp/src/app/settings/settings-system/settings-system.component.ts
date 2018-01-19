@@ -1,9 +1,15 @@
+import { UpdateDialogComponent } from './../../update-dialog/update-dialog.component';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { UpdateService } from './../../services/update.service';
 import { WarningDialogService } from './../../services/warning-dialog.service';
 import { Settings } from './../../models/settings';
 import { Component, OnInit } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
 import { ApiService } from '../../services/api.service';
 import { PendingChangesDialogService } from '../../services/pending-changes-dialog.service';
+import { SongService } from '../../services/song.service';
+import { Song } from '../../models/song';
+import { Version } from '../../models/version';
 
 @Component({
   selector: 'app-settings-system',
@@ -11,13 +17,18 @@ import { PendingChangesDialogService } from '../../services/pending-changes-dial
   styleUrls: ['./settings-system.component.scss']
 })
 export class SettingsSystemComponent implements OnInit {
-  
+
   settings: Settings;
+  songs: Song[];
+  currentVersion: Version;
 
   constructor(
     public settingsService: SettingsService,
     private warningDialogService: WarningDialogService,
-    private apiService: ApiService) { }
+    private apiService: ApiService,
+    private songService: SongService,
+    private updateService: UpdateService,
+    private modalService: BsModalService) { }
 
   private loadSettings() {
     this.settingsService.getSettings().map(result => {
@@ -31,6 +42,14 @@ export class SettingsSystemComponent implements OnInit {
     this.settingsService.settingsChanged.subscribe(() => {
       this.loadSettings();
     });
+
+    this.songService.getSongs(true).subscribe((songs: Song[]) => {
+      this.songs = songs;
+    });
+
+    this.updateService.getCurrentVersion().subscribe((version: Version) => {
+      this.currentVersion = version;
+    });
   }
 
   switchLanguage(language: string) {
@@ -39,10 +58,15 @@ export class SettingsSystemComponent implements OnInit {
 
   reboot() {
     this.warningDialogService.show('settings.warning-reboot').map(result => {
-      if(result) {
+      if (result) {
         this.apiService.post('system/reboot', undefined).subscribe();
       }
     }).subscribe();
+  }
+
+  checkVersion() {
+    // Show the file details dialog
+    let updateDialog = this.modalService.show(UpdateDialogComponent, { keyboard: false, ignoreBackdropClick: true, class: '' });
   }
 
 }

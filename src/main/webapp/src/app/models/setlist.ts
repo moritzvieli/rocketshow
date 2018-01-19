@@ -1,8 +1,8 @@
 import { Song } from './song'; 
 
 export class SetList {
-    currentSongIndex: number = 0;
-    songList: Song[] = [];
+    currentSongIndex: number;
+    songList: Song[];
     name: string;
     notes: string;
 

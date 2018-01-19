@@ -87,6 +87,10 @@ public class StateManager {
 					}
 				}
 			}
+			
+			if(manager.getSession() != null) {
+				currentState.setUpdateFinished(manager.getSession().isUpdateFinished());
+			}
 		}
 
 		return currentState;

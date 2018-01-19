@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.log4j.Logger;
 
+import com.ascargon.rocketshow.audio.AudioBus;
 import com.ascargon.rocketshow.audio.AudioPlayer.PlayerType;
 import com.ascargon.rocketshow.midi.Midi2ActionMapping;
 import com.ascargon.rocketshow.midi.MidiDevice;
@@ -26,6 +27,10 @@ public class Settings {
 	// Create an own logging enum to save it in the settings xml
 	public enum LoggingLevel {
 		ERROR, WARN, INFO, DEBUG, TRACE
+	}
+	
+	public enum AudioOutput {
+		HEADPHONES, HDMI, DEVICE
 	}
 
 	private MidiDevice midiInDevice;
@@ -57,6 +62,12 @@ public class Settings {
 	private String deviceName;
 
 	private boolean resetUsbAfterBoot = false;
+	
+	private AudioOutput audioOutput;
+	
+	private String audioOutputDeviceName;
+	
+	private List<AudioBus> audioBusList = new ArrayList<AudioBus>();
 	
 	public Settings() {
 		// Initialize default settings
@@ -274,6 +285,34 @@ public class Settings {
 
 	public void setResetUsbAfterBoot(boolean resetUsbAfterBoot) {
 		this.resetUsbAfterBoot = resetUsbAfterBoot;
+	}
+
+	@XmlElement
+	public AudioOutput getAudioOutput() {
+		return audioOutput;
+	}
+
+	public void setAudioOutput(AudioOutput audioOutput) {
+		this.audioOutput = audioOutput;
+	}
+
+	@XmlElement
+	public String getAudioOutputDeviceName() {
+		return audioOutputDeviceName;
+	}
+
+	public void setAudioOutputDeviceName(String audioOutputDeviceName) {
+		this.audioOutputDeviceName = audioOutputDeviceName;
+	}
+	
+	@XmlElement(name = "audioBus")
+	@XmlElementWrapper(name = "audioBusList")
+	public List<AudioBus> getAudioBusList() {
+		return audioBusList;
+	}
+
+	public void setAudioBusList(List<AudioBus> audioBusList) {
+		this.audioBusList = audioBusList;
 	}
 
 }
