@@ -28,10 +28,10 @@ public class System {
 		return Response.status(200).build();
 	}
 	
-	@Path("reload-setting")
+	@Path("reload-settings")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response play() throws Exception {
+	public Response reloadSettings() throws Exception {
 		Manager manager = (Manager)context.getAttribute("manager");
 		manager.loadSettings();
 		return Response.status(200).build();
