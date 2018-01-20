@@ -302,6 +302,7 @@ public class Manager {
 
 	public void loadSettings() throws Exception {
 		File file = new File(BASE_PATH + "settings");
+		
 		if (!file.exists() || file.isDirectory()) {
 			return;
 		}
@@ -321,7 +322,7 @@ public class Manager {
 		} catch (Exception e) {
 			logger.error("Could not reset the USB devices", e);
 		}
-		
+
 		// Play the idle song, if set
 		playIdleSong();
 

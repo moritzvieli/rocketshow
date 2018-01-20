@@ -32,11 +32,11 @@ public class SetList {
 	private Manager manager;
 
 	private Song currentSong;
-	
+
 	private ExecutorService playExecutor;
 
 	private String notes;
-	
+
 	// Read the current song from its file
 	public void readCurrentSong() throws Exception {
 		if (currentSongIndex >= setListSongList.size()) {
@@ -44,7 +44,7 @@ public class SetList {
 		}
 
 		SetListSong currentSetListSong = setListSongList.get(currentSongIndex);
-		
+
 		// Stop the current song (if not already done)
 		if (currentSong != null) {
 			currentSong.stop();
@@ -72,10 +72,6 @@ public class SetList {
 	}
 
 	public void play() throws Exception {
-		currentSong.setPlayState(PlayState.LOADING);
-		
-		manager.stopIdleVideo();
-		
 		// Make sure all remote devices and the local one have loaded the song
 		// before playing it
 		playExecutor = Executors.newFixedThreadPool(30);
@@ -105,7 +101,7 @@ public class SetList {
 		}
 
 		logger.debug("Wait for all devices to be loaded...");
-		
+
 		// Wait for the songs on all devices to be loaded
 		playExecutor.shutdown();
 
@@ -113,14 +109,14 @@ public class SetList {
 		}
 
 		logger.debug("All devices loaded");
-		
+
 		if (currentSong.getPlayState() != PlayState.PAUSED) {
 			// Maybe the song stopped meanwhile
 			return;
 		}
-		
+
 		logger.debug("Start playing on all devices...");
-		
+
 		// Play the song on all remote devices
 		for (RemoteDevice remoteDevice : manager.getSettings().getRemoteDeviceList()) {
 			if (remoteDevice.isSynchronize()) {
@@ -132,7 +128,7 @@ public class SetList {
 		if (currentSong != null) {
 			currentSong.play();
 		}
-		
+
 		logger.debug("Playing on all devices");
 	}
 
@@ -161,8 +157,6 @@ public class SetList {
 	}
 
 	public void togglePlay() throws Exception {
-		manager.stopIdleVideo();
-		
 		for (RemoteDevice remoteDevice : manager.getSettings().getRemoteDeviceList()) {
 			if (remoteDevice.isSynchronize()) {
 				remoteDevice.togglePlay();
@@ -179,7 +173,7 @@ public class SetList {
 
 		// Reset the DMX universe to clear left out signals
 		manager.getDmxSignalSender().reset();
-		
+
 		// Stop all remote devices
 		for (RemoteDevice remoteDevice : manager.getSettings().getRemoteDeviceList()) {
 			if (remoteDevice.isSynchronize()) {
@@ -282,17 +276,24 @@ public class SetList {
 					remoteDevice.setSongIndex(currentSongIndex);
 				}
 			}
+
+			manager.saveSession();
 		}
 
 		this.currentSongIndex = currentSongIndex;
 		readCurrentSong();
 
-		if(manager != null) {
-			if(manager.getStateManager() != null) {
+		if (manager != null) {
+			if (manager.getStateManager() != null) {
 				manager.getStateManager().notifyClients();
 			}
 		}
-		
+
+		if (manager != null) {
+			// Save the session to remember the current song index
+			manager.saveSession();
+		}
+
 		logger.info("Set song index " + currentSongIndex);
 	}
 
@@ -308,5 +309,5 @@ public class SetList {
 	public void setNotes(String notes) {
 		this.notes = notes;
 	}
-	
+
 }

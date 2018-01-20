@@ -65,6 +65,11 @@
 								<argument>build</argument>
 								<argument>--base-href=/app/</argument>
 								<argument>--environment=prod</argument>
+
+								<!-- No caching to make sure, the newest version will always be loaded 
+									(e.g. after an update). Caching anyways only has a small impact, because 
+									the devices are most probably run in an internal network. -->
+								<argument>--output-hashing=all</argument>
 							</arguments>
 						</configuration>
 						<goals>

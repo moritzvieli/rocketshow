@@ -99,12 +99,19 @@ public class Song {
 
 	// Load all files but don't start playing
 	public synchronized void loadFiles() throws Exception {
+		if (!idleSong) {
+			manager.stopIdleVideo();
+		}
+
 		if (filesLoaded) {
 			return;
 		}
 
 		playState = PlayState.LOADING;
-		manager.getStateManager().notifyClients();
+
+		if (!idleSong) {
+			manager.getStateManager().notifyClients();
+		}
 
 		logger.debug("Loading all files for song '" + name + "'...");
 
@@ -198,7 +205,7 @@ public class Song {
 					} else {
 						// Select the next song automatically
 						manager.getCurrentSetList().nextSong();
-						
+
 						// Stop and play the idle song
 						stop();
 					}
@@ -237,7 +244,10 @@ public class Song {
 		passedMillis = 0;
 
 		playState = PlayState.PLAYING;
-		manager.getStateManager().notifyClients();
+
+		if (!idleSong) {
+			manager.getStateManager().notifyClients();
+		}
 	}
 
 	public synchronized void pause() throws Exception {
@@ -264,7 +274,10 @@ public class Song {
 		}
 
 		playState = PlayState.PAUSED;
-		manager.getStateManager().notifyClients();
+
+		if (!idleSong) {
+			manager.getStateManager().notifyClients();
+		}
 	}
 
 	public synchronized void resume() throws Exception {
@@ -286,7 +299,10 @@ public class Song {
 		}
 
 		playState = PlayState.PLAYING;
-		manager.getStateManager().notifyClients();
+
+		if (!idleSong) {
+			manager.getStateManager().notifyClients();
+		}
 	}
 
 	public synchronized void togglePlay() throws Exception {
@@ -303,7 +319,10 @@ public class Song {
 		}
 
 		playState = PlayState.STOPPING;
-		manager.getStateManager().notifyClients();
+
+		if (!idleSong) {
+			manager.getStateManager().notifyClients();
+		}
 
 		// Cancel the auto-stop timer
 		if (autoStopTimer != null) {
@@ -331,7 +350,10 @@ public class Song {
 		logger.info("Song '" + name + "' stopped");
 
 		playState = PlayState.STOPPED;
-		manager.getStateManager().notifyClients();
+
+		if (!idleSong) {
+			manager.getStateManager().notifyClients();
+		}
 
 		// Play the idle song, if necessary
 		if (!idleSong && playIdleSong) {

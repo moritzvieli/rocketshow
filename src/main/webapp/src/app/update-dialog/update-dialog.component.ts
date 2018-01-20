@@ -56,6 +56,8 @@ export class UpdateDialogComponent implements OnInit {
           this.updating = false;
           this.updateFinished = true;
           this.updatePerc = 100;
+
+          this.updateService.finishUpdate().subscribe();
         }
       }
     });
@@ -77,6 +79,7 @@ export class UpdateDialogComponent implements OnInit {
     })
       .subscribe((version: Version) => {
         this.remoteVersion = version;
+        // TODO remove
 this.remoteVersion.version = "1.0.1";
         if(this.versionCompare(this.remoteVersion.version, this.currentVersion.version) > 0) {
           this.remoteVersionNewer = true;
@@ -145,8 +148,9 @@ this.remoteVersion.version = "1.0.1";
 
   public ok(): void {
     if(this.updateFinished) {
-      // Hard reload the page
-      location.reload(true);
+      // Reload the page (caching has been disabled in Angular CLI and we
+      // therefore automatically receive the new version of the app)
+      location.reload();
     } else{
       this.onClose.next(1);
       this.bsModalRef.hide();

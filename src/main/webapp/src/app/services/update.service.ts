@@ -30,4 +30,10 @@ export class UpdateService {
     });
   }
 
+  finishUpdate(): Observable<null> {
+    return this.apiService.post('session/dismiss-update-finished', null).map(() => {
+      return null;
+    });
+  }
+
 }

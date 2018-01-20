@@ -71,6 +71,9 @@ public class Updater {
 
 	public void update() throws Exception {
 		logger.info("Updating system...");
+		
+		manager.getSession().setUpdateFinished(false);
+		manager.saveSession();
 
 		logger.info("Downloading new version...");
 
