@@ -79,8 +79,7 @@ export class UpdateDialogComponent implements OnInit {
     })
       .subscribe((version: Version) => {
         this.remoteVersion = version;
-        // TODO remove
-this.remoteVersion.version = "1.0.1";
+
         if(this.versionCompare(this.remoteVersion.version, this.currentVersion.version) > 0) {
           this.remoteVersionNewer = true;
         }

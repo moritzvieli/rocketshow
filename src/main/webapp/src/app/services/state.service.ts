@@ -17,7 +17,7 @@ export class StateService {
   private wsUrl: string;
 
   // The websocket connection
-  private websocket: $WebSocket;
+  websocket: $WebSocket;
 
   connected: boolean;
 
@@ -45,8 +45,9 @@ export class StateService {
 
     this.websocket.onOpen(() => {
       this.connected = true;
+
       this.getState().subscribe((state: State) => {
-        this.receiveState(this.currentState);
+        this.receiveState(state);
       });
     });
 
@@ -65,10 +66,6 @@ export class StateService {
   }
 
   getState(): Observable<State> {
-    if (this.currentState) {
-      return Observable.of(this.currentState);
-    }
-
     return this.apiService.get('system/state')
       .map((response: Response) => {
         this.currentState = new State(response.json());
