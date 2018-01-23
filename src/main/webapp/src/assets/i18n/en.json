@@ -74,6 +74,7 @@
         "warning-setlist-changes": "This set contains unsaved changes. Do you really want to proceed?",
         "warning-delete-song": "Do you really want to delete this composition?",
         "warning-delete-setlist": "Do you really want to delete this set?",
+        "warning-delete-file": "Do you really want to delete this file?",
         "toast-song-save-success": "The composition has been saved.",
         "toast-setlist-save-success": "The set has been saved.",
         "toast-song-delete-success": "The composition has been deleted.",

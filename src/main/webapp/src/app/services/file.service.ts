@@ -25,4 +25,10 @@ export class FileService {
       });
   }
 
+  deleteFile(file: SongFile): Observable<void> {
+    return this.apiService.post('file/delete?name=' + file.name + '&type=' + file.type, undefined).map((response: Response) => {
+      return null;
+    });
+  }
+
 }

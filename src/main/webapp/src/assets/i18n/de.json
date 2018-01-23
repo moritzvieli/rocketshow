@@ -74,6 +74,7 @@
         "warning-setlist-changes": "Dieses Set enthält noch nicht gespeicherte Änderungen. Möchtest du wirklich fortfahren?",
         "warning-delete-song": "Möchtest du diese Komposition wirklich löschen?",
         "warning-delete-setlist": "Möchtest du dieses Set wirklich löschen?",
+        "warning-delete-file": "Möchtest du diese Datei wirklich löschen?",
         "toast-song-save-success": "Die Komposition wurde gespeichert.",
         "toast-setlist-save-success": "Das Set wurde gespeichert.",
         "toast-song-delete-success": "Die Komposition wurde gelöscht.",

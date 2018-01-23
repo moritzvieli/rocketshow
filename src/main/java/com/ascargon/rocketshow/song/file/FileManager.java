@@ -13,6 +13,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.Manager;
+import com.ascargon.rocketshow.song.file.File.FileType;
 
 public class FileManager {
 
@@ -60,6 +61,29 @@ public class FileManager {
 		}
 
 		return returnFileList;
+	}
+
+	public void deleteFile(String name, String type) throws Exception {
+		String path = Manager.BASE_PATH + com.ascargon.rocketshow.song.file.File.MEDIA_PATH;
+
+		// Audio files
+		if (type.equals(FileType.MIDI.name())) {
+			path += MidiFile.MIDI_PATH;
+		} else if (type.equals(FileType.AUDIO.name())) {
+			path += AudioFile.AUDIO_PATH;
+		} else if (type.equals(FileType.VIDEO.name())) {
+			path += VideoFile.VIDEO_PATH;
+		}
+		
+		path += name;
+
+		File systemFile = new File(path);
+
+		if (!systemFile.exists()) {
+			return;
+		}
+
+		systemFile.delete();
 	}
 
 	public com.ascargon.rocketshow.song.file.File saveFile(InputStream uploadedInputStream, String fileName) {

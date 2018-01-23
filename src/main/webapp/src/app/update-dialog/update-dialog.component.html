@@ -44,8 +44,9 @@
           <p class="mb-2">
             {{ 'settings.new-version' | translate }}</p>
           <span *ngFor="let changeNote of remoteVersion.changeNoteList">
-            - {{ changeNote.version }}: {{ changeNote.changes }}</span>
-          <br />
+            - {{ changeNote.version }}: {{ changeNote.changes }}
+            <br />
+          </span>
           <button type="button" class="btn btn-primary mt-3" (click)="update(); false">
             <i class="fa fa-download" aria-hidden="true"></i> {{ 'settings.do-update' | translate }}
           </button>

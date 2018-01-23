@@ -1,3 +1,4 @@
+import { WarningDialogService } from './../../../services/warning-dialog.service';
 import { SongMidiFile } from './../../../models/song-midi-file';
 import { FileService } from './../../../services/file.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -36,7 +37,8 @@ export class EditorSongFileComponent implements OnInit {
     private modalService: BsModalService,
     private apiService: ApiService,
     private translateService: TranslateService,
-    private fileService: FileService) {
+    private fileService: FileService,
+    private warningDialogService: WarningDialogService) {
 
     this.dropzoneConfig = {
       url: apiService.getRestUrl() + 'file/upload',
@@ -64,7 +66,11 @@ export class EditorSongFileComponent implements OnInit {
       this.uploadMessage = '<h3 class="mb-0"><i class="fa fa-cloud-upload"></i></h3>' + result;
     }).subscribe();
 
-    fileService.getFiles().map(result => {
+    this.loadFiles();
+  }
+
+  private loadFiles() {
+    this.fileService.getFiles().map(result => {
       this.existingFiles = result;
       this.filterExistingFiles();
     }).subscribe();
@@ -172,6 +178,16 @@ export class EditorSongFileComponent implements OnInit {
 
   deleteRouting(midiRoutingIndex: number) {
     (<SongMidiFile>this.file).midiRoutingList.splice(midiRoutingIndex, 1);
+  }
+
+  deleteFile(existingFile: SongFile) {
+    this.warningDialogService.show('editor.warning-delete-file').map(result => {
+      if (result) {
+        this.fileService.deleteFile(existingFile).subscribe(() => {
+          this.loadFiles();
+        });
+      }
+    }).subscribe();
   }
 
 }

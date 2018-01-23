@@ -276,8 +276,6 @@ public class SetList {
 					remoteDevice.setSongIndex(currentSongIndex);
 				}
 			}
-
-			manager.saveSession();
 		}
 
 		this.currentSongIndex = currentSongIndex;
@@ -290,8 +288,9 @@ public class SetList {
 		}
 
 		if (manager != null) {
-			// Save the session to remember the current song index
-			manager.saveSession();
+			// Save the set list to remember the current song index (e.g. after
+			// a reboot)
+			manager.getSongManager().saveSetList(this);
 		}
 
 		logger.info("Set song index " + currentSongIndex);

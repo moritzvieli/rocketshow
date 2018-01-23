@@ -50,8 +50,8 @@ export class UpdateDialogComponent implements OnInit {
         }
       }
 
-      if(this.waitReboot) {
-        if(state.updateFinished) {
+      if (this.waitReboot) {
+        if (state.updateFinished) {
           // The update has been completed and the update is finished
           this.updating = false;
           this.updateFinished = true;
@@ -80,8 +80,17 @@ export class UpdateDialogComponent implements OnInit {
       .subscribe((version: Version) => {
         this.remoteVersion = version;
 
-        if(this.versionCompare(this.remoteVersion.version, this.currentVersion.version) > 0) {
+        if (this.versionCompare(this.remoteVersion.version, this.currentVersion.version) > 0) {
           this.remoteVersionNewer = true;
+
+          // Remove all change notes from the remote version, already included in the current one
+          for (var i = 0; i < this.remoteVersion.changeNoteList.length; ++i) {
+            let changeNote = this.remoteVersion.changeNoteList[i];
+
+            if(this.versionCompare(changeNote.version, this.currentVersion.version) <= 0) {
+              this.remoteVersion.changeNoteList.splice(i--, 1);
+            }
+          }
         }
       });
   }
@@ -146,11 +155,11 @@ export class UpdateDialogComponent implements OnInit {
   }
 
   public ok(): void {
-    if(this.updateFinished) {
+    if (this.updateFinished) {
       // Reload the page (caching has been disabled in Angular CLI and we
       // therefore automatically receive the new version of the app)
       location.reload();
-    } else{
+    } else {
       this.onClose.next(1);
       this.bsModalRef.hide();
     }

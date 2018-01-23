@@ -68,14 +68,23 @@
               <div class="card" style="height: 300px; overflow-y: scroll;">
                 <div class="card-body p-0">
                   <div class="list-group list-group-flush">
-                    <a *ngFor="let existingFile of filteredExistingFiles" (click)="selectExistingFile(existingFile); false" href="#" class="list-group-item list-group-item-action flex-column align-items-start p-2"
+                    <div *ngFor="let existingFile of filteredExistingFiles" class="list-group-item list-group-item-action"
                       [class.active]="file?.name == existingFile.name && file?.type == existingFile.type">
 
-                      <p class="mb-0">
-                        <i class="fa fa-fw" [ngClass]="existingFile.getFontAwesomeIconClass()" aria-hidden="true"></i>
-                        {{ existingFile.name }}
-                      </p>
-                    </a>
+                      <div class="row">
+                        <a [class.text-white]="file?.name == existingFile.name && file?.type == existingFile.type" href="#" (click)="selectExistingFile(existingFile); false" class="col-auto my-auto">
+                          <i class="fa fa-fw" [ngClass]="existingFile.getFontAwesomeIconClass()" aria-hidden="true"></i>
+                        </a>
+
+                        <a [class.text-white]="file?.name == existingFile.name && file?.type == existingFile.type" href="#" (click)="selectExistingFile(existingFile); false" class="col-auto my-auto flex-grow text-break-word pl-0">
+                          {{ existingFile.name }}
+                        </a>
+
+                        <a class="col-auto my-auto pl-0 text-danger float-right" href="#" role="button" (click)="deleteFile(existingFile); false">
+                          <i class="fa fa-trash-o" aria-hidden="true"></i>
+                        </a>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
