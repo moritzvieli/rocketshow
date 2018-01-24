@@ -3,7 +3,7 @@ export class State {
     currentSongIndex: number = 0;
     currentSongName: string = "";
     currentSongDurationMillis: number = 0;
-    lastStartTime: Date;
+    passedMillis: number;
     updateState: string;
     currentSetListName: string;
     updateFinished: boolean;
@@ -17,7 +17,7 @@ export class State {
         this.currentSongIndex = data.currentSongIndex;
         this.currentSongName = data.currentSongName;
         this.currentSongDurationMillis = data.currentSongDurationMillis;
-        this.lastStartTime = new Date(data.lastStartTime);
+        this.passedMillis = data.passedMillis;
         this.updateState = data.updateState;
         this.currentSetListName = data.currentSetListName;
         this.updateFinished = data.updateFinished;

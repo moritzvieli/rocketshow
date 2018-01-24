@@ -24,6 +24,7 @@ export class PlayComponent implements OnInit {
   playPercentage: number = 0;
   playTime: string = '00:00.000';
   playUpdateSubscription: Subscription;
+  lastPlayTime: Date;
 
   manualSongSelection: boolean = false;
 
@@ -108,10 +109,13 @@ export class PlayComponent implements OnInit {
         this.playUpdateSubscription.unsubscribe;
       }
 
+      // Save the last time, we started the song. Don't use device time, as it may be wrong.
+      this.lastPlayTime = new Date();
+
       let playUpdater = Observable.timer(0, 10);
       this.playUpdateSubscription = playUpdater.subscribe(() => {
         let currentTime = new Date();
-        let passedMillis = currentTime.getTime() - this.currentState.lastStartTime.getTime();
+        let passedMillis = currentTime.getTime() - this.lastPlayTime.getTime() + this.currentState.passedMillis;
 
         if (passedMillis > 0) {
           this.playTime = this.msToTime(passedMillis);

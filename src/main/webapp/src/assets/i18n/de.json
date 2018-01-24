@@ -70,6 +70,8 @@
         "file-settings": "Einstellungen",
         "dropzone-message": "Ziehe Dateien hier hinein oder klicke, um hochzuladen",
         "no-file-selected": "Keine Datei ausgewählt",
+        "error-multiple-video-images-title": "Mehr als ein Video",
+        "error-multiple-video-images": "Mehr als ein Video ist nicht erlaubt in der selben Komposition.",
         "warning-song-changes": "Diese Komposition enthält noch nicht gespeicherte Änderungen. Möchtest du wirklich fortfahren?",
         "warning-setlist-changes": "Dieses Set enthält noch nicht gespeicherte Änderungen. Möchtest du wirklich fortfahren?",
         "warning-delete-song": "Möchtest du diese Komposition wirklich löschen?",

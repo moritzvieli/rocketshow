@@ -433,15 +433,6 @@ public class Song {
 		this.notes = notes;
 	}
 
-	@XmlTransient
-	public LocalDateTime getLastStartTime() {
-		return lastStartTime;
-	}
-
-	public void setLastStartTime(LocalDateTime lastStartTime) {
-		this.lastStartTime = lastStartTime;
-	}
-
 	public void setPlayState(PlayState playState) {
 		this.playState = playState;
 	}
@@ -453,6 +444,15 @@ public class Song {
 
 	public void setIdleSong(boolean idleSong) {
 		this.idleSong = idleSong;
+	}
+
+	@XmlTransient
+	public long getPassedMillis() {
+		return passedMillis;
+	}
+
+	public void setPassedMillis(long passedMillis) {
+		this.passedMillis = passedMillis;
 	}
 
 }

@@ -133,7 +133,7 @@ public class Transport {
 		
 		Manager manager = (Manager) context.getAttribute("manager");
 		if (manager.getCurrentSetList() != null) {
-			manager.getCurrentSetList().setCurrentSongIndex(index);
+			manager.getCurrentSetList().setSongIndex(index);
 		}
 		return Response.status(200).build();
 	}

@@ -71,7 +71,32 @@ public class SetList {
 		}
 	}
 
+	private void setSongIndexOnRemoteDevices(int songIndex) {
+		ExecutorService executor = Executors.newFixedThreadPool(30);
+
+		// Set the song index for all remote devices
+		for (RemoteDevice remoteDevice : manager.getSettings().getRemoteDeviceList()) {
+			if (remoteDevice.isSynchronize()) {
+				executor.execute(new Runnable() {
+					public void run() {
+						remoteDevice.setSongIndex(songIndex);
+					}
+				});
+			}
+		}
+
+		// Wait for all devices to have the song index set
+		executor.shutdown();
+
+		while (!executor.isTerminated()) {
+		}
+	}
+
 	public void play() throws Exception {
+		// Set the current song index on all remote device to ensure staying in
+		// sync
+		setSongIndexOnRemoteDevices(currentSongIndex);
+
 		// Make sure all remote devices and the local one have loaded the song
 		// before playing it
 		playExecutor = Executors.newFixedThreadPool(30);
@@ -216,7 +241,7 @@ public class SetList {
 			currentSong.close();
 		}
 
-		setCurrentSongIndex(newIndex);
+		setSongIndex(newIndex);
 	}
 
 	public void previousSong() throws Exception {
@@ -230,7 +255,7 @@ public class SetList {
 			currentSong.close();
 		}
 
-		setCurrentSongIndex(newIndex);
+		setSongIndex(newIndex);
 	}
 
 	public void close() throws Exception {
@@ -269,16 +294,25 @@ public class SetList {
 		return setListSongList.get(currentSongIndex).getName();
 	}
 
-	public void setCurrentSongIndex(int currentSongIndex) throws Exception {
-		if (manager != null) {
-			for (RemoteDevice remoteDevice : manager.getSettings().getRemoteDeviceList()) {
-				if (remoteDevice.isSynchronize()) {
-					remoteDevice.setSongIndex(currentSongIndex);
-				}
+	public void setSongIndex(int songIndex) throws Exception {
+		// Set the song index on all remote devices
+		setSongIndexOnRemoteDevices(songIndex);
+
+		// Stop a playing song if needed and wait until it is stopped
+		if (currentSong != null) {
+			while (currentSong.getPlayState() != PlayState.STOPPED) {
+				currentSong.stop();
+				Thread.sleep(50);
 			}
 		}
 
-		this.currentSongIndex = currentSongIndex;
+		// Return, if we already have the correct song set
+		if (currentSongIndex == songIndex) {
+			return;
+		}
+
+		// Load the new song
+		currentSongIndex = songIndex;
 		readCurrentSong();
 
 		if (manager != null) {
@@ -290,7 +324,7 @@ public class SetList {
 		if (manager != null) {
 			// Save the set list to remember the current song index (e.g. after
 			// a reboot)
-			manager.getSongManager().saveSetList(this);
+			manager.getSongManager().saveSetList(this, false);
 		}
 
 		logger.info("Set song index " + currentSongIndex);

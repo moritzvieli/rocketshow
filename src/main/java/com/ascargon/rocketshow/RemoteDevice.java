@@ -131,7 +131,7 @@ public class RemoteDevice {
 	}
 
 	public void setSongIndex(int songIndex) {
-		doPost("transport/set-song-index?index=" + songIndex);
+		doPost("transport/set-song-index?index=" + songIndex, true);
 	}
 
 	@XmlElement

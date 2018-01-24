@@ -57,13 +57,15 @@ export class IntroComponent implements OnInit {
         this.deviceName = result;
       }
       this.settings.deviceName = this.deviceName;
-      this.settingsService.saveSettings(this.settings).subscribe();
-      this.sessionService.introFinished().subscribe();
-
-      // Show the app as soon as the intro wizard has been hidden
-      setTimeout(() => {
-        this.router.navigate(['/play']);
-      }, 500);
+      this.settingsService.saveSettings(this.settings).subscribe(() => {
+        this.settingsService.settingsChanged.next();
+        this.sessionService.introFinished().subscribe();
+  
+        // Show the app as soon as the intro wizard has been hidden
+        setTimeout(() => {
+          this.router.navigate(['/play']);
+        }, 500);
+      });
     });
   }
 

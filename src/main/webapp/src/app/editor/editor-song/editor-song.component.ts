@@ -215,4 +215,28 @@ export class EditorSongComponent implements OnInit {
     });
   }
 
+  multipleVideoImage(): boolean {
+    let videoImageCount: number = 0;
+
+    if(!this.currentSong) {
+      return false;
+    }
+
+    if(!this.currentSong.fileList) {
+      return false;
+    }
+
+    for(let file of this.currentSong.fileList) {
+      if(file.type == 'VIDEO' || file.type == 'IMAGE') {
+        videoImageCount ++;
+
+        if(videoImageCount > 1) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
 }

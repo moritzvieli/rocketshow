@@ -94,27 +94,29 @@ public class SongManager {
 		return song;
 	}
 
-	public void saveSetList(SetList setList) throws Exception {
-		// Update all song information
-		Iterator<SetListSong> iterator = setList.getSetListSongList().iterator();
+	public void saveSetList(SetList setList, boolean checkSongs) throws Exception {
+		if (checkSongs) {
+			// Update all song information
+			Iterator<SetListSong> iterator = setList.getSetListSongList().iterator();
 
-		while (iterator.hasNext()) {
-			SetListSong setListSong = iterator.next();
+			while (iterator.hasNext()) {
+				SetListSong setListSong = iterator.next();
 
-			Song song = null;
+				Song song = null;
 
-			try {
-				song = loadSong(setListSong.getName());
-			} catch (Exception e) {
-			}
+				try {
+					song = loadSong(setListSong.getName());
+				} catch (Exception e) {
+				}
 
-			if (song == null) {
-				// The song does not exist anymore (has been deleted)
-				// --> delete it from the setList
-				iterator.remove();
-			} else {
-				// The song still exists -> update some information
-				setListSong.setDurationMillis(song.getDurationMillis());
+				if (song == null) {
+					// The song does not exist anymore (has been deleted)
+					// --> delete it from the setList
+					iterator.remove();
+				} else {
+					// The song still exists -> update some information
+					setListSong.setDurationMillis(song.getDurationMillis());
+				}
 			}
 		}
 
@@ -128,6 +130,10 @@ public class SongManager {
 		jaxbMarshaller.marshal(setList, file);
 
 		logger.info("Setlist '" + setList.getName() + "' saved");
+	}
+
+	public void saveSetList(SetList setList) throws Exception {
+		saveSetList(setList, true);
 	}
 
 	public void saveSong(Song song) throws Exception {
@@ -184,7 +190,7 @@ public class SongManager {
 
 		logger.info("Song '" + name + "' deleted");
 	}
-	
+
 	public void deleteSetList(String name) throws Exception {
 		// Delete the setlist
 		File file = new File(Manager.BASE_PATH + SETLIST_PATH + name);
@@ -205,7 +211,7 @@ public class SongManager {
 		for (SetList setList : setLists) {
 			// Load the full setlist
 			SetList fullSetList = loadSetList(setList.getName());
-			
+
 			saveSetList(fullSetList);
 		}
 	}

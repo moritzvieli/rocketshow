@@ -1,7 +1,5 @@
 package com.ascargon.rocketshow.api;
 
-import java.util.Date;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -16,12 +14,12 @@ public class State {
 	private PlayState playState;
 	private String currentSongName;
 	private long currentSongDurationMillis;
-	private Date lastStartTime;
+	private long passedMillis;
 	private MidiSignal midiSignal;
 	private UpdateState updateState;
 	private String currentSetListName;
 	private boolean updateFinished;
-	
+
 	@XmlElement
 	public int getCurrentSongIndex() {
 		return currentSongIndex;
@@ -59,12 +57,12 @@ public class State {
 	}
 
 	@XmlElement
-	public Date getLastStartTime() {
-		return lastStartTime;
+	public long getPassedMillis() {
+		return passedMillis;
 	}
 
-	public void setLastStartTime(Date lastStartTime) {
-		this.lastStartTime = lastStartTime;
+	public void setPassedMillis(long passedMillis) {
+		this.passedMillis = passedMillis;
 	}
 
 	@XmlElement
@@ -102,5 +100,5 @@ public class State {
 	public void setUpdateFinished(boolean updateFinished) {
 		this.updateFinished = updateFinished;
 	}
-	
+
 }

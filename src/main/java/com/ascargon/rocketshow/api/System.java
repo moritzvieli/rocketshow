@@ -12,6 +12,7 @@ import javax.ws.rs.core.Response;
 import com.ascargon.rocketshow.Manager;
 import com.ascargon.rocketshow.Settings;
 import com.ascargon.rocketshow.VersionInfo;
+import com.ascargon.rocketshow.util.FactoryReset;
 
 @Path("/system")
 public class System {
@@ -94,6 +95,15 @@ public class System {
 		Manager manager = (Manager)context.getAttribute("manager");
 		manager.setSettings(settings);
 		manager.saveSettings();
+		
+		return Response.status(200).build();
+	}
+	
+	@Path("factory-reset")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response factoryReset() throws Exception {
+		FactoryReset.reset();
 		
 		return Response.status(200).build();
 	}

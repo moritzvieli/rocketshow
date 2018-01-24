@@ -78,6 +78,13 @@
           </div>
         </div>
 
+        <!-- More than one video/image -->
+        <div *ngIf="multipleVideoImage()" class="alert alert-danger mb-0 text-center" role="alert">
+          <h3>
+            <i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{ 'editor.error-multiple-video-images-title' | translate }}</h3>
+          <p class="mb-0">{{ 'editor.error-multiple-video-images' | translate }}</p>
+        </div>
+
       </div>
 
       <div class="card-footer d-flex" style="justify-content: space-between;">
@@ -89,9 +96,9 @@
           <a class="mr-3 my-auto" href="#" role="button" (click)="unselect(); false">
             {{ 'misc.cancel' | translate }}
           </a>
-          <a class="btn btn-primary" href="#" role="button" (click)="save(currentSong); false">
+          <button type="button" class="btn btn-primary" (click)="save(currentSong); false" [disabled]="multipleVideoImage()" role="button">
             <i class="fa fa-floppy-o" aria-hidden="true"></i> {{ 'misc.save' | translate }}
-          </a>
+          </button>
         </div>
       </div>
     </div>

@@ -1,9 +1,7 @@
 package com.ascargon.rocketshow.api;
 
 import java.io.IOException;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.websocket.OnClose;
@@ -69,7 +67,7 @@ public class StateManager {
 		if (manager != null) {
 			if (manager.getCurrentSetList() != null) {
 				currentState.setCurrentSetListName(manager.getCurrentSetList().getName());
-				
+
 				if (manager.getCurrentSetList().getCurrentSong() != null) {
 					currentState.setPlayState(manager.getCurrentSetList().getCurrentSong().getPlayState());
 				}
@@ -81,14 +79,11 @@ public class StateManager {
 					currentState.setCurrentSongDurationMillis(
 							manager.getCurrentSetList().getCurrentSong().getDurationMillis());
 
-					if (manager.getCurrentSetList().getCurrentSong().getLastStartTime() != null) {
-						currentState.setLastStartTime(Date.from(manager.getCurrentSetList().getCurrentSong()
-								.getLastStartTime().atZone(ZoneId.systemDefault()).toInstant()));
-					}
+					currentState.setPassedMillis(manager.getCurrentSetList().getCurrentSong().getPassedMillis());
 				}
 			}
-			
-			if(manager.getSession() != null) {
+
+			if (manager.getSession() != null) {
 				currentState.setUpdateFinished(manager.getSession().isUpdateFinished());
 			}
 		}
@@ -102,13 +97,13 @@ public class StateManager {
 
 		currentState.setMidiSignal(midiSignal);
 		currentState.setUpdateState(updateState);
-		
+
 		// Convert the object to json
 		ObjectMapper mapper = new ObjectMapper();
 
 		return mapper.writeValueAsString(currentState);
 	}
-	
+
 	private void notifyClients(MidiSignal midiSignal, UpdateState updateState) throws Exception {
 		String state = getSerializedState(midiSignal, updateState);
 
@@ -129,7 +124,7 @@ public class StateManager {
 	public void notifyClients(MidiSignal midiSignal) throws Exception {
 		notifyClients(midiSignal, null);
 	}
-	
+
 	// Notify the clients about the current state and include update
 	// information, if an update is running
 	public void notifyClients(UpdateState updateState) throws Exception {
