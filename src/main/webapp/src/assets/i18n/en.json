@@ -133,7 +133,7 @@
         "update-reboot": "Rebooting...",
         "update-finished": "Hooray! The update has finished successfully.",
         "reboot-device": "Reboot device",
-        "idle-song": "Idle composition",
+        "idle-song": "Default composition",
         "no-idle-song": "None",
         "toast-save-success-title": "Saved",
         "toast-save-success": "The settings have been saved.",

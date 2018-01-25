@@ -133,7 +133,7 @@
         "update-reboot": "Neu starten...",
         "update-finished": "Hurrah! Die Aktualisierung wurde erfolgreich abgeschlossen.",
         "reboot-device": "Gerät neu starten",
-        "idle-song": "Leerlauf-Komposition",
+        "idle-song": "Standard-Komposition",
         "no-idle-song": "Keine",
         "toast-save-success-title": "Gespeichert",
         "toast-save-success": "Die Einstellungen wurden gespeichert.",

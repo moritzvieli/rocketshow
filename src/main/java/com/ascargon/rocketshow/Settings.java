@@ -28,7 +28,7 @@ public class Settings {
 	public enum LoggingLevel {
 		ERROR, WARN, INFO, DEBUG, TRACE
 	}
-	
+
 	public enum AudioOutput {
 		HEADPHONES, HDMI, DEVICE
 	}
@@ -56,19 +56,19 @@ public class Settings {
 	private String idleSong;
 
 	private LoggingLevel loggingLevel;
-	
+
 	private String language = "en";
-	
+
 	private String deviceName;
 
 	private boolean resetUsbAfterBoot = false;
-	
+
 	private AudioOutput audioOutput;
-	
+
 	private String audioOutputDeviceName;
-	
+
 	private List<AudioBus> audioBusList = new ArrayList<AudioBus>();
-	
+
 	public Settings() {
 		// Initialize default settings
 
@@ -111,8 +111,7 @@ public class Settings {
 		offsetMillisAudio = 0;
 		offsetMillisVideo = 0;
 
-		// Set to info, as soon as the version is stable
-		loggingLevel = LoggingLevel.DEBUG;
+		loggingLevel = LoggingLevel.INFO;
 	}
 
 	public RemoteDevice getRemoteDeviceById(int id) {
@@ -304,7 +303,7 @@ public class Settings {
 	public void setAudioOutputDeviceName(String audioOutputDeviceName) {
 		this.audioOutputDeviceName = audioOutputDeviceName;
 	}
-	
+
 	@XmlElement(name = "audioBus")
 	@XmlElementWrapper(name = "audioBusList")
 	public List<AudioBus> getAudioBusList() {

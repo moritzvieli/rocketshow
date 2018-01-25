@@ -176,38 +176,28 @@ public class Song {
 		}
 
 		maxDurationAndOffset -= passedMillis;
+		
+		logger.debug("Scheduled the auto-stop timer in " + maxDurationAndOffset + " millis");
 
 		autoStopTimer = new Timer();
 		autoStopTimer.schedule(new TimerTask() {
 			@Override
 			public void run() {
 				try {
+					logger.debug("Automatically stopping the song...");
+					
 					autoStopTimer.cancel();
 					autoStopTimer = null;
 
-					if (autoStartNextSong) {
-						int oldSongIndex = manager.getCurrentSetList().getCurrentSongIndex();
-						manager.getCurrentSetList().nextSong();
-
-						if (oldSongIndex != manager.getCurrentSetList().getCurrentSongIndex()) {
-							// There really was a next song, it's not the
-							// current one
-
-							// Stop but don't play the idle song
-							stop(false);
-
-							// Play the next song
-							manager.getCurrentSetList().play();
-						} else {
-							// Stop and play the idle song
-							stop();
-						}
+					if (autoStartNextSong && manager.getCurrentSetList().hasNextSong()) {
+						// Stop, don't play the idle song but start playing the
+						// next song
+						manager.getCurrentSetList().nextSong(false);
+						manager.getCurrentSetList().play();
 					} else {
-						// Select the next song automatically
+						// Stop, play the idle song and select the next song
+						// automatically (if there is one)
 						manager.getCurrentSetList().nextSong();
-
-						// Stop and play the idle song
-						stop();
 					}
 				} catch (Exception e) {
 					logger.error("Could not automatically stop song '" + name + "'", e);

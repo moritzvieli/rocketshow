@@ -230,7 +230,7 @@ public class SetList {
 		}
 	}
 
-	public void nextSong() throws Exception {
+	public void nextSong(boolean playIdleSong) throws Exception {
 		int newIndex = currentSongIndex + 1;
 
 		if (newIndex >= setListSongList.size()) {
@@ -241,7 +241,21 @@ public class SetList {
 			currentSong.close();
 		}
 
-		setSongIndex(newIndex);
+		setSongIndex(newIndex, playIdleSong);
+	}
+	
+	public boolean hasNextSong() {
+		int newIndex = currentSongIndex + 1;
+
+		if (newIndex >= setListSongList.size()) {
+			return false;
+		}
+
+		return true;
+	}
+	
+	public void nextSong() throws Exception {
+		nextSong(true);
 	}
 
 	public void previousSong() throws Exception {
@@ -294,14 +308,14 @@ public class SetList {
 		return setListSongList.get(currentSongIndex).getName();
 	}
 
-	public void setSongIndex(int songIndex) throws Exception {
+	public void setSongIndex(int songIndex, boolean playIdleSong) throws Exception {
 		// Set the song index on all remote devices
 		setSongIndexOnRemoteDevices(songIndex);
 
 		// Stop a playing song if needed and wait until it is stopped
 		if (currentSong != null) {
 			while (currentSong.getPlayState() != PlayState.STOPPED) {
-				currentSong.stop();
+				currentSong.stop(playIdleSong);
 				Thread.sleep(50);
 			}
 		}
@@ -328,6 +342,10 @@ public class SetList {
 		}
 
 		logger.info("Set song index " + currentSongIndex);
+	}
+	
+	public void setSongIndex(int songIndex) throws Exception {
+		setSongIndex(songIndex, true);
 	}
 
 	@XmlTransient
