@@ -73,7 +73,7 @@ public class StateManager {
 				}
 
 				currentState.setCurrentSongIndex(manager.getCurrentSetList().getCurrentSongIndex());
-				currentState.setCurrentSongName(manager.getCurrentSetList().getCurrentSongName());
+				currentState.setCurrentSongName(manager.getPlayer().getCurrentSong().getName());
 
 				if (manager.getPlayer().getCurrentSong() != null) {
 					currentState.setCurrentSongDurationMillis(
