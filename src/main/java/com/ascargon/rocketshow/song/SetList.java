@@ -2,8 +2,6 @@ package com.ascargon.rocketshow.song;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
@@ -13,7 +11,6 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.Manager;
-import com.ascargon.rocketshow.RemoteDevice;
 import com.ascargon.rocketshow.song.Song.PlayState;
 
 @XmlRootElement
@@ -45,7 +42,7 @@ public class SetList {
 		if (manager.getPlayer().getCurrentSong() != null) {
 			manager.getPlayer().getCurrentSong().stop();
 		}
-		
+
 		Song currentSong = manager.getSongManager().loadSong(currentSetListSong.getName());
 
 		manager.getPlayer().setCurrentSong(currentSong);
@@ -70,10 +67,6 @@ public class SetList {
 			return;
 		}
 
-		if (manager.getPlayer().getCurrentSong() != null) {
-			manager.getPlayer().getCurrentSong().close();
-		}
-
 		setSongIndex(newIndex, playIdleSong);
 	}
 
@@ -96,10 +89,6 @@ public class SetList {
 
 		if (newIndex < 0) {
 			return;
-		}
-
-		if (manager.getPlayer().getCurrentSong() != null) {
-			manager.getPlayer().getCurrentSong().close();
 		}
 
 		setSongIndex(newIndex);
@@ -140,17 +129,9 @@ public class SetList {
 	}
 
 	public void setSongIndex(int songIndex, boolean playIdleSong) throws Exception {
-		// Stop a playing song if needed and wait until it is stopped
+		// Stop a playing song if needed
 		if (manager.getPlayer().getCurrentSong() != null) {
-			logger.info(manager.getPlayer().getCurrentSong().getPlayState());
-			
-			if(manager.getPlayer().getCurrentSong().getPlayState() != PlayState.STOPPED) {
-				manager.getPlayer().stop();
-				
-				while (manager.getPlayer().getCurrentSong().getPlayState() != PlayState.STOPPED) {
-					Thread.sleep(50);
-				}
-			}
+			manager.getPlayer().stop(playIdleSong);
 		}
 
 		// Return, if we already have the correct song set

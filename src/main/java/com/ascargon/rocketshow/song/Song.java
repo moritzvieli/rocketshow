@@ -176,7 +176,7 @@ public class Song {
 		}
 
 		maxDurationAndOffset -= passedMillis;
-		
+
 		logger.debug("Scheduled the auto-stop timer in " + maxDurationAndOffset + " millis");
 
 		autoStopTimer = new Timer();
@@ -185,7 +185,7 @@ public class Song {
 			public void run() {
 				try {
 					logger.debug("Automatically stopping the song...");
-					
+
 					autoStopTimer.cancel();
 					autoStopTimer = null;
 

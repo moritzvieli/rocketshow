@@ -12,6 +12,7 @@ import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.Manager;
+import com.ascargon.rocketshow.song.Song;
 
 @Path("/transport")
 public class Transport {
@@ -24,13 +25,37 @@ public class Transport {
 	@Path("load")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response load() throws Exception {
+	public Response load(@QueryParam("name") String songName) throws Exception {
 		logger.info("Received API request for transport/load");
 		
 		Manager manager = (Manager) context.getAttribute("manager");
-		if (manager.getCurrentSetList() != null) {
-			manager.getPlayer().getCurrentSong().loadFiles();
+		
+		Song currentSong = null;
+		
+		if(songName.length() == 0) {
+			// Load the current song, if available
+			manager.getPlayer().getCurrentSong();
+		} else {
+			// Stop a current song, if needed and don't play the idle video
+			if(manager.getPlayer().getCurrentSong() != null) {
+				manager.getPlayer().getCurrentSong().stop(false);
+			}
+			
+			// Load the song with the given name
+			currentSong = manager.getSongManager().loadSong(songName);
+
+			manager.getPlayer().setCurrentSong(currentSong);
+			currentSong.setName(songName);
+			currentSong.getMidiMapping().setParent(manager.getSettings().getMidiMapping());
+			currentSong.setManager(manager);
+			
+			currentSong.loadFiles();
 		}
+		
+		if (currentSong != null) {
+			currentSong.loadFiles();
+		}
+		
 		return Response.status(200).build();
 	}
 	
@@ -94,7 +119,7 @@ public class Transport {
 		
 		Manager manager = (Manager) context.getAttribute("manager");
 		if (manager.getCurrentSetList() != null) {
-			manager.getPlayer().stop();
+			manager.getPlayer().stop(true);
 		}
 		return Response.status(200).build();
 	}

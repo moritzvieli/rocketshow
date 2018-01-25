@@ -95,8 +95,8 @@ public class RemoteDevice {
 		doPost("system/reboot");
 	}
 	
-	public void load(boolean synchronous) {
-		doPost("transport/load", synchronous);
+	public void load(boolean synchronous, String name) {
+		doPost("transport/load?name=" + name, synchronous);
 	}
 	public void load() {
 		doPost("transport/load", false);

@@ -37,7 +37,7 @@ public class Player {
 			if (remoteDevice.isSynchronize()) {
 				playExecutor.execute(new Runnable() {
 					public void run() {
-						remoteDevice.load(true);
+						remoteDevice.load(true, currentSong.getName());
 					}
 				});
 			}
@@ -124,7 +124,7 @@ public class Player {
 		}
 	}
 
-	public void stop() throws Exception {
+	public void stop(boolean playIdleSong) throws Exception {
 		ExecutorService executor = Executors.newFixedThreadPool(30);
 
 		// Reset the DMX universe to clear left out signals
@@ -146,7 +146,7 @@ public class Player {
 			executor.execute(new Runnable() {
 				public void run() {
 					try {
-						currentSong.stop();
+						currentSong.stop(playIdleSong);
 					} catch (Exception e) {
 						logger.error("Could not load the song files", e);
 					}
