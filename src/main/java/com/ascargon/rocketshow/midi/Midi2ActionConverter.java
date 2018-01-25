@@ -82,19 +82,19 @@ public class Midi2ActionConverter {
 		
 		switch (action) {
 		case PLAY:
-			manager.getCurrentSetList().play();
+			manager.getPlayer().play();
 			break;
 		case PAUSE:
-			manager.getCurrentSetList().pause();
+			manager.getPlayer().pause();
 			break;
 		case TOGGLE_PLAY:
-			manager.getCurrentSetList().togglePlay();
+			manager.getPlayer().togglePlay();
 			break;
 		case RESUME:
-			manager.getCurrentSetList().resume();
+			manager.getPlayer().resume();
 			break;
 		case STOP:
-			manager.getCurrentSetList().stop();
+			manager.getPlayer().stop();
 			break;
 		case NEXT_SONG:
 			manager.getCurrentSetList().nextSong();

@@ -29,7 +29,7 @@ public class Transport {
 		
 		Manager manager = (Manager) context.getAttribute("manager");
 		if (manager.getCurrentSetList() != null) {
-			manager.getCurrentSetList().getCurrentSong().loadFiles();
+			manager.getPlayer().getCurrentSong().loadFiles();
 		}
 		return Response.status(200).build();
 	}
@@ -42,7 +42,7 @@ public class Transport {
 		
 		Manager manager = (Manager) context.getAttribute("manager");
 		if (manager.getCurrentSetList() != null) {
-			manager.getCurrentSetList().play();
+			manager.getPlayer().play();
 		}
 		return Response.status(200).build();
 	}
@@ -55,7 +55,7 @@ public class Transport {
 		
 		Manager manager = (Manager) context.getAttribute("manager");
 		if (manager.getCurrentSetList() != null) {
-			manager.getCurrentSetList().pause();
+			manager.getPlayer().pause();
 		}
 		return Response.status(200).build();
 	}
@@ -68,7 +68,7 @@ public class Transport {
 		
 		Manager manager = (Manager) context.getAttribute("manager");
 		if (manager.getCurrentSetList() != null) {
-			manager.getCurrentSetList().resume();
+			manager.getPlayer().resume();
 		}
 		return Response.status(200).build();
 	}
@@ -81,7 +81,7 @@ public class Transport {
 		
 		Manager manager = (Manager) context.getAttribute("manager");
 		if (manager.getCurrentSetList() != null) {
-			manager.getCurrentSetList().togglePlay();
+			manager.getPlayer().togglePlay();
 		}
 		return Response.status(200).build();
 	}
@@ -94,7 +94,7 @@ public class Transport {
 		
 		Manager manager = (Manager) context.getAttribute("manager");
 		if (manager.getCurrentSetList() != null) {
-			manager.getCurrentSetList().stop();
+			manager.getPlayer().stop();
 		}
 		return Response.status(200).build();
 	}

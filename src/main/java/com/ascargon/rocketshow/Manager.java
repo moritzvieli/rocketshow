@@ -65,6 +65,8 @@ public class Manager {
 	private SetList currentSetList;
 
 	private Song idleSong;
+	
+	private Player player;
 
 	public void addMidiOutDeviceConnectedListener(MidiDeviceConnectedListener listener) {
 		midiOutDeviceConnectedListeners.add(listener);
@@ -153,6 +155,8 @@ public class Manager {
 	}
 
 	public void playIdleSong() throws Exception {
+		logger.debug("Playing the idle song...");
+		
 		if (idleSong != null) {
 			// The idle song is already initialized
 			return;
@@ -170,7 +174,9 @@ public class Manager {
 		idleSong.play();
 	}
 
-	public void stopIdleVideo() throws Exception {
+	public void stopIdleSong() throws Exception {
+		logger.debug("Stopping the idle song...");
+		
 		if (idleSong == null) {
 			return;
 		}
@@ -183,6 +189,9 @@ public class Manager {
 
 	public void load() throws IOException {
 		logger.info("Initialize...");
+		
+		// Initialize the player
+		player = new Player(this);
 
 		// Initialize the client state
 		stateManager = new StateManager();
@@ -415,6 +424,12 @@ public class Manager {
 	public void close() {
 		logger.info("Close...");
 
+		try {
+			player.close();
+		} catch (Exception e) {
+			logger.error("Could not close the player", e);
+		}
+		
 		if (connectMidiOutDeviceTimer != null) {
 			connectMidiOutDeviceTimer.cancel();
 		}
@@ -444,7 +459,7 @@ public class Manager {
 		}
 
 		try {
-			stopIdleVideo();
+			stopIdleSong();
 		} catch (Exception e) {
 			logger.error("Could not stop idle video", e);
 		}
@@ -522,6 +537,14 @@ public class Manager {
 
 	public MidiInDeviceReceiver getMidiInDeviceReceiver() {
 		return midiInDeviceReceiver;
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 
 }

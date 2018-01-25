@@ -100,7 +100,7 @@ public class Song {
 	// Load all files but don't start playing
 	public synchronized void loadFiles() throws Exception {
 		if (!idleSong) {
-			manager.stopIdleVideo();
+			manager.stopIdleSong();
 		}
 
 		if (filesLoaded) {
@@ -193,7 +193,7 @@ public class Song {
 						// Stop, don't play the idle song but start playing the
 						// next song
 						manager.getCurrentSetList().nextSong(false);
-						manager.getCurrentSetList().play();
+						manager.getPlayer().play();
 					} else {
 						// Stop, play the idle song and select the next song
 						// automatically (if there is one)
