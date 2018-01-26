@@ -65,22 +65,14 @@ public class StateManager {
 		currentState.setCurrentSongIndex(0);
 
 		if (manager != null) {
+			currentState.setPlayState(manager.getPlayer().getPlayState());
+			currentState.setCurrentSongIndex(manager.getCurrentSetList().getCurrentSongIndex());
+			currentState.setCurrentSongName(manager.getPlayer().getCurrentSongName());
+			currentState.setCurrentSongDurationMillis(manager.getPlayer().getCurrentSongDurationMillis());
+			currentState.setPassedMillis(manager.getPlayer().getCurrentSongPassedMillis());
+
 			if (manager.getCurrentSetList() != null) {
 				currentState.setCurrentSetListName(manager.getCurrentSetList().getName());
-
-				if (manager.getPlayer().getCurrentSong() != null) {
-					currentState.setPlayState(manager.getPlayer().getCurrentSong().getPlayState());
-				}
-
-				currentState.setCurrentSongIndex(manager.getCurrentSetList().getCurrentSongIndex());
-				currentState.setCurrentSongName(manager.getPlayer().getCurrentSong().getName());
-
-				if (manager.getPlayer().getCurrentSong() != null) {
-					currentState.setCurrentSongDurationMillis(
-							manager.getPlayer().getCurrentSong().getDurationMillis());
-
-					currentState.setPassedMillis(manager.getPlayer().getCurrentSong().getPassedMillis());
-				}
 			}
 
 			if (manager.getSession() != null) {

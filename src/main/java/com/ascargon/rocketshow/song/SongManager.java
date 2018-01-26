@@ -23,7 +23,10 @@ public class SongManager {
 	public final static String SONG_PATH = "song/";
 	public final static String SETLIST_PATH = "setlist/";
 
-	public SongManager() {
+	private Manager manager;
+
+	public SongManager(Manager manager) {
+		this.manager = manager;
 	}
 
 	public List<Song> getAllSongs() throws Exception {
@@ -88,6 +91,10 @@ public class SongManager {
 		JAXBContext jaxbContext = JAXBContext.newInstance(Song.class);
 		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 		song = (Song) jaxbUnmarshaller.unmarshal(new File(Manager.BASE_PATH + SONG_PATH + name));
+
+		song.setName(name);
+		song.getMidiMapping().setParent(manager.getSettings().getMidiMapping());
+		song.setManager(manager);
 
 		logger.info("Song '" + name + "' successfully loaded");
 

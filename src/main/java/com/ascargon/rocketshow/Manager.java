@@ -65,7 +65,7 @@ public class Manager {
 	private SetList currentSetList;
 
 	private Song idleSong;
-	
+
 	private Player player;
 
 	public void addMidiOutDeviceConnectedListener(MidiDeviceConnectedListener listener) {
@@ -156,7 +156,7 @@ public class Manager {
 
 	public void playIdleSong() throws Exception {
 		logger.debug("Playing the idle song...");
-		
+
 		if (idleSong != null) {
 			// The idle song is already initialized
 			return;
@@ -176,7 +176,7 @@ public class Manager {
 
 	public void stopIdleSong() throws Exception {
 		logger.debug("Stopping the idle song...");
-		
+
 		if (idleSong == null) {
 			return;
 		}
@@ -189,7 +189,7 @@ public class Manager {
 
 	public void load() throws IOException {
 		logger.info("Initialize...");
-		
+
 		// Initialize the player
 		player = new Player(this);
 
@@ -201,7 +201,7 @@ public class Manager {
 		updater = new Updater(this);
 
 		// Initialize the songmanager
-		songManager = new SongManager();
+		songManager = new SongManager(this);
 
 		// Initialize the filemanager
 		fileManager = new FileManager();
@@ -311,7 +311,7 @@ public class Manager {
 
 	public void loadSettings() throws Exception {
 		File file = new File(BASE_PATH + "settings");
-		
+
 		if (!file.exists() || file.isDirectory()) {
 			return;
 		}
@@ -429,7 +429,7 @@ public class Manager {
 		} catch (Exception e) {
 			logger.error("Could not close the player", e);
 		}
-		
+
 		if (connectMidiOutDeviceTimer != null) {
 			connectMidiOutDeviceTimer.cancel();
 		}

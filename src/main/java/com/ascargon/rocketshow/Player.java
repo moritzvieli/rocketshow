@@ -9,25 +9,35 @@ import com.ascargon.rocketshow.song.Song;
 import com.ascargon.rocketshow.song.Song.PlayState;
 
 public class Player {
-	
+
 	final static Logger logger = Logger.getLogger(Player.class);
 
 	private Song currentSong;
 	private Manager manager;
-	
+
 	public Player(Manager manager) {
 		this.manager = manager;
 	}
-	
+
 	public void load() throws Exception {
 		if (currentSong != null) {
 			currentSong.loadFiles();
 		}
 	}
-	
+
 	public void play() throws Exception {
+		if (currentSong == null) {
+			return;
+		}
+
+		if (currentSong.getPlayState() == PlayState.PLAYING || currentSong.getPlayState() == PlayState.STOPPING
+				|| currentSong.getPlayState() == PlayState.LOADING) {
+			
+			return;
+		}
+
 		ExecutorService playExecutor;
-		
+
 		// Make sure all remote devices and the local one have loaded the song
 		// before playing it
 		playExecutor = Executors.newFixedThreadPool(30);
@@ -44,17 +54,15 @@ public class Player {
 		}
 
 		// Also load the local song files
-		if (currentSong != null) {
-			playExecutor.execute(new Runnable() {
-				public void run() {
-					try {
-						currentSong.loadFiles();
-					} catch (Exception e) {
-						logger.error("Could not load the song files", e);
-					}
+		playExecutor.execute(new Runnable() {
+			public void run() {
+				try {
+					currentSong.loadFiles();
+				} catch (Exception e) {
+					logger.error("Could not load the song files", e);
 				}
-			});
-		}
+			}
+		});
 
 		logger.debug("Wait for all devices to be loaded...");
 
@@ -87,7 +95,7 @@ public class Player {
 
 		logger.debug("Playing on all devices");
 	}
-	
+
 	public void pause() throws Exception {
 		for (RemoteDevice remoteDevice : manager.getSettings().getRemoteDeviceList()) {
 			if (remoteDevice.isSynchronize()) {
@@ -125,6 +133,14 @@ public class Player {
 	}
 
 	public void stop(boolean playIdleSong) throws Exception {
+		if (currentSong == null) {
+			return;
+		}
+
+		if (currentSong.getPlayState() == PlayState.STOPPED || currentSong.getPlayState() == PlayState.STOPPING) {
+			return;
+		}
+
 		ExecutorService executor = Executors.newFixedThreadPool(30);
 
 		// Reset the DMX universe to clear left out signals
@@ -142,17 +158,15 @@ public class Player {
 		}
 
 		// Also stop the local song
-		if (currentSong != null) {
-			executor.execute(new Runnable() {
-				public void run() {
-					try {
-						currentSong.stop(playIdleSong);
-					} catch (Exception e) {
-						logger.error("Could not load the song files", e);
-					}
+		executor.execute(new Runnable() {
+			public void run() {
+				try {
+					currentSong.stop(playIdleSong);
+				} catch (Exception e) {
+					logger.error("Could not load the song files", e);
 				}
-			});
-		}
+			}
+		});
 
 		// Wait for all devices to be stopped
 		executor.shutdown();
@@ -161,18 +175,73 @@ public class Player {
 		}
 	}
 	
+	public void stop() throws Exception {
+		stop(true);
+	}
+
+	public PlayState getPlayState() {
+		if (currentSong == null) {
+			return PlayState.STOPPED;
+		}
+
+		return currentSong.getPlayState();
+	}
+
+	public String getCurrentSongName() {
+		if (currentSong == null) {
+			return null;
+		}
+
+		return currentSong.getName();
+	}
+
+	public long getCurrentSongDurationMillis() {
+		if (currentSong == null) {
+			return 0;
+		}
+
+		return currentSong.getDurationMillis();
+	}
+
+	public long getCurrentSongPassedMillis() {
+		if (currentSong == null) {
+			return 0;
+		}
+
+		return currentSong.getPassedMillis();
+	}
+
 	public void close() throws Exception {
 		if (currentSong != null) {
 			currentSong.close();
 		}
 	}
-	
-	public Song getCurrentSong() {
-		return currentSong;
-	}
 
-	public void setCurrentSong(Song currentSong) {
+	public void setCurrentSong(Song currentSong, boolean playIdleSongWhenStoppingCurrentSong) throws Exception {
+		// Stop the current song, if needed
+		stop(playIdleSongWhenStoppingCurrentSong);
+		
 		this.currentSong = currentSong;
 	}
 	
+	public void setCurrentSong(Song currentSong) throws Exception {
+		setCurrentSong(currentSong, true);
+	}
+	
+	public void loadFiles() throws Exception {
+		if(currentSong == null) {
+			return;
+		}
+		
+		currentSong.loadFiles();
+	}
+	
+	public void setAutoStartNextSong(boolean autoStartNextSong) {
+		if(currentSong == null) {
+			return;
+		}
+		
+		currentSong.setAutoStartNextSong(autoStartNextSong);
+	}
+
 }

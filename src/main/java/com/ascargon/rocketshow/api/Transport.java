@@ -12,59 +12,42 @@ import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.Manager;
-import com.ascargon.rocketshow.song.Song;
 
 @Path("/transport")
 public class Transport {
 
 	final static Logger logger = Logger.getLogger(Transport.class);
-	
+
 	@Context
 	ServletContext context;
-	
+
 	@Path("load")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response load(@QueryParam("name") String songName) throws Exception {
 		logger.info("Received API request for transport/load");
-		
-		Manager manager = (Manager) context.getAttribute("manager");
-		
-		Song currentSong = null;
-		
-		if(songName.length() == 0) {
-			// Load the current song, if available
-			manager.getPlayer().getCurrentSong();
-		} else {
-			// Stop a current song, if needed and don't play the idle video
-			if(manager.getPlayer().getCurrentSong() != null) {
-				manager.getPlayer().getCurrentSong().stop(false);
-			}
-			
-			// Load the song with the given name
-			currentSong = manager.getSongManager().loadSong(songName);
 
-			manager.getPlayer().setCurrentSong(currentSong);
-			currentSong.setName(songName);
-			currentSong.getMidiMapping().setParent(manager.getSettings().getMidiMapping());
-			currentSong.setManager(manager);
-			
-			currentSong.loadFiles();
+		Manager manager = (Manager) context.getAttribute("manager");
+
+		if (songName.length() > 0) {
+			if (!manager.getPlayer().getCurrentSongName().equals(songName)) {
+				// Load the song with the given name into the player
+				manager.getPlayer().setCurrentSong(manager.getSongManager().loadSong(songName), false);
+			}
 		}
-		
-		if (currentSong != null) {
-			currentSong.loadFiles();
-		}
-		
+
+		// Load the files for the current song
+		manager.getPlayer().loadFiles();
+
 		return Response.status(200).build();
 	}
-	
+
 	@Path("play")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response play() throws Exception {
 		logger.info("Received API request for transport/play");
-		
+
 		Manager manager = (Manager) context.getAttribute("manager");
 		if (manager.getCurrentSetList() != null) {
 			manager.getPlayer().play();
@@ -77,7 +60,7 @@ public class Transport {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response pause() throws Exception {
 		logger.info("Received API request for transport/pause");
-		
+
 		Manager manager = (Manager) context.getAttribute("manager");
 		if (manager.getCurrentSetList() != null) {
 			manager.getPlayer().pause();
@@ -90,7 +73,7 @@ public class Transport {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response resume() throws Exception {
 		logger.info("Received API request for transport/resume");
-		
+
 		Manager manager = (Manager) context.getAttribute("manager");
 		if (manager.getCurrentSetList() != null) {
 			manager.getPlayer().resume();
@@ -103,7 +86,7 @@ public class Transport {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response togglePlay() throws Exception {
 		logger.info("Received API request for transport/toggle-play");
-		
+
 		Manager manager = (Manager) context.getAttribute("manager");
 		if (manager.getCurrentSetList() != null) {
 			manager.getPlayer().togglePlay();
@@ -116,10 +99,10 @@ public class Transport {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response stop() throws Exception {
 		logger.info("Received API request for transport/stop");
-		
+
 		Manager manager = (Manager) context.getAttribute("manager");
 		if (manager.getCurrentSetList() != null) {
-			manager.getPlayer().stop(true);
+			manager.getPlayer().stop();
 		}
 		return Response.status(200).build();
 	}
@@ -129,7 +112,7 @@ public class Transport {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response nextSong() throws Exception {
 		logger.info("Received API request for transport/next-song");
-		
+
 		Manager manager = (Manager) context.getAttribute("manager");
 		if (manager.getCurrentSetList() != null) {
 			manager.getCurrentSetList().nextSong();
@@ -142,7 +125,7 @@ public class Transport {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response previousSong() throws Exception {
 		logger.info("Received API request for transport/previous-song");
-		
+
 		Manager manager = (Manager) context.getAttribute("manager");
 		if (manager.getCurrentSetList() != null) {
 			manager.getCurrentSetList().previousSong();
@@ -155,7 +138,7 @@ public class Transport {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response setSongIndex(@QueryParam("index") int index) throws Exception {
 		logger.info("Received API request for transport/set-song-index");
-		
+
 		Manager manager = (Manager) context.getAttribute("manager");
 		if (manager.getCurrentSetList() != null) {
 			manager.getCurrentSetList().setSongIndex(index);

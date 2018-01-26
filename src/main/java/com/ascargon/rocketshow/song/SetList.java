@@ -11,7 +11,6 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.Manager;
-import com.ascargon.rocketshow.song.Song.PlayState;
 
 @XmlRootElement
 public class SetList {
@@ -36,20 +35,11 @@ public class SetList {
 			return;
 		}
 
+		// Load the current song into the player
 		SetListSong currentSetListSong = setListSongList.get(currentSongIndex);
-
-		// Stop the current song (if not already done)
-		if (manager.getPlayer().getCurrentSong() != null) {
-			manager.getPlayer().getCurrentSong().stop();
-		}
-
-		Song currentSong = manager.getSongManager().loadSong(currentSetListSong.getName());
-
-		manager.getPlayer().setCurrentSong(currentSong);
-		currentSong.setName(currentSetListSong.getName());
-		currentSong.getMidiMapping().setParent(manager.getSettings().getMidiMapping());
-		currentSong.setManager(manager);
-		currentSong.setAutoStartNextSong(currentSetListSong.isAutoStartNextSong());
+		
+		manager.getPlayer().setCurrentSong(manager.getSongManager().loadSong(currentSetListSong.getName()));
+		manager.getPlayer().setAutoStartNextSong(currentSetListSong.isAutoStartNextSong());
 	}
 
 	// Return only the setlist-relevant information of the song (e.g. to save to
@@ -130,9 +120,7 @@ public class SetList {
 
 	public void setSongIndex(int songIndex, boolean playIdleSong) throws Exception {
 		// Stop a playing song if needed
-		if (manager.getPlayer().getCurrentSong() != null) {
-			manager.getPlayer().stop(playIdleSong);
-		}
+		manager.getPlayer().stop(playIdleSong);
 
 		// Return, if we already have the correct song set
 		if (currentSongIndex == songIndex) {

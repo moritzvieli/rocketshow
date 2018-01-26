@@ -99,12 +99,12 @@ public class Song {
 
 	// Load all files but don't start playing
 	public synchronized void loadFiles() throws Exception {
-		if (!idleSong) {
-			manager.stopIdleSong();
-		}
-
 		if (filesLoaded) {
 			return;
+		}
+		
+		if (!idleSong) {
+			manager.stopIdleSong();
 		}
 
 		playState = PlayState.LOADING;
@@ -207,10 +207,6 @@ public class Song {
 	}
 
 	public synchronized void play() throws Exception {
-		if (playState == PlayState.PLAYING || playState == PlayState.STOPPING || playState == PlayState.LOADING) {
-			return;
-		}
-
 		// Load all files
 		loadFiles();
 
@@ -304,10 +300,6 @@ public class Song {
 	}
 
 	public synchronized void stop(boolean playIdleSong) throws Exception {
-		if (playState == PlayState.STOPPED || playState == PlayState.STOPPING) {
-			return;
-		}
-
 		playState = PlayState.STOPPING;
 
 		if (!idleSong) {
