@@ -16,7 +16,9 @@
         "setlist-without-songs": "Dieses Set enthält keine Kompositionen. Klicke hier, um den Editor zu öffnen.",
         "no-setlists-title": "Keine Sets",
         "no-setlists": "Klicke hier, um Kompositionen und dein erstes Set zu erstellen.",
-        "update": "Aktualisieren"
+        "update": "Aktualisieren",
+        "please-wait": "Bitte warten...",
+        "info": "Hinweis"
     },
     "loading": {
         "title": "Laden...",
@@ -112,6 +114,10 @@
         "advanced": "Erweitert",
         "language": "Sprache",
         "warning-reboot": "Möchtest du das Gerät wirklich neu starten?",
+        "factory-reset": "Auf Werkseinstellungen zurücksetzen",
+        "factory-reset-done": "Die Werkseinstellungen wurden erfolgreich zurückgesetzt.",
+        "wait-factory-reset": "Bitte warte, während das Gerät zurückgesetzt wird...",
+        "warning-factory-reset": "Möchtest du das Gerät wirklich auf die Werkseinstellungen zurücksetzen? Alle Dateien, Kompositionen und Einstellungen gehen dabei verloren.",
         "name-unit": "Name des Geräts",
         "warning-settings-changes": "Die Einstellungen enthalten noch nicht gespeicherte Änderungen. Möchtest du wirklich fortfahren?",
         "usb-interface": "USB Schnittstelle",

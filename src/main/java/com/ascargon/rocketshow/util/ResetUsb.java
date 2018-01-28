@@ -24,12 +24,15 @@ public class ResetUsb {
 			// Extract the bus and the device from each line
 			String bus = line.substring(4, 7);
 			String device = line.substring(15, 18);
+			String name = line.substring(33);
 
-			// Reset the interface
-			ShellManager shellManager = new ShellManager(
-					new String[] { "sudo", Manager.BASE_PATH + "bin/usbreset", "/dev/bus/usb/" + bus + "/" + device });
+			if (!name.startsWith("Standard Microsystems Corp") && !name.startsWith("Linux Foundation 2.0")) {
+				// Reset the interface
+				ShellManager shellManager = new ShellManager(new String[] { "sudo", Manager.BASE_PATH + "bin/usbreset",
+						"/dev/bus/usb/" + bus + "/" + device });
 
-			shellManager.getProcess().waitFor();
+				shellManager.getProcess().waitFor();
+			}
 		}
 	}
 

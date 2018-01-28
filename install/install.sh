@@ -142,6 +142,7 @@ cat <<'EOF' >/opt/rocketshow_reset.sh
 #!/bin/bash
 #
 rm -rf /opt/rocketshow
+cd /opt
 tar xvzf /opt/rocketshow_factory.tar.gz
 sudo reboot
 EOF

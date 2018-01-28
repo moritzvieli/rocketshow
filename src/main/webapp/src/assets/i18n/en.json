@@ -16,7 +16,9 @@
         "setlist-without-songs": "This set does not contain any compositions. Click here to open the editor.",
         "no-setlists-title": "No sets",
         "no-setlists": "Click here to create Compositions and your first set.",
-        "update": "Update"
+        "update": "Update",
+        "please-wait": "Please wait...",
+        "info": "Information"
     },
     "loading": {
         "title": "Loading...",
@@ -112,6 +114,10 @@
         "advanced": "Advanced",
         "language": "Language",
         "warning-reboot": "Do you really want to reboot the device?",
+        "factory-reset": "Reset to factory defaults",
+        "factory-reset-done": "The factory defaults have successfully been restored.",
+        "wait-factory-reset": "Please wait, while the device is being reset...",
+        "warning-factory-reset": "Do you really want to reset the device to its factory defaults? All files, compositions and settings will be lost.",
         "name-unit": "Device name",
         "warning-settings-changes": "The settings contain unsaved changes. Do you really want to proceed?",
         "usb-interface": "USB interface",

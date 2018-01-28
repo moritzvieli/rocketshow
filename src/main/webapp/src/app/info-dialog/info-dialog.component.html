@@ -1,0 +1,29 @@
+<div class="card-modal">
+  <div class="card">
+    <div class="card-header">
+      {{ 'misc.info' | translate }}
+    </div>
+
+    <div class="card-body">
+      <div class="row">
+        <div class="col-auto">
+          <h2 class="mb-0">
+            <i class="fa fa-info-circle" aria-hidden="true"></i>
+          </h2>
+        </div>
+        <div class="col pl-0">
+          <p class="mb-0">{{ message }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <div class="d-flex float-right">
+        <button type="button" class="btn btn-primary" (click)="ok(); false">
+          {{ 'misc.ok' | translate }}
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

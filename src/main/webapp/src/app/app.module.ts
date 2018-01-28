@@ -1,3 +1,4 @@
+import { WaitDialogService } from './services/wait-dialog.service';
 import { Song } from './models/song';
 import { State } from './models/state';
 import { BrowserModule } from '@angular/platform-browser';
@@ -32,6 +33,8 @@ import { EditorSongFileComponent } from './editor/editor-song/editor-song-file/e
 import { RoutingDetailsComponent } from './routing-details/routing-details.component';
 import { SettingsAdvancedComponent } from './settings/settings-advanced/settings-advanced.component';
 import { UpdateDialogComponent } from './update-dialog/update-dialog.component';
+import { WaitDialogComponent } from './wait-dialog/wait-dialog.component';
+import { InfoDialogComponent } from './info-dialog/info-dialog.component';
 
 import { ApiService } from './services/api.service';
 import { StateService } from './services/state.service';
@@ -44,6 +47,7 @@ import { WarningDialogService } from './services/warning-dialog.service';
 import { WarningDialogComponent } from './warning-dialog/warning-dialog.component';
 import { PendingChangesDialogService } from './services/pending-changes-dialog.service';
 import { UpdateService } from './services/update.service';
+import { InfoDialogService } from './services/info-dialog.service';
 
 const appRoutes: Routes = [
   { path: 'intro', component: IntroComponent },
@@ -77,7 +81,9 @@ const DROPZONE_CONFIG: DropzoneConfigInterface = {
     WarningDialogComponent,
     WarningDialogComponent,
     SettingsAdvancedComponent,
-    UpdateDialogComponent
+    UpdateDialogComponent,
+    WaitDialogComponent,
+    InfoDialogComponent,
   ],
   imports: [
     HttpModule,
@@ -118,13 +124,17 @@ const DROPZONE_CONFIG: DropzoneConfigInterface = {
     SessionService,
     WarningDialogService,
     PendingChangesDialogService,
-    UpdateService
+    UpdateService,
+    WaitDialogService,
+    InfoDialogService
   ],
   entryComponents: [
     EditorSongFileComponent,
     RoutingDetailsComponent,
     WarningDialogComponent,
-    UpdateDialogComponent
+    UpdateDialogComponent,
+    WaitDialogComponent,
+    InfoDialogComponent
   ],
   bootstrap: [AppComponent]
 })
