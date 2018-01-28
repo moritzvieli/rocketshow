@@ -23,11 +23,15 @@ public class SetList {
 
 	private List<SetListSong> setListSongList = new ArrayList<SetListSong>();
 
-	private int currentSongIndex = 0;
+	private int currentSongIndex;
 
 	private Manager manager;
 
 	private String notes;
+	
+	public SetList() {
+		currentSongIndex = 0;
+	}
 
 	// Read the current song from its file
 	public void readCurrentSong() throws Exception {
@@ -105,8 +109,14 @@ public class SetList {
 		this.manager = manager;
 	}
 
+	@XmlElement
 	public int getCurrentSongIndex() {
 		return currentSongIndex;
+	}
+	
+	// For the XML load to work
+	public void setCurrentSongIndex(int currentSongIndex) throws Exception {
+		this.setSongIndex(currentSongIndex);
 	}
 
 	@XmlTransient
@@ -120,15 +130,18 @@ public class SetList {
 
 	public void setSongIndex(int songIndex, boolean playIdleSong) throws Exception {
 		// Stop a playing song if needed
-		manager.getPlayer().stop(playIdleSong);
-
+		if (manager != null) {
+			manager.getPlayer().stop(playIdleSong);
+		}
+		
 		// Return, if we already have the correct song set
 		if (currentSongIndex == songIndex) {
 			return;
 		}
 
-		// Load the new song
 		currentSongIndex = songIndex;
+		
+		// Load the new song
 		readCurrentSong();
 
 		if (manager != null) {
