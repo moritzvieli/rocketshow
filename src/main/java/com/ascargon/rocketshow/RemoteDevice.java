@@ -2,6 +2,8 @@ package com.ascargon.rocketshow;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -94,10 +96,15 @@ public class RemoteDevice {
 	public void reboot() {
 		doPost("system/reboot");
 	}
-	
+
 	public void load(boolean synchronous, String name) {
-		doPost("transport/load?name=" + name, synchronous);
+		try {
+			doPost("transport/load?name=" + URLEncoder.encode(name, "UTF-8"), synchronous);
+		} catch (UnsupportedEncodingException e) {
+			logger.error("Could not encode the name " + name, e);
+		}
 	}
+
 	public void load() {
 		doPost("transport/load", false);
 	}
