@@ -140,9 +140,11 @@ public class Song {
 
 		logger.debug("All files for song '" + name + "' loaded");
 
-		playState = PlayState.PAUSED;
-
-		filesLoaded = true;
+		// Maybe we are stopping meanwhile
+		if(playState == PlayState.LOADING) {
+			playState = PlayState.PAUSED;
+			filesLoaded = true;
+		}
 	}
 
 	private void startAutoStopTimer(long passedMillis) {
@@ -192,11 +194,15 @@ public class Song {
 					if (autoStartNextSong && manager.getCurrentSetList().hasNextSong()) {
 						// Stop, don't play the idle song but start playing the
 						// next song
+						stop(false);
+						
 						manager.getCurrentSetList().nextSong(false);
 						manager.getPlayer().play();
 					} else {
 						// Stop, play the idle song and select the next song
 						// automatically (if there is one)
+						stop(true);
+						
 						manager.getCurrentSetList().nextSong();
 					}
 				} catch (Exception e) {
