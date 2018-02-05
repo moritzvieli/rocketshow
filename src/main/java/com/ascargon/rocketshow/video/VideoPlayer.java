@@ -69,7 +69,9 @@ public class VideoPlayer {
 		loadTimer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				loadTimer.cancel();
+				if (loadTimer != null) {
+					loadTimer.cancel();
+				}
 				loadTimer = null;
 
 				if (playerLoadedListener != null) {
