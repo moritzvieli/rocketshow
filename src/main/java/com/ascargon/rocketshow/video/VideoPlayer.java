@@ -61,10 +61,8 @@ public class VideoPlayer {
 
 		pause();
 
-		// Wait for the player to get ready, because reading the input stream in
-		// an infinite loop does not work properly (takes too much resources and
-		// exiting the loop as soon as the player is loaded breaks the process)
-		// TODO: May work? See thread above?
+		// Wait for the player to get ready, because reading the input stream
+		// does not work. Output will only be received on exit.
 		loadTimer = new Timer();
 		loadTimer.schedule(new TimerTask() {
 			@Override
@@ -106,6 +104,7 @@ public class VideoPlayer {
 						public void run() {
 							BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 							String line = null;
+
 							try {
 								while ((line = reader.readLine()) != null) {
 									if (line.contains("/usr/bin/omxplayer.bin")) {

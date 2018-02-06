@@ -1,5 +1,8 @@
 package com.ascargon.rocketshow;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.audio.AudioBus;
+import com.ascargon.rocketshow.audio.AudioDevice;
 import com.ascargon.rocketshow.audio.AudioPlayer.PlayerType;
 import com.ascargon.rocketshow.midi.Midi2ActionMapping;
 import com.ascargon.rocketshow.midi.MidiDevice;
@@ -18,6 +22,7 @@ import com.ascargon.rocketshow.midi.MidiMapping;
 import com.ascargon.rocketshow.midi.MidiRouting;
 import com.ascargon.rocketshow.midi.MidiUtil;
 import com.ascargon.rocketshow.midi.MidiUtil.MidiDirection;
+import com.ascargon.rocketshow.util.ShellManager;
 
 @XmlRootElement
 public class Settings {
@@ -65,7 +70,9 @@ public class Settings {
 
 	private AudioOutput audioOutput;
 
-	private String audioOutputDeviceName;
+	private int audioRate;
+
+	private AudioDevice audioDevice;
 
 	private List<AudioBus> audioBusList = new ArrayList<AudioBus>();
 
@@ -111,7 +118,12 @@ public class Settings {
 		offsetMillisAudio = 0;
 		offsetMillisVideo = 0;
 
+		audioOutput = AudioOutput.HEADPHONES;
+		audioRate = 44100 /* or 48000 */;
+
 		loggingLevel = LoggingLevel.INFO;
+
+		updateSystem();
 	}
 
 	public RemoteDevice getRemoteDeviceById(int id) {
@@ -122,6 +134,124 @@ public class Settings {
 		}
 
 		return null;
+	}
+
+	private void setSystemAudioOutput(int id) throws Exception {
+		ShellManager shellManager = new ShellManager(new String[] { "amixer", "cset", "numid=3", String.valueOf(id) });
+		shellManager.getProcess().waitFor();
+	}
+
+	private int getTotalAudioChannels() {
+		int total = 0;
+
+		for (AudioBus audioBus : audioBusList) {
+			total += audioBus.getChannels();
+		}
+
+		return total;
+	}
+	
+	private String getBusNameFromId(int id) {
+		return "bus" + (id + 1);
+	}
+
+	public String getAlsaDeviceFromOutputBus(String outputBus) {
+		logger.debug("Find ALSA device for bus name '" + outputBus + "'...");
+		
+		// Get an alsa device name from a bus name
+		for (int i = 0; i < audioBusList.size(); i++) {
+			AudioBus audioBus = audioBusList.get(i);
+			
+			logger.debug("Got bus '" + audioBus.getName() + "'");
+			
+			if(outputBus.equals(audioBus.getName())) {
+				logger.debug("Found device '" + getBusNameFromId(i) + "'");
+				
+				return getBusNameFromId(i);
+			}
+		}
+		
+		return "";
+	}
+	
+	private String getAlsaSettings() {
+		// Generate the ALSA settings
+		String settings = "";
+		int currentChannel = 0;
+		
+		if(audioDevice == null) {
+			// We got no audio device
+			return "";
+		}
+
+		// Build the general device settings
+		// @formatter:off
+		settings += "pcm_slave.card_slave {\n" +
+				"  pcm \"hw:" + audioDevice.getKey() + "\"\n" +
+				"  channels " + getTotalAudioChannels() + "\n" +
+				"\n" +
+				"  rate " + audioRate + "\n" +
+				"}\n";
+		
+		// List each bus
+		for (int i = 0; i < audioBusList.size(); i++) {
+			AudioBus audioBus = audioBusList.get(i);
+			
+			settings += "\n" +
+					"pcm." + getBusNameFromId(i) + "_dshare {\n" +
+					"  type dshare\n" +
+					"  ipc_key " + 87273 + "\n" +
+					"  slave card_slave\n";
+			
+			// Add each channel to the bus
+			for (int j = 0; j < audioBus.getChannels(); j++) {
+				settings += "  bindings." + j + " " + currentChannel + "\n";
+				
+				currentChannel ++;
+			}
+					
+			settings += 	"}\n";	
+			
+			// Add the plugin for the bus
+			settings += "\n" +
+					"pcm." + getBusNameFromId(i) + " {\n" +
+					"  type plug\n" +
+					"  slave.pcm " + getBusNameFromId(i) + "_dshare\n" +
+					"}\n";
+		}
+		// @formatter:on
+
+		return settings;
+	}
+
+	private void updateAudioSystem() throws Exception {
+		if (audioOutput == AudioOutput.HEADPHONES) {
+			setSystemAudioOutput(1);
+		} else if (audioOutput == AudioOutput.HDMI) {
+			setSystemAudioOutput(2);
+		} else if (audioOutput == AudioOutput.DEVICE) {
+			// Write the audio settings to /home/.asoundrc and use ALSA to
+			// output audio on the selected device name
+			File alsaSettings = new File("/home/rocketshow/.asoundrc");
+			
+			try {
+			    FileWriter fileWriter = new FileWriter(alsaSettings, false);
+			    fileWriter.write(getAlsaSettings());
+			    fileWriter.close();
+			} catch (IOException e) {
+			    logger.error("Could not write .asoundrc", e);
+			} 
+		}
+	}
+
+	public void updateSystem() {
+		// Update all system settings
+
+		try {
+			updateAudioSystem();
+		} catch (Exception e) {
+			logger.error("Could not update the audio system settings", e);
+		}
 	}
 
 	@XmlElement
@@ -295,15 +425,6 @@ public class Settings {
 		this.audioOutput = audioOutput;
 	}
 
-	@XmlElement
-	public String getAudioOutputDeviceName() {
-		return audioOutputDeviceName;
-	}
-
-	public void setAudioOutputDeviceName(String audioOutputDeviceName) {
-		this.audioOutputDeviceName = audioOutputDeviceName;
-	}
-
 	@XmlElement(name = "audioBus")
 	@XmlElementWrapper(name = "audioBusList")
 	public List<AudioBus> getAudioBusList() {
@@ -312,6 +433,24 @@ public class Settings {
 
 	public void setAudioBusList(List<AudioBus> audioBusList) {
 		this.audioBusList = audioBusList;
+	}
+
+	public int getAudioRate() {
+		return audioRate;
+	}
+
+	@XmlElement
+	public void setAudioRate(int audioRate) {
+		this.audioRate = audioRate;
+	}
+
+	@XmlElement
+	public AudioDevice getAudioDevice() {
+		return audioDevice;
+	}
+
+	public void setAudioDevice(AudioDevice audioDevice) {
+		this.audioDevice = audioDevice;
 	}
 
 }

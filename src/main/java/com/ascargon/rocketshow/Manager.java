@@ -305,6 +305,8 @@ public class Manager {
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
 		jaxbMarshaller.marshal(settings, file);
+		
+		settings.updateSystem();
 
 		logger.info("Settings saved");
 	}
@@ -322,6 +324,8 @@ public class Manager {
 		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 		settings = (Settings) jaxbUnmarshaller.unmarshal(file);
 
+		settings.updateSystem();
+		
 		// Reset the USB interface, if needed
 		try {
 			if (settings.isResetUsbAfterBoot()) {

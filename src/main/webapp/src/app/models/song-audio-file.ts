@@ -2,7 +2,7 @@ import { SongFile } from "./song-file";
 
 export class SongAudioFile extends SongFile {
 
-    device: string;
+    outputBus: string;
 
     constructor(data?: any) {
         super(data);
@@ -11,7 +11,7 @@ export class SongAudioFile extends SongFile {
         	return;
         }
 
-        this.device = data.device;
+        this.outputBus = data.outputBus;
     }
 
 }

@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.ascargon.rocketshow.Settings.AudioOutput;
 import com.ascargon.rocketshow.song.file.PlayerLoadedListener;
 import com.ascargon.rocketshow.util.ShellManager;
 
@@ -26,9 +27,9 @@ public class AudioPlayer {
 	private boolean loop;
 
 	private PlayerType playerType = PlayerType.MPLAYER;
-	
-	public void load(PlayerType playerType, PlayerLoadedListener playerLoadedListener, String path, String device)
-			throws IOException, InterruptedException {
+
+	public void load(PlayerType playerType, PlayerLoadedListener playerLoadedListener, String path,
+			AudioOutput audioOutput, String device) throws IOException, InterruptedException {
 
 		this.playerType = playerType;
 		this.path = path;
@@ -36,48 +37,50 @@ public class AudioPlayer {
 
 		if (playerType == PlayerType.MPLAYER) {
 			List<String> params = new ArrayList<String>();
-			
+
 			params.add("mplayer");
-			
-			// Set the ALSA out device
-			params.add("-ao");
-			params.add("alsa:device=" + device);
-			
+
+			if (audioOutput == AudioOutput.DEVICE) {
+				// Set the ALSA out device
+				params.add("-ao");
+				params.add("alsa:device=" + device);
+			}
+
 			// Don't fill the buffer with unnecessary stuff
 			params.add("-quiet");
-			
+
 			// Start in slave-mode to process the input easier
 			params.add("-slave");
-			
+
 			// Set the cache
 			params.add("-cache-min");
 			params.add("99");
-			
+
 			// Set the player looped, if necessary
-			if(loop) {
+			if (loop) {
 				params.add("-loop");
-				
+
 				// 0 = infinite
 				params.add("0");
 			}
-			
+
 			// Add the path
 			params.add(path);
-			
+
 			shellManager = new ShellManager(params.toArray(new String[0]));
 
-			new Thread(new Runnable(){
-			    public void run(){
+			new Thread(new Runnable() {
+				public void run() {
 					BufferedReader reader = new BufferedReader(new InputStreamReader(shellManager.getInputStream()));
 					String line = null;
 					try {
 						while ((line = reader.readLine()) != null) {
 							logger.debug("Output from audio player: " + line);
-							
-							if(line.startsWith("Starting playback...")) {
+
+							if (line.startsWith("Starting playback...")) {
 								// Rewind to the start position
 								shellManager.sendCommand("pausing seek 0 2", true);
-								
+
 								logger.debug("File '" + path + "' loaded");
 								playerLoadedListener.playerLoaded();
 							}
@@ -85,9 +88,9 @@ public class AudioPlayer {
 					} catch (IOException e) {
 						logger.error("Could not read audio player output", e);
 					}
-			    }
+				}
 			}).start();
-			
+
 			// Pause, as soon as the song has been loaded and wait for it to be
 			// played
 			pause();
