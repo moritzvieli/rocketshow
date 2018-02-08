@@ -194,14 +194,14 @@ public class Song {
 					if (autoStartNextSong && manager.getCurrentSetList().hasNextSong()) {
 						// Stop, don't play the idle song but start playing the
 						// next song
-						stop(false);
+						manager.getPlayer().stop(false);
 						
 						manager.getCurrentSetList().nextSong(false);
 						manager.getPlayer().play();
 					} else {
 						// Stop, play the idle song and select the next song
 						// automatically (if there is one)
-						stop(true);
+						manager.getPlayer().stop(true);
 						
 						manager.getCurrentSetList().nextSong();
 					}
