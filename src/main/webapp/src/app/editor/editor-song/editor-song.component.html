@@ -16,6 +16,10 @@
     <div class="card" style="height: 400px; overflow-y: scroll;">
       <div class="card-body p-0">
         <div class="list-group list-group-flush">
+          <a *ngIf="loadingSongs" (click)="selectSong(song); false" href="#" class="list-group-item list-group-item-action flex-column align-items-start d-flex">
+            <p class="mb-0 mx-auto"><i class="fa fa-spinner fa-pulse fa-fw"></i></p>
+          </a>
+
           <a *ngFor="let song of filteredSongs" (click)="selectSong(song); false" href="#" class="list-group-item list-group-item-action flex-column align-items-start"
             [class.active]="initialSong?.name == song.name">
 
@@ -96,7 +100,8 @@
           <a class="mr-3 my-auto" href="#" role="button" (click)="unselect(); false">
             {{ 'misc.cancel' | translate }}
           </a>
-          <button type="button" class="btn btn-primary" (click)="save(currentSong); false" [disabled]="multipleVideoImage() || !currentSong || !currentSong.name || currentSong.name.length < 1 || currentSong.name.length > 50" role="button">
+          <button type="button" class="btn btn-primary" (click)="save(currentSong); false" [disabled]="multipleVideoImage() || !currentSong || !currentSong.name || currentSong.name.length < 1 || currentSong.name.length > 50"
+            role="button">
             <i class="fa fa-floppy-o" aria-hidden="true"></i> {{ 'misc.save' | translate }}
           </button>
         </div>

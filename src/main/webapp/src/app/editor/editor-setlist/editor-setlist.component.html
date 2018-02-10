@@ -1,20 +1,26 @@
 <div class="row">
-  <!-- Song navigation -->
+  <!-- Setlist navigation -->
   <div class="col-md-4 mb-3">
 
-    <!-- Create a new song -->
+    <!-- Create a new setlist -->
     <a class="btn btn-primary mb-3 btn btn-primary btn-block" href="#" role="button" (click)="createSetList(); false">
       <i class="fa fa-plus" aria-hidden="true"></i> {{ 'editor.create-setlist' | translate }}
     </a>
 
-    <!-- Search for songs -->
+    <!-- Search for setlists -->
     <input type="text" class="form-control input-block mb-3" id="searchSetListList" placeholder="{{ 'editor.search-setlists' | translate }}"
       (input)="filterSetLists($event.target.value)">
 
-    <!-- Existing song list -->
+    <!-- Existing setlists -->
     <div class="card" style="height: 400px; overflow-y: scroll;">
       <div class="card-body p-0">
         <div class="list-group list-group-flush">
+          <a *ngIf="loadingSetLists" (click)="selectSong(song); false" href="#" class="list-group-item list-group-item-action flex-column align-items-start d-flex">
+            <p class="mb-0 mx-auto">
+              <i class="fa fa-spinner fa-pulse fa-fw"></i>
+            </p>
+          </a>
+
           <a *ngFor="let setList of filteredSetLists" (click)="selectSetList(setList); false" href="#" class="list-group-item list-group-item-action flex-column align-items-start"
             [class.active]="initialSetList?.name == setList.name">
 
@@ -55,6 +61,12 @@
               <div class="card" style="height: 400px; overflow-y: scroll;">
                 <div class="card-body p-0">
                   <div class="list-group list-group-flush">
+                    <a *ngIf="loadingSongs" (click)="selectSong(song); false" href="#" class="list-group-item list-group-item-action flex-column align-items-start d-flex">
+                      <p class="mb-0 mx-auto">
+                        <i class="fa fa-spinner fa-pulse fa-fw"></i>
+                      </p>
+                    </a>
+
                     <div class="list-group-item" *ngFor="let song of filteredSongs" [hidden]="!showAvailableSong(song)">
                       <div class="row">
                         <div class="col-10 col-auto my-auto">
@@ -118,7 +130,8 @@
           <a class="mr-3 my-auto" href="#" role="button" (click)="unselect(); false">
             {{ 'misc.cancel' | translate }}
           </a>
-          <button type="button" class="btn btn-primary" href="#" role="button" (click)="save(currentSetList); false" [disabled]="!currentSetList || !currentSetList.name || currentSetList.name.length < 1 || currentSetList.name.length > 50" role="button">
+          <button type="button" class="btn btn-primary" href="#" role="button" (click)="save(currentSetList); false" [disabled]="!currentSetList || !currentSetList.name || currentSetList.name.length < 1 || currentSetList.name.length > 50"
+            role="button">
             <i class="fa fa-floppy-o" aria-hidden="true"></i> {{ 'misc.save' | translate }}
           </button>
         </div>

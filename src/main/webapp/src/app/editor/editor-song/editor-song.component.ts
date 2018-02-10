@@ -31,6 +31,8 @@ export class EditorSongComponent implements OnInit {
   filteredSongs: Song[];
   currentSong: Song;
 
+  loadingSongs: boolean = false;
+
   // The song, as it was when we loaded it
   initialSong: Song;
 
@@ -48,9 +50,13 @@ export class EditorSongComponent implements OnInit {
   }
 
   private loadSongs() {
+    this.loadingSongs = true;
+
     this.songService.getSongs(true).subscribe((songs: Song[]) => {
       this.songs = songs;
       this.filterSongs();
+
+      this.loadingSongs = false;
     });
   }
 

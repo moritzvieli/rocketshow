@@ -27,6 +27,9 @@ export class EditorSetlistComponent implements OnInit {
   filteredSongs: Song[];
   availableSongs: Song[];
 
+  loadingSongs: boolean = false;
+  loadingSetLists: boolean = false;
+
   // The setList, as it was when we loaded it
   initialSetList: SetList;
 
@@ -50,16 +53,24 @@ export class EditorSetlistComponent implements OnInit {
   }
 
   private loadAvailableSongs() {
+    this.loadingSongs = true;
+
     this.songService.getSongs(true).subscribe((songs: Song[]) => {
       this.availableSongs = songs;
       this.filterSongs();
+
+      this.loadingSongs = false;
     });
   }
 
   private loadSetLists() {
+    this.loadingSetLists = true;
+
     this.songService.getSetLists(true).subscribe((setLists: SetList[]) => {
       this.setLists = setLists;
       this.filterSetLists();
+
+      this.loadingSetLists = false;
     });
   }
 
