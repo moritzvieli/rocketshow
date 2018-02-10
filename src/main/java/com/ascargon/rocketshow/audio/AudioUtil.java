@@ -14,14 +14,14 @@ public class AudioUtil {
 
 	private static AudioDevice getAudioDeviceFromString(String line) {
 		AudioDevice audioDevice = new AudioDevice();
-		
+
 		audioDevice.setId(Integer.parseInt(line.substring(0, 3).trim()));
 		audioDevice.setKey(line.substring(4, 19).trim());
 		audioDevice.setName(line.substring(21).trim());
-		
+
 		return audioDevice;
 	}
-	
+
 	public static List<AudioDevice> getAudioDevices() {
 		List<AudioDevice> audioDeviceList = new ArrayList<AudioDevice>();
 
@@ -33,17 +33,19 @@ public class AudioUtil {
 					BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 					String line = null;
 					boolean readLine = true;
-					
+
 					try {
 						while ((line = reader.readLine()) != null) {
 							// Only read the uneven lines. The even ones contain
 							// unneccessary information.
-							if(readLine) {
+							if (readLine) {
 								readLine = false;
-								
+
 								AudioDevice audioDevice = getAudioDeviceFromString(line);
-								
-								if(audioDevice.getName() != null && audioDevice.getName().length() > 0 && !audioDevice.getName().equals("ALSA")) {
+
+								if (audioDevice.getName() != null && audioDevice.getName().length() > 0
+										&& !audioDevice.getKey().equals("ALSA")) {
+									
 									audioDeviceList.add(audioDevice);
 								}
 							} else {

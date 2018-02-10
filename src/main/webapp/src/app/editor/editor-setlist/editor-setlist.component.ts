@@ -96,7 +96,10 @@ export class EditorSetlistComponent implements OnInit {
   }
 
   private copyInitialSetList() {
-    this.initialSetList = new SetList(JSON.parse(JSON.stringify(this.currentSetList)));
+    let setListString = JSON.stringify(this.currentSetList);
+
+    this.currentSetList = new SetList(JSON.parse(setListString));
+    this.initialSetList = new SetList(JSON.parse(setListString));
   }
 
   checkPendingChanges(): Observable<boolean> {
@@ -149,7 +152,12 @@ export class EditorSetlistComponent implements OnInit {
 
   // Save a new song
   save(setList: SetList) {
-    console.log(setList);
+    this.currentSetList.name = this.currentSetList.name.replace(/\//g, '').replace(/\\/g, '');
+
+    if(this.currentSetList.name.length < 1) {
+      return;
+    }
+
     // Delete the old song, if the name changed
     if (this.initialSetList && this.initialSetList.name && this.initialSetList.name != setList.name && this.initialSetList.name.length > 0) {
       this.songService.deleteSetList(this.initialSetList.name).map(() => {
@@ -177,9 +185,11 @@ export class EditorSetlistComponent implements OnInit {
   }
 
   showAvailableSong(song: Song): boolean {
-    for (let setListSong of this.currentSetList.songList) {
-      if (setListSong.name == song.name) {
-        return false;
+    if (this.currentSetList && this.currentSetList.songList) {
+      for (let setListSong of this.currentSetList.songList) {
+        if (setListSong.name == song.name) {
+          return false;
+        }
       }
     }
 

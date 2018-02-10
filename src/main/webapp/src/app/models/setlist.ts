@@ -30,13 +30,15 @@ export class SetList {
 
         object.songList = [];
 
-        for (let song of this.songList) {
-            let songObj: any = {};
-            songObj.name = song.name;
-            songObj.durationMillis = song.durationMillis;
-            songObj.autoStartNextSong = song.autoStartNextSong;
+        if(this.songList) {
+            for (let song of this.songList) {
+                let songObj: any = {};
+                songObj.name = song.name;
+                songObj.durationMillis = song.durationMillis;
+                songObj.autoStartNextSong = song.autoStartNextSong;
 
-            object.songList.push(songObj);
+                object.songList.push(songObj);
+            }
         }
 
         return JSON.stringify(object);

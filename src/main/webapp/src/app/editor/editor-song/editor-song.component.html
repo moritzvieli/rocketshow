@@ -37,7 +37,7 @@
 
         <div class="form-group">
           <label for="songName">{{ 'editor.song-name' | translate }}</label>
-          <input type="text" class="form-control" [(ngModel)]="currentSong.name" id="songName" placeholder="{{ 'editor.default-song-name' | translate }}">
+          <input type="text" class="form-control" maxlength="50" [(ngModel)]="currentSong.name" id="songName" placeholder="{{ 'editor.default-song-name' | translate }}">
         </div>
 
         <div class="form-group">
@@ -96,7 +96,7 @@
           <a class="mr-3 my-auto" href="#" role="button" (click)="unselect(); false">
             {{ 'misc.cancel' | translate }}
           </a>
-          <button type="button" class="btn btn-primary" (click)="save(currentSong); false" [disabled]="multipleVideoImage()" role="button">
+          <button type="button" class="btn btn-primary" (click)="save(currentSong); false" [disabled]="multipleVideoImage() || !currentSong || !currentSong.name || currentSong.name.length < 1 || currentSong.name.length > 50" role="button">
             <i class="fa fa-floppy-o" aria-hidden="true"></i> {{ 'misc.save' | translate }}
           </button>
         </div>

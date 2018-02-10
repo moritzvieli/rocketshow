@@ -36,7 +36,7 @@
 
         <div class="form-group">
           <label for="setListName">{{ 'editor.song-name' | translate }}</label>
-          <input type="text" class="form-control" [(ngModel)]="currentSetList.name" id="setListName" placeholder="{{ 'editor.default-setlist-name' | translate }}">
+          <input type="text" class="form-control" [(ngModel)]="currentSetList.name" maxlength="50" id="setListName" placeholder="{{ 'editor.default-setlist-name' | translate }}">
         </div>
 
         <!--div class="form-group">
@@ -118,9 +118,9 @@
           <a class="mr-3 my-auto" href="#" role="button" (click)="unselect(); false">
             {{ 'misc.cancel' | translate }}
           </a>
-          <a class="btn btn-primary" href="#" role="button" (click)="save(currentSetList); false">
+          <button type="button" class="btn btn-primary" href="#" role="button" (click)="save(currentSetList); false" [disabled]="!currentSetList || !currentSetList.name || currentSetList.name.length < 1 || currentSetList.name.length > 50" role="button">
             <i class="fa fa-floppy-o" aria-hidden="true"></i> {{ 'misc.save' | translate }}
-          </a>
+          </button>
         </div>
       </div>
     </div>

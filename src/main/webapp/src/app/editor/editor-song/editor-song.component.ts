@@ -77,7 +77,10 @@ export class EditorSongComponent implements OnInit {
   }
 
   private copyInitialSong() {
-    this.initialSong = new Song(JSON.parse(this.currentSong.stringify()));
+    let songString = this.currentSong.stringify();
+
+    this.currentSong = new Song(JSON.parse(songString));
+    this.initialSong = new Song(JSON.parse(songString));
   }
 
   checkPendingChanges(): Observable<boolean> {
@@ -132,6 +135,12 @@ export class EditorSongComponent implements OnInit {
 
   // Save a new song
   save(song: Song) {
+    song.name = song.name.replace(/\//g, '').replace(/\\/g, '');
+
+    if(song.name.length < 1) {
+      return;
+    }
+
     // Delete the old song, if the name changed
     if (this.initialSong && this.initialSong.name && this.initialSong.name != song.name && this.initialSong.name.length > 0) {
       this.songService.deleteSong(this.initialSong.name).map(() => {
