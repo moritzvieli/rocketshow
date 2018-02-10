@@ -119,16 +119,27 @@
         </a>
 
         <!-- No songs in the current set -->
-        <a *ngIf="currentSetList && currentSetList.name && currentSetList.songList.length == 0" id="song0" href="#" routerLink="/editor" class="list-group-item list-group-item-action flex-column align-items-start active">
+        <a *ngIf="!loadingSet && currentSetList && currentSetList.name && currentSetList.songList.length == 0" id="song0" href="#"
+          routerLink="/editor" class="list-group-item list-group-item-action flex-column align-items-start">
           <div class="d-flex w-100 justify-content-between">
             <p class="mb-1">{{ 'misc.setlist-without-songs' | translate }}</p>
           </div>
         </a>
 
         <!-- no songs at all -->
-        <a *ngIf="(currentSetList && !currentSetList.name) && currentSetList.songList == 0" id="song0" href="#" routerLink="/editor" class="list-group-item list-group-item-action flex-column align-items-start active">
+        <a *ngIf="!loadingSet && (currentSetList && !currentSetList.name) && currentSetList.songList == 0" id="song0" href="#" routerLink="/editor"
+          class="list-group-item list-group-item-action flex-column align-items-start">
           <div class="d-flex w-100 justify-content-between">
             <p class="mb-1">{{ 'misc.no-songs' | translate }}</p>
+          </div>
+        </a>
+
+        <!-- Loading the setlist -->
+        <a *ngIf="loadingSet" id="song0" href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+          <div class="d-flex w-100 justify-content-between">
+            <p class="mb-1 mx-auto">
+              <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
+            </p>
           </div>
         </a>
       </div>
@@ -156,6 +167,7 @@
         <!-- Display all songs -->
         <a *ngFor="let song of currentSetList?.songList; let i = index" id="songSmall{{ i }}" href="#" (click)="setSong(i, song); false"
           class="list-group-item list-group-item-action flex-column align-items-start pt-1 pb-1" [class.active]="currentState?.currentSongName == song.name">
+
           <div class="d-flex w-100 justify-content-between">
             <p class="mb-1">{{ song.name }}</p>
             <small class="my-auto">{{ msToTime(song.durationMillis, false) }}</small>
@@ -163,16 +175,29 @@
         </a>
 
         <!-- No songs in the current set -->
-        <a *ngIf="currentSetList && currentSetList.name && currentSetList.songList.length == 0" id="song0" href="#" routerLink="/editor" class="list-group-item list-group-item-action flex-column align-items-start active">
+        <a *ngIf="!loadingSet && currentSetList && currentSetList.name && currentSetList.songList.length == 0" id="song0" href="#"
+          routerLink="/editor" class="list-group-item list-group-item-action flex-column align-items-start">
+
           <div class="d-flex w-100 justify-content-between">
             <p class="mb-1">{{ 'misc.setlist-without-songs' | translate }}</p>
           </div>
         </a>
 
         <!-- no songs at all -->
-        <a *ngIf="(currentSetList && !currentSetList.name) && currentSetList.songList == 0" id="song0" href="#" routerLink="/editor" class="list-group-item list-group-item-action flex-column align-items-start active">
+        <a *ngIf="!loadingSet && (currentSetList && !currentSetList.name) && currentSetList.songList == 0" id="song0" href="#" routerLink="/editor"
+          class="list-group-item list-group-item-action flex-column align-items-start">
+
           <div class="d-flex w-100 justify-content-between">
             <p class="mb-1">{{ 'misc.no-songs' | translate }}</p>
+          </div>
+        </a>
+
+        <!-- Loading the setlist -->
+        <a *ngIf="loadingSet" id="song0" href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+          <div class="d-flex w-100 justify-content-between">
+            <p class="mb-1 mx-auto">
+              <i class="fa fa-spinner fa-pulse fa-fw"></i>
+            </p>
           </div>
         </a>
       </div>

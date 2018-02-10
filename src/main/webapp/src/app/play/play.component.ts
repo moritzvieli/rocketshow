@@ -31,6 +31,8 @@ export class PlayComponent implements OnInit {
 
   totalPlayTime: string = '';
 
+  loadingSet: boolean = false;
+
   constructor(public apiService: ApiService,
     private stateService: StateService,
     private songService: SongService,
@@ -58,28 +60,37 @@ export class PlayComponent implements OnInit {
     .subscribe();
   }
 
+  private updateTotalDuration() {
+    let totalDurationMillis: number = 0;
+
+    for(let song of this.currentSetList.songList) {
+      totalDurationMillis += song.durationMillis;
+    }
+
+    this.totalPlayTime = this.msToTime(totalDurationMillis, false);
+  }
+
   private loadCurrentSetList() {
     // Load the current setlist
+    this.loadingSet = true;
+
     this.songService.getCurrentSetList(true).subscribe((setList: SetList) => {
       this.currentSetList = undefined;
 
       if(setList) {
         this.currentSetList = setList;
-
-        let totalDurationMillis: number = 0;
-
-        for(let song of setList.songList) {
-          totalDurationMillis += song.durationMillis;
-        }
-
-        this.totalPlayTime = this.msToTime(totalDurationMillis, false);
+        this.updateTotalDuration();
       }
 
       if(this.currentSetList && !this.currentSetList.name) {
         // The default setlist with all songs is loaded -> display all songs
         this.songService.getSongs(true).subscribe((songs: Song[]) => {
           this.currentSetList.songList = songs;
+          this.updateTotalDuration();
+          this.loadingSet = false;
         });
+      } else {
+        this.loadingSet = false;
       }
     });
   }
