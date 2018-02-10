@@ -4,12 +4,14 @@
 # This script needs to be executed as root.
 # 
 
-# Install all required packages
+# Install all required packages (libnss-mdns installs the Bonjour service, if not already installed)
 apt-get update
 
 echo iptables-persistent iptables-persistent/autosave_v4 boolean true | sudo debconf-set-selections
 echo iptables-persistent iptables-persistent/autosave_v6 boolean true | sudo debconf-set-selections
-apt-get -y install iptables-persistent oracle-java8-jdk omxplayer fbi ola mplayer
+apt-get -y install iptables-persistent oracle-java8-jdk omxplayer fbi ola mplayer libnss-mdns
+
+sudo /etc/init.d/hostname.sh
 
 # Add the rocketshow user
 adduser \
@@ -148,3 +150,9 @@ sudo reboot
 EOF
 
 chmod +x /opt/rocketshow_reset.sh
+
+# Set the hostname to RocketShow
+sed -i '/127.0.1.1/d' /etc/hosts
+sed -i "\$a127.0.1.1\tRocketShow" /etc/hosts
+
+sed -i 's/raspberrypi/RocketShow/g' /etc/hostname

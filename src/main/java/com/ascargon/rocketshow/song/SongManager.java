@@ -176,6 +176,8 @@ public class SongManager {
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 		jaxbMarshaller.marshal(song, file);
 
+		// TODO Only update the information of this song in the setlists, don't
+		// check all other songs
 		updateSetLists();
 
 		logger.info("Song '" + song.getName() + "' saved");
