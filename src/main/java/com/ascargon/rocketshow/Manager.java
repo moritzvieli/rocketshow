@@ -305,7 +305,7 @@ public class Manager {
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
 		jaxbMarshaller.marshal(settings, file);
-		
+
 		settings.updateSystem();
 
 		logger.info("Settings saved");
@@ -325,7 +325,7 @@ public class Manager {
 		settings = (Settings) jaxbUnmarshaller.unmarshal(file);
 
 		settings.updateSystem();
-		
+
 		// Reset the USB interface, if needed
 		try {
 			if (settings.isResetUsbAfterBoot()) {
@@ -343,7 +343,9 @@ public class Manager {
 	}
 
 	public void saveSession() {
-		if (currentSetList != null) {
+		if (currentSetList == null) {
+			session.setCurrentSetListName("");
+		} else {
 			session.setCurrentSetListName(currentSetList.getName());
 		}
 
@@ -378,11 +380,12 @@ public class Manager {
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 			session = (Session) jaxbUnmarshaller.unmarshal(file);
 
-			if (session.getCurrentSetListName() == null || session.getCurrentSetListName().length() == 0) {
-				loadFirstSetList();
-			} else {
+			if (session.getCurrentSetListName() != null && session.getCurrentSetListName().length() > 0) {
 				// Load the last setlist
 				loadSetList(session.getCurrentSetListName());
+			} else {
+				// Load the default setlist
+				loadSetList("");
 			}
 
 			logger.info("Session restored");
@@ -394,35 +397,40 @@ public class Manager {
 	public void loadSetList(String name) throws Exception {
 		if (currentSetList != null) {
 			currentSetList.close();
+			currentSetList = null;
 		}
 
-		currentSetList = songManager.loadSetList(name);
-		currentSetList.setManager(this);
-		currentSetList.setName(name);
+		if (name.length() > 0) {
+			// Also load a new setlist, don't only unload the current one
+			currentSetList = songManager.loadSetList(name);
+			currentSetList.setManager(this);
+			currentSetList.setName(name);
+		}
 
+		// Read the current song file
+		if (currentSetList == null) {
+			logger.debug("Try setting a default song...");
+			
+			// We have no setlist. Simply read the first song, if available
+			List<Song> songs = songManager.getAllSongs();
+			
+			if(songs.size() > 0) {
+				logger.debug("Set default song '" + songs.get(0).getName() + "'...");
+				
+				player.setCurrentSong(songs.get(0));
+			}
+		} else {
+			// We got a setlist loaded
+			try {
+				currentSetList.readCurrentSong();
+			} catch (Exception e) {
+				logger.error("Could not read current song", e);
+			}
+		}
+		
 		stateManager.notifyClients();
 
 		saveSession();
-
-		// Read the current song file
-		try {
-			currentSetList.readCurrentSong();
-		} catch (Exception e) {
-			logger.error("Could not read current song", e);
-		}
-	}
-
-	public void loadFirstSetList() throws Exception {
-		// Load the first available setList
-		List<SetList> setLists = songManager.getAllSetLists();
-
-		logger.info("Load the first setlist from available " + setLists.size());
-
-		if (setLists != null) {
-			if (setLists.size() > 0) {
-				loadSetList(setLists.get(0).getName());
-			}
-		}
 	}
 
 	public void close() {

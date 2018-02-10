@@ -9,8 +9,9 @@ export const environment = {
   
   // Add the local backend to test
   // Uncomment this line for a local tomcat deployment
-  //localBackend: "localhost:8080/RocketShow",
+  //localBackend: "localhost:8080/ROOT",
   
-  localBackend: "192.168.1.146",
+  //localBackend: "192.168.1.146",
+  localBackend: "172.20.10.2",
   debug: true
 };

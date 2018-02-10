@@ -196,14 +196,18 @@ public class Song {
 						// next song
 						manager.getPlayer().stop(false);
 						
-						manager.getCurrentSetList().nextSong(false);
-						manager.getPlayer().play();
+						if(manager.getCurrentSetList() != null) {
+							manager.getCurrentSetList().nextSong(false);
+							manager.getPlayer().play();
+						}
 					} else {
 						// Stop, play the idle song and select the next song
 						// automatically (if there is one)
 						manager.getPlayer().stop(true);
 						
-						manager.getCurrentSetList().nextSong();
+						if(manager.getCurrentSetList() != null) {
+							manager.getCurrentSetList().nextSong();
+						}
 					}
 				} catch (Exception e) {
 					logger.error("Could not automatically stop song '" + name + "'", e);

@@ -49,9 +49,8 @@ public class Transport {
 		logger.info("Received API request for transport/play");
 
 		Manager manager = (Manager) context.getAttribute("manager");
-		if (manager.getCurrentSetList() != null) {
-			manager.getPlayer().play();
-		}
+		manager.getPlayer().play();
+		
 		return Response.status(200).build();
 	}
 
@@ -62,9 +61,8 @@ public class Transport {
 		logger.info("Received API request for transport/pause");
 
 		Manager manager = (Manager) context.getAttribute("manager");
-		if (manager.getCurrentSetList() != null) {
-			manager.getPlayer().pause();
-		}
+		manager.getPlayer().pause();
+
 		return Response.status(200).build();
 	}
 
@@ -75,9 +73,8 @@ public class Transport {
 		logger.info("Received API request for transport/resume");
 
 		Manager manager = (Manager) context.getAttribute("manager");
-		if (manager.getCurrentSetList() != null) {
-			manager.getPlayer().resume();
-		}
+		manager.getPlayer().resume();
+		
 		return Response.status(200).build();
 	}
 
@@ -88,9 +85,8 @@ public class Transport {
 		logger.info("Received API request for transport/toggle-play");
 
 		Manager manager = (Manager) context.getAttribute("manager");
-		if (manager.getCurrentSetList() != null) {
-			manager.getPlayer().togglePlay();
-		}
+		manager.getPlayer().togglePlay();
+		
 		return Response.status(200).build();
 	}
 
@@ -101,9 +97,8 @@ public class Transport {
 		logger.info("Received API request for transport/stop");
 
 		Manager manager = (Manager) context.getAttribute("manager");
-		if (manager.getCurrentSetList() != null) {
-			manager.getPlayer().stop();
-		}
+		manager.getPlayer().stop();
+		
 		return Response.status(200).build();
 	}
 
@@ -146,4 +141,23 @@ public class Transport {
 		return Response.status(200).build();
 	}
 
+	@Path("set-song-name")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response setSongName(@QueryParam("name") String songName) throws Exception {
+		logger.info("Received API request for transport/load");
+
+		Manager manager = (Manager) context.getAttribute("manager");
+
+		if (songName.length() > 0) {
+			if (manager.getPlayer().getCurrentSongName() == null || !manager.getPlayer().getCurrentSongName().equals(songName)) {
+				// Load the song with the given name into the player
+				manager.getPlayer().setCurrentSong(manager.getSongManager().loadSong(songName), false);
+				manager.getStateManager().notifyClients();
+			}
+		}
+
+		return Response.status(200).build();
+	}
+	
 }

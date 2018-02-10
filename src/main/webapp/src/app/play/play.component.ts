@@ -1,3 +1,4 @@
+import { Song } from './../models/song';
 import { SongService } from './../services/song.service';
 import { StateService } from './../services/state.service';
 import { SetList } from './../models/setlist';
@@ -60,6 +61,8 @@ export class PlayComponent implements OnInit {
   private loadCurrentSetList() {
     // Load the current setlist
     this.songService.getCurrentSetList(true).subscribe((setList: SetList) => {
+      this.currentSetList = undefined;
+
       if(setList) {
         this.currentSetList = setList;
 
@@ -71,11 +74,24 @@ export class PlayComponent implements OnInit {
 
         this.totalPlayTime = this.msToTime(totalDurationMillis, false);
       }
+
+      if(this.currentSetList && !this.currentSetList.name) {
+        // The default setlist with all songs is loaded -> display all songs
+        this.songService.getSongs(true).subscribe((songs: Song[]) => {
+          this.currentSetList.songList = songs;
+        });
+      }
     });
   }
 
   selectSetList(setList: SetList) {
-    this.songService.loadSetList(setList.name).subscribe();
+    let setListName: string = '';
+
+    if(setList) {
+      setListName = setList.name;
+    }
+
+    this.songService.loadSetList(setListName).subscribe();
   } 
 
   private pad(num: number, size: number): string {
@@ -145,8 +161,9 @@ export class PlayComponent implements OnInit {
       if (songObject) {
         songObject.scrollIntoView();
       }
+
       let songSmallObject = document.querySelector('#songSmall' + newState.currentSongIndex);
-      if (songObject) {
+      if (songSmallObject) {
         songSmallObject.scrollIntoView();
       }
     }
@@ -177,9 +194,16 @@ export class PlayComponent implements OnInit {
     this.transportService.previousSong().subscribe();
   }
 
-  setSongIndex(index: number) {
+  setSong(index: number, song: Song) {
     this.manualSongSelection = true;
-    this.transportService.setSongIndex(index).subscribe();
+
+    if(this.currentSetList && !this.currentSetList.name) {
+      // We got the default setlist loaded -> select songs by name
+      this.transportService.setSongName(song.name).subscribe();
+    } else {
+      // We got a real setlist loaded -> select songs by index
+      this.transportService.setSongIndex(index).subscribe();
+    }
   }
 
 }

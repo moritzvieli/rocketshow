@@ -3,7 +3,7 @@ A tool to automate your DMX and videoshow.
 
 ## For developers
 ### Development
-Access the web api with the following url: http://localhost:8080/RocketShow/api/status/, after deploying it in your local Apache Tomcat.
+Access the web api with the following url: http://localhost:8080/ROOT/api/status/, after deploying it in your local Apache Tomcat.
 
 During development, the following commands can be used for the Angular 4 web application:
 ```shell

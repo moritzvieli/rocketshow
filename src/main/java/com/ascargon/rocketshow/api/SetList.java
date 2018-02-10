@@ -70,10 +70,10 @@ public class SetList {
 		Manager manager = (Manager) context.getAttribute("manager");
 		manager.getSongManager().deleteSetList(name);
 		
-		// Load another setlist (if possible), if the current setlist has been deleted
+		// Load the default setlist, if the current setlist has been deleted
 		if(manager.getCurrentSetList() != null) {
 			if(manager.getCurrentSetList().getName().equals(name)) {
-				manager.loadFirstSetList();
+				manager.loadSetList("");
 			}
 		}
 		

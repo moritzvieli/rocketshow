@@ -37,9 +37,7 @@ public class SongManager {
 		if (fileList != null) {
 			for (File file : fileList) {
 				if (file.isFile()) {
-					Song song = new Song();
-					song.setName(file.getName());
-
+					Song song = loadSong(file.getName());
 					songList.add(song);
 				}
 			}
@@ -70,7 +68,7 @@ public class SongManager {
 	public SetList loadSetList(String name) throws Exception {
 		SetList setList;
 
-		logger.info("Loading setlist '" + name + "'...");
+		logger.debug("Loading setlist '" + name + "'...");
 
 		// Load a setlist
 		JAXBContext jaxbContext = JAXBContext.newInstance(SetList.class);
@@ -85,7 +83,7 @@ public class SongManager {
 	public Song loadSong(String name) throws Exception {
 		Song song;
 
-		logger.info("Loading song " + name + "...");
+		logger.debug("Loading song " + name + "...");
 
 		// Load a song
 		JAXBContext jaxbContext = JAXBContext.newInstance(Song.class);
@@ -96,7 +94,7 @@ public class SongManager {
 		song.getMidiMapping().setParent(manager.getSettings().getMidiMapping());
 		song.setManager(manager);
 
-		logger.info("Song '" + name + "' successfully loaded");
+		logger.debug("Song '" + name + "' successfully loaded");
 
 		return song;
 	}

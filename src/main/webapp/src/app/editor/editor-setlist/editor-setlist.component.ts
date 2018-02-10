@@ -185,7 +185,7 @@ export class EditorSetlistComponent implements OnInit {
   }
 
   showAvailableSong(song: Song): boolean {
-    if (this.currentSetList && this.currentSetList.songList) {
+    if (this.currentSetList) {
       for (let setListSong of this.currentSetList.songList) {
         if (setListSong.name == song.name) {
           return false;

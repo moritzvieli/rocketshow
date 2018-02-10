@@ -14,11 +14,11 @@
         "ok": "OK",
         "warning": "Warning",
         "setlist-without-songs": "This set does not contain any compositions. Click here to open the editor.",
-        "no-setlists-title": "No sets",
-        "no-setlists": "Click here to create Compositions and your first set.",
+        "no-songs": "There are no compositions. Click here to open the editor and create a composition.",
         "update": "Update",
         "please-wait": "Please wait...",
-        "info": "Information"
+        "info": "Information",
+        "default-setlist": "All compositions"
     },
     "loading": {
         "title": "Loading...",

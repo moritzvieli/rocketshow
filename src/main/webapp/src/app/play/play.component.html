@@ -86,19 +86,22 @@
   </div>
 
   <!-- Setlist -->
-  <div class="row" *ngIf="stateService.connected && currentSetList?.name">
+  <div class="row" *ngIf="stateService.connected">
     <div class="col" style="display: flex; flex-flow: column;">
 
       <!-- For larger screens -->
       <div class="list-group d-none d-sm-flex" style="flex: 0 0 auto;">
         <div class="list-group-item list-group-item-action flex-column align-items-start" style="border-top-left-radius: 0.25em; border-top-right-radius: 0.25em; border-bottom-left-radius: 0; border-bottom-right-radius: 0;">
           <a href="#" class="" d="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            {{ currentSetList?.name }}
+            <span *ngIf="currentSetList && currentSetList.name">{{ currentSetList?.name }}</span>
+            <span *ngIf="!currentSetList || !currentSetList.name">{{ 'misc.default-setlist' | translate }}</span>
             <i class="fa fa-caret-down" aria-hidden="true"></i>
           </a>
 
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a *ngFor="let setList of setLists" class="dropdown-item" [class.active]="setList.name == currentSetList?.name" href="#" (click)="selectSetList(setList); false;">{{ setList.name }}</a>
+            <a class="dropdown-item" [class.active]="!currentSetList || !currentSetList.name" href="#" (click)="selectSetList(undefined); false;">{{ 'misc.default-setlist' | translate }}</a>
+            <a *ngFor="let setList of setLists" class="dropdown-item" [class.active]="setList.name == currentSetList?.name" href="#"
+              (click)="selectSetList(setList); false;">{{ setList.name }}</a>
           </div>
 
           <span style="margin-top: 3px" class="float-right">{{ totalPlayTime }}</span>
@@ -107,17 +110,25 @@
 
       <div class="list-group song-list d-none d-sm-flex" style="flex: 0 1 auto; overflow: auto;">
         <!-- Display all songs -->
-        <a *ngFor="let song of currentSetList?.songList; let i = index" id="song{{ i }}" href="#" (click)="setSongIndex(i); false"
-          class="list-group-item list-group-item-action flex-column align-items-start" [class.active]="currentState?.currentSongIndex == i">
+        <a *ngFor="let song of currentSetList?.songList; let i = index" id="song{{ i }}" href="#" (click)="setSong(i, song); false"
+          class="list-group-item list-group-item-action flex-column align-items-start" [class.active]="currentState?.currentSongName == song.name">
           <div class="d-flex w-100 justify-content-between">
             <p class="mb-1">{{ song.name }}</p>
             <small class="my-auto">{{ msToTime(song.durationMillis, false) }}</small>
           </div>
         </a>
 
-        <a *ngIf="!currentState?.currentSongName" id="song0" href="#" routerLink="/editor" class="list-group-item list-group-item-action flex-column align-items-start active">
+        <!-- No songs in the current set -->
+        <a *ngIf="currentSetList && currentSetList.name && currentSetList.songList.length == 0" id="song0" href="#" routerLink="/editor" class="list-group-item list-group-item-action flex-column align-items-start active">
           <div class="d-flex w-100 justify-content-between">
             <p class="mb-1">{{ 'misc.setlist-without-songs' | translate }}</p>
+          </div>
+        </a>
+
+        <!-- no songs at all -->
+        <a *ngIf="(currentSetList && !currentSetList.name) && currentSetList.songList == 0" id="song0" href="#" routerLink="/editor" class="list-group-item list-group-item-action flex-column align-items-start active">
+          <div class="d-flex w-100 justify-content-between">
+            <p class="mb-1">{{ 'misc.no-songs' | translate }}</p>
           </div>
         </a>
       </div>
@@ -126,12 +137,15 @@
       <div class="list-group d-sm-none" style="flex: 0 0 auto;">
         <div class="list-group-item list-group-item-action flex-column align-items-start pt-2 pb-2" style="border-top-left-radius: 0.25em; border-top-right-radius: 0.25em; border-bottom-left-radius: 0; border-bottom-right-radius: 0;">
           <a href="#" class="" d="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            {{ currentSetList?.name }}
+            <span *ngIf="currentSetList && currentSetList.name">{{ currentSetList?.name }}</span>
+            <span *ngIf="!currentSetList || !currentSetList.name">{{ 'misc.default-setlist' | translate }}</span>
             <i class="fa fa-caret-down" aria-hidden="true"></i>
           </a>
 
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a *ngFor="let setList of setLists" class="dropdown-item" [class.active]="setList.name == currentSetList?.name" href="#" (click)="selectSetList(setList); false;">{{ setList.name }}</a>
+            <a class="dropdown-item" [class.active]="!currentSetList || !currentSetList.name" href="#" (click)="selectSetList(undefined); false;">{{ 'misc.default-setlist' | translate }}</a>
+            <a *ngFor="let setList of setLists" class="dropdown-item" [class.active]="setList.name == currentSetList?.name" href="#"
+              (click)="selectSetList(setList); false;">{{ setList.name }}</a>
           </div>
 
           <span style="margin-top: 3px" class="float-right">{{ totalPlayTime }}</span>
@@ -140,31 +154,30 @@
 
       <div class="list-group song-list d-sm-none" style="flex: 0 1 auto; overflow: auto;">
         <!-- Display all songs -->
-        <a *ngFor="let song of currentSetList?.songList; let i = index" id="songSmall{{ i }}" href="#" (click)="setSongIndex(i); false"
-          class="list-group-item list-group-item-action flex-column align-items-start pt-1 pb-1" [class.active]="currentState?.currentSongIndex == i">
+        <a *ngFor="let song of currentSetList?.songList; let i = index" id="songSmall{{ i }}" href="#" (click)="setSong(i, song); false"
+          class="list-group-item list-group-item-action flex-column align-items-start pt-1 pb-1" [class.active]="currentState?.currentSongName == song.name">
           <div class="d-flex w-100 justify-content-between">
             <p class="mb-1">{{ song.name }}</p>
             <small class="my-auto">{{ msToTime(song.durationMillis, false) }}</small>
           </div>
         </a>
 
-        <a *ngIf="!currentState?.currentSongName" id="songSmall0" href="#" routerLink="/editor" class="list-group-item list-group-item-action flex-column align-items-start pt-1 pb-1 active">
+        <!-- No songs in the current set -->
+        <a *ngIf="currentSetList && currentSetList.name && currentSetList.songList.length == 0" id="song0" href="#" routerLink="/editor" class="list-group-item list-group-item-action flex-column align-items-start active">
           <div class="d-flex w-100 justify-content-between">
             <p class="mb-1">{{ 'misc.setlist-without-songs' | translate }}</p>
+          </div>
+        </a>
+
+        <!-- no songs at all -->
+        <a *ngIf="(currentSetList && !currentSetList.name) && currentSetList.songList == 0" id="song0" href="#" routerLink="/editor" class="list-group-item list-group-item-action flex-column align-items-start active">
+          <div class="d-flex w-100 justify-content-between">
+            <p class="mb-1">{{ 'misc.no-songs' | translate }}</p>
           </div>
         </a>
       </div>
 
     </div>
-  </div>
-
-  <!-- No setlists -->
-  <div *ngIf="!currentSetList?.name && stateService.connected" class="alert alert-warning mb-0 text-center" role="alert">
-    <h3>
-      <i class="fa fa-list" aria-hidden="true"></i> {{ 'misc.no-setlists-title' | translate }}</h3>
-    <p class="mb-0">
-      <a href="#" routerLink="/editor">{{ 'misc.no-setlists' | translate }}</a>
-    </p>
   </div>
 
 </div>
