@@ -219,9 +219,10 @@ public class Manager {
 		dmxSignalSender = new DmxSignalSender(this);
 		midi2DmxConverter = new Midi2DmxConverter(dmxSignalSender);
 
-		// Initialize the image displayer
+		// Initialize the image displayer and display a default black screen
 		try {
 			imageDisplayer = new ImageDisplayer();
+			imageDisplayer.display(BASE_PATH + "black.jpg");
 		} catch (IOException e) {
 			logger.error("Could not initialize image displayer", e);
 		}
@@ -557,6 +558,10 @@ public class Manager {
 
 	public void setPlayer(Player player) {
 		this.player = player;
+	}
+
+	public ImageDisplayer getImageDisplayer() {
+		return imageDisplayer;
 	}
 
 }
