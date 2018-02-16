@@ -1,3 +1,4 @@
+import { Response, ResponseContentType } from '@angular/http';
 import { InfoDialogService } from './../../services/info-dialog.service';
 import { WaitDialogService } from './../../services/wait-dialog.service';
 import { StateService } from './../../services/state.service';
@@ -7,6 +8,7 @@ import { Settings } from '../../models/settings';
 import { WarningDialogService } from '../../services/warning-dialog.service';
 import { ApiService } from '../../services/api.service';
 import { State } from '../../models/state';
+import { saveAs } from 'file-saver/FileSaver';
 
 @Component({
   selector: 'app-settings-advanced',
@@ -60,6 +62,16 @@ export class SettingsAdvancedComponent implements OnInit {
         this.apiService.post('system/factory-reset', undefined).subscribe();
       }
     }).subscribe();
+  }
+
+  private downloadFile(response: Response){
+    saveAs(response.blob(), 'logs.zip');
+  }
+
+  downloadLogs() {
+    this.apiService.get('system/download-logs', {responseType: ResponseContentType.Blob}).subscribe(response => {
+      this.downloadFile(response);
+    });
   }
 
 }

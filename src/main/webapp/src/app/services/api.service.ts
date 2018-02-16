@@ -1,5 +1,5 @@
 import { StateService } from './state.service';
-import { Http, XHRBackend, RequestOptions, Request, RequestOptionsArgs, Response, Headers } from '@angular/http';
+import { Http, XHRBackend, RequestOptions, Request, RequestOptionsArgs, Response, Headers, ResponseContentType } from '@angular/http';
 
 import { State } from './../models/state';
 import { Injectable } from '@angular/core';
@@ -33,8 +33,8 @@ export class ApiService extends Http {
     return this.restUrl;
   }
 
-  get(url: string): Observable<Response> {
-    return super.get(this.restUrl + url);
+  get(url: string, options: RequestOptionsArgs = undefined): Observable<Response> {
+    return super.get(this.restUrl + url, options);
   }
 
   post(url: string, body: any): Observable<Response> {

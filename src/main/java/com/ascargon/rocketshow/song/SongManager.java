@@ -37,8 +37,12 @@ public class SongManager {
 		if (fileList != null) {
 			for (File file : fileList) {
 				if (file.isFile()) {
-					Song song = loadSong(file.getName());
-					songList.add(song);
+					try {
+						Song song = loadSong(file.getName());
+						songList.add(song);
+					} catch (Exception e) {
+						logger.error("Could not load song '" + file.getName() + "'", e);
+					}
 				}
 			}
 		}

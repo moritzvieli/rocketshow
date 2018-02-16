@@ -43,6 +43,7 @@ export class EditorSongFileComponent implements OnInit {
     this.dropzoneConfig = {
       url: apiService.getRestUrl() + 'file/upload',
       addRemoveLinks: false,
+      maxFilesize: 10000 /* 10 GB */,
       acceptedFiles: 'audio/*,video/*',
       previewTemplate: `
       <div class="dz-preview dz-file-preview">
@@ -126,6 +127,8 @@ export class EditorSongFileComponent implements OnInit {
   }
 
   public onUploadSuccess(args: any) {
+    this.loadFiles();
+
     // Hide the preview element
     args[0].previewElement.hidden = true;
 

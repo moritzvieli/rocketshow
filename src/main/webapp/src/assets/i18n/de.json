@@ -122,6 +122,7 @@
         "warning-settings-changes": "Die Einstellungen enthalten noch nicht gespeicherte Änderungen. Möchtest du wirklich fortfahren?",
         "usb-interface": "USB Schnittstelle",
         "reset-after-boot": "Nach dem Aufstarten neu initialisieren",
+        "download-logs": "Logs herunterladen",
         "version": "Aktuelle Version",
         "remote-version": "Neueste Version",
         "check-version": "Aktualisierungen suchen...",

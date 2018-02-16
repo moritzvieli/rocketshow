@@ -13,6 +13,7 @@ import com.ascargon.rocketshow.Manager;
 import com.ascargon.rocketshow.Settings;
 import com.ascargon.rocketshow.VersionInfo;
 import com.ascargon.rocketshow.util.FactoryReset;
+import com.ascargon.rocketshow.util.LogDownload;
 
 @Path("/system")
 public class System {
@@ -106,6 +107,13 @@ public class System {
 		FactoryReset.reset();
 		
 		return Response.status(200).build();
+	}
+	
+	@Path("download-logs")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response downloadLogs() throws Exception {
+		return Response.ok(LogDownload.getLogsFile(), "application/zip").build();
 	}
 	
 }

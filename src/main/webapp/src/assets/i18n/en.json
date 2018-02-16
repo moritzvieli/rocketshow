@@ -122,6 +122,7 @@
         "warning-settings-changes": "The settings contain unsaved changes. Do you really want to proceed?",
         "usb-interface": "USB interface",
         "reset-after-boot": "Reset after boot",
+        "download-logs": "Download logs",
         "version": "Current version",
         "remote-version": "Latest version",
         "check-version": "Search for updates...",
