@@ -118,7 +118,7 @@ chmod +x usbreset
 
 # Overclock the raspberry to sustain streams without underruns
 # - Set more memory for the GPU to play larger video files with omxplayer
-# - Enable turbo-mode by default (boot_delay avoids sdcard corruption with turbo-mode, warranty is void)
+# - Enable turbo-mode by default (boot_delay avoids sdcard corruption)
 # - Overclock the sdcard a little bit to prevent bufferunderruns with ALSA
 # - Hide warnings (e.g. temperature icon)
 sed -i '1i# ROCKETSHOWSTART\ngpu_mem=256\nforce_turbo=1\nboot_delay=1\ndtparam=sd_overclock=100\navoid_warnings=1\n# ROCKETSHOWEND\n' /boot/config.txt

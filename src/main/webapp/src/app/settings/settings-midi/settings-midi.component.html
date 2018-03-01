@@ -1,0 +1,88 @@
+<div class="form-group row">
+  <label class="col-lg-3 col-form-label">{{ 'settings.midi-device-in' | translate }}</label>
+  <div class="col-lg-9">
+    <select class="custom-select" [ngModel]="settings?.midiInDevice?.id" (ngModelChange)="settings.midiInDevice = $event">
+      <option *ngFor="let midiDevice of midiInDevices" [ngValue]="midiDevice.id">{{ midiDevice.name }}</option>
+    </select>
+  </div>
+</div>
+
+<div class="form-group row">
+  <label class="col-lg-3 col-form-label">{{ 'settings.midi-device-out' | translate }}</label>
+  <div class="col-lg-9">
+    <select class="custom-select" [ngModel]="settings?.midOutDevice?.id" (ngModelChange)="settings.midiOutDevice = $event">
+      <option *ngFor="let midiDevice of midiOutDevices" [ngValue]="midiDevice.id">{{ midiDevice.name }}</option>
+    </select>
+  </div>
+</div>
+
+<div class="form-group row">
+  <label class="col-lg-3 col-form-label">{{ 'settings.midi-actions' | translate }}</label>
+  <div class="col-lg-9">
+    <div class="list-group" [sortablejs]="settings?.actionMappingList" [sortablejsOptions]="{ onMove: sortMove }">
+      <div class="list-group-item" *ngFor="let actionMapping of settings?.actionMappingList; let i = index">
+
+        <div class="form-group row" style="margin-top: 10px; margin-bottom: -30px;">
+          <div class="col d-flex">
+            <a class="my-auto ml-auto text-danger" *ngIf="!currentSong?.isNew" href="#" role="button" (click)="delete(); false">
+              <i class="fa fa-trash-o" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-md-3 col-form-label">{{ 'settings.midi-channel-in' | translate }}</label>
+          <div class="col-md-8">
+            <select class="custom-select" [ngModel]="actionMapping.channelFrom" (ngModelChange)="actionMapping.channelFrom = $event">
+              <option *ngFor="let channel of channelList" [ngValue]="channel">{{ (channel + 1) }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-md-3 col-form-label">{{ 'settings.midi-note-in' | translate }}</label>
+          <div class="col-md-9">
+            <select class="custom-select" [ngModel]="actionMapping.noteFrom" (ngModelChange)="actionMapping.noteFrom = $event">
+              <option *ngFor="let note of noteList" [ngValue]="note">{{ (note + 1) + ' - ' + midiIdToNote(note) }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-md-3 col-form-label">{{ 'settings.midi-action' | translate }}</label>
+          <div class="col-md-9">
+            <select class="custom-select" [ngModel]="actionMapping.midiAction" (ngModelChange)="actionMapping.midiAction = $event">
+              <option *ngFor="let midiAction of midiActionList" [ngValue]="midiAction">{{ 'settings.midi-actions-enum.' + midiAction | translate }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-md-3 col-form-label"></label>
+          <div class="col-md-9">
+            <label class="form-check-label mt-2">
+              <input type="checkbox" [ngModel]="actionMapping.executeLocally" (ngModelChange)="actionMapping.executeLocally = $event" class="form-check-input"> {{ 'settings.midi-action-exec-locally' | translate }}
+            </label>
+          </div>
+        </div>
+        <div class="form-group row mb-2">
+          <label class="col-md-3 col-form-label">{{ 'routing.remote-devices' | translate }}</label>
+          <div class="col-md-9">
+            <div class="card mb-0">
+              <div class="card-body">
+                <i *ngIf="!settings || !settings.remoteDeviceList || settings.remoteDeviceList.length == 0">{{ 'routing.remote-devices-hint' | translate }}</i>
+                <div class="mt-2">
+                  <div *ngFor="let remoteDevice of settings?.remoteDeviceList">
+                    <label class="form-check-label">
+                      <input type="checkbox" class="form-check-input"> {{ remoteDevice.name }}
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <a href="#" (click)="addMidiAction(); false" class="no-sortjs list-group-item list-group-item-action text-center">
+        <i class="fa fa-plus" aria-hidden="true"></i> {{ 'settings.midi-actions-add' | translate }}
+      </a>
+    </div>
+  </div>
+</div>

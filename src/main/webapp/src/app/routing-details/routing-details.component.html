@@ -71,7 +71,7 @@
       <div class="col-sm-8">
         <div class="card">
           <div class="card-body">
-            <i>{{ 'routing.remote-devices-hint' | translate }}</i>
+            <i *ngIf="!remoteDevices || remoteDevices.length == 0">{{ 'routing.remote-devices-hint' | translate }}</i>
             <div class="mt-2">
               <div *ngFor="let remoteDevice of remoteDevices">
                 <label class="form-check-label">

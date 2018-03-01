@@ -29,6 +29,7 @@ export class SetList {
         let object = JSON.parse(string);
 
         object.songList = [];
+        object.currentSongIndex = undefined;
 
         if(this.songList) {
             for (let song of this.songList) {

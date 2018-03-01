@@ -27,7 +27,7 @@ public class ActionMapping {
 	// The note, this action should be triggered. If null -> all notes
 	private Integer noteFrom;
 
-	// Should this action apply to a remote devices?
+	// Should this action apply to a remote device?
 	private List<Integer> remoteDeviceIds = new ArrayList<Integer>();
 
 	// Should this action apply locally?

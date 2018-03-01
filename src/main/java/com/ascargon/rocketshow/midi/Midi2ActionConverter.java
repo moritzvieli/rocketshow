@@ -1,6 +1,7 @@
 package com.ascargon.rocketshow.midi;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.sound.midi.ShortMessage;
 
@@ -136,7 +137,7 @@ public class Midi2ActionConverter {
 		}
 	}
 
-	public void processMidiEvent(MidiSignal midiSignal, Midi2ActionMapping midi2ActionMapping) throws Exception {
+	public void processMidiEvent(MidiSignal midiSignal, List<ActionMapping> actionMappingList) throws Exception {
 		// Map the MIDI event and execute the appropriate actions
 
 		// Only react to NOTE_ON events with a velocity higher than 0
@@ -146,7 +147,7 @@ public class Midi2ActionConverter {
 		}
 
 		// Search for and execute all required actions
-		for (ActionMapping actionMapping : midi2ActionMapping.getActionMappingList()) {
+		for (ActionMapping actionMapping : actionMappingList) {
 			if (isActionMappingMatch(actionMapping, midiSignal.getChannel(), midiSignal.getNote())) {
 				executeActionMappingAction(actionMapping);
 			}

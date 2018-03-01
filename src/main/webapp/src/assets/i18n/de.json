@@ -104,11 +104,12 @@
         "dmx-mapping-type": "Art",
         "dmx-mapping-type-simple": "Einfach",
         "remote-devices": "Entfernte Geräte",
-        "remote-devices-hint": "Du kannst die entfernten Geräte in den Einstellungen konfigurieren."
+        "remote-devices-hint": "Du kannst die entfernten Geräte in den Netzwerk-Einstellungen konfigurieren."
     },
     "settings": {
         "system": "System",
         "network": "Netzwerk",
+        "midi": "MIDI",
         "audio": "Audio",
         "video": "Video",
         "advanced": "Erweitert",
@@ -123,6 +124,20 @@
         "usb-interface": "USB Schnittstelle",
         "reset-after-boot": "Nach dem Aufstarten neu initialisieren",
         "download-logs": "Logs herunterladen",
+        "remote-device-add": "Entferntes Gerät hinzufügen",
+        "remote-device-name": "Name",
+        "remote-device-name-placeholder": "Mein entferntes Gerät",
+        "remote-device-host": "Host",
+        "remote-device-host-placeholder": "192.168.1.12",
+        "remote-device-synchronize": "Synchronisieren",
+        "midi-device-in": "Eingang",
+        "midi-device-out": "Ausgang",
+        "midi-actions": "Kontrolle",
+        "midi-actions-add": "Aktion hinzufügen",
+        "midi-action-exec-locally": "Lokal ausführen",
+        "midi-channel-in": "Eingangskanal",
+        "midi-note-in": "Eingangsnote",
+        "midi-action": "Aktion",
         "version": "Aktuelle Version",
         "remote-version": "Neueste Version",
         "check-version": "Aktualisierungen suchen...",
@@ -145,6 +160,13 @@
         "toast-save-success-title": "Gespeichert",
         "toast-save-success": "Die Einstellungen wurden gespeichert.",
         "toast-discard-success-title": "Verworfen",
-        "toast-discard-success": "Die Einstellungen wurden verworfen."
+        "toast-discard-success": "Die Einstellungen wurden verworfen.",
+        "midi-actions-enum": {
+            "PLAY": "Abspielen",
+            "NEXT_SONG": "Nächsten Song auswählen",
+            "PREVIOUS_SONG": "Vorherigen Song auswählen",
+            "STOP": "Stop",
+            "REBOOT": "Gerät neu starten"
+        }
     }
 }

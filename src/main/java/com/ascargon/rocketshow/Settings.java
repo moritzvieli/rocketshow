@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 import com.ascargon.rocketshow.audio.AudioBus;
 import com.ascargon.rocketshow.audio.AudioDevice;
 import com.ascargon.rocketshow.audio.AudioPlayer.PlayerType;
-import com.ascargon.rocketshow.midi.Midi2ActionMapping;
+import com.ascargon.rocketshow.midi.ActionMapping;
 import com.ascargon.rocketshow.midi.MidiDevice;
 import com.ascargon.rocketshow.midi.MidiMapping;
 import com.ascargon.rocketshow.midi.MidiRouting;
@@ -43,7 +43,7 @@ public class Settings {
 
 	private List<RemoteDevice> remoteDeviceList = new ArrayList<RemoteDevice>();
 
-	private Midi2ActionMapping midi2ActionMapping;
+	private List<ActionMapping> actionMappingList = new ArrayList<ActionMapping>();
 	private MidiMapping midiMapping;
 
 	private int dmxSendDelayMillis;
@@ -83,9 +83,6 @@ public class Settings {
 		midiOutDevice = new MidiDevice();
 
 		audioPlayerType = PlayerType.MPLAYER;
-
-		// Global MIDI to action mapping
-		midi2ActionMapping = new Midi2ActionMapping();
 
 		// Global MIDI mapping
 		midiMapping = new MidiMapping();
@@ -292,15 +289,6 @@ public class Settings {
 	}
 
 	@XmlElement
-	public Midi2ActionMapping getMidi2ActionMapping() {
-		return midi2ActionMapping;
-	}
-
-	public void setMidi2ActionMapping(Midi2ActionMapping midi2ActionMapping) {
-		this.midi2ActionMapping = midi2ActionMapping;
-	}
-
-	@XmlElement
 	public MidiMapping getMidiMapping() {
 		return midiMapping;
 	}
@@ -333,6 +321,16 @@ public class Settings {
 			remoteMidiRouting.setMidiSource("remote MIDI");
 		}
 		this.remoteMidiRoutingList = remoteMidiRoutingList;
+	}
+
+	@XmlElement(name = "actionMapping")
+	@XmlElementWrapper(name = "actionMappingList")
+	public List<ActionMapping> getActionMappingList() {
+		return actionMappingList;
+	}
+
+	public void setActionMappingList(List<ActionMapping> actionMappingList) {
+		this.actionMappingList = actionMappingList;
 	}
 
 	@XmlElement

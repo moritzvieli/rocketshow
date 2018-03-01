@@ -1,3 +1,4 @@
+import { MidiDevice } from './../models/midi-device';
 import { Subject } from 'rxjs/Rx';
 import { Settings } from './../models/settings';
 import { Observable } from 'rxjs/Observable';
@@ -50,7 +51,7 @@ export class SettingsService {
         this.settings = new Settings(response.json());
       }
       this.observable = undefined;
-
+      
       return this.settings;
     });
 
@@ -59,6 +60,27 @@ export class SettingsService {
 
   saveSettings(settings: Settings): Observable<Response> {
     return this.apiService.post('system/settings', JSON.stringify(settings));
+  }
+
+  private apiGetMidiDevices(url: string) {
+    return this.apiService.get('midi/' + url)
+    .map((response: Response) => {
+      let deviceList: MidiDevice[] = [];
+
+      for (let midiDevice of response.json()) {
+        deviceList.push(new MidiDevice(midiDevice));
+      }
+
+      return deviceList;
+    });
+  }
+
+  getMidiInDevices(): Observable<MidiDevice[]> {
+    return this.apiGetMidiDevices('in-devices');
+  }
+
+  getMidiOutDevices(): Observable<MidiDevice[]> {
+    return this.apiGetMidiDevices('out-devices');
   }
 
 }

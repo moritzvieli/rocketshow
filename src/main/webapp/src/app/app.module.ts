@@ -48,6 +48,10 @@ import { WarningDialogComponent } from './warning-dialog/warning-dialog.componen
 import { PendingChangesDialogService } from './services/pending-changes-dialog.service';
 import { UpdateService } from './services/update.service';
 import { InfoDialogService } from './services/info-dialog.service';
+import { SettingsMidiComponent } from './settings/settings-midi/settings-midi.component';
+import { SettingsNetworkComponent } from './settings/settings-network/settings-network.component';
+import { SettingsAudioComponent } from './settings/settings-audio/settings-audio.component';
+import { SettingsVideoComponent } from './settings/settings-video/settings-video.component';
 
 const appRoutes: Routes = [
   { path: 'intro', component: IntroComponent },
@@ -84,6 +88,10 @@ const DROPZONE_CONFIG: DropzoneConfigInterface = {
     UpdateDialogComponent,
     WaitDialogComponent,
     InfoDialogComponent,
+    SettingsMidiComponent,
+    SettingsNetworkComponent,
+    SettingsAudioComponent,
+    SettingsVideoComponent,
   ],
   imports: [
     HttpModule,

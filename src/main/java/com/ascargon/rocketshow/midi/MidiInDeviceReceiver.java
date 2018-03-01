@@ -132,7 +132,7 @@ public class MidiInDeviceReceiver implements Receiver {
 		// Process MIDI events as actions according to the settings
 		try {
 			manager.getMidi2ActionConverter().processMidiEvent(midiSignal,
-					manager.getSettings().getMidi2ActionMapping());
+					manager.getSettings().getActionMappingList());
 		} catch (Exception e) {
 			logger.error("Could not execute action from live MIDI", e);
 		}

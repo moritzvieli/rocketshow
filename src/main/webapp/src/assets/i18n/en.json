@@ -104,11 +104,12 @@
         "dmx-mapping-type": "Type",
         "dmx-mapping-type-simple": "Simple",
         "remote-devices": "Remote devices",
-        "remote-devices-hint": "You can configure the remote devices in the settings."
+        "remote-devices-hint": "You can configure the remote devices in the network-settings."
     },
     "settings": {
         "system": "System",
         "network": "Network",
+        "midi": "MIDI",
         "audio": "Audio",
         "video": "Video",
         "advanced": "Advanced",
@@ -123,6 +124,20 @@
         "usb-interface": "USB interface",
         "reset-after-boot": "Reset after boot",
         "download-logs": "Download logs",
+        "remote-device-add": "Add remote device",
+        "remote-device-name": "Name",
+        "remote-device-name-placeholder": "My remote device",
+        "remote-device-host": "Host",
+        "remote-device-host-placeholder": "192.168.1.12",
+        "remote-device-synchronize": "Synchronize",
+        "midi-device-in": "MIDI input",
+        "midi-device-out": "MIDI output",
+        "midi-actions": "Control",
+        "midi-actions-add": "Add action",
+        "midi-action-exec-locally": "Execute locally",
+        "midi-channel-in": "Input channel",
+        "midi-note-in": "Input note",
+        "midi-action": "Action",
         "version": "Current version",
         "remote-version": "Latest version",
         "check-version": "Search for updates...",
@@ -145,6 +160,13 @@
         "toast-save-success-title": "Saved",
         "toast-save-success": "The settings have been saved.",
         "toast-discard-success-title": "Discarded",
-        "toast-discard-success": "The settings have been discarded."
+        "toast-discard-success": "The settings have been discarded.",
+        "midi-actions-enum": {
+            "PLAY": "Play",
+            "NEXT_SONG": "Select next song",
+            "PREVIOUS_SONG": "Select previous song",
+            "STOP": "Stop",
+            "REBOOT": "Reboot device"
+        }
     }
 }

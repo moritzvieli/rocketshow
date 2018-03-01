@@ -1,5 +1,5 @@
 <div class="form-group row">
-  <label for="staticEmail" class="col-lg-3 col-form-label">{{ 'settings.language' | translate }}</label>
+  <label class="col-lg-3 col-form-label">{{ 'settings.language' | translate }}</label>
   <div class="col-lg-9">
     <select class="custom-select" [ngModel]="settings?.language" (ngModelChange)="switchLanguage($event)">
       <option *ngFor="let language of settingsService?.languages" [ngValue]="language.key">{{ language.name }}</option>

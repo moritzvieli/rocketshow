@@ -1,0 +1,41 @@
+<div class="form-group row">
+  <label class="col-lg-3 col-form-label">{{ 'routing.remote-devices' | translate }}</label>
+  <div class="col-lg-9">
+    <div class="list-group" [sortablejs]="settings?.remoteDeviceList" [sortablejsOptions]="{ onMove: sortMove }">
+      <div class="list-group-item" *ngFor="let remoteDevice of settings?.remoteDeviceList; let i = index">
+
+        <div class="form-group row" style="margin-top: 10px; margin-bottom: -30px;">
+          <div class="col d-flex">
+            <a class="my-auto ml-auto text-danger" *ngIf="!currentSong?.isNew" href="#" role="button" (click)="delete(); false">
+              <i class="fa fa-trash-o" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-md-3 col-form-label">{{ 'settings.remote-device-name' | translate }}</label>
+          <div class="col-md-8">
+            <input type="text" class="form-control" ([ngModel])="remoteDevice.name" id="name" placeholder="{{ 'settings.remote-device-name-placeholder' | translate }}">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-md-3 col-form-label">{{ 'settings.remote-device-host' | translate }}</label>
+          <div class="col-md-8">
+            <input type="text" class="form-control" ([ngModel])="remoteDevice.host" id="name" placeholder="{{ 'settings.remote-device-host-placeholder' | translate }}">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-md-3 col-form-label"></label>
+          <div class="col-md-9">
+            <label class="form-check-label mt-2">
+              <input type="checkbox" [ngModel]="remoteDevice.synchronize" (ngModelChange)="remoteDevice.synchronize = $event" class="form-check-input"> {{ 'settings.remote-device-synchronize' | translate }}
+            </label>
+          </div>
+        </div>
+
+      </div>
+      <a href="#" (click)="addRemoteDevice(); false" class="no-sortjs list-group-item list-group-item-action text-center">
+        <i class="fa fa-plus" aria-hidden="true"></i> {{ 'settings.remote-device-add' | translate }}
+      </a>
+    </div>
+  </div>
+</div>
