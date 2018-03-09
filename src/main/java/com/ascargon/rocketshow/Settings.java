@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 import com.ascargon.rocketshow.audio.AudioBus;
 import com.ascargon.rocketshow.audio.AudioDevice;
 import com.ascargon.rocketshow.audio.AudioPlayer.PlayerType;
-import com.ascargon.rocketshow.midi.ActionMapping;
+import com.ascargon.rocketshow.midi.MidiControl;
 import com.ascargon.rocketshow.midi.MidiDevice;
 import com.ascargon.rocketshow.midi.MidiMapping;
 import com.ascargon.rocketshow.midi.MidiRouting;
@@ -43,7 +43,7 @@ public class Settings {
 
 	private List<RemoteDevice> remoteDeviceList = new ArrayList<RemoteDevice>();
 
-	private List<ActionMapping> actionMappingList = new ArrayList<ActionMapping>();
+	private List<MidiControl> midiControlList = new ArrayList<MidiControl>();
 	private MidiMapping midiMapping;
 
 	private int dmxSendDelayMillis;
@@ -58,7 +58,7 @@ public class Settings {
 
 	private PlayerType audioPlayerType;
 
-	private String idleSong;
+	private String defaultComposition;
 
 	private LoggingLevel loggingLevel;
 
@@ -123,9 +123,9 @@ public class Settings {
 		updateSystem();
 	}
 
-	public RemoteDevice getRemoteDeviceById(int id) {
+	public RemoteDevice getRemoteDeviceByName(String name) {
 		for (RemoteDevice remoteDevice : remoteDeviceList) {
-			if (remoteDevice.getId() == id) {
+			if (remoteDevice.getName().equals(name)) {
 				return remoteDevice;
 			}
 		}
@@ -323,14 +323,14 @@ public class Settings {
 		this.remoteMidiRoutingList = remoteMidiRoutingList;
 	}
 
-	@XmlElement(name = "actionMapping")
-	@XmlElementWrapper(name = "actionMappingList")
-	public List<ActionMapping> getActionMappingList() {
-		return actionMappingList;
+	@XmlElement(name = "midiControl")
+	@XmlElementWrapper(name = "midiControlList")
+	public List<MidiControl> getMidiControlList() {
+		return midiControlList;
 	}
 
-	public void setActionMappingList(List<ActionMapping> actionMappingList) {
-		this.actionMappingList = actionMappingList;
+	public void setActionMappingList(List<MidiControl> midiControlList) {
+		this.midiControlList = midiControlList;
 	}
 
 	@XmlElement
@@ -343,12 +343,12 @@ public class Settings {
 	}
 
 	@XmlElement
-	public String getIdleSong() {
-		return idleSong;
+	public String getDefaultComposition() {
+		return defaultComposition;
 	}
 
-	public void setIdleSong(String idleSong) {
-		this.idleSong = idleSong;
+	public void setDefaultComposition(String defaultComposition) {
+		this.defaultComposition = defaultComposition;
 	}
 
 	@XmlElement

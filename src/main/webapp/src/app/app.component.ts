@@ -1,5 +1,5 @@
 import { StateService } from './services/state.service';
-import { SongService } from './services/song.service';
+import { CompositionService } from './services/composition.service';
 import { Component, OnChanges, Input, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { trigger, state, animate, transition, style, query } from '@angular/animations';
@@ -27,7 +27,7 @@ export class AppComponent implements OnInit {
     private translateService: TranslateService,
     private router: Router,
     private stateService: StateService,
-    private songService: SongService,
+    private compositionService: CompositionService,
     private sessionService: SessionService,
     private settingsService: SettingsService,
     private titleService: Title) {
@@ -57,8 +57,8 @@ export class AppComponent implements OnInit {
     // Load some required data
     Observable.forkJoin(
       this.stateService.getState(),
-      this.songService.getSetLists(),
-      this.songService.getSongs(),
+      this.compositionService.getCompositions(),
+      this.compositionService.getSets(),
       this.sessionService.getSession(),
       this.settingsService.getSettings()
     ).subscribe((result) => {

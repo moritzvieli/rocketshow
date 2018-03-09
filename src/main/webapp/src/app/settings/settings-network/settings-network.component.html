@@ -6,7 +6,7 @@
 
         <div class="form-group row" style="margin-top: 10px; margin-bottom: -30px;">
           <div class="col d-flex">
-            <a class="my-auto ml-auto text-danger" *ngIf="!currentSong?.isNew" href="#" role="button" (click)="delete(); false">
+            <a class="my-auto ml-auto text-danger" *ngIf="!currentComposition?.isNew" href="#" role="button" (click)="deleteRemoteDevice(i); false">
               <i class="fa fa-trash-o" aria-hidden="true"></i>
             </a>
           </div>
@@ -14,13 +14,13 @@
         <div class="form-group row">
           <label class="col-md-3 col-form-label">{{ 'settings.remote-device-name' | translate }}</label>
           <div class="col-md-8">
-            <input type="text" class="form-control" ([ngModel])="remoteDevice.name" id="name" placeholder="{{ 'settings.remote-device-name-placeholder' | translate }}">
+            <input type="text" class="form-control" [(ngModel)]="remoteDevice.name" id="name" placeholder="{{ 'settings.remote-device-name-placeholder' | translate }}">
           </div>
         </div>
         <div class="form-group row">
           <label class="col-md-3 col-form-label">{{ 'settings.remote-device-host' | translate }}</label>
           <div class="col-md-8">
-            <input type="text" class="form-control" ([ngModel])="remoteDevice.host" id="name" placeholder="{{ 'settings.remote-device-host-placeholder' | translate }}">
+            <input type="text" class="form-control" [(ngModel)]="remoteDevice.host" id="host" placeholder="192.168.1.22">
           </div>
         </div>
         <div class="form-group row">

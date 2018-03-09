@@ -5,14 +5,14 @@ import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 
-import com.ascargon.rocketshow.song.Song;
-import com.ascargon.rocketshow.song.Song.PlayState;
+import com.ascargon.rocketshow.composition.Composition;
+import com.ascargon.rocketshow.composition.Composition.PlayState;
 
 public class Player {
 
 	final static Logger logger = Logger.getLogger(Player.class);
 
-	private Song currentSong;
+	private Composition composition;
 	private Manager manager;
 
 	public Player(Manager manager) {
@@ -20,53 +20,53 @@ public class Player {
 	}
 
 	public void load() throws Exception {
-		if (currentSong != null) {
-			currentSong.loadFiles();
+		if (composition != null) {
+			composition.loadFiles();
 		}
 	}
 
 	public void play() throws Exception {
-		if (currentSong == null) {
+		if (composition == null) {
 			return;
 		}
 
-		if (currentSong.getPlayState() == PlayState.PLAYING || currentSong.getPlayState() == PlayState.STOPPING
-				|| currentSong.getPlayState() == PlayState.LOADING) {
-			
+		if (composition.getPlayState() == PlayState.PLAYING || composition.getPlayState() == PlayState.STOPPING
+				|| composition.getPlayState() == PlayState.LOADING) {
+
 			return;
 		}
 
 		ExecutorService playExecutor;
 
-		// Make sure all remote devices and the local one have loaded the song
-		// before playing it
+		// Make sure all remote devices and the local one have loaded the
+		// composition before playing it
 		playExecutor = Executors.newFixedThreadPool(30);
 
-		// Load all remote devices song
+		// Load the composition on all remote devices
 		for (RemoteDevice remoteDevice : manager.getSettings().getRemoteDeviceList()) {
 			if (remoteDevice.isSynchronize()) {
 				playExecutor.execute(new Runnable() {
 					public void run() {
-						remoteDevice.load(true, currentSong.getName());
+						remoteDevice.load(true, composition.getName());
 					}
 				});
 			}
 		}
 
-		// Also load the local song files
+		// Also load the local composition files
 		playExecutor.execute(new Runnable() {
 			public void run() {
 				try {
-					currentSong.loadFiles();
+					composition.loadFiles();
 				} catch (Exception e) {
-					logger.error("Could not load the song files", e);
+					logger.error("Could not load the composition files", e);
 				}
 			}
 		});
 
 		logger.debug("Wait for all devices to be loaded...");
 
-		// Wait for the songs on all devices to be loaded
+		// Wait for the compositions on all devices to be loaded
 		playExecutor.shutdown();
 
 		while (!playExecutor.isTerminated()) {
@@ -74,23 +74,23 @@ public class Player {
 
 		logger.debug("All devices loaded");
 
-		if (currentSong.getPlayState() != PlayState.PAUSED) {
-			// Maybe the song stopped meanwhile
+		if (composition.getPlayState() != PlayState.PAUSED) {
+			// Maybe the composition stopped meanwhile
 			return;
 		}
 
 		logger.debug("Start playing on all devices...");
 
-		// Play the song on all remote devices
+		// Play the composition on all remote devices
 		for (RemoteDevice remoteDevice : manager.getSettings().getRemoteDeviceList()) {
 			if (remoteDevice.isSynchronize()) {
 				remoteDevice.play();
 			}
 		}
 
-		// Play the song locally
-		if (currentSong != null) {
-			currentSong.play();
+		// Play the composition locally
+		if (composition != null) {
+			composition.play();
 		}
 
 		logger.debug("Playing on all devices");
@@ -103,8 +103,8 @@ public class Player {
 			}
 		}
 
-		if (currentSong != null) {
-			currentSong.pause();
+		if (composition != null) {
+			composition.pause();
 		}
 	}
 
@@ -115,8 +115,8 @@ public class Player {
 			}
 		}
 
-		if (currentSong != null) {
-			currentSong.resume();
+		if (composition != null) {
+			composition.resume();
 		}
 	}
 
@@ -127,17 +127,17 @@ public class Player {
 			}
 		}
 
-		if (currentSong != null) {
-			currentSong.togglePlay();
+		if (composition != null) {
+			composition.togglePlay();
 		}
 	}
 
-	public void stop(boolean playIdleSong) throws Exception {
-		if (currentSong == null) {
+	public void stop(boolean playDefaultComposition) throws Exception {
+		if (composition == null) {
 			return;
 		}
 
-		if (currentSong.getPlayState() == PlayState.STOPPED || currentSong.getPlayState() == PlayState.STOPPING) {
+		if (composition.getPlayState() == PlayState.STOPPED || composition.getPlayState() == PlayState.STOPPING) {
 			return;
 		}
 
@@ -157,13 +157,13 @@ public class Player {
 			}
 		}
 
-		// Also stop the local song
+		// Also stop the local composition
 		executor.execute(new Runnable() {
 			public void run() {
 				try {
-					currentSong.stop(playIdleSong);
+					composition.stop(playDefaultComposition);
 				} catch (Exception e) {
-					logger.error("Could not load the song files", e);
+					logger.error("Could not load the composition files", e);
 				}
 			}
 		});
@@ -174,74 +174,75 @@ public class Player {
 		while (!executor.isTerminated()) {
 		}
 	}
-	
+
 	public void stop() throws Exception {
 		stop(true);
 	}
 
 	public PlayState getPlayState() {
-		if (currentSong == null) {
+		if (composition == null) {
 			return PlayState.STOPPED;
 		}
 
-		return currentSong.getPlayState();
+		return composition.getPlayState();
 	}
 
-	public String getCurrentSongName() {
-		if (currentSong == null) {
+	public String getCompositionName() {
+		if (composition == null) {
 			return null;
 		}
 
-		return currentSong.getName();
+		return composition.getName();
 	}
 
-	public long getCurrentSongDurationMillis() {
-		if (currentSong == null) {
+	public long getCompositionDurationMillis() {
+		if (composition == null) {
 			return 0;
 		}
 
-		return currentSong.getDurationMillis();
+		return composition.getDurationMillis();
 	}
 
-	public long getCurrentSongPassedMillis() {
-		if (currentSong == null) {
+	public long getCompostionPassedMillis() {
+		if (composition == null) {
 			return 0;
 		}
 
-		return currentSong.getPassedMillis();
+		return composition.getPassedMillis();
 	}
 
 	public void close() throws Exception {
-		if (currentSong != null) {
-			currentSong.close();
+		if (composition != null) {
+			composition.close();
 		}
 	}
 
-	public void setCurrentSong(Song currentSong, boolean playIdleSongWhenStoppingCurrentSong) throws Exception {
-		// Stop the current song, if needed
-		stop(playIdleSongWhenStoppingCurrentSong);
-		
-		this.currentSong = currentSong;
+	public void setComposition(Composition composition, boolean playDefaultCompositionWhenStoppingComposition)
+			throws Exception {
+		// Stop the current composition, if needed
+		stop(playDefaultCompositionWhenStoppingComposition);
+
+		this.composition = composition;
 	}
-	
-	public void setCurrentSong(Song currentSong) throws Exception {
-		setCurrentSong(currentSong, true);
+
+	public void setComposition(Composition composition) throws Exception {
+		setComposition(composition, true);
 	}
-	
+
 	public void loadFiles() throws Exception {
-		if(currentSong == null) {
+		if (composition == null) {
 			return;
 		}
-		
-		currentSong.loadFiles();
+
+		composition.loadFiles();
 	}
-	
-	public void setAutoStartNextSong(boolean autoStartNextSong) {
-		if(currentSong == null) {
+
+	public void setAutoStartNextComposition(boolean autoStartNextComposition) {
+		if (composition == null) {
 			return;
 		}
-		
-		currentSong.setAutoStartNextSong(autoStartNextSong);
+
+		composition.setAutoStartNextComposition(autoStartNextComposition);
 	}
 
 }

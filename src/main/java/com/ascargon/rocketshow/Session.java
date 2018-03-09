@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Session {
 
-	private String currentSetListName;
+	private String currentSetName;
 	private boolean firstStart = true;
 	private boolean updateFinished = false;
 	
@@ -14,12 +14,12 @@ public class Session {
 	}
 	
 	@XmlElement
-	public String getCurrentSetListName() {
-		return currentSetListName;
+	public String getCurrentSetName() {
+		return currentSetName;
 	}
 
-	public void setCurrentSetListName(String currentSetListName) {
-		this.currentSetListName = currentSetListName;
+	public void setCurrentSetName(String currentSetName) {
+		this.currentSetName = currentSetName;
 	}
 
 	@XmlElement

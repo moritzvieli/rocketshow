@@ -1,11 +1,11 @@
 export class State {
     playState: string = "STOPPED";
-    currentSongIndex: number = 0;
-    currentSongName: string = "";
-    currentSongDurationMillis: number = 0;
+    currentCompositionIndex: number = 0;
+    currentCompositionName: string = "";
+    currentCompositionDurationMillis: number = 0;
     passedMillis: number;
     updateState: string;
-    currentSetListName: string;
+    currentSetName: string;
     updateFinished: boolean;
 
     constructor(data?: any) {
@@ -14,12 +14,12 @@ export class State {
         }
         
         this.playState = data.playState;
-        this.currentSongIndex = data.currentSongIndex;
-        this.currentSongName = data.currentSongName;
-        this.currentSongDurationMillis = data.currentSongDurationMillis;
+        this.currentCompositionIndex = data.currentCompositionIndex;
+        this.currentCompositionName = data.currentCompositionName;
+        this.currentCompositionDurationMillis = data.currentCompositionDurationMillis;
         this.passedMillis = data.passedMillis;
         this.updateState = data.updateState;
-        this.currentSetListName = data.currentSetListName;
+        this.currentSetName = data.currentSetName;
         this.updateFinished = data.updateFinished;
     }
 }

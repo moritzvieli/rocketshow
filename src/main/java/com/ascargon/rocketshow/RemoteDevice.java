@@ -28,16 +28,13 @@ public class RemoteDevice {
 
 	private HttpClient httpClient;
 
-	// The id of the remote device
-	private int id;
-
 	// The name of the remote device
 	private String name;
 
 	// The host address (IP or hostname) of the remote device
 	private String host;
 
-	// Synchronize song plays/stops with the local device
+	// Synchronize composition plays/stops with the local device
 	private boolean synchronize;
 
 	public RemoteDevice() {
@@ -129,25 +126,16 @@ public class RemoteDevice {
 		doPost("transport/resume");
 	}
 
-	public void setNextSong() {
-		doPost("transport/next-song");
+	public void setNextComposition() {
+		doPost("transport/next-composition");
 	}
 
-	public void setPreviousSong() {
-		doPost("transport/previous-song");
+	public void setPreviousComposition() {
+		doPost("transport/previous-composition");
 	}
 
-	public void setSongIndex(int songIndex) {
-		doPost("transport/set-song-index?index=" + songIndex, true);
-	}
-
-	@XmlElement
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
+	public void setCompositionIndex(int compositionIndex) {
+		doPost("transport/set-composition-index?index=" + compositionIndex, true);
 	}
 
 	@XmlElement

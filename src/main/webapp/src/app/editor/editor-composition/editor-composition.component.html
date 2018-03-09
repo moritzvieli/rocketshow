@@ -1,0 +1,127 @@
+<div class="row">
+
+  <!-- Composition navigation -->
+  <div class="col-md-4 mb-3">
+
+    <!-- Create a new composition -->
+    <a class="btn btn-primary mb-3 btn btn-primary btn-block" href="#" role="button" (click)="createComposition(); false">
+      <i class="fa fa-plus" aria-hidden="true"></i> {{ 'editor.create-composition' | translate }}
+    </a>
+
+    <!-- Search for compositions -->
+    <input type="text" class="form-control input-block mb-3" id="searchCompositionList" placeholder="{{ 'editor.search-compositions' | translate }}"
+      (input)="filterCompositions($event.target.value)">
+
+    <!-- Existing composition list -->
+    <div class="card" style="height: 400px; overflow-y: scroll;">
+      <div class="card-body p-0">
+        <div class="list-group list-group-flush">
+          <a *ngIf="loadingCompositions" (click)="selectComposition(composition); false" href="#" class="list-group-item list-group-item-action flex-column align-items-start d-flex">
+            <p class="mb-0 mx-auto"><i class="fa fa-spinner fa-pulse fa-fw"></i></p>
+          </a>
+
+          <a *ngFor="let composition of filteredCompositions" (click)="selectComposition(composition); false" href="#" class="list-group-item list-group-item-action flex-column align-items-start"
+            [class.active]="initialComposition?.name == composition.name">
+
+            <p class="mb-0">{{ composition.name }}</p>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit the selected/new composition -->
+  <div class="col-md-8" *ngIf="currentComposition && !loadingComposition">
+    <div class="card">
+      <div class="card-header">
+        <span *ngIf="currentComposition?.name">{{ currentComposition?.name }}</span>
+        <span *ngIf="!currentComposition?.name">{{ 'editor.default-composition-name' | translate }}</span>
+      </div>
+      <div class="card-body">
+
+        <div class="form-group">
+          <label for="compositionName">{{ 'editor.composition-name' | translate }}</label>
+          <input type="text" class="form-control" maxlength="50" [(ngModel)]="currentComposition.name" id="compositionName" placeholder="{{ 'editor.default-composition-name' | translate }}">
+        </div>
+
+        <div class="form-group">
+          <label for="compositionNotes">{{ 'editor.notes' | translate }}</label>
+          <textarea [(ngModel)]="currentComposition.notes" class="form-control" id="compositionNotes" rows="3"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>{{ 'editor.files' | translate }}</label>
+
+          <div class="list-group" [sortablejs]="currentComposition?.fileList" [sortablejsOptions]="{ onMove: sortMove }">
+            <div class="list-group-item" *ngFor="let file of currentComposition?.fileList; let i = index">
+              <div class="row">
+                <div class="col-auto list-sort-handle my-auto" style="cursor: move; cursor: -webkit-grabbing;">
+                  <i class="fa fa-bars" aria-hidden="true"></i>
+                </div>
+                <a href="#" class="col-auto col-auto my-auto pl-0" (click)="toggleActive(file); false" [class.text-danger]="!file.active">
+                  <i class="fa fa-fw" [ngClass]="file.getFontAwesomeIconClass()" aria-hidden="true"></i>
+                </a>
+                <div class="col-auto flex-grow text-break-word my-auto pl-0">
+                  <a href="#" (click)="editCompositionFileDetails(i); false">
+                    <p class="mb-0">{{ file.name }}</p>
+                  </a>
+                </div>
+                <div class="col-auto my-auto pl-0 pr-0">
+                  <a class="text-danger float-right" href="#" role="button" (click)="deleteFile(i); false">
+                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                  </a>
+                </div>
+                <div class="col-auto my-auto">
+                  <a class="btn btn-secondary btn-sm float-right" href="#" role="button" (click)="editCompositionFileDetails(i); false">...</a>
+                </div>
+              </div>
+            </div>
+            <a href="#" (click)="addCompositionFile(); false" class="no-sortjs list-group-item list-group-item-action text-center">
+              <i class="fa fa-plus" aria-hidden="true"></i> {{ 'editor.add-file' | translate }}
+            </a>
+          </div>
+        </div>
+
+        <!-- More than one video/image -->
+        <div *ngIf="multipleVideoImage()" class="alert alert-danger mb-0 text-center" role="alert">
+          <h3>
+            <i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{ 'editor.error-multiple-video-images-title' | translate }}</h3>
+          <p class="mb-0">{{ 'editor.error-multiple-video-images' | translate }}</p>
+        </div>
+
+      </div>
+
+      <div class="card-footer d-flex" style="justify-content: space-between;">
+        <a class="mr-3 my-auto text-danger" *ngIf="!currentComposition?.isNew" href="#" role="button" (click)="delete(); false">
+          <i class="fa fa-trash-o" aria-hidden="true"></i> {{ 'misc.delete' | translate }}
+        </a>
+
+        <div class="d-flex">
+          <a class="mr-3 my-auto" href="#" role="button" (click)="unselect(); false">
+            {{ 'misc.cancel' | translate }}
+          </a>
+          <button type="button" class="btn btn-primary" (click)="save(currentComposition); false" [disabled]="multipleVideoImage() || !currentComposition || !currentComposition.name || currentComposition.name.length < 1 || currentComposition.name.length > 50"
+            role="button">
+            <i class="fa fa-floppy-o" aria-hidden="true"></i> {{ 'misc.save' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- No current composition selected -->
+  <div class="col-md-8 text-center d-flex" *ngIf="!currentComposition && !loadingComposition">
+    <div class="d-flex m-auto">
+      <i>{{ 'editor.select-composition' | translate }}</i>
+    </div>
+  </div>
+
+  <!-- Loading a composition -->
+  <div class="col-md-8 text-center d-flex" *ngIf="loadingComposition">
+    <div class="d-flex m-auto">
+      <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
+    </div>
+  </div>
+
+</div>

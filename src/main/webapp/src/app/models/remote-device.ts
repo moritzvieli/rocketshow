@@ -1,6 +1,5 @@
 export class RemoteDevice {
 
-    id: number = 0;
     name: string = "";
     host: string = "";
     synchronize: boolean = false;
@@ -10,7 +9,6 @@ export class RemoteDevice {
             return;
         }
 
-        this.id = data.id;
         this.name = data.name;
         this.host = data.host;
         this.synchronize = data.synchronize;

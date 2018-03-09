@@ -1,8 +1,8 @@
-import { EditorSongComponent } from './editor-song/editor-song.component';
+import { EditorCompositionComponent } from './editor-composition/editor-composition.component';
 import { Observable } from 'rxjs/Observable';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ComponentCanDeactivate } from '../pending-changes.guard';
-import { EditorSetlistComponent } from './editor-setlist/editor-setlist.component';
+import { EditorSetComponent } from './editor-set/editor-set.component';
 
 @Component({
   selector: 'app-editor',
@@ -11,8 +11,8 @@ import { EditorSetlistComponent } from './editor-setlist/editor-setlist.componen
 })
 export class EditorComponent implements OnInit, ComponentCanDeactivate {
 
-  @ViewChild(EditorSongComponent) editorSongComponent: EditorSongComponent;
-  @ViewChild(EditorSetlistComponent) editorSetlistComponent: EditorSetlistComponent;
+  @ViewChild(EditorCompositionComponent) editorCompositionComponent: EditorCompositionComponent;
+  @ViewChild(EditorSetComponent) editorSetComponent: EditorSetComponent;
   
   constructor() {
   }
@@ -21,9 +21,9 @@ export class EditorComponent implements OnInit, ComponentCanDeactivate {
   }
 
   canDeactivate(): Observable<boolean> {
-    return this.editorSongComponent.checkPendingChanges()
+    return this.editorCompositionComponent.checkPendingChanges()
     .flatMap(result => {
-      return result && this.editorSetlistComponent.checkPendingChanges();
+      return result && this.editorSetComponent.checkPendingChanges();
     });
   }
 

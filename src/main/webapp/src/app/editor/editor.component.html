@@ -8,24 +8,24 @@
           <!-- Tab navigation -->
           <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="songs-tab" data-toggle="tab" href="#songs" role="tab">
-                <i class="fa fa-play-circle" aria-hidden="true"></i> {{ 'editor.songs' | translate }}
+              <a class="nav-link active" id="compositions-tab" data-toggle="tab" href="#compositions" role="tab">
+                <i class="fa fa-play-circle" aria-hidden="true"></i> {{ 'editor.compositions' | translate }}
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="setlists-tab" data-toggle="tab" href="#setlists" role="tab">
-                <i class="fa fa-list" aria-hidden="true"></i> {{ 'editor.setlists' | translate }}
+              <a class="nav-link" id="sets-tab" data-toggle="tab" href="#sets" role="tab">
+                <i class="fa fa-list" aria-hidden="true"></i> {{ 'editor.sets' | translate }}
               </a>
             </li>
           </ul>
 
           <!-- Tab content -->
           <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="songs" role="tabpanel">
-              <app-editor-song></app-editor-song>
+            <div class="tab-pane fade show active" id="compositions" role="tabpanel">
+              <app-editor-composition></app-editor-composition>
             </div>
-            <div class="tab-pane fade" id="setlists" role="tabpanel">
-              <app-editor-setlist></app-editor-setlist>
+            <div class="tab-pane fade" id="sets" role="tabpanel">
+              <app-editor-set></app-editor-set>
             </div>
           </div>
 

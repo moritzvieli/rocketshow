@@ -15,8 +15,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import com.ascargon.rocketshow.Manager;
 import com.ascargon.rocketshow.Updater.UpdateState;
+import com.ascargon.rocketshow.composition.Composition.PlayState;
 import com.ascargon.rocketshow.midi.MidiSignal;
-import com.ascargon.rocketshow.song.Song.PlayState;
 
 /**
  * Handle the current state of the device and notify all connected clients on
@@ -62,17 +62,17 @@ public class StateManager {
 		State currentState = new State();
 
 		currentState.setPlayState(PlayState.STOPPED);
-		currentState.setCurrentSongIndex(0);
+		currentState.setCurrentCompositionIndex(0);
 
 		if (manager != null) {
 			currentState.setPlayState(manager.getPlayer().getPlayState());
-			currentState.setCurrentSongName(manager.getPlayer().getCurrentSongName());
-			currentState.setCurrentSongDurationMillis(manager.getPlayer().getCurrentSongDurationMillis());
-			currentState.setPassedMillis(manager.getPlayer().getCurrentSongPassedMillis());
+			currentState.setCurrentCompositionName(manager.getPlayer().getCompositionName());
+			currentState.setCurrentCompositionDurationMillis(manager.getPlayer().getCompositionDurationMillis());
+			currentState.setPassedMillis(manager.getPlayer().getCompostionPassedMillis());
 
-			if (manager.getCurrentSetList() != null) {
-				currentState.setCurrentSongIndex(manager.getCurrentSetList().getCurrentSongIndex());
-				currentState.setCurrentSetListName(manager.getCurrentSetList().getName());
+			if (manager.getCurrentSet() != null) {
+				currentState.setCurrentCompositionIndex(manager.getCurrentSet().getCurrentCompositionIndex());
+				currentState.setCurrentSetName(manager.getCurrentSet().getName());
 			}
 
 			if (manager.getSession() != null) {

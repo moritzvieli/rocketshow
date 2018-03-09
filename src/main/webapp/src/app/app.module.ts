@@ -1,6 +1,3 @@
-import { WaitDialogService } from './services/wait-dialog.service';
-import { Song } from './models/song';
-import { State } from './models/state';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -26,20 +23,25 @@ import { PlayComponent } from './play/play.component';
 import { SettingsComponent } from './settings/settings.component';
 import { SettingsSystemComponent } from './settings/settings-system/settings-system.component';
 import { EditorComponent } from './editor/editor.component';
-import { EditorSongComponent } from './editor/editor-song/editor-song.component';
-import { EditorSetlistComponent } from './editor/editor-setlist/editor-setlist.component';
+import { EditorCompositionComponent } from './editor/editor-composition/editor-composition.component';
+import { EditorSetComponent } from './editor/editor-set/editor-set.component';
 import { ConnectionComponent } from './connection/connection.component';
-import { EditorSongFileComponent } from './editor/editor-song/editor-song-file/editor-song-file.component';
+import { EditorCompositionFileComponent } from './editor/editor-composition/editor-composition-file/editor-composition-file.component';
 import { RoutingDetailsComponent } from './routing-details/routing-details.component';
 import { SettingsAdvancedComponent } from './settings/settings-advanced/settings-advanced.component';
 import { UpdateDialogComponent } from './update-dialog/update-dialog.component';
 import { WaitDialogComponent } from './wait-dialog/wait-dialog.component';
 import { InfoDialogComponent } from './info-dialog/info-dialog.component';
+import { SettingsMidiComponent } from './settings/settings-midi/settings-midi.component';
+import { SettingsNetworkComponent } from './settings/settings-network/settings-network.component';
+import { SettingsAudioComponent } from './settings/settings-audio/settings-audio.component';
+import { SettingsVideoComponent } from './settings/settings-video/settings-video.component';
+import { RemoteDeviceSelectionComponent } from './remote-device-selection/remote-device-selection.component';
 
 import { ApiService } from './services/api.service';
 import { StateService } from './services/state.service';
 import { TransportService } from './services/transport.service';
-import { SongService } from './services/song.service';
+import { CompositionService } from './services/composition.service';
 import { FileService } from './services/file.service';
 import { SettingsService } from './services/settings.service';
 import { SessionService } from './services/session.service';
@@ -48,10 +50,8 @@ import { WarningDialogComponent } from './warning-dialog/warning-dialog.componen
 import { PendingChangesDialogService } from './services/pending-changes-dialog.service';
 import { UpdateService } from './services/update.service';
 import { InfoDialogService } from './services/info-dialog.service';
-import { SettingsMidiComponent } from './settings/settings-midi/settings-midi.component';
-import { SettingsNetworkComponent } from './settings/settings-network/settings-network.component';
-import { SettingsAudioComponent } from './settings/settings-audio/settings-audio.component';
-import { SettingsVideoComponent } from './settings/settings-video/settings-video.component';
+import { ToastGeneralErrorService } from './services/toast-general-error.service';
+import { WaitDialogService } from './services/wait-dialog.service';
 
 const appRoutes: Routes = [
   { path: 'intro', component: IntroComponent },
@@ -76,10 +76,10 @@ const DROPZONE_CONFIG: DropzoneConfigInterface = {
     PlayComponent,
     SettingsComponent,
     EditorComponent,
-    EditorSongComponent,
-    EditorSetlistComponent,
+    EditorCompositionComponent,
+    EditorSetComponent,
     ConnectionComponent,
-    EditorSongFileComponent,
+    EditorCompositionFileComponent,
     RoutingDetailsComponent,
     SettingsSystemComponent,
     WarningDialogComponent,
@@ -92,6 +92,7 @@ const DROPZONE_CONFIG: DropzoneConfigInterface = {
     SettingsNetworkComponent,
     SettingsAudioComponent,
     SettingsVideoComponent,
+    RemoteDeviceSelectionComponent,
   ],
   imports: [
     HttpModule,
@@ -126,7 +127,7 @@ const DROPZONE_CONFIG: DropzoneConfigInterface = {
     ApiService,
     StateService,
     TransportService,
-    SongService,
+    CompositionService,
     FileService,
     SettingsService,
     SessionService,
@@ -134,10 +135,11 @@ const DROPZONE_CONFIG: DropzoneConfigInterface = {
     PendingChangesDialogService,
     UpdateService,
     WaitDialogService,
-    InfoDialogService
+    InfoDialogService,
+    ToastGeneralErrorService
   ],
   entryComponents: [
-    EditorSongFileComponent,
+    EditorCompositionFileComponent,
     RoutingDetailsComponent,
     WarningDialogComponent,
     UpdateDialogComponent,

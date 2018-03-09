@@ -14,7 +14,7 @@ import javax.sound.midi.Sequencer;
 import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.Manager;
-import com.ascargon.rocketshow.song.file.PlayerLoadedListener;
+import com.ascargon.rocketshow.composition.PlayerLoadedListener;
 
 public class MidiPlayer {
 

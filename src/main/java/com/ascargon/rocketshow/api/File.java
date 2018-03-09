@@ -27,7 +27,7 @@ public class File {
 	@Path("list")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<com.ascargon.rocketshow.song.file.File> getAll() throws Exception {
+	public List<com.ascargon.rocketshow.composition.File> getAll() throws Exception {
 		Manager manager = (Manager) context.getAttribute("manager");
 		return manager.getFileManager().getAllFiles();
 	}
@@ -36,7 +36,7 @@ public class File {
 	@POST
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
-	public com.ascargon.rocketshow.song.file.File upload(@FormDataParam("file") InputStream uploadedInputStream,
+	public com.ascargon.rocketshow.composition.File upload(@FormDataParam("file") InputStream uploadedInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDetail) throws Exception {
 
 		Manager manager = (Manager) context.getAttribute("manager");

@@ -25,7 +25,7 @@ public class Midi2RemoteReceiver implements Receiver {
 
 	private MidiMapping midiMapping;
 
-	private List<Integer> remoteDeviceIdList = new ArrayList<Integer>();
+	private List<String> remoteDeviceNameList = new ArrayList<String>();
 
 	private Manager manager;
 
@@ -40,7 +40,7 @@ public class Midi2RemoteReceiver implements Receiver {
 		}
 
 		MidiSignal midiSignal = new MidiSignal((ShortMessage) message);
-		
+
 		try {
 			MidiMapper.processMidiEvent(midiSignal, midiMapping);
 		} catch (IOException e) {
@@ -50,14 +50,18 @@ public class Midi2RemoteReceiver implements Receiver {
 		String apiUrl = "midi/send-message?command=" + midiSignal.getCommand() + "&channel=" + midiSignal.getChannel()
 				+ "&note=" + midiSignal.getNote() + "&velocity" + midiSignal.getVelocity();
 
-		for (Integer remoteDeviceId : remoteDeviceIdList) {
-			RemoteDevice remoteDevice = manager.getSettings().getRemoteDeviceById(remoteDeviceId);
+		for (String name : remoteDeviceNameList) {
+			RemoteDevice remoteDevice = manager.getSettings().getRemoteDeviceByName(name);
 
-			try {
-				remoteDevice.doPost(apiUrl);
-			} catch (Exception e) {
-				logger.error("Could not send MIDI message to remote device '" + remoteDevice.getHost() + "' ("
-						+ remoteDeviceId + ")", e);
+			if (remoteDevice == null) {
+				logger.warn("No remote device could be found in the settings with name " + name);
+			} else {
+				try {
+					remoteDevice.doPost(apiUrl);
+				} catch (Exception e) {
+					logger.error("Could not send MIDI message to remote device '" + remoteDevice.getHost() + "' ("
+							+ name + ")", e);
+				}
 			}
 		}
 	}
@@ -67,12 +71,12 @@ public class Midi2RemoteReceiver implements Receiver {
 		// Nothing to do at the moment
 	}
 
-	public List<Integer> getRemoteDeviceIdList() {
-		return remoteDeviceIdList;
+	public List<String> getRemoteDeviceNameList() {
+		return remoteDeviceNameList;
 	}
 
-	public void setRemoteDeviceIdList(List<Integer> remoteDeviceIdList) {
-		this.remoteDeviceIdList = remoteDeviceIdList;
+	public void setRemoteDeviceNameList(List<String> remoteDeviceNameList) {
+		this.remoteDeviceNameList = remoteDeviceNameList;
 	}
 
 	public MidiMapping getMidiMapping() {

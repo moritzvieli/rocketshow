@@ -47,11 +47,11 @@ public class MidiInDeviceReceiver implements Receiver {
 	 */
 	public void connectMidiReceiver() throws MidiUnavailableException {
 		// Cancel an eventually existing timer
-		if(connectTimer != null) {
+		if (connectTimer != null) {
 			connectTimer.cancel();
 			connectTimer = null;
 		}
-		
+
 		if (midiReceiver != null && midiReceiver.isOpen()) {
 			// We already have an open receiver -> close this one
 			try {
@@ -131,8 +131,7 @@ public class MidiInDeviceReceiver implements Receiver {
 
 		// Process MIDI events as actions according to the settings
 		try {
-			manager.getMidi2ActionConverter().processMidiEvent(midiSignal,
-					manager.getSettings().getActionMappingList());
+			manager.getMidi2ActionConverter().processMidiEvent(midiSignal, manager.getSettings().getMidiControlList());
 		} catch (Exception e) {
 			logger.error("Could not execute action from live MIDI", e);
 		}

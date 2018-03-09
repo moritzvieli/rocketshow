@@ -20,26 +20,26 @@ export class TransportService {
     });
   }
 
-  nextSong(): Observable<null> {
-    return this.apiService.post('transport/next-song', null).map((response: Response) => {
+  nextComposition(): Observable<null> {
+    return this.apiService.post('transport/next-composition', null).map((response: Response) => {
       return null;
     });
   }
 
-  previousSong(): Observable<null> {
-    return this.apiService.post('transport/previous-song', null).map((response: Response) => {
+  previousComposition(): Observable<null> {
+    return this.apiService.post('transport/previous-composition', null).map((response: Response) => {
       return null;
     });
   }
 
-  setSongName(songName: string): Observable<null> {
-    return this.apiService.post('transport/set-song-name?name=' + songName, null).map((response: Response) => {
+  setCompositionName(compositionName: string): Observable<null> {
+    return this.apiService.post('transport/set-composition-name?name=' + compositionName, null).map((response: Response) => {
       return null;
     });
   }
 
-  setSongIndex(index: number): Observable<null> {
-    return this.apiService.post('transport/set-song-index?index=' + index, null).map((response: Response) => {
+  setCompositionIndex(index: number): Observable<null> {
+    return this.apiService.post('transport/set-composition-index?index=' + index, null).map((response: Response) => {
       return null;
     });
   }

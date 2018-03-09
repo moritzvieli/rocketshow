@@ -9,7 +9,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.Settings.AudioOutput;
-import com.ascargon.rocketshow.song.file.PlayerLoadedListener;
+import com.ascargon.rocketshow.composition.PlayerLoadedListener;
 import com.ascargon.rocketshow.util.ShellManager;
 
 public class AudioPlayer {
@@ -91,8 +91,8 @@ public class AudioPlayer {
 				}
 			}).start();
 
-			// Pause, as soon as the song has been loaded and wait for it to be
-			// played
+			// Pause, as soon as the composition has been loaded and wait for it
+			// to be played
 			pause();
 		} else if (playerType == PlayerType.ALSA_PLAYER) {
 			logger.debug("File '" + path + "' loaded");

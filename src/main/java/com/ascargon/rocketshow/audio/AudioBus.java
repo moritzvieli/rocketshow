@@ -3,11 +3,16 @@ package com.ascargon.rocketshow.audio;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+/**
+ * An audio bus containing a number of channels.
+ *
+ * @author Moritz A. Vieli
+ */
 @XmlRootElement
 public class AudioBus {
 
 	private String name;
-	
+
 	private int channels = 2;
 
 	@XmlElement
@@ -27,5 +32,5 @@ public class AudioBus {
 	public void setChannels(int channels) {
 		this.channels = channels;
 	}
-	
+
 }

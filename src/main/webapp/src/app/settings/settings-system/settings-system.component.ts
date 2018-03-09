@@ -7,8 +7,8 @@ import { Component, OnInit } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
 import { ApiService } from '../../services/api.service';
 import { PendingChangesDialogService } from '../../services/pending-changes-dialog.service';
-import { SongService } from '../../services/song.service';
-import { Song } from '../../models/song';
+import { CompositionService } from '../../services/composition.service';
+import { Composition } from '../../models/composition';
 import { Version } from '../../models/version';
 
 @Component({
@@ -18,15 +18,17 @@ import { Version } from '../../models/version';
 })
 export class SettingsSystemComponent implements OnInit {
 
+  selectUndefinedOptionValue: any;
+
   settings: Settings;
-  songs: Song[];
+  compositions: Composition[];
   currentVersion: Version;
 
   constructor(
     public settingsService: SettingsService,
     private warningDialogService: WarningDialogService,
     private apiService: ApiService,
-    private songService: SongService,
+    private compositionService: CompositionService,
     private updateService: UpdateService,
     private modalService: BsModalService) { }
 
@@ -43,8 +45,8 @@ export class SettingsSystemComponent implements OnInit {
       this.loadSettings();
     });
 
-    this.songService.getSongs(true).subscribe((songs: Song[]) => {
-      this.songs = songs;
+    this.compositionService.getCompositions(true).subscribe((compositions: Composition[]) => {
+      this.compositions = compositions;
     });
 
     this.updateService.getCurrentVersion().subscribe((version: Version) => {

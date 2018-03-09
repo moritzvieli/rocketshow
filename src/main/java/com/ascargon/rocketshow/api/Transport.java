@@ -24,19 +24,19 @@ public class Transport {
 	@Path("load")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response load(@QueryParam("name") String songName) throws Exception {
+	public Response load(@QueryParam("name") String compositionName) throws Exception {
 		logger.info("Received API request for transport/load");
 
 		Manager manager = (Manager) context.getAttribute("manager");
 
-		if (songName.length() > 0) {
-			if (!manager.getPlayer().getCurrentSongName().equals(songName)) {
-				// Load the song with the given name into the player
-				manager.getPlayer().setCurrentSong(manager.getSongManager().loadSong(songName), false);
+		if (compositionName.length() > 0) {
+			if (!manager.getPlayer().getCompositionName().equals(compositionName)) {
+				// Load the composition with the given name into the player
+				manager.getPlayer().setComposition(manager.getCompositionManager().loadComposition(compositionName), false);
 			}
 		}
 
-		// Load the files for the current song
+		// Load the files for the current composition
 		manager.getPlayer().loadFiles();
 
 		return Response.status(200).build();
@@ -102,57 +102,57 @@ public class Transport {
 		return Response.status(200).build();
 	}
 
-	@Path("next-song")
+	@Path("next-composition")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response nextSong() throws Exception {
-		logger.info("Received API request for transport/next-song");
+	public Response nextComposition() throws Exception {
+		logger.info("Received API request for transport/next-composition");
 
 		Manager manager = (Manager) context.getAttribute("manager");
-		if (manager.getCurrentSetList() != null) {
-			manager.getCurrentSetList().nextSong();
+		if (manager.getCurrentSet() != null) {
+			manager.getCurrentSet().nextComposition();
 		}
 		return Response.status(200).build();
 	}
 
-	@Path("previous-song")
+	@Path("previous-composition")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response previousSong() throws Exception {
-		logger.info("Received API request for transport/previous-song");
+	public Response previousComposition() throws Exception {
+		logger.info("Received API request for transport/previous-composition");
 
 		Manager manager = (Manager) context.getAttribute("manager");
-		if (manager.getCurrentSetList() != null) {
-			manager.getCurrentSetList().previousSong();
+		if (manager.getCurrentSet() != null) {
+			manager.getCurrentSet().previousComposition();
 		}
 		return Response.status(200).build();
 	}
 
-	@Path("set-song-index")
+	@Path("set-composition-index")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response setSongIndex(@QueryParam("index") int index) throws Exception {
-		logger.info("Received API request for transport/set-song-index");
+	public Response setCompositionIndex(@QueryParam("index") int index) throws Exception {
+		logger.info("Received API request for transport/set-composition-index");
 
 		Manager manager = (Manager) context.getAttribute("manager");
-		if (manager.getCurrentSetList() != null) {
-			manager.getCurrentSetList().setSongIndex(index);
+		if (manager.getCurrentSet() != null) {
+			manager.getCurrentSet().setCompositionIndex(index);
 		}
 		return Response.status(200).build();
 	}
 
-	@Path("set-song-name")
+	@Path("set-composition-name")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response setSongName(@QueryParam("name") String songName) throws Exception {
-		logger.info("Received API request for transport/load");
+	public Response setCompositionName(@QueryParam("name") String compositionName) throws Exception {
+		logger.info("Received API request for transport/set-composition-name");
 
 		Manager manager = (Manager) context.getAttribute("manager");
 
-		if (songName.length() > 0) {
-			if (manager.getPlayer().getCurrentSongName() == null || !manager.getPlayer().getCurrentSongName().equals(songName)) {
-				// Load the song with the given name into the player
-				manager.getPlayer().setCurrentSong(manager.getSongManager().loadSong(songName), false);
+		if (compositionName.length() > 0) {
+			if (manager.getPlayer().getCompositionName() == null || !manager.getPlayer().getCompositionName().equals(compositionName)) {
+				// Load the composition with the given name into the player
+				manager.getPlayer().setComposition(manager.getCompositionManager().loadComposition(compositionName), false);
 				manager.getStateManager().notifyClients();
 			}
 		}

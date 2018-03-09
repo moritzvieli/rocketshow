@@ -1,4 +1,5 @@
-import { ActionMapping } from './../../models/action-mapping';
+import { RemoteDevice } from './../../models/remote-device';
+import { MidiControl } from './../../models/midi-control';
 import { Subject } from 'rxjs/Subject';
 import { SettingsService } from './../../services/settings.service';
 import { MidiDevice } from './../../models/midi-device';
@@ -21,10 +22,10 @@ export class SettingsMidiComponent implements OnInit {
   noteList: number[] = [];
   midiActionList: string[] = [];
 
-  private noteIdNames = new Map<number, string>(); 
+  private noteIdNames = new Map<number, string>();
 
   constructor(
-    private settingsServie: SettingsService
+    private settingsService: SettingsService
   ) {
     for (let i = 0; i < 16; i++) {
       this.channelList.push(i);
@@ -35,8 +36,8 @@ export class SettingsMidiComponent implements OnInit {
     }
 
     this.midiActionList.push('PLAY');
-    this.midiActionList.push('NEXT_SONG');
-    this.midiActionList.push('PREVIOUS_SONG');
+    this.midiActionList.push('NEXT_COMPOSITION');
+    this.midiActionList.push('PREVIOUS_COMPOSITION');
     this.midiActionList.push('STOP');
     this.midiActionList.push('REBOOT');
 
@@ -170,16 +171,24 @@ export class SettingsMidiComponent implements OnInit {
     this.noteIdNames.set(127, 'G8');
   }
 
+  private loadSettings() {
+    this.settingsService.getSettings().map(result => {
+      this.settings = result;
+    }).subscribe();
+  }
+
   ngOnInit() {
-    this.settingsServie.getSettings().subscribe((response) => {
-      this.settings = response;
+    this.loadSettings();
+
+    this.settingsService.settingsChanged.subscribe(() => {
+      this.loadSettings();
     });
 
-    this.settingsServie.getMidiInDevices().subscribe((response) => {
+    this.settingsService.getMidiInDevices().subscribe((response) => {
       this.midiInDevice = response
     });
 
-    this.settingsServie.getMidiOutDevices().subscribe((response) => {
+    this.settingsService.getMidiOutDevices().subscribe((response) => {
       this.midiOutDevices = response
     });
   }
@@ -190,10 +199,13 @@ export class SettingsMidiComponent implements OnInit {
     return evt.related.className.indexOf('no-sortjs') === -1;
   }
 
-  addMidiAction() {
-    let actionMapping: ActionMapping = new ActionMapping();
+  addMidiControl() {
+    let midiControl: MidiControl = new MidiControl();
+    this.settings.midiControlList.push(midiControl);
+  }
 
-    this.settings.actionMappingList.push(actionMapping);
+  deleteMidiControl(midiControlIndex: number) {
+    this.settings.midiControlList.splice(midiControlIndex, 1);
   }
 
   midiIdToNote(id: number): string {

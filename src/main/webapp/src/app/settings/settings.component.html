@@ -3,11 +3,15 @@
   <div class="row">
     <div class="col">
       <div class="card">
-        <div class="card-body">
+        <div *ngIf="loading" class="card-body d-flex m-auto">
+          <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
+        </div>
+
+        <div *ngIf="!loading" class="card-body">
 
           <div class="row">
             <div class="col-md-3 mb-3">
-              <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist">
+              <div  class="nav flex-column nav-pills" id="v-pills-tab" role="tablist">
                 <a class="nav-link active" data-toggle="pill" href="#system" role="tab">{{ 'settings.system' | translate }}</a>
                 <a class="nav-link" data-toggle="pill" href="#network" role="tab">{{ 'settings.network' | translate }}</a>
                 <a class="nav-link" data-toggle="pill" href="#midi" role="tab">{{ 'settings.midi' | translate }}</a>
@@ -51,7 +55,7 @@
                 <a class="mr-3 my-auto" href="#" role="button" (click)="discard(); false">
                   {{ 'misc.discard' | translate }}
                 </a>
-                <a class="btn btn-primary" href="#" role="button" (click)="save(currentSong); false">
+                <a class="btn btn-primary" href="#" role="button" (click)="save(currentComposition); false">
                   <i class="fa fa-floppy-o" aria-hidden="true"></i> {{ 'misc.save' | translate }}
                 </a>
               </div>

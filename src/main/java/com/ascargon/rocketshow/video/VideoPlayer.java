@@ -10,7 +10,7 @@ import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 
-import com.ascargon.rocketshow.song.file.PlayerLoadedListener;
+import com.ascargon.rocketshow.composition.PlayerLoadedListener;
 import com.ascargon.rocketshow.util.ShellManager;
 
 public class VideoPlayer {

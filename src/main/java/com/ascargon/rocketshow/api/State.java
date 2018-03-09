@@ -4,29 +4,29 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.ascargon.rocketshow.Updater.UpdateState;
+import com.ascargon.rocketshow.composition.Composition.PlayState;
 import com.ascargon.rocketshow.midi.MidiSignal;
-import com.ascargon.rocketshow.song.Song.PlayState;
 
 @XmlRootElement
 public class State {
 
-	private int currentSongIndex;
+	private int currentCompositionIndex;
 	private PlayState playState;
-	private String currentSongName;
-	private long currentSongDurationMillis;
+	private String currentCompositionName;
+	private long currentCompositionDurationMillis;
 	private long passedMillis;
 	private MidiSignal midiSignal;
 	private UpdateState updateState;
-	private String currentSetListName;
+	private String currentSetName;
 	private boolean updateFinished;
 
 	@XmlElement
-	public int getCurrentSongIndex() {
-		return currentSongIndex;
+	public int getCurrentCompositionIndex() {
+		return currentCompositionIndex;
 	}
 
-	public void setCurrentSongIndex(int currentSongIndex) {
-		this.currentSongIndex = currentSongIndex;
+	public void setCurrentCompositionIndex(int currentCompositionIndex) {
+		this.currentCompositionIndex = currentCompositionIndex;
 	}
 
 	@XmlElement
@@ -39,21 +39,21 @@ public class State {
 	}
 
 	@XmlElement
-	public String getCurrentSongName() {
-		return currentSongName;
+	public String getCurrentCompositionName() {
+		return currentCompositionName;
 	}
 
-	public void setCurrentSongName(String currentSongName) {
-		this.currentSongName = currentSongName;
+	public void setCurrentCompositionName(String currentCompositionName) {
+		this.currentCompositionName = currentCompositionName;
 	}
 
 	@XmlElement
-	public long getCurrentSongDurationMillis() {
-		return currentSongDurationMillis;
+	public long getCurrentCompositionDurationMillis() {
+		return currentCompositionDurationMillis;
 	}
 
-	public void setCurrentSongDurationMillis(long currentSongDurationMillis) {
-		this.currentSongDurationMillis = currentSongDurationMillis;
+	public void setCurrentCompositionDurationMillis(long currentCompositionDurationMillis) {
+		this.currentCompositionDurationMillis = currentCompositionDurationMillis;
 	}
 
 	@XmlElement
@@ -84,12 +84,12 @@ public class State {
 	}
 
 	@XmlElement
-	public String getCurrentSetListName() {
-		return currentSetListName;
+	public String getCurrentSetName() {
+		return currentSetName;
 	}
 
-	public void setCurrentSetListName(String currentSetListName) {
-		this.currentSetListName = currentSetListName;
+	public void setCurrentSetName(String currentSetName) {
+		this.currentSetName = currentSetName;
 	}
 
 	@XmlElement

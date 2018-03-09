@@ -42,7 +42,7 @@ public class MidiRouting {
 	private Midi2RemoteReceiver midi2RemoteReceiver;
 
 	// A list of remote device ids in case of destination type = REMOTE
-	private List<Integer> remoteDeviceIdList = new ArrayList<Integer>();
+	private List<String> remoteDeviceNameList = new ArrayList<String>();
 
 	private Midi2DeviceOutReceiver midi2DeviceOutReceiver;
 
@@ -60,7 +60,7 @@ public class MidiRouting {
 		midi2DmxReceiver.setMidiMapping(midiMapping);
 
 		midi2RemoteReceiver = new Midi2RemoteReceiver(manager);
-		midi2RemoteReceiver.setRemoteDeviceIdList(remoteDeviceIdList);
+		midi2RemoteReceiver.setRemoteDeviceNameList(remoteDeviceNameList);
 		midi2RemoteReceiver.setMidiMapping(midiMapping);
 
 		midi2DeviceOutReceiver = new Midi2DeviceOutReceiver(manager);
@@ -160,17 +160,17 @@ public class MidiRouting {
 		this.midiSource = midiSource;
 	}
 
-	@XmlElement(name = "remoteDeviceIdList")
-	@XmlElementWrapper(name = "remoteDeviceId")
-	public List<Integer> getRemoteDeviceIdList() {
-		return remoteDeviceIdList;
+	@XmlElement(name = "remoteDevice")
+	@XmlElementWrapper(name = "remoteDeviceList")
+	public List<String> getRemoteDeviceIdList() {
+		return remoteDeviceNameList;
 	}
 
-	public void setRemoteDeviceIdList(List<Integer> remoteDeviceIdList) {
-		this.remoteDeviceIdList = remoteDeviceIdList;
+	public void setRemoteDeviceIdList(List<String> remoteDeviceNameList) {
+		this.remoteDeviceNameList = remoteDeviceNameList;
 
 		if (midi2RemoteReceiver != null) {
-			midi2RemoteReceiver.setRemoteDeviceIdList(remoteDeviceIdList);
+			midi2RemoteReceiver.setRemoteDeviceNameList(remoteDeviceNameList);
 		}
 	}
 

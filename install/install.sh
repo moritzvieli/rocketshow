@@ -45,8 +45,11 @@ cd /opt/rocketshow
 mkdir -p bin
 mkdir -p log
 mkdir -p media
-mkdir -p setlist
-mkdir -p song
+mkdir -p media/midi
+mkdir -p media/audio
+mkdir -p media/video
+mkdir -p sets
+mkdir -p compositions
 mkdir -p tomcat
 mkdir -p update
 

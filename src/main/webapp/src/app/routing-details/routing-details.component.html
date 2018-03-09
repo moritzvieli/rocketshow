@@ -71,14 +71,7 @@
       <div class="col-sm-8">
         <div class="card">
           <div class="card-body">
-            <i *ngIf="!remoteDevices || remoteDevices.length == 0">{{ 'routing.remote-devices-hint' | translate }}</i>
-            <div class="mt-2">
-              <div *ngFor="let remoteDevice of remoteDevices">
-                <label class="form-check-label">
-                  <input type="checkbox" class="form-check-input"> {{ remoteDevice.name }}
-                </label>
-              </div>
-            </div>
+            <app-remote-device-selection [remoteDeviceListContainer]="midiRouting"></app-remote-device-selection>
           </div>
         </div>
       </div>

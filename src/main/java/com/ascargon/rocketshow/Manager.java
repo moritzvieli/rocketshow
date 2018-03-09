@@ -18,6 +18,10 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.api.StateManager;
+import com.ascargon.rocketshow.composition.FileManager;
+import com.ascargon.rocketshow.composition.Set;
+import com.ascargon.rocketshow.composition.Composition;
+import com.ascargon.rocketshow.composition.CompositionManager;
 import com.ascargon.rocketshow.dmx.DmxSignalSender;
 import com.ascargon.rocketshow.dmx.Midi2DmxConverter;
 import com.ascargon.rocketshow.image.ImageDisplayer;
@@ -27,10 +31,6 @@ import com.ascargon.rocketshow.midi.MidiInDeviceReceiver;
 import com.ascargon.rocketshow.midi.MidiRouting;
 import com.ascargon.rocketshow.midi.MidiUtil;
 import com.ascargon.rocketshow.midi.MidiUtil.MidiDirection;
-import com.ascargon.rocketshow.song.SetList;
-import com.ascargon.rocketshow.song.Song;
-import com.ascargon.rocketshow.song.SongManager;
-import com.ascargon.rocketshow.song.file.FileManager;
 import com.ascargon.rocketshow.util.ResetUsb;
 import com.ascargon.rocketshow.util.ShellManager;
 
@@ -45,7 +45,7 @@ public class Manager {
 
 	private Updater updater;
 
-	private SongManager songManager;
+	private CompositionManager compositionManager;
 	private FileManager fileManager;
 
 	private ImageDisplayer imageDisplayer;
@@ -62,9 +62,9 @@ public class Manager {
 	private Session session;
 	private Settings settings;
 
-	private SetList currentSetList;
+	private Set currentSet;
 
-	private Song idleSong;
+	private Composition defaultComposition;
 
 	private Player player;
 
@@ -154,37 +154,35 @@ public class Manager {
 		logger.info("Successfully connected to output MIDI device " + midiOutDevice.getDeviceInfo().getName());
 	}
 
-	public void playIdleSong() throws Exception {
-		logger.debug("Playing the idle song...");
+	public void playDefaultComposition() throws Exception {
+		logger.debug("Playing the default composition...");
 
-		if (idleSong != null) {
-			// The idle song is already initialized
+		if (defaultComposition != null) {
+			// The default composition is already initialized
 			return;
 		}
 
-		if (settings.getIdleSong() == null || settings.getIdleSong().length() == 0) {
+		if (settings.getDefaultComposition() == null || settings.getDefaultComposition().length() == 0) {
 			return;
 		}
 
-		logger.info("Play idle song");
+		logger.info("Play default composition");
 
-		idleSong = songManager.loadSong(settings.getIdleSong());
-		idleSong.setManager(this);
-		idleSong.setIdleSong(true);
-		idleSong.play();
+		defaultComposition = compositionManager.loadComposition(settings.getDefaultComposition());
+		defaultComposition.setManager(this);
+		defaultComposition.setDefaultComposition(true);
+		defaultComposition.play();
 	}
 
-	public void stopIdleSong() throws Exception {
-		logger.debug("Stopping the idle song...");
-
-		if (idleSong == null) {
+	public void stopDefaultComposition() throws Exception {
+		if (defaultComposition == null) {
 			return;
 		}
 
-		logger.info("Stop idle song");
+		logger.debug("Stopping the default composition...");
 
-		idleSong.stop();
-		idleSong = null;
+		defaultComposition.stop();
+		defaultComposition = null;
 	}
 
 	public void load() throws IOException {
@@ -200,8 +198,8 @@ public class Manager {
 		// Initialize the updater
 		updater = new Updater(this);
 
-		// Initialize the songmanager
-		songManager = new SongManager(this);
+		// Initialize the compositionmanager
+		compositionManager = new CompositionManager(this);
 
 		// Initialize the filemanager
 		fileManager = new FileManager();
@@ -337,17 +335,17 @@ public class Manager {
 			logger.error("Could not reset the USB devices", e);
 		}
 
-		// Play the idle song, if set
-		playIdleSong();
+		// Play the default composition, if set
+		playDefaultComposition();
 
 		logger.info("Settings loaded");
 	}
 
 	public void saveSession() {
-		if (currentSetList == null) {
-			session.setCurrentSetListName("");
+		if (currentSet == null) {
+			session.setCurrentSetName("");
 		} else {
-			session.setCurrentSetListName(currentSetList.getName());
+			session.setCurrentSetName(currentSet.getName());
 		}
 
 		try {
@@ -381,12 +379,12 @@ public class Manager {
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 			session = (Session) jaxbUnmarshaller.unmarshal(file);
 
-			if (session.getCurrentSetListName() != null && session.getCurrentSetListName().length() > 0) {
-				// Load the last setlist
-				loadSetList(session.getCurrentSetListName());
+			if (session.getCurrentSetName() != null && session.getCurrentSetName().length() > 0) {
+				// Load the last set
+				loadSet(session.getCurrentSetName());
 			} else {
-				// Load the default setlist
-				loadSetList("");
+				// Load the default set
+				loadSet("");
 			}
 
 			logger.info("Session restored");
@@ -395,40 +393,40 @@ public class Manager {
 		}
 	}
 
-	public void loadSetList(String name) throws Exception {
-		if (currentSetList != null) {
-			currentSetList.close();
-			currentSetList = null;
+	public void loadSet(String name) throws Exception {
+		if (currentSet != null) {
+			currentSet.close();
+			currentSet = null;
 		}
 
 		if (name.length() > 0) {
-			// Also load a new setlist, don't only unload the current one
-			currentSetList = songManager.loadSetList(name);
-			currentSetList.setManager(this);
-			currentSetList.setName(name);
+			// Also load a new set, don't only unload the current one
+			currentSet = compositionManager.loadSet(name);
+			currentSet.setManager(this);
+			currentSet.setName(name);
 		}
 
-		// Read the current song file
-		if (currentSetList == null) {
-			logger.debug("Try setting a default song...");
-			
-			// We have no setlist. Simply read the first song, if available
-			List<Song> songs = songManager.getAllSongs();
-			
-			if(songs.size() > 0) {
-				logger.debug("Set default song '" + songs.get(0).getName() + "'...");
-				
-				player.setCurrentSong(songs.get(0));
+		// Read the current composition file
+		if (currentSet == null) {
+			logger.debug("Try setting a default composition...");
+
+			// We have no set. Simply read the first composition, if available
+			List<Composition> compositions = compositionManager.getAllCompositions();
+
+			if (compositions.size() > 0) {
+				logger.debug("Set default composition '" + compositions.get(0).getName() + "'...");
+
+				player.setComposition(compositions.get(0));
 			}
 		} else {
-			// We got a setlist loaded
+			// We got a set loaded
 			try {
-				currentSetList.readCurrentSong();
+				currentSet.readCurrentComposition();
 			} catch (Exception e) {
-				logger.error("Could not read current song", e);
+				logger.error("Could not read current composition", e);
 			}
 		}
-		
+
 		stateManager.notifyClients();
 
 		saveSession();
@@ -463,18 +461,18 @@ public class Manager {
 			}
 		}
 
-		if (currentSetList != null) {
+		if (currentSet != null) {
 			try {
-				currentSetList.close();
+				currentSet.close();
 			} catch (Exception e) {
 				logger.error("Could not close current set list", e);
 			}
 		}
 
 		try {
-			stopIdleSong();
+			stopDefaultComposition();
 		} catch (Exception e) {
-			logger.error("Could not stop idle video", e);
+			logger.error("Could not stop the default composition", e);
 		}
 
 		logger.info("Finished closing");
@@ -495,12 +493,12 @@ public class Manager {
 		return midi2DmxConverter;
 	}
 
-	public SetList getCurrentSetList() {
-		return currentSetList;
+	public Set getCurrentSet() {
+		return currentSet;
 	}
 
-	public void setCurrentSetList(SetList currentSetList) {
-		this.currentSetList = currentSetList;
+	public void setCurrentSet(Set currentSet) {
+		this.currentSet = currentSet;
 		saveSession();
 	}
 
@@ -524,8 +522,8 @@ public class Manager {
 		return midi2ActionConverter;
 	}
 
-	public SongManager getSongManager() {
-		return songManager;
+	public CompositionManager getCompositionManager() {
+		return compositionManager;
 	}
 
 	public Updater getUpdater() {

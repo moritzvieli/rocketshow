@@ -1,0 +1,6 @@
+<i *ngIf="!settings || !settings.remoteDeviceList || settings.remoteDeviceList.length == 0">{{ 'routing.remote-devices-hint' | translate }}</i>
+<div *ngFor="let remoteDevice of settings?.remoteDeviceList" [hidden]="!remoteDevice.name">
+  <label class="form-check-label">
+    <input type="checkbox" class="form-check-input" [ngModel]="remoteDeviceChecked(remoteDevice)" (ngModelChange)="updateRemoteDeviceSync(remoteDevice, $event)"> {{ remoteDevice.name }}
+  </label>
+</div>

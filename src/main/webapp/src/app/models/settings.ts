@@ -1,5 +1,4 @@
-import { ActionMapping } from './action-mapping';
-import { MidiMapping } from './midi-mapping';
+import { MidiControl } from './midi-control';
 import { MidiDevice } from "./midi-device";
 import { RemoteDevice } from "./remote-device";
 
@@ -7,9 +6,9 @@ export class Settings {
     midiInDevice: MidiDevice;
     midiOutDevice: MidiDevice;
     remoteDeviceList: RemoteDevice[];
-    actionMappingList: ActionMapping[];
+    midiControlList: MidiControl[];
     dmxSendDelayMillis: number;
-    idleSong: string;
+    defaultComposition: string;
     offsetMillisMidi: number;
     offsetMillisAudio: number;
     offsetMillisVideo: number;
@@ -37,15 +36,15 @@ export class Settings {
                 this.remoteDeviceList.push(new RemoteDevice(remoteDevice));
             }
         }
-        if(data.actionMappingList) {
-            this.actionMappingList = [];
+        if(data.midiControlList) {
+            this.midiControlList = [];
 
-            for(let actionMapping of data.actionMappingList) {
-                this.actionMappingList.push(new ActionMapping(actionMapping));
+            for(let midiControl of data.midiControlList) {
+                this.midiControlList.push(new MidiControl(midiControl));
             }
         }
         this.dmxSendDelayMillis = data.dmxSendDelayMillis;
-        this.idleSong = data.idleSong;
+        this.defaultComposition = data.defaultComposition;
         this.offsetMillisMidi = data.offsetMillisMidi;
         this.offsetMillisAudio = data.offsetMillisAudio;
         this.audioPlayerType = data.audioPlayerType;

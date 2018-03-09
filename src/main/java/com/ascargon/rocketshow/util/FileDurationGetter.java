@@ -5,11 +5,11 @@ import java.io.InputStreamReader;
 
 import org.apache.log4j.Logger;
 
-import com.ascargon.rocketshow.midi.MidiPlayer;
-import com.ascargon.rocketshow.song.file.AudioFile;
-import com.ascargon.rocketshow.song.file.File;
-import com.ascargon.rocketshow.song.file.MidiFile;
-import com.ascargon.rocketshow.song.file.VideoFile;;
+import com.ascargon.rocketshow.composition.AudioFile;
+import com.ascargon.rocketshow.composition.File;
+import com.ascargon.rocketshow.composition.MidiFile;
+import com.ascargon.rocketshow.composition.VideoFile;
+import com.ascargon.rocketshow.midi.MidiPlayer;;
 
 /**
  * Get the duration of a file.

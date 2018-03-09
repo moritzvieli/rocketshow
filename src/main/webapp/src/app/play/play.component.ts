@@ -1,7 +1,7 @@
-import { Song } from './../models/song';
-import { SongService } from './../services/song.service';
+import { Composition } from './../models/composition';
+import { CompositionService } from './../services/composition.service';
 import { StateService } from './../services/state.service';
-import { SetList } from './../models/setlist';
+import { Set } from './../models/set';
 import { Component, OnInit } from '@angular/core';
 import { trigger, state, animate, transition, style, query } from '@angular/animations';
 import { State } from '../models/state';
@@ -17,17 +17,17 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class PlayComponent implements OnInit {
 
-  currentSetList: SetList;
+  currentSet: Set;
   currentState: State = new State();
 
-  setLists: SetList[];
+  sets: Set[];
 
   playPercentage: number = 0;
   playTime: string = '00:00.000';
   playUpdateSubscription: Subscription;
   lastPlayTime: Date;
 
-  manualSongSelection: boolean = false;
+  manualCompositionSelection: boolean = false;
 
   totalPlayTime: string = '';
 
@@ -35,7 +35,7 @@ export class PlayComponent implements OnInit {
 
   constructor(public apiService: ApiService,
     private stateService: StateService,
-    private songService: SongService,
+    private compositionService: CompositionService,
     private transportService: TransportService) {
   }
 
@@ -51,11 +51,11 @@ export class PlayComponent implements OnInit {
       this.currentState = state;
     });
 
-    this.loadCurrentSetList();
+    this.loadCurrentSet();
 
-    // Load all setlists
-    this.songService.getSetLists().map(result => {
-      this.setLists = result;
+    // Load all sets
+    this.compositionService.getSets().map(result => {
+      this.sets = result;
     })
     .subscribe();
   }
@@ -63,29 +63,29 @@ export class PlayComponent implements OnInit {
   private updateTotalDuration() {
     let totalDurationMillis: number = 0;
 
-    for(let song of this.currentSetList.songList) {
-      totalDurationMillis += song.durationMillis;
+    for(let composition of this.currentSet.compositionList) {
+      totalDurationMillis += composition.durationMillis;
     }
 
     this.totalPlayTime = this.msToTime(totalDurationMillis, false);
   }
 
-  private loadCurrentSetList() {
-    // Load the current setlist
+  private loadCurrentSet() {
+    // Load the current set
     this.loadingSet = true;
 
-    this.songService.getCurrentSetList(true).subscribe((setList: SetList) => {
-      this.currentSetList = undefined;
+    this.compositionService.getCurrentSet(true).subscribe((set: Set) => {
+      this.currentSet = undefined;
 
-      if(setList) {
-        this.currentSetList = setList;
+      if(set) {
+        this.currentSet = set;
         this.updateTotalDuration();
       }
 
-      if(this.currentSetList && !this.currentSetList.name) {
-        // The default setlist with all songs is loaded -> display all songs
-        this.songService.getSongs(true).subscribe((songs: Song[]) => {
-          this.currentSetList.songList = songs;
+      if(this.currentSet && !this.currentSet.name) {
+        // The default set with all compositions is loaded -> display all compositions
+        this.compositionService.getCompositions(true).subscribe((compositions: Composition[]) => {
+          this.currentSet.compositionList = compositions;
           this.updateTotalDuration();
           this.loadingSet = false;
         });
@@ -95,14 +95,14 @@ export class PlayComponent implements OnInit {
     });
   }
 
-  selectSetList(setList: SetList) {
-    let setListName: string = '';
+  selectSet(set: Set) {
+    let setName: string = '';
 
-    if(setList) {
-      setListName = setList.name;
+    if(set) {
+      setName = set.name;
     }
 
-    this.songService.loadSetList(setListName).subscribe();
+    this.compositionService.loadSet(setName).subscribe();
   } 
 
   private pad(num: number, size: number): string {
@@ -136,7 +136,7 @@ export class PlayComponent implements OnInit {
         this.playUpdateSubscription.unsubscribe;
       }
 
-      // Save the last time, we started the song. Don't use device time, as it may be wrong.
+      // Save the last time, we started the composition. Don't use device time, as it may be wrong.
       this.lastPlayTime = new Date();
 
       let playUpdater = Observable.timer(0, 10);
@@ -148,7 +148,7 @@ export class PlayComponent implements OnInit {
           this.playTime = this.msToTime(passedMillis);
         }
 
-        this.playPercentage = 100 * passedMillis / this.currentState.currentSongDurationMillis;
+        this.playPercentage = 100 * passedMillis / this.currentState.currentCompositionDurationMillis;
       });
     }
 
@@ -162,26 +162,26 @@ export class PlayComponent implements OnInit {
       this.playPercentage = 0;
     }
 
-    // Scroll the corresponding song into the view, except the user selected the
-    // song here in the app.
-    if (this.manualSongSelection) {
-      // The next time, we receive a new song state, we should scroll into the view again
-      this.manualSongSelection = false;
+    // Scroll the corresponding composition into the view, except the user selected the
+    // composition here in the app.
+    if (this.manualCompositionSelection) {
+      // The next time, we receive a new composition state, we should scroll into the view again
+      this.manualCompositionSelection = false;
     } else {
-      let songObject = document.querySelector('#song' + newState.currentSongIndex);
-      if (songObject) {
-        songObject.scrollIntoView();
+      let compositionObject = document.querySelector('#composition' + newState.currentCompositionIndex);
+      if (compositionObject) {
+        compositionObject.scrollIntoView();
       }
 
-      let songSmallObject = document.querySelector('#songSmall' + newState.currentSongIndex);
-      if (songSmallObject) {
-        songSmallObject.scrollIntoView();
+      let compositionSmallObject = document.querySelector('#compositionSmall' + newState.currentCompositionIndex);
+      if (compositionSmallObject) {
+        compositionSmallObject.scrollIntoView();
       }
     }
 
-    // The current setlist changed
-    if (newState.currentSetListName != this.currentState.currentSetListName) {
-      this.loadCurrentSetList();
+    // The current set changed
+    if (newState.currentSetName != this.currentState.currentSetName) {
+      this.loadCurrentSet();
     }
 
     this.currentState = newState;
@@ -197,23 +197,23 @@ export class PlayComponent implements OnInit {
     this.transportService.stop().subscribe();
   }
 
-  nextSong() {
-    this.transportService.nextSong().subscribe();
+  nextComposition() {
+    this.transportService.nextComposition().subscribe();
   }
 
-  previousSong() {
-    this.transportService.previousSong().subscribe();
+  previousComposition() {
+    this.transportService.previousComposition().subscribe();
   }
 
-  setSong(index: number, song: Song) {
-    this.manualSongSelection = true;
+  setComposition(index: number, composition: Composition) {
+    this.manualCompositionSelection = true;
 
-    if(this.currentSetList && !this.currentSetList.name) {
-      // We got the default setlist loaded -> select songs by name
-      this.transportService.setSongName(song.name).subscribe();
+    if(this.currentSet && !this.currentSet.name) {
+      // We got the default set loaded -> select compositions by name
+      this.transportService.setCompositionName(composition.name).subscribe();
     } else {
-      // We got a real setlist loaded -> select songs by index
-      this.transportService.setSongIndex(index).subscribe();
+      // We got a real set loaded -> select compositions by index
+      this.transportService.setCompositionIndex(index).subscribe();
     }
   }
 

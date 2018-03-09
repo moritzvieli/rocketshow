@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.Manager;
 import com.ascargon.rocketshow.RemoteDevice;
-import com.ascargon.rocketshow.midi.ActionMapping.MidiAction;
+import com.ascargon.rocketshow.midi.MidiControl.MidiAction;
 
 public class Midi2ActionConverter {
 
@@ -31,7 +31,7 @@ public class Midi2ActionConverter {
 	 * @param note
 	 * @return
 	 */
-	private boolean isActionMappingMatch(ActionMapping actionMapping, int channel, int note) {
+	private boolean isActionMappingMatch(MidiControl actionMapping, int channel, int note) {
 		if ((actionMapping.getChannelFrom() == null || actionMapping.getChannelFrom() == channel)
 				&& (actionMapping.getNoteFrom() == null || actionMapping.getNoteFrom() == note)) {
 			return true;
@@ -59,14 +59,14 @@ public class Midi2ActionConverter {
 		case STOP:
 			remoteDevice.stop();
 			break;
-		case NEXT_SONG:
-			remoteDevice.setNextSong();
+		case NEXT_COMPOSITION:
+			remoteDevice.setNextComposition();
 			break;
-		case PREVIOUS_SONG:
-			remoteDevice.setPreviousSong();
+		case PREVIOUS_COMPOSITION:
+			remoteDevice.setPreviousComposition();
 			break;
-		case SET_SONG_INDEX:
-			remoteDevice.setSongIndex(manager.getCurrentSetList().getCurrentSongIndex());
+		case SET_COMPOSITION_INDEX:
+			remoteDevice.setCompositionIndex(manager.getCurrentSet().getCurrentCompositionIndex());
 			break;
 		case REBOOT:
 			remoteDevice.reboot();
@@ -97,11 +97,11 @@ public class Midi2ActionConverter {
 		case STOP:
 			manager.getPlayer().stop();
 			break;
-		case NEXT_SONG:
-			manager.getCurrentSetList().nextSong();
+		case NEXT_COMPOSITION:
+			manager.getCurrentSet().nextComposition();
 			break;
-		case PREVIOUS_SONG:
-			manager.getCurrentSetList().previousSong();
+		case PREVIOUS_COMPOSITION:
+			manager.getCurrentSet().previousComposition();
 			break;
 		case REBOOT:
 			manager.reboot();
@@ -118,26 +118,26 @@ public class Midi2ActionConverter {
 	 * @param actionMapping
 	 * @throws Exception
 	 */
-	private void executeActionMappingAction(ActionMapping actionMapping) throws Exception {
-		MidiAction action = actionMapping.getAction();
+	private void executeActionMappingAction(MidiControl midiControl) throws Exception {
+		MidiAction action = midiControl.getAction();
 
-		if (actionMapping.isExecuteLocally()) {
+		if (midiControl.isExecuteLocally()) {
 			executeActionLocally(action);
 		}
 
 		// Execute the action on each specified remote device
-		for (int id : actionMapping.getRemoteDeviceIds()) {
-			RemoteDevice remoteDevice = manager.getSettings().getRemoteDeviceById(id);
+		for (String name : midiControl.getRemoteDeviceNames()) {
+			RemoteDevice remoteDevice = manager.getSettings().getRemoteDeviceByName(name);
 
 			if (remoteDevice == null) {
-				logger.warn("No remoteDevice could be found in the settings with id " + id);
+				logger.warn("No remote device could be found in the settings with name " + name);
 			} else {
 				executeActionOnRemoteDevice(action, remoteDevice);
 			}
 		}
 	}
 
-	public void processMidiEvent(MidiSignal midiSignal, List<ActionMapping> actionMappingList) throws Exception {
+	public void processMidiEvent(MidiSignal midiSignal, List<MidiControl> actionMappingList) throws Exception {
 		// Map the MIDI event and execute the appropriate actions
 
 		// Only react to NOTE_ON events with a velocity higher than 0
@@ -147,7 +147,7 @@ public class Midi2ActionConverter {
 		}
 
 		// Search for and execute all required actions
-		for (ActionMapping actionMapping : actionMappingList) {
+		for (MidiControl actionMapping : actionMappingList) {
 			if (isActionMappingMatch(actionMapping, midiSignal.getChannel(), midiSignal.getNote())) {
 				executeActionMappingAction(actionMapping);
 			}
