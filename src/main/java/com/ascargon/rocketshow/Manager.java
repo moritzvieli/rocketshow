@@ -215,7 +215,6 @@ public class Manager {
 
 		// Initialize the DMX manager
 		dmxManager = new DmxManager(this);
-		dmxManager.initializeUniverse();
 		midi2DmxConverter = new Midi2DmxConverter(dmxManager);
 
 		// Initialize the image displayer and display a default black screen
@@ -436,6 +435,14 @@ public class Manager {
 	public void close() {
 		logger.info("Close...");
 
+		if (dmxManager != null) {
+			try {
+				dmxManager.close();
+			} catch (Exception e) {
+				logger.error("Could not close the DMX manager", e);
+			}
+		}
+		
 		try {
 			player.close();
 		} catch (Exception e) {

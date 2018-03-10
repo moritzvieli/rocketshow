@@ -27,7 +27,7 @@ public class Updater {
 	public final static String AFTER_SCRIPT_NAME = "after.sh";
 	public final static String WAR_NAME = "current.war";
 	public final static String CURRENT_VERSION = "currentversion.xml";
-	public final static String UPDATE_URL = "http://www.rocketshow.net/update/";
+	public final static String UPDATE_URL = "https://www.rocketshow.net/update/";
 	public final static String UPDATE_SCRIPT = "update.sh";
 
 	private Manager manager;

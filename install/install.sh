@@ -33,13 +33,13 @@ file="/etc/sudoers"
 sed -i "s/root\sALL=(ALL:ALL) ALL/root    ALL=(ALL:ALL) ALL\n$insert/" $file
 
 # Set the required config files to writeable for the rocketshow user
-chmod 777 /boot/config.txt
+# chmod 777 /boot/config.txt -> Does not work
 chmod 777 /etc/wpa_supplicant/wpa_supplicant.conf
 chmod 777 /etc/dhcpcd.conf 
 
 # Download the initial directory structure including samples
 cd /opt
-wget http://rocketshow.net/install/directory.tar.gz
+wget https://rocketshow.net/install/directory.tar.gz
 tar xvzf ./directory.tar.gz
 rm directory.tar.gz
 
@@ -64,7 +64,7 @@ chmod +x /opt/rocketshow/update.sh
 # Install Tomcat (credits to https://wolfpaulus.com/java/tomcat-jessie/)
 mkdir -p ~/tmp
 cd ~/tmp
-wget http://rocketshow.net/install/tomcat/apache-tomcat-8.5.24.tar.gz
+wget https://rocketshow.net/install/tomcat/apache-tomcat-8.5.24.tar.gz
 tar xvzf ./apache-tomcat-8.5.24.tar.gz
 rm apache-tomcat-8.5.24.tar.gz
 mv ./apache-tomcat-8.5.24 ./tomcat
@@ -137,9 +137,9 @@ rm -rf /opt/rocketshow/tomcat/webapps/*
 
 # Download current war and versioninfo
 cd /opt/rocketshow/tomcat/webapps
-wget -O ROOT.war http://www.rocketshow.net/update/current.war
+wget -O ROOT.war https://www.rocketshow.net/update/current.war
 cd /opt/rocketshow
-wget http://www.rocketshow.net/update/currentversion.xml
+wget https://www.rocketshow.net/update/currentversion.xml
 
 # Keep the whole directory in its current state for the factory reset
 cd /opt
@@ -162,5 +162,3 @@ sed -i '/127.0.1.1/d' /etc/hosts
 sed -i "\$a127.0.1.1\tRocketShow" /etc/hosts
 
 sed -i 's/raspberrypi/RocketShow/g' /etc/hostname
-
-sudo /etc/init.d/hostname.sh

@@ -36,7 +36,7 @@ These commands can be used to install Rocket Show on a Raspberry Pi with Raspbia
 ```shell
 sudo su - root
 cd /tmp
-wget rocketshow.net/install/script/install.sh
+wget https://rocketshow.net/install/script/install.sh
 chmod +x install.sh
 ./install.sh
 rm -rf install.sh
