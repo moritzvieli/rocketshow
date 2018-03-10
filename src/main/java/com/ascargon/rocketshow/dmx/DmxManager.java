@@ -10,10 +10,12 @@ import org.apache.log4j.Logger;
 import com.ascargon.rocketshow.Manager;
 
 import ola.OlaClient;
+import ola.proto.Ola.DeviceInfoReply;
+import ola.proto.Ola.UniverseInfoReply;
 
-public class DmxSignalSender {
+public class DmxManager {
 
-	final static Logger logger = Logger.getLogger(DmxSignalSender.class);
+	final static Logger logger = Logger.getLogger(DmxManager.class);
 
 	private Manager manager;
 
@@ -30,7 +32,7 @@ public class DmxSignalSender {
 	// time, but sentseparately)
 	private Timer timer;
 
-	public DmxSignalSender(Manager manager) {
+	public DmxManager(Manager manager) {
 		this.manager = manager;
 
 		try {
@@ -92,16 +94,42 @@ public class DmxSignalSender {
 					logger.error("Could not send the DMX universe", e);
 				}
 
-				if(timer != null) {
+				if (timer != null) {
 					timer.cancel();
 				}
-				
+
 				timer = null;
 			}
 		};
 
 		timer = new Timer();
 		timer.schedule(timerTask, manager.getSettings().getDmxSendDelayMillis());
+	}
+
+	public void initializeUniverse() {
+		if(olaClient == null) {
+			// OLA client is not connected
+			return;
+		}
+		
+		logger.debug("Initializing DMX universe on OLA...");
+		
+		UniverseInfoReply universeInfoReply = olaClient.getUniverseList();
+
+		if (universeInfoReply != null) {
+			if (universeInfoReply.getUniverseCount() > 0) {
+				// The default universe is already initialized
+				return;
+			}
+		}
+
+		DeviceInfoReply deviceInfoReply = olaClient.getDeviceInfo();
+
+		if(deviceInfoReply != null) {
+			// TODO
+		}
+
+		logger.debug("DMX universe on OLA initialized");
 	}
 
 }

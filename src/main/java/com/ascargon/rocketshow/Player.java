@@ -144,7 +144,7 @@ public class Player {
 		ExecutorService executor = Executors.newFixedThreadPool(30);
 
 		// Reset the DMX universe to clear left out signals
-		manager.getDmxSignalSender().reset();
+		manager.getDmxManager().reset();
 
 		// Stop all remote devices
 		for (RemoteDevice remoteDevice : manager.getSettings().getRemoteDeviceList()) {

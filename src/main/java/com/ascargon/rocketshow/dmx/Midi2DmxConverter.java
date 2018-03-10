@@ -13,9 +13,9 @@ public class Midi2DmxConverter {
 
 	final static Logger logger = Logger.getLogger(Midi2DmxConverter.class);
 
-	private DmxSignalSender dmxSignalSender;
+	private DmxManager dmxSignalSender;
 
-	public Midi2DmxConverter(DmxSignalSender dmxSignalSender) {
+	public Midi2DmxConverter(DmxManager dmxSignalSender) {
 		this.dmxSignalSender = dmxSignalSender;
 	}
 
@@ -57,11 +57,11 @@ public class Midi2DmxConverter {
 		}
 	}
 
-	public DmxSignalSender getDmxSignalSender() {
+	public DmxManager getDmxSignalSender() {
 		return dmxSignalSender;
 	}
 
-	public void setDmxSignalSender(DmxSignalSender dmxSignalSender) {
+	public void setDmxSignalSender(DmxManager dmxSignalSender) {
 		this.dmxSignalSender = dmxSignalSender;
 	}
 

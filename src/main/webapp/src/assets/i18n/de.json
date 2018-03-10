@@ -175,6 +175,8 @@
         "remote-midi-routing": "Netzwerk MIDI Ausgang",
         "global-midi-mapping": "Globale MIDI Transformation",
         "audio-sample-rate": "Sample Rate",
+        "dmx-console": "DMX Konsole",
+        "dmx-console-open": "DMX Konsole öffnen",
         "toast-save-success-title": "Gespeichert",
         "toast-save-success": "Die Einstellungen wurden gespeichert.",
         "toast-discard-success-title": "Verworfen",

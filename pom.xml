@@ -188,10 +188,11 @@
 			<version>1.1</version>
 		</dependency>
 
+		<!-- For the OLA client -->
 		<dependency>
 			<groupId>com.google.protobuf</groupId>
 			<artifactId>protobuf-java</artifactId>
-			<version>2.4.1</version>
+			<version>3.5.1</version>
 		</dependency>
 
 		<dependency>
@@ -213,7 +214,7 @@
 			<artifactId>org.openlighting</artifactId>
 			<version>1.0</version>
 			<scope>system</scope>
-			<systemPath>${project.basedir}/WebContent/WEB-INF/lib/ola-java-client-0.0.1.jar</systemPath>
+			<systemPath>${project.basedir}/WebContent/WEB-INF/lib/ola-java-client-0.0.2.jar</systemPath>
 		</dependency>
 
 	</dependencies>

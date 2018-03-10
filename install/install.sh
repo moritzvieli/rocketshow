@@ -11,8 +11,6 @@ echo iptables-persistent iptables-persistent/autosave_v4 boolean true | sudo deb
 echo iptables-persistent iptables-persistent/autosave_v6 boolean true | sudo debconf-set-selections
 apt-get -y install iptables-persistent oracle-java8-jdk omxplayer fbi ola mplayer libnss-mdns
 
-sudo /etc/init.d/hostname.sh
-
 # Add the rocketshow user
 adduser \
   --system \
@@ -33,6 +31,11 @@ insert="rocketshow      ALL=(ALL) NOPASSWD: ALL"
 file="/etc/sudoers"
 
 sed -i "s/root\sALL=(ALL:ALL) ALL/root    ALL=(ALL:ALL) ALL\n$insert/" $file
+
+# Set the required config files to writeable for the rocketshow user
+chmod 777 /boot/config.txt
+chmod 777 /etc/wpa_supplicant/wpa_supplicant.conf
+chmod 777 /etc/dhcpcd.conf 
 
 # Download the initial directory structure including samples
 cd /opt
@@ -159,3 +162,5 @@ sed -i '/127.0.1.1/d' /etc/hosts
 sed -i "\$a127.0.1.1\tRocketShow" /etc/hosts
 
 sed -i 's/raspberrypi/RocketShow/g' /etc/hostname
+
+sudo /etc/init.d/hostname.sh

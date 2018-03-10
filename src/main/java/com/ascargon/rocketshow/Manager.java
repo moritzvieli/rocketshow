@@ -22,7 +22,7 @@ import com.ascargon.rocketshow.composition.FileManager;
 import com.ascargon.rocketshow.composition.Set;
 import com.ascargon.rocketshow.composition.Composition;
 import com.ascargon.rocketshow.composition.CompositionManager;
-import com.ascargon.rocketshow.dmx.DmxSignalSender;
+import com.ascargon.rocketshow.dmx.DmxManager;
 import com.ascargon.rocketshow.dmx.Midi2DmxConverter;
 import com.ascargon.rocketshow.image.ImageDisplayer;
 import com.ascargon.rocketshow.midi.Midi2ActionConverter;
@@ -52,7 +52,7 @@ public class Manager {
 	private MidiInDeviceReceiver midiInDeviceReceiver;
 	private Midi2ActionConverter midi2ActionConverter;
 
-	private DmxSignalSender dmxSignalSender;
+	private DmxManager dmxManager;
 	private Midi2DmxConverter midi2DmxConverter;
 
 	private MidiDevice midiOutDevice;
@@ -187,7 +187,7 @@ public class Manager {
 
 	public void load() throws IOException {
 		logger.info("Initialize...");
-
+		
 		// Initialize the player
 		player = new Player(this);
 
@@ -213,9 +213,10 @@ public class Manager {
 		// Initialize the MIDI action converter
 		midi2ActionConverter = new Midi2ActionConverter(this);
 
-		// Initialize the DMX sender
-		dmxSignalSender = new DmxSignalSender(this);
-		midi2DmxConverter = new Midi2DmxConverter(dmxSignalSender);
+		// Initialize the DMX manager
+		dmxManager = new DmxManager(this);
+		dmxManager.initializeUniverse();
+		midi2DmxConverter = new Midi2DmxConverter(dmxManager);
 
 		// Initialize the image displayer and display a default black screen
 		try {
@@ -510,12 +511,12 @@ public class Manager {
 		this.settings = settings;
 	}
 
-	public DmxSignalSender getDmxSignalSender() {
-		return dmxSignalSender;
+	public DmxManager getDmxManager() {
+		return dmxManager;
 	}
 
-	public void setDmxSignalSender(DmxSignalSender dmxSignalSender) {
-		this.dmxSignalSender = dmxSignalSender;
+	public void setDmxManager(DmxManager dmxManager) {
+		this.dmxManager = dmxManager;
 	}
 
 	public Midi2ActionConverter getMidi2ActionConverter() {

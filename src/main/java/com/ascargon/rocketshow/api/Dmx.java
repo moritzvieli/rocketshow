@@ -21,7 +21,7 @@ public class Dmx {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response reset() throws Exception {
 		Manager manager = (Manager)context.getAttribute("manager");
-		manager.getDmxSignalSender().reset();
+		manager.getDmxManager().reset();
 		return Response.status(200).build();
 	}
 	

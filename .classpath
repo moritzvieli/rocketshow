@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="WebContent/WEB-INF/lib/ola-java-client-0.0.1.jar"/>
+	<classpathentry kind="lib" path="/Users/moritzvieli/ametiq-connect-ag-master/ws/RocketShow/WebContent/WEB-INF/lib/ola-java-client-0.0.2.jar"/>
 	<classpathentry excluding="webapp/**" kind="src" output="target/classes" path="src/main/java">
 		<attributes>
 			<attribute name="optional" value="true"/>
