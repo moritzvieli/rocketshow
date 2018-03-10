@@ -1,13 +1,13 @@
+import { Settings } from './../../models/settings';
 import { SettingsService } from './../../services/settings.service';
 import { Component, OnInit } from '@angular/core';
-import { Settings } from '../../models/settings';
 
 @Component({
-  selector: 'app-settings-video',
-  templateUrl: './settings-video.component.html',
-  styleUrls: ['./settings-video.component.scss']
+  selector: 'app-settings-dmx',
+  templateUrl: './settings-dmx.component.html',
+  styleUrls: ['./settings-dmx.component.scss']
 })
-export class SettingsVideoComponent implements OnInit {
+export class SettingsDmxComponent implements OnInit {
 
   settings: Settings;
 

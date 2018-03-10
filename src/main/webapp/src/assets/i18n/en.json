@@ -34,7 +34,7 @@
     },
     "navigation": {
         "start": "Start",
-        "edit": "Edit" ,
+        "compositions": "Compositions",
         "settings": "Settings" 
     },
     "editor": {
@@ -60,9 +60,6 @@
         "offset-millis": "Delay in milliseconds",
         "offset-placeholder": "Delay in milliseconds",
         "loop": "Loop",
-        "midi-destination-dmx": "DMX (light)",
-        "midi-destination-device": "MIDI out",
-        "midi-destination-remote": "Remote devices",
         "routing": "MIDI Output",
         "add-routing": "Add output",
         "edit-file": "Edit file",
@@ -112,6 +109,7 @@
         "midi": "MIDI",
         "audio": "Audio",
         "video": "Video",
+        "dmx": "DMX (light)",
         "advanced": "Advanced",
         "language": "Language",
         "warning-reboot": "Do you really want to reboot the device?",
@@ -137,6 +135,7 @@
         "midi-control-channel-in": "Input channel",
         "midi-control-note-in": "Input note",
         "midi-control-action": "Action",
+        "no-midi-devices": "No MIDI devices available",
         "version": "Current version",
         "remote-version": "Latest version",
         "check-version": "Search for updates...",
@@ -156,18 +155,53 @@
         "reboot-device": "Reboot device",
         "default-composition": "Default composition",
         "no-default-composition": "None",
+        "audio-buses": "Audio buses",
+        "audio-bus": "Audio bus",
+        "audio-bus-add": "Add audio bus",
+        "audio-bus-name": "Name",
+        "audio-bus-name-placeholder": "My audio bus",
+        "audio-bus-channels": "Channels",
+        "audio-bus-mono": "Mono",
+        "audio-bus-stereo": "Stereo",
+        "audio-bus-surround": "Surround",
+        "no-audio-bus": "None",
+        "audio-output": "Output",
+        "audio-device": "USB audio device",
+        "no-audio-devices": "No USB audio devices available",
+        "logging-level": "Logging level",
+        "dmx-send-delay": "Send delay in milliseconds",
+        "global-play-offset": "Global play offset in milliseconds",
+        "device-in-midi-routing": "MIDI device routing",
+        "remote-midi-routing": "Remote MIDI routing",
+        "global-midi-mapping": "Global MIDI transformation",
+        "audio-sample-rate": "Sample rate",
         "toast-save-success-title": "Saved",
         "toast-save-success": "The settings have been saved.",
         "toast-discard-success-title": "Discarded",
         "toast-discard-success": "The settings have been discarded.",
         "toast-general-error-title": "Error",
         "toast-general-error": "Whoops! An error occured. Please try again or contact the support.",
+        "midi-destination-enum": {
+            "OUT_DEVICE": "MIDI out",
+            "DMX": "DMX (light)",
+            "REMOTE": "Remote devices"
+        },
         "midi-control-enum": {
             "PLAY": "Play",
             "NEXT_COMPOSITION": "Select next composition",
             "PREVIOUS_COMPOSITION": "Select previous composition",
             "STOP": "Stop",
             "REBOOT": "Reboot device"
+        },
+        "audio-output-enum": {
+            "HEADPHONES": "Headphone jack",
+            "HDMI": "HDMI output",
+            "DEVICE": "USB audio device"
+        },
+        "logging-level-enum": {
+            "INFO": "Info (default)",
+            "DEBUG": "Debug",
+            "TRACE": "Trace"
         }
     }
 }

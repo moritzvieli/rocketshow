@@ -15,7 +15,7 @@ export class SettingsMidiComponent implements OnInit {
 
   settings: Settings;
 
-  midiInDevice: MidiDevice[];
+  midiInDevices: MidiDevice[];
   midiOutDevices: MidiDevice[];
 
   channelList: number[] = [];
@@ -185,7 +185,7 @@ export class SettingsMidiComponent implements OnInit {
     });
 
     this.settingsService.getMidiInDevices().subscribe((response) => {
-      this.midiInDevice = response
+      this.midiInDevices = response
     });
 
     this.settingsService.getMidiOutDevices().subscribe((response) => {

@@ -17,7 +17,9 @@
       <div class="card-body p-0">
         <div class="list-group list-group-flush">
           <a *ngIf="loadingCompositions" (click)="selectComposition(composition); false" href="#" class="list-group-item list-group-item-action flex-column align-items-start d-flex">
-            <p class="mb-0 mx-auto"><i class="fa fa-spinner fa-pulse fa-fw"></i></p>
+            <p class="mb-0 mx-auto">
+              <i class="fa fa-spinner fa-pulse fa-fw"></i>
+            </p>
           </a>
 
           <a *ngFor="let composition of filteredCompositions" (click)="selectComposition(composition); false" href="#" class="list-group-item list-group-item-action flex-column align-items-start"
@@ -100,9 +102,11 @@
           <a class="mr-3 my-auto" href="#" role="button" (click)="unselect(); false">
             {{ 'misc.cancel' | translate }}
           </a>
-          <button type="button" class="btn btn-primary" (click)="save(currentComposition); false" [disabled]="multipleVideoImage() || !currentComposition || !currentComposition.name || currentComposition.name.length < 1 || currentComposition.name.length > 50"
+          <button type="button" class="btn btn-primary" (click)="save(currentComposition); false" [disabled]="savingComposition || multipleVideoImage() || !currentComposition || !currentComposition.name || currentComposition.name.length < 1 || currentComposition.name.length > 50"
             role="button">
-            <i class="fa fa-floppy-o" aria-hidden="true"></i> {{ 'misc.save' | translate }}
+
+            <i *ngIf="savingComposition" class="fa fa-spinner fa-pulse fa-fw" aria-hidden="true"></i>
+            <i *ngIf="!savingComposition" class="fa fa-floppy-o fa-fw" aria-hidden="true"></i> {{ 'misc.save' | translate }}
           </button>
         </div>
       </div>

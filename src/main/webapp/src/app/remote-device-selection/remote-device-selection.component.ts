@@ -9,8 +9,7 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./remote-device-selection.component.scss']
 })
 export class RemoteDeviceSelectionComponent implements OnInit {
-  // TODO Instead of any, an interface would be the proper way
-  @Input() remoteDeviceListContainer: any;
+  @Input() remoteDeviceList: string[];
 
   settings: Settings;
 
@@ -29,15 +28,11 @@ export class RemoteDeviceSelectionComponent implements OnInit {
   }
 
   remoteDeviceChecked(remoteDevice: RemoteDevice) {
-    if(!this.remoteDeviceListContainer) {
+    if (!this.remoteDeviceList) {
       return;
     }
 
-    if(!this.remoteDeviceListContainer.remoteDeviceList) {
-      this.remoteDeviceListContainer.remoteDeviceList = [];
-    }
-
-    for (let midiControlRemoteDevice of this.remoteDeviceListContainer.remoteDeviceList) {
+    for (let midiControlRemoteDevice of this.remoteDeviceList) {
       if (midiControlRemoteDevice == remoteDevice.name) {
         return true;
       }
@@ -47,17 +42,13 @@ export class RemoteDeviceSelectionComponent implements OnInit {
   }
 
   updateRemoteDeviceSync(remoteDevice: RemoteDevice, value: boolean) {
-    if(!this.remoteDeviceListContainer) {
+    if (!this.remoteDeviceList) {
       return;
-    }
-
-    if(!this.remoteDeviceListContainer.remoteDeviceList) {
-      this.remoteDeviceListContainer.remoteDeviceList = [];
     }
 
     if (value) {
       // Add the remote device, if not already added
-      for (let existingRemoteDevice of this.remoteDeviceListContainer.remoteDeviceList) {
+      for (let existingRemoteDevice of this.remoteDeviceList) {
         if (existingRemoteDevice == remoteDevice.name) {
           // Already added -> nothing to do
           return;
@@ -65,12 +56,12 @@ export class RemoteDeviceSelectionComponent implements OnInit {
       }
 
       // Add the new remote device
-      this.remoteDeviceListContainer.remoteDeviceList.push(remoteDevice.name);
+      this.remoteDeviceList.push(remoteDevice.name);
     } else {
       // Remove the remote device, if not already removed
-      for (let i = 0; i < this.remoteDeviceListContainer.remoteDeviceList.length; i++) {
-        if (this.remoteDeviceListContainer.remoteDeviceList[i] == remoteDevice.name) {
-          this.remoteDeviceListContainer.remoteDeviceList.splice(i, 1);
+      for (let i = 0; i < this.remoteDeviceList.length; i++) {
+        if (this.remoteDeviceList[i] == remoteDevice.name) {
+          this.remoteDeviceList.splice(i, 1);
           return;
         }
       }

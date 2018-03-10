@@ -27,6 +27,7 @@ export class EditorCompositionComponent implements OnInit {
   searchName: string = '';
 
   loadingComposition: boolean = false;
+  savingComposition: boolean = false;
 
   private compositions: Composition[];
   filteredCompositions: Composition[];
@@ -129,6 +130,8 @@ export class EditorCompositionComponent implements OnInit {
   }
 
   private saveApi(composition: Composition) {
+    this.savingComposition = true;
+
     this.compositionService.saveComposition(composition).map(() => {
       this.loadCompositions();
       this.copyInitialComposition();
@@ -141,7 +144,11 @@ export class EditorCompositionComponent implements OnInit {
     })
     .catch((err) => {
       return this.toastGeneralErrorService.show(err);
-    }).subscribe();
+    })
+    .finally(() => {
+      this.savingComposition = false;
+    })
+    .subscribe();
   }
 
   // Save a new composition

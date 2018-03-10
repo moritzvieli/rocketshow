@@ -17,27 +17,6 @@ import { ToastrModule } from 'ngx-toastr';
 
 import { PendingChangesGuard } from './pending-changes.guard';
 
-import { AppComponent } from './app.component';
-import { IntroComponent } from './intro/intro.component';
-import { PlayComponent } from './play/play.component';
-import { SettingsComponent } from './settings/settings.component';
-import { SettingsSystemComponent } from './settings/settings-system/settings-system.component';
-import { EditorComponent } from './editor/editor.component';
-import { EditorCompositionComponent } from './editor/editor-composition/editor-composition.component';
-import { EditorSetComponent } from './editor/editor-set/editor-set.component';
-import { ConnectionComponent } from './connection/connection.component';
-import { EditorCompositionFileComponent } from './editor/editor-composition/editor-composition-file/editor-composition-file.component';
-import { RoutingDetailsComponent } from './routing-details/routing-details.component';
-import { SettingsAdvancedComponent } from './settings/settings-advanced/settings-advanced.component';
-import { UpdateDialogComponent } from './update-dialog/update-dialog.component';
-import { WaitDialogComponent } from './wait-dialog/wait-dialog.component';
-import { InfoDialogComponent } from './info-dialog/info-dialog.component';
-import { SettingsMidiComponent } from './settings/settings-midi/settings-midi.component';
-import { SettingsNetworkComponent } from './settings/settings-network/settings-network.component';
-import { SettingsAudioComponent } from './settings/settings-audio/settings-audio.component';
-import { SettingsVideoComponent } from './settings/settings-video/settings-video.component';
-import { RemoteDeviceSelectionComponent } from './remote-device-selection/remote-device-selection.component';
-
 import { ApiService } from './services/api.service';
 import { StateService } from './services/state.service';
 import { TransportService } from './services/transport.service';
@@ -52,6 +31,30 @@ import { UpdateService } from './services/update.service';
 import { InfoDialogService } from './services/info-dialog.service';
 import { ToastGeneralErrorService } from './services/toast-general-error.service';
 import { WaitDialogService } from './services/wait-dialog.service';
+
+import { AppComponent } from './app.component';
+import { IntroComponent } from './intro/intro.component';
+import { ConnectionComponent } from './connection/connection.component';
+import { PlayComponent } from './play/play.component';
+import { SettingsComponent } from './settings/settings.component';
+import { SettingsSystemComponent } from './settings/settings-system/settings-system.component';
+import { SettingsAdvancedComponent } from './settings/settings-advanced/settings-advanced.component';
+import { SettingsMidiComponent } from './settings/settings-midi/settings-midi.component';
+import { SettingsNetworkComponent } from './settings/settings-network/settings-network.component';
+import { SettingsAudioComponent } from './settings/settings-audio/settings-audio.component';
+import { SettingsVideoComponent } from './settings/settings-video/settings-video.component';
+import { SettingsDmxComponent } from './settings/settings-dmx/settings-dmx.component';
+import { EditorComponent } from './editor/editor.component';
+import { EditorCompositionComponent } from './editor/editor-composition/editor-composition.component';
+import { EditorSetComponent } from './editor/editor-set/editor-set.component';
+import { EditorCompositionFileComponent } from './editor/editor-composition/editor-composition-file/editor-composition-file.component';
+import { RoutingDetailsComponent } from './routing-details/routing-details.component';
+import { UpdateDialogComponent } from './update-dialog/update-dialog.component';
+import { WaitDialogComponent } from './wait-dialog/wait-dialog.component';
+import { InfoDialogComponent } from './info-dialog/info-dialog.component';
+import { RemoteDeviceSelectionComponent } from './remote-device-selection/remote-device-selection.component';
+import { MidiRoutingComponent } from './midi-routing/midi-routing.component';
+import { MidiMappingComponent } from './midi-mapping/midi-mapping.component';
 
 const appRoutes: Routes = [
   { path: 'intro', component: IntroComponent },
@@ -93,6 +96,9 @@ const DROPZONE_CONFIG: DropzoneConfigInterface = {
     SettingsAudioComponent,
     SettingsVideoComponent,
     RemoteDeviceSelectionComponent,
+    SettingsDmxComponent,
+    MidiRoutingComponent,
+    MidiMappingComponent,
   ],
   imports: [
     HttpModule,

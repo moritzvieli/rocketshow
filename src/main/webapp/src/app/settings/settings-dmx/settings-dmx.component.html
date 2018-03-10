@@ -1,0 +1,6 @@
+<div class="form-group row">
+  <label class="col-lg-3 col-form-label">{{ 'settings.dmx-send-delay' | translate }}</label>
+  <div class="col-lg-9">
+    <input type="text" class="form-control" [ngModel]="settings?.dmxSendDelayMillis" (ngModelChange)="settings.dmxSendDelayMillis = $event">
+  </div>
+</div>

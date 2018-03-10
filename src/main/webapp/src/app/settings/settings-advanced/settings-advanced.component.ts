@@ -20,13 +20,20 @@ export class SettingsAdvancedComponent implements OnInit {
   settings: Settings;
   private isResettingToFactory: boolean = false;
 
+  loggingLevelList: string[] = [];
+
   constructor(
     private settingsService: SettingsService,
     private warningDialogService: WarningDialogService,
     private waitDialogService: WaitDialogService,
     private apiService: ApiService,
     private stateService: StateService,
-    private infoDialogService: InfoDialogService) { }
+    private infoDialogService: InfoDialogService) {
+
+    this.loggingLevelList.push('INFO');
+    this.loggingLevelList.push('DEBUG');
+    this.loggingLevelList.push('TRACE');
+  }
 
   private loadSettings() {
     this.settingsService.getSettings().map(result => {
@@ -42,7 +49,7 @@ export class SettingsAdvancedComponent implements OnInit {
     });
 
     this.stateService.state.subscribe((state: State) => {
-      if(this.isResettingToFactory) {
+      if (this.isResettingToFactory) {
         // We got a new state after resetting to factory defaults
         // -> the device has been resetted
         this.isResettingToFactory = false;
@@ -64,12 +71,12 @@ export class SettingsAdvancedComponent implements OnInit {
     }).subscribe();
   }
 
-  private downloadFile(response: Response){
+  private downloadFile(response: Response) {
     saveAs(response.blob(), 'logs.zip');
   }
 
   downloadLogs() {
-    this.apiService.get('system/download-logs', {responseType: ResponseContentType.Blob}).subscribe(response => {
+    this.apiService.get('system/download-logs', { responseType: ResponseContentType.Blob }).subscribe(response => {
       this.downloadFile(response);
     });
   }

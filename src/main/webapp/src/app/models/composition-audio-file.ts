@@ -11,7 +11,9 @@ export class CompositionAudioFile extends CompositionFile {
         	return;
         }
 
-        this.outputBus = data.outputBus;
+        if(data.outputBus) {
+            this.outputBus = data.outputBus;
+        }
     }
 
 }

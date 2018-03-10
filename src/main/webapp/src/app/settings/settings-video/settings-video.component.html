@@ -1,3 +1,6 @@
-<p>
-  settings-video works!
-</p>
+<div class="form-group row">
+  <label class="col-lg-3 col-form-label">{{ 'settings.global-play-offset' | translate }}</label>
+  <div class="col-lg-9">
+    <input type="text" class="form-control" [ngModel]="settings?.offsetMillisVideo" (ngModelChange)="settings.offsetMillisVideo = $event">
+  </div>
+</div>

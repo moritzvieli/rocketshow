@@ -1,3 +1,5 @@
+import { Settings } from './../../../models/settings';
+import { SettingsService } from './../../../services/settings.service';
 import { WarningDialogService } from './../../../services/warning-dialog.service';
 import { CompositionMidiFile } from './../../../models/composition-midi-file';
 import { FileService } from './../../../services/file.service';
@@ -5,11 +7,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { CompositionFile } from './../../../models/composition-file';
 import { MidiRouting } from './../../../models/midi-routing';
 import { Component, OnInit } from '@angular/core';
-import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap';
 import { Subject } from 'rxjs/Subject';
 import { Composition } from '../../../models/composition';
-import { RoutingDetailsComponent } from '../../../routing-details/routing-details.component';
 import { DropzoneConfigInterface } from 'ngx-dropzone-wrapper/dist/lib/dropzone.interfaces';
 import { ApiService } from '../../../services/api.service';
 
@@ -20,9 +20,12 @@ import { ApiService } from '../../../services/api.service';
 })
 export class EditorCompositionFileComponent implements OnInit {
 
+  selectUndefinedOptionValue: any;
+
   fileIndex: number;
   file: CompositionFile;
   composition: Composition;
+  settings: Settings;
 
   onClose: Subject<number>;
 
@@ -34,11 +37,11 @@ export class EditorCompositionFileComponent implements OnInit {
 
   constructor(
     private bsModalRef: BsModalRef,
-    private modalService: BsModalService,
     private apiService: ApiService,
     private translateService: TranslateService,
     private fileService: FileService,
-    private warningDialogService: WarningDialogService) {
+    private warningDialogService: WarningDialogService,
+    private settingsService: SettingsService) {
 
     this.dropzoneConfig = {
       url: apiService.getRestUrl() + 'file/upload',
@@ -70,6 +73,12 @@ export class EditorCompositionFileComponent implements OnInit {
     this.loadFiles();
   }
 
+  private loadSettings() {
+    this.settingsService.getSettings().map(result => {
+      this.settings = result;
+    }).subscribe();
+  }
+
   private loadFiles() {
     this.fileService.getFiles().map(result => {
       this.existingFiles = result;
@@ -79,6 +88,12 @@ export class EditorCompositionFileComponent implements OnInit {
 
   ngOnInit() {
     this.onClose = new Subject();
+
+    this.loadSettings();
+
+    this.settingsService.settingsChanged.subscribe(() => {
+      this.loadSettings();
+    });
   }
 
   public ok(): void {
@@ -89,37 +104,6 @@ export class EditorCompositionFileComponent implements OnInit {
   public cancel(): void {
     this.onClose.next(2);
     this.bsModalRef.hide();
-  }
-
-  // Edit the routing details
-  editRouting(midiRoutingIndex: number, addNew: boolean = false) {
-    // Create a backup of the current file
-    let fileCopy: CompositionMidiFile = new CompositionMidiFile(JSON.parse(JSON.stringify(this.file)));
-
-    if (addNew) {
-      // Add a new routing, if necessary
-      let newRouting: MidiRouting = new MidiRouting();
-      newRouting.midiDestination = 'OUT_DEVICE';
-      fileCopy.midiRoutingList.push(newRouting);
-      midiRoutingIndex = fileCopy.midiRoutingList.length - 1;
-    }
-
-    // Show the routing details dialog
-    let routingDialog = this.modalService.show(RoutingDetailsComponent, { keyboard: true, animated: true, backdrop: false, ignoreBackdropClick: true, class: "" });
-    (<RoutingDetailsComponent>routingDialog.content).midiRouting = fileCopy.midiRoutingList[midiRoutingIndex];
-
-    (<RoutingDetailsComponent>routingDialog.content).onClose.subscribe(result => {
-      if (result === 1) {
-        // OK has been pressed -> save
-        (<CompositionMidiFile>this.file).midiRoutingList[midiRoutingIndex] = fileCopy.midiRoutingList[midiRoutingIndex];
-      }
-    });
-  }
-
-  // Prevent the last item in the file-list to be draggable.
-  // Taken from http://jsbin.com/tuyafe/1/edit?html,js,output
-  sortMove(evt) {
-    return evt.related.className.indexOf('no-sortjs') === -1;
   }
 
   public onUploadError(args: any) {
@@ -177,10 +161,6 @@ export class EditorCompositionFileComponent implements OnInit {
     if (this.file.type == 'MIDI' && midiRoutingList) {
       (<CompositionMidiFile>this.file).midiRoutingList = midiRoutingList;
     }
-  }
-
-  deleteRouting(midiRoutingIndex: number) {
-    (<CompositionMidiFile>this.file).midiRoutingList.splice(midiRoutingIndex, 1);
   }
 
   deleteFile(existingFile: CompositionFile) {

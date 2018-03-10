@@ -130,9 +130,11 @@
           <a class="mr-3 my-auto" href="#" role="button" (click)="unselect(); false">
             {{ 'misc.cancel' | translate }}
           </a>
-          <button type="button" class="btn btn-primary" href="#" role="button" (click)="save(currentSet); false" [disabled]="!currentSet || !currentSet.name || currentSet.name.length < 1 || currentSet.name.length > 50"
+          <button type="button" class="btn btn-primary" href="#" role="button" (click)="save(currentSet); false" [disabled]=" savingSet || !currentSet || !currentSet.name || currentSet.name.length < 1 || currentSet.name.length > 50"
             role="button">
-            <i class="fa fa-floppy-o" aria-hidden="true"></i> {{ 'misc.save' | translate }}
+
+            <i *ngIf="savingSet" class="fa fa-spinner fa-pulse fa-fw" aria-hidden="true"></i>
+            <i *ngIf="!savingSet" class="fa fa-floppy-o fa-fw" aria-hidden="true"></i> {{ 'misc.save' | translate }}
           </button>
         </div>
       </div>

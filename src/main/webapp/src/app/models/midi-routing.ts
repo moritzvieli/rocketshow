@@ -2,7 +2,7 @@ import { MidiMapping } from './midi-mapping';
 
 export class MidiRouting {
     midiDestination: string;
-    midiMapping: MidiMapping;
+    midiMapping: MidiMapping = new MidiMapping();
     remoteDeviceList: string[] = [];
 
     constructor(data?: any) {

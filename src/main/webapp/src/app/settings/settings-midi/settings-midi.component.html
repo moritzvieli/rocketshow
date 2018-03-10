@@ -1,7 +1,8 @@
 <div class="form-group row">
   <label class="col-lg-3 col-form-label">{{ 'settings.midi-device-in' | translate }}</label>
   <div class="col-lg-9">
-    <select class="custom-select" [ngModel]="settings?.midiInDevice?.id" (ngModelChange)="settings.midiInDevice = $event">
+    <div *ngIf="midiInDevices?.length == 0">- {{ 'settings.no-midi-devices' | translate }} -</div>
+    <select *ngIf="midiInDevices?.length > 0" class="custom-select" [ngModel]="settings?.midiInDevice?.id" (ngModelChange)="settings.midiInDevice = $event">
       <option *ngFor="let midiDevice of midiInDevices" [ngValue]="midiDevice.id">{{ midiDevice.name }}</option>
     </select>
   </div>
@@ -10,9 +11,42 @@
 <div class="form-group row">
   <label class="col-lg-3 col-form-label">{{ 'settings.midi-device-out' | translate }}</label>
   <div class="col-lg-9">
-    <select class="custom-select" [ngModel]="settings?.midOutDevice?.id" (ngModelChange)="settings.midiOutDevice = $event">
+    <div *ngIf="midiOutDevices?.length == 0">- {{ 'settings.no-midi-devices' | translate }} -</div>
+    <select *ngIf="midiOutDevices?.length > 0" class="custom-select" [ngModel]="settings?.midOutDevice?.id" (ngModelChange)="settings.midiOutDevice = $event">
       <option *ngFor="let midiDevice of midiOutDevices" [ngValue]="midiDevice.id">{{ midiDevice.name }}</option>
     </select>
+  </div>
+</div>
+
+<div class="form-group row">
+  <label class="col-lg-3 col-form-label">{{ 'settings.global-play-offset' | translate }}</label>
+  <div class="col-lg-9">
+    <input type="text" class="form-control" [ngModel]="settings?.offsetMillisMidi" (ngModelChange)="settings.offsetMillisMidi = $event">
+  </div>
+</div>
+
+<div class="form-group row">
+  <label class="col-lg-3 col-form-label">{{ 'settings.device-in-midi-routing' | translate }}</label>
+  <div class="col-lg-9">
+    <app-midi-routing [midiRoutingList]="settings?.deviceInMidiRoutingList"></app-midi-routing>
+  </div>
+</div>
+
+<div class="form-group row">
+  <label class="col-lg-3 col-form-label">{{ 'settings.remote-midi-routing' | translate }}</label>
+  <div class="col-lg-9">
+    <app-midi-routing [midiRoutingList]="settings?.remoteMidiRoutingList"></app-midi-routing>
+  </div>
+</div>
+
+<div class="form-group row">
+  <label class="col-lg-3 col-form-label">{{ 'settings.global-midi-mapping' | translate }}</label>
+  <div class="col-lg-9">
+    <div class="card">
+      <div class="card-body">
+        <app-midi-mapping [midiMapping]="settings?.midiMapping"></app-midi-mapping>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -66,7 +100,7 @@
           <div class="col-md-9">
             <div class="card mb-0">
               <div class="card-body">
-                <app-remote-device-selection [remoteDeviceListContainer]="midiControl"></app-remote-device-selection>
+                <app-remote-device-selection [remoteDeviceList]="midiControl.remoteDeviceList"></app-remote-device-selection>
               </div>
             </div>
           </div>

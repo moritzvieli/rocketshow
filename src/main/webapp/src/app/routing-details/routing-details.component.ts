@@ -17,14 +17,21 @@ export class RoutingDetailsComponent implements OnInit {
   onClose: Subject<number>;
   remoteDevices: RemoteDevice[];
 
+  midiDestinationList: string[] = [];
+
   constructor(
     private bsModalRef: BsModalRef,
-    private settingsService: SettingsService) { }
+    private settingsService: SettingsService) {
+
+    this.midiDestinationList.push('OUT_DEVICE');
+    this.midiDestinationList.push('DMX');
+    this.midiDestinationList.push('REMOTE');
+  }
 
   ngOnInit() {
     this.onClose = new Subject();
 
-    this.settingsService.getSettings().subscribe((result) =>  {
+    this.settingsService.getSettings().subscribe((result) => {
       this.remoteDevices = result.remoteDeviceList;
     });
   }

@@ -1,3 +1,4 @@
+import { AudioDevice } from './../models/audio-device';
 import { MidiDevice } from './../models/midi-device';
 import { Subject } from 'rxjs/Rx';
 import { Settings } from './../models/settings';
@@ -81,6 +82,19 @@ export class SettingsService {
 
   getMidiOutDevices(): Observable<MidiDevice[]> {
     return this.apiGetMidiDevices('out-devices');
+  }
+
+  getAudioDevices(): Observable<AudioDevice[]> {
+    return this.apiService.get('audio/devices')
+    .map((response: Response) => {
+      let deviceList: AudioDevice[] = [];
+
+      for (let audioDevice of response.json()) {
+        deviceList.push(new AudioDevice(audioDevice));
+      }
+
+      return deviceList;
+    });
   }
 
 }

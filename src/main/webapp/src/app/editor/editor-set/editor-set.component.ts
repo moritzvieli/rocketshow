@@ -20,6 +20,7 @@ export class EditorSetComponent implements OnInit {
   searchName: string = '';
 
   loadingSet: boolean = false;
+  savingSet: boolean = false;
 
   private sets: Set[];
   filteredSets: Set[];
@@ -153,6 +154,8 @@ export class EditorSetComponent implements OnInit {
   }
 
   private saveApi(set: Set) {
+    this.savingSet = true;
+
     this.compositionService.saveSet(set).map(() => {
       this.loadSets();
       this.copyInitialSet();
@@ -163,6 +166,9 @@ export class EditorSetComponent implements OnInit {
     })
     .catch((err) => {
       return this.toastGeneralErrorService.show(err);
+    })
+    .finally(() => {
+      this.savingSet = false;
     })
     .subscribe();
   }

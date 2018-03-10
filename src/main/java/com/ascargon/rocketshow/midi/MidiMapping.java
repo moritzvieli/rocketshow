@@ -13,8 +13,8 @@ public class MidiMapping {
 
 	private List<ChannelMapping> channelMap = new ArrayList<ChannelMapping>();
 	
-	private Integer channelOffset;
-	private Integer noteOffset;
+	private Integer channelOffset = 0;
+	private Integer noteOffset = 0;
 
 	// Completely ignore all parent's settings
 	private Boolean overrideParent = false;

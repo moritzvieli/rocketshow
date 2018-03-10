@@ -14,9 +14,7 @@
       <label class="col-sm-4 col-form-label">{{ 'routing.type' | translate }}</label>
       <div class="col-sm-8">
         <select class="custom-select" [ngModel]="midiRouting?.midiDestination" (ngModelChange)="midiRouting.midiDestination = $event">
-          <option value="OUT_DEVICE">{{ 'editor.midi-destination-device' | translate }}</option>
-          <option value="DMX">{{ 'editor.midi-destination-dmx' | translate }}</option>
-          <option value="REMOTE">{{ 'editor.midi-destination-remote' | translate }}</option>
+          <option *ngFor="let midiDestination of midiDestinationList" [ngValue]="midiDestination">{{ 'settings.midi-destination-enum.' + midiDestination | translate }}</option>
         </select>
       </div>
     </div>
@@ -27,20 +25,7 @@
       <div class="col-sm-8">
         <div class="card">
           <div class="card-body">
-            <div class="form-group row">
-              <label for="channel-offset" class="col-sm-6 col-form-label">{{ 'routing.channel-offset' | translate }}</label>
-              <div class="col-sm-6">
-                <input type="text" [ngModel]="midiRouting?.midiMapping?.channelOffset" (ngModelChange)="midiRouting.midiMapping.channelOffset = $event"
-                  class="form-control" id="channel-offset">
-              </div>
-            </div>
-            <div class="form-group row mb-0">
-              <label for="note-offset" class="col-sm-6 col-form-label">{{ 'routing.note-offset' | translate }}</label>
-              <div class="col-sm-6">
-                <input type="text" [ngModel]="midiRouting?.midiMapping?.noteOffset" (ngModelChange)="midiRouting.midiMapping.noteOffset = $event"
-                  class="form-control" id="note-offset">
-              </div>
-            </div>
+            <app-midi-mapping [midiMapping]="midiRouting?.midiMapping"></app-midi-mapping>
           </div>
         </div>
       </div>
@@ -71,7 +56,7 @@
       <div class="col-sm-8">
         <div class="card">
           <div class="card-body">
-            <app-remote-device-selection [remoteDeviceListContainer]="midiRouting"></app-remote-device-selection>
+            <app-remote-device-selection [remoteDeviceList]="midiRouting?.remoteDeviceList"></app-remote-device-selection>
           </div>
         </div>
       </div>

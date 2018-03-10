@@ -1,3 +1,76 @@
-<p>
-  settings-audio works!
-</p>
+<div class="form-group row">
+  <label class="col-lg-3 col-form-label">{{ 'settings.global-play-offset' | translate }}</label>
+  <div class="col-lg-9">
+    <input type="text" class="form-control" [ngModel]="settings?.offsetMillisAudio" (ngModelChange)="settings.offsetMillisAudio = $event">
+  </div>
+</div>
+
+<div class="form-group row">
+  <label class="col-sm-3 col-form-label">{{ 'settings.audio-sample-rate' | translate }}</label>
+  <div class="col-sm-9">
+    <select class="custom-select" [ngModel]="settings?.audioRate" (ngModelChange)="settings.audioRate = $event">
+      <option [ngValue]="44100">44100</option>
+      <option [ngValue]="48000">48000</option>
+    </select>
+  </div>
+</div>
+
+<div class="form-group row">
+  <label class="col-sm-3 col-form-label">{{ 'settings.audio-output' | translate }}</label>
+  <div class="col-sm-9">
+    <select class="custom-select" [ngModel]="settings?.audioOutput" (ngModelChange)="settings.audioOutput = $event">
+      <option *ngFor="let audioOutput of audioOutputList" [ngValue]="audioOutput">{{ 'settings.audio-output-enum.' + audioOutput | translate }}</option>
+    </select>
+  </div>
+</div>
+
+<div class="form-group row" *ngIf="settings?.audioOutput == 'DEVICE'">
+  <label class="col-lg-3 col-form-label">{{ 'settings.audio-device' | translate }}</label>
+  <div class="col-lg-9">
+    <div *ngIf="audioDeviceList?.length == 0">- {{ 'settings.no-audio-devices' | translate }} -</div>
+    <select *ngIf="audioDeviceList?.length > 0" class="custom-select" [ngModel]="settings?.audioDevice?.id" (ngModelChange)="settings.audioDevice = $event">
+      <option *ngFor="let audioDevice of audioDeviceList" [ngValue]="audioDevice.id">{{ audioDevice.name }}</option>
+    </select>
+  </div>
+</div>
+
+<div class="form-group row" *ngIf="settings?.audioOutput == 'DEVICE' && settings?.audioDevice?.id">
+  <label class="col-lg-3 col-form-label">{{ 'settings.audio-buses' | translate }}</label>
+  <div class="col-lg-9">
+    <div class="list-group" [sortablejs]="settings?.audioBusList" [sortablejsOptions]="{ onMove: sortMove }">
+      <div class="list-group-item" *ngFor="let audioBus of settings?.audioBusList; let i = index">
+
+        <div class="form-group row" style="margin-top: 10px; margin-bottom: -30px;">
+          <div class="col d-flex">
+            <a class="my-auto ml-auto text-danger" href="#" role="button" (click)="deleteAudioBus(i); false">
+              <i class="fa fa-trash-o" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-md-3 col-form-label">{{ 'settings.audio-bus-name' | translate }}</label>
+          <div class="col-md-8">
+            <input type="text" class="form-control" [(ngModel)]="audioBus.name" id="name" placeholder="{{ 'settings.audio-bus-name-placeholder' | translate }}">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-md-3 col-form-label">{{ 'settings.audio-bus-channels' | translate }}</label>
+          <div class="col-md-8">
+            <select class="custom-select" [ngModel]="audioBus.channels" (ngModelChange)="audioBus.channels = $event">
+              <option value="1">1 {{ 'settings.audio-bus-mono' | translate }}</option>
+              <option value="2">2 {{ 'settings.audio-bus-stereo' | translate }}</option>
+              <option value="3">3 {{ 'settings.audio-bus-surround' | translate }} 2.1</option>
+              <option value="6">6 {{ 'settings.audio-bus-surround' | translate }} 5.1</option>
+              <option value="7">7 {{ 'settings.audio-bus-surround' | translate }} 6.1</option>
+              <option value="8">8 {{ 'settings.audio-bus-surround' | translate }} 7.1</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+      <a href="#" (click)="addAudioBus(); false" class="no-sortjs list-group-item list-group-item-action text-center">
+        <i class="fa fa-plus" aria-hidden="true"></i> {{ 'settings.audio-bus-add' | translate }}
+      </a>
+    </div>
+  </div>
+</div>
