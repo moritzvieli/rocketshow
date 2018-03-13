@@ -14,14 +14,13 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.api.StateManager;
-import com.ascargon.rocketshow.composition.FileManager;
-import com.ascargon.rocketshow.composition.Set;
 import com.ascargon.rocketshow.composition.Composition;
 import com.ascargon.rocketshow.composition.CompositionManager;
+import com.ascargon.rocketshow.composition.FileManager;
+import com.ascargon.rocketshow.composition.Set;
 import com.ascargon.rocketshow.dmx.DmxManager;
 import com.ascargon.rocketshow.dmx.Midi2DmxConverter;
 import com.ascargon.rocketshow.image.ImageDisplayer;
@@ -187,7 +186,7 @@ public class Manager {
 
 	public void load() throws IOException {
 		logger.info("Initialize...");
-		
+
 		// Initialize the player
 		player = new Player(this);
 
@@ -237,26 +236,6 @@ public class Manager {
 			saveSettings();
 		} catch (JAXBException e) {
 			logger.error("Could not save settings", e);
-		}
-
-		// Set the proper logging level (map from the log4j enum to our own
-		// enum)
-		switch (settings.getLoggingLevel()) {
-		case INFO:
-			logger.setLevel(Level.INFO);
-			break;
-		case WARN:
-			logger.setLevel(Level.WARN);
-			break;
-		case ERROR:
-			logger.setLevel(Level.ERROR);
-			break;
-		case DEBUG:
-			logger.setLevel(Level.DEBUG);
-			break;
-		case TRACE:
-			logger.setLevel(Level.TRACE);
-			break;
 		}
 
 		// Initialize the required objects inside settings
@@ -366,51 +345,53 @@ public class Manager {
 
 	private void restoreSession() throws Exception {
 		File file = new File(BASE_PATH + "session");
-		if (!file.exists() || file.isDirectory()) {
-			// Create a default session
+		
+		if (file.exists()) {
+			// We already have a session -> restore it from the file
+			try {
+				JAXBContext jaxbContext = JAXBContext.newInstance(Session.class);
+	
+				Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+				session = (Session) jaxbUnmarshaller.unmarshal(file);
+	
+				logger.info("Session restored");
+			} catch (JAXBException e) {
+				e.printStackTrace();
+			}
+		} else {
+			// There is no session existant -> create a default session
 			saveSession();
-			return;
 		}
 
-		// Restore the session from the file
-		try {
-			JAXBContext jaxbContext = JAXBContext.newInstance(Session.class);
-
-			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-			session = (Session) jaxbUnmarshaller.unmarshal(file);
-
-			if (session.getCurrentSetName() != null && session.getCurrentSetName().length() > 0) {
-				// Load the last set
-				loadSet(session.getCurrentSetName());
-			} else {
-				// Load the default set
-				loadSet("");
-			}
-
-			logger.info("Session restored");
-		} catch (JAXBException e) {
-			e.printStackTrace();
+		// Load the last set/composition
+		if (session != null && session.getCurrentSetName() != null && session.getCurrentSetName().length() > 0) {
+			// Load the last set
+			loadSetAndComposition(session.getCurrentSetName());
+		} else {
+			// Load the default set
+			loadSetAndComposition("");
 		}
 	}
 
-	public void loadSet(String name) throws Exception {
+	public void loadSetAndComposition(String setName) throws Exception {
 		if (currentSet != null) {
+			// Unload the current set
 			currentSet.close();
 			currentSet = null;
 		}
 
-		if (name.length() > 0) {
-			// Also load a new set, don't only unload the current one
-			currentSet = compositionManager.loadSet(name);
+		if (setName.length() > 0) {
+			// Load the new set
+			currentSet = compositionManager.loadSet(setName);
 			currentSet.setManager(this);
-			currentSet.setName(name);
+			currentSet.setName(setName);
 		}
 
 		// Read the current composition file
 		if (currentSet == null) {
+			// We have no set. Simply read the first composition, if available			
 			logger.debug("Try setting a default composition...");
 
-			// We have no set. Simply read the first composition, if available
 			List<Composition> compositions = compositionManager.getAllCompositions();
 
 			if (compositions.size() > 0) {
@@ -442,7 +423,7 @@ public class Manager {
 				logger.error("Could not close the DMX manager", e);
 			}
 		}
-		
+
 		try {
 			player.close();
 		} catch (Exception e) {

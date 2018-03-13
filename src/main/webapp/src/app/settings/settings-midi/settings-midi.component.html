@@ -12,7 +12,7 @@
   <label class="col-lg-3 col-form-label">{{ 'settings.midi-device-out' | translate }}</label>
   <div class="col-lg-9">
     <div *ngIf="midiOutDevices?.length == 0">- {{ 'settings.no-midi-devices' | translate }} -</div>
-    <select *ngIf="midiOutDevices?.length > 0" class="custom-select" [ngModel]="settings?.midOutDevice?.id" (ngModelChange)="settings.midiOutDevice = $event">
+    <select *ngIf="midiOutDevices?.length > 0" class="custom-select" [ngModel]="settings?.midiOutDevice?.id" (ngModelChange)="settings.midiOutDevice = $event">
       <option *ngFor="let midiDevice of midiOutDevices" [ngValue]="midiDevice.id">{{ midiDevice.name }}</option>
     </select>
   </div>

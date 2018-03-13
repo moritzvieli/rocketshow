@@ -27,10 +27,40 @@ export class SettingsComponent implements OnInit {
     private toastGeneralErrorService: ToastGeneralErrorService
   ) { }
 
+  private finishInit(settings: Settings) {
+    this.copyInitialSettings(settings);
+    this.loading = false;
+  }
+
   ngOnInit() {
     this.settingsService.getSettings(true).map(result => {
-      this.copyInitialSettings(result);
-      this.loading = false;
+      // Set the initial devices
+      Observable.forkJoin(
+        this.settingsService.getMidiInDevices(),
+        this.settingsService.getMidiOutDevices(),
+        this.settingsService.getAudioDevices()
+      ).subscribe((devices) => {
+        if((!result.midiInDevice || result.midiInDevice && result.midiInDevice.id == 0) && devices[0].length > 0) {
+          result.midiInDevice = devices[0][0];
+        }
+
+        if((!result.midiOutDevice || result.midiOutDevice && result.midiOutDevice.id == 0) && devices[1].length > 0) {
+          result.midiOutDevice = devices[1][0];
+        }
+
+        if((!result.audioDevice || result.audioDevice && result.audioDevice.id == 0) && devices[2].length > 0) {
+          result.audioDevice = devices[2][0];
+        }
+
+        if(result.audioBusList.length == 0) {
+          // Add a default bus
+          this.settingsService.addAudioBus(result).subscribe(() => {
+            this.finishInit(result);
+          });
+        } else {
+          this.finishInit(result);
+        }
+      });
     }).subscribe();
   }
 

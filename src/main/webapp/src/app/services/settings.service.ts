@@ -1,8 +1,9 @@
+import { AudioBus } from './../models/audio-bus';
+import { TranslateService } from '@ngx-translate/core';
 import { AudioDevice } from './../models/audio-device';
 import { MidiDevice } from './../models/midi-device';
-import { Subject } from 'rxjs/Rx';
+import { Subject, Observable } from 'rxjs/Rx';
 import { Settings } from './../models/settings';
-import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { Response } from '@angular/http';
@@ -18,7 +19,10 @@ export class SettingsService {
   settings: Settings;
   observable: Observable<Settings>;
 
-  constructor(private apiService: ApiService) {
+  constructor(
+    private apiService: ApiService,
+    private translateService: TranslateService) {
+
     let language: Language;
 
     language = new Language();
@@ -33,7 +37,7 @@ export class SettingsService {
   }
 
   getSettings(clearCache: boolean = false): Observable<Settings> {
-    if(clearCache) {
+    if (clearCache) {
       this.settings = undefined;
       this.observable = undefined;
     }
@@ -42,19 +46,19 @@ export class SettingsService {
       return Observable.of(this.settings);
     }
 
-    if(this.observable) {
+    if (this.observable) {
       return this.observable;
     }
 
     this.observable = this.apiService.get('system/settings')
-    .map((response: Response) => {
-      if(!this.settings) {
-        this.settings = new Settings(response.json());
-      }
-      this.observable = undefined;
-      
-      return this.settings;
-    });
+      .map((response: Response) => {
+        if (!this.settings) {
+          this.settings = new Settings(response.json());
+        }
+        this.observable = undefined;
+
+        return this.settings;
+      });
 
     return this.observable;
   }
@@ -65,15 +69,15 @@ export class SettingsService {
 
   private apiGetMidiDevices(url: string) {
     return this.apiService.get('midi/' + url)
-    .map((response: Response) => {
-      let deviceList: MidiDevice[] = [];
+      .map((response: Response) => {
+        let deviceList: MidiDevice[] = [];
 
-      for (let midiDevice of response.json()) {
-        deviceList.push(new MidiDevice(midiDevice));
-      }
+        for (let midiDevice of response.json()) {
+          deviceList.push(new MidiDevice(midiDevice));
+        }
 
-      return deviceList;
-    });
+        return deviceList;
+      });
   }
 
   getMidiInDevices(): Observable<MidiDevice[]> {
@@ -86,14 +90,22 @@ export class SettingsService {
 
   getAudioDevices(): Observable<AudioDevice[]> {
     return this.apiService.get('audio/devices')
-    .map((response: Response) => {
-      let deviceList: AudioDevice[] = [];
+      .map((response: Response) => {
+        let deviceList: AudioDevice[] = [];
 
-      for (let audioDevice of response.json()) {
-        deviceList.push(new AudioDevice(audioDevice));
-      }
+        for (let audioDevice of response.json()) {
+          deviceList.push(new AudioDevice(audioDevice));
+        }
 
-      return deviceList;
+        return deviceList;
+      });
+  }
+
+  addAudioBus(settings: Settings): Observable<void> {
+    return this.translateService.get('settings.audio-bus-name-placeholder').map(result => {
+      let audioBus: AudioBus = new AudioBus();
+      audioBus.name = result + ' ' + (settings.audioBusList.length + 1);
+      settings.audioBusList.push(audioBus);
     });
   }
 

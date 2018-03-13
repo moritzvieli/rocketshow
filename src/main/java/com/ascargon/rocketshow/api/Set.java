@@ -34,7 +34,7 @@ public class Set {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response load(@QueryParam("name") String name) throws Exception {
 		Manager manager = (Manager)context.getAttribute("manager");
-		manager.loadSet(name);
+		manager.loadSetAndComposition(name);
 		return Response.status(200).build();
 	}
 	
@@ -59,7 +59,7 @@ public class Set {
 	public Response save(com.ascargon.rocketshow.composition.Set set) throws Exception {
 		Manager manager = (Manager)context.getAttribute("manager");
 		manager.getCompositionManager().saveSet(set);
-		manager.loadSet(set.getName());
+		manager.loadSetAndComposition(set.getName());
 		return Response.status(200).build();
 	}
 	
@@ -73,7 +73,7 @@ public class Set {
 		// Load the default set, if the current set has been deleted
 		if(manager.getCurrentSet() != null) {
 			if(manager.getCurrentSet().getName().equals(name)) {
-				manager.loadSet("");
+				manager.loadSetAndComposition("");
 			}
 		}
 		

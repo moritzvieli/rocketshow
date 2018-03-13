@@ -11,6 +11,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import com.ascargon.rocketshow.audio.AudioBus;
@@ -161,11 +163,16 @@ public class Settings {
 			
 			logger.debug("Got bus '" + audioBus.getName() + "'");
 			
-			if(outputBus.equals(audioBus.getName())) {
+			if(outputBus != null && outputBus.equals(audioBus.getName())) {
 				logger.debug("Found device '" + getBusNameFromId(i) + "'");
 				
 				return getBusNameFromId(i);
 			}
+		}
+		
+		// Return a default bus, if none is found
+		if(audioBusList.size() > 0) {
+			return getBusNameFromId(0);
 		}
 		
 		return "";
@@ -240,6 +247,28 @@ public class Settings {
 			} 
 		}
 	}
+	
+	private void updateLoggingLevel() {
+		// Set the proper logging level (map from the log4j enum to our own
+		// enum)
+		switch (loggingLevel) {
+		case INFO:
+			LogManager.getRootLogger().setLevel(Level.INFO);
+			break;
+		case WARN:
+			LogManager.getRootLogger().setLevel(Level.WARN);
+			break;
+		case ERROR:
+			LogManager.getRootLogger().setLevel(Level.ERROR);
+			break;
+		case DEBUG:
+			LogManager.getRootLogger().setLevel(Level.DEBUG);
+			break;
+		case TRACE:
+			LogManager.getRootLogger().setLevel(Level.TRACE);
+			break;
+		}
+	}
 
 	public void updateSystem() {
 		// Update all system settings
@@ -249,6 +278,13 @@ public class Settings {
 		} catch (Exception e) {
 			logger.error("Could not update the audio system settings", e);
 		}
+		
+		try {
+			updateLoggingLevel();
+		} catch (Exception e) {
+			logger.error("Could not update the logging level system settings", e);
+		}
+
 	}
 
 	@XmlElement

@@ -7,9 +7,7 @@
 # Install all required packages (libnss-mdns installs the Bonjour service, if not already installed)
 apt-get update
 
-echo iptables-persistent iptables-persistent/autosave_v4 boolean true | sudo debconf-set-selections
-echo iptables-persistent iptables-persistent/autosave_v6 boolean true | sudo debconf-set-selections
-apt-get -y install iptables-persistent oracle-java8-jdk omxplayer fbi ola mplayer libnss-mdns
+apt-get -y install oracle-java8-jdk omxplayer fbi ola mplayer libnss-mdns authbind
 
 # Add the rocketshow user
 adduser \
@@ -112,10 +110,15 @@ sed -i '2iCATALINA_OPTS="-Djava.awt.headless=true -Dfile.encoding=UTF-8 -server 
 sed -i '2iJAVA_OPTS="-Djava.security.egd=file:/dev/urandom"\n' /opt/rocketshow/tomcat/bin/catalina.sh
 
 # Set default port to 80
-iptables -A INPUT -i eth0 -p tcp --dport 80 -j ACCEPT
-iptables -A PREROUTING -t nat -p tcp --dport 80 -j REDIRECT --to-port 8080
+touch /etc/authbind/byport/{443,80}
+chmod 500 /etc/authbind/byport/{443,80}
+chown rocketshow:rocketshow /etc/authbind/byport/{443,80}
 
-iptables-save > /etc/iptables/rules.v4
+sed -i 's/8080/80/g' /opt/rocketshow/tomcat/conf/server.xml
+sed -i 's/8443/443/g' /opt/rocketshow/tomcat/conf/server.xml
+
+# Make tomcat use authbind
+sed -i 's/exec "$PRGDIR"/exec authbind --deep "$PRGDIR"/g' /opt/rocketshow/tomcat/bin/startup.sh
 
 # Install an USB interface reset according to
 # https://raspberrypi.stackexchange.com/questions/9264/how-do-i-reset-a-usb-device-using-a-script

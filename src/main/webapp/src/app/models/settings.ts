@@ -1,3 +1,4 @@
+import { AudioDevice } from './audio-device';
 import { MidiRouting } from './midi-routing';
 import { AudioBus } from './audio-bus';
 import { MidiControl } from './midi-control';
@@ -25,6 +26,7 @@ export class Settings {
     resetUsbAfterBoot: boolean;
     audioOutput: string;
     audioRate: number;
+    audioDevice: AudioDevice;
     audioBusList: AudioBus[];
 
     constructor(data?: any) {
@@ -32,47 +34,47 @@ export class Settings {
             return;
         }
 
-        if(data.midiInDevice) {
+        if (data.midiInDevice) {
             this.midiInDevice = new MidiDevice(data.midiInDevice);
         }
 
-        if(data.midiOutDevice) {
-            this.midiInDevice = new MidiDevice(data.midiOutDevice);
+        if (data.midiOutDevice) {
+            this.midiOutDevice = new MidiDevice(data.midiOutDevice);
         }
 
-        if(data.remoteDeviceList) {
+        if (data.remoteDeviceList) {
             this.remoteDeviceList = [];
 
-            for(let remoteDevice of data.remoteDeviceList) {
+            for (let remoteDevice of data.remoteDeviceList) {
                 this.remoteDeviceList.push(new RemoteDevice(remoteDevice));
             }
         }
 
-        if(data.deviceInMidiRoutingList) {
+        if (data.deviceInMidiRoutingList) {
             this.deviceInMidiRoutingList = [];
 
-            for(let midiRouting of data.deviceInMidiRoutingList) {
+            for (let midiRouting of data.deviceInMidiRoutingList) {
                 this.deviceInMidiRoutingList.push(new MidiRouting(midiRouting));
             }
         }
 
-        if(data.remoteMidiRoutingList) {
+        if (data.remoteMidiRoutingList) {
             this.remoteMidiRoutingList = [];
 
-            for(let midiRouting of data.remoteMidiRoutingList) {
+            for (let midiRouting of data.remoteMidiRoutingList) {
                 this.remoteMidiRoutingList.push(new MidiRouting(midiRouting));
             }
         }
 
-        if(data.midiControlList) {
+        if (data.midiControlList) {
             this.midiControlList = [];
 
-            for(let midiControl of data.midiControlList) {
+            for (let midiControl of data.midiControlList) {
                 this.midiControlList.push(new MidiControl(midiControl));
             }
         }
 
-        if(data.midiMapping) {
+        if (data.midiMapping) {
             this.midiMapping = new MidiMapping(data.midiMapping);
         }
 
@@ -89,10 +91,14 @@ export class Settings {
         this.audioOutput = data.audioOutput;
         this.audioRate = data.audioRate;
 
-        if(data.audioBusList) {
+        if (data.audioDevice) {
+            this.audioDevice = new AudioDevice(data.audioDevice);
+        }
+
+        if (data.audioBusList) {
             this.audioBusList = [];
 
-            for(let audioBus of data.audioBusList) {
+            for (let audioBus of data.audioBusList) {
                 this.audioBusList.push(new AudioBus(audioBus));
             }
         }

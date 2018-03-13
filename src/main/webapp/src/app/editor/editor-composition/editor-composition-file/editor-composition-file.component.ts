@@ -48,6 +48,7 @@ export class EditorCompositionFileComponent implements OnInit {
       addRemoveLinks: false,
       maxFilesize: 10000 /* 10 GB */,
       acceptedFiles: 'audio/*,video/*',
+      timeout: 0,
       previewTemplate: `
       <div class="dz-preview dz-file-preview">
         <!-- The attachment details -->

@@ -25,10 +25,12 @@ public class AudioUtil {
 	public static List<AudioDevice> getAudioDevices() {
 		List<AudioDevice> audioDeviceList = new ArrayList<AudioDevice>();
 
+		logger.debug("List audio devices...");
+		
 		try {
 			Process process = new ProcessBuilder("cat", "/proc/asound/cards").start();
 
-			new Thread(new Runnable() {
+			Thread readerThread = new Thread(new Runnable() {
 				public void run() {
 					BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 					String line = null;
@@ -36,6 +38,8 @@ public class AudioUtil {
 
 					try {
 						while ((line = reader.readLine()) != null) {
+							logger.trace("Output from audio device list process: " + line);
+							
 							// Only read the uneven lines. The even ones contain
 							// unneccessary information.
 							if (readLine) {
@@ -53,13 +57,23 @@ public class AudioUtil {
 							}
 						}
 					} catch (IOException e) {
-						logger.error("Could not read video player output", e);
+						logger.error("Could not read audio device list output", e);
 					}
 				}
-			}).start();
+			});
+			
+			readerThread.start();
+			
+			try {
+				readerThread.join();
+			} catch (InterruptedException e) {
+				logger.error("Could not wait for the list of audio devices", e);
+			}
 		} catch (IOException e) {
-			logger.error("Could not stop the video player", e);
+			logger.error("Could not list the audio devices", e);
 		}
+		
+		logger.debug("Audio devices listed");
 
 		return audioDeviceList;
 	}

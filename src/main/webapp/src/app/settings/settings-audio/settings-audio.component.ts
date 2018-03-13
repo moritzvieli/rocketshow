@@ -28,6 +28,10 @@ export class SettingsAudioComponent implements OnInit {
   private loadSettings() {
     this.settingsService.getSettings().map(result => {
       this.settings = result;
+
+      this.settingsService.getAudioDevices().subscribe((response) => {
+        this.audioDeviceList = response;
+      });
     }).subscribe();
   }
 
@@ -37,18 +41,10 @@ export class SettingsAudioComponent implements OnInit {
     this.settingsService.settingsChanged.subscribe(() => {
       this.loadSettings();
     });
-
-    this.settingsService.getAudioDevices().subscribe((response) => {
-      this.audioDeviceList = response;
-    });
   }
 
   addAudioBus() {
-    this.translateService.get('settings.audio-bus-name-placeholder').subscribe(result => {
-      let audioBus: AudioBus = new AudioBus();
-      audioBus.name = result + ' ' + (this.settings.audioBusList.length + 1);
-      this.settings.audioBusList.push(audioBus);
-    });
+    this.settingsService.addAudioBus(this.settings).subscribe();
   }
 
   deleteAudioBus(audioBusIndex: number) {
