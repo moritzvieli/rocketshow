@@ -1,4 +1,4 @@
-package com.ascargon.rocketshow;
+package com.ascargon.rocketshow.util;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,6 +12,8 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.log4j.Logger;
+
+import com.ascargon.rocketshow.Manager;
 
 @XmlRootElement
 public class Updater {

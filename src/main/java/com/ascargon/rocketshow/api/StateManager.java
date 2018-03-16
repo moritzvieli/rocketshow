@@ -14,9 +14,9 @@ import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.ascargon.rocketshow.Manager;
-import com.ascargon.rocketshow.Updater.UpdateState;
 import com.ascargon.rocketshow.composition.Composition.PlayState;
 import com.ascargon.rocketshow.midi.MidiSignal;
+import com.ascargon.rocketshow.util.Updater.UpdateState;
 
 /**
  * Handle the current state of the device and notify all connected clients on

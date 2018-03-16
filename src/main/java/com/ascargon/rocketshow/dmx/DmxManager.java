@@ -3,7 +3,6 @@ package com.ascargon.rocketshow.dmx;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,21 +15,23 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import com.ascargon.rocketshow.Manager;
 
 import ola.OlaClient;
-import ola.proto.Ola.DeviceInfo;
-import ola.proto.Ola.DeviceInfoReply;
 import ola.proto.Ola.UniverseInfoReply;
 
 public class DmxManager {
 
 	final static Logger logger = Logger.getLogger(DmxManager.class);
+
+	final String OLA_URL = "http://localhost:9090/";
 
 	private Manager manager;
 
@@ -48,8 +49,6 @@ public class DmxManager {
 	private Timer sendUniverseTimer;
 
 	private List<String> standardDeviceNames = new ArrayList<String>();
-
-	private Timer initializeUniverseTimer;
 
 	public DmxManager(Manager manager) {
 		this.manager = manager;
@@ -71,17 +70,7 @@ public class DmxManager {
 		standardDeviceNames.add("E1.31 (DMX over ACN)");
 		standardDeviceNames.add("OSC Device");
 
-		// Initialize the universe periodically e.g. when a new device is
-		// connected)
-		TimerTask timerTask = new TimerTask() {
-			@Override
-			public void run() {
-				initializeUniverse();
-			}
-		};
-
-		initializeUniverseTimer = new Timer();
-		initializeUniverseTimer.schedule(timerTask, 0, 5000);
+		initializeUniverse();
 	}
 
 	public void reset() {
@@ -148,7 +137,7 @@ public class DmxManager {
 
 	private boolean isStandardDevice(String name) {
 		for (String standardDeviceName : standardDeviceNames) {
-			if (standardDeviceName.equals(name)) {
+			if (name.startsWith(standardDeviceName)) {
 				return true;
 			}
 		}
@@ -156,43 +145,57 @@ public class DmxManager {
 		return false;
 	}
 
-	private DeviceInfo getConnectedDmxDevice(DeviceInfoReply deviceInfoReply) {
-		for (DeviceInfo deviceInfo : deviceInfoReply.getDeviceList()) {
-			if (deviceInfo.getOutputPortCount() > 0) {
-				if (!isStandardDevice(deviceInfo.getDeviceName())) {
-					return deviceInfo;
-				}
+	private String getConnectedPort() throws ClientProtocolException, IOException {
+		// Query the OLA JSON API for all ports
+		HttpClient httpClient;
+		RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(5000).build();
+		httpClient = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
+		HttpGet httpGet = new HttpGet(OLA_URL + "json/get_ports");
+		HttpResponse response = httpClient.execute(httpGet);
+
+		// Parse the resulting JSON ports
+		ObjectMapper mapper = new ObjectMapper();
+		OlaPort[] olaPortList = mapper.readValue(response.getEntity().getContent(), OlaPort[].class);
+
+		// Search for any non-default ports (e.g. a connected DMX USB device)
+		for (OlaPort olaPort : olaPortList) {
+			if (olaPort.isOutput() && !isStandardDevice(olaPort.getDevice())) {
+				return olaPort.getId();
 			}
 		}
 
 		return null;
 	}
 
-	private void createUniverse(int universeId, String name, String portId) throws ClientProtocolException, IOException {
+	private void createUniverse(int universeId, String name, String portId)
+			throws ClientProtocolException, IOException {
+
+		logger.debug("Adding new universe with port '" + portId + "'...");
+
 		HttpClient httpClient;
 
 		RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(5000).build();
 		httpClient = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
 
-		HttpPost httpPost = new HttpPost("http://localhost:9090/new_universe");
-		
+		HttpPost httpPost = new HttpPost(OLA_URL + "new_universe");
+
 		List<NameValuePair> data = new ArrayList<NameValuePair>(3);
-		
+
 		data.add(new BasicNameValuePair("id", String.valueOf(universeId)));
 		data.add(new BasicNameValuePair("name", name));
 		data.add(new BasicNameValuePair("add_ports", portId));
-		
+
 		httpPost.setEntity(new UrlEncodedFormEntity(data, "UTF-8"));
 		httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded");
-		
+
 		HttpResponse response = httpClient.execute(httpPost);
 
 		// Read the response. The POST connection will not be released otherwise
-		BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
 		String line = "";
 
-		while ((line = rd.readLine()) != null) {
+		while ((line = bufferedReader.readLine()) != null) {
 			logger.debug("Response from OLA POST: " + line);
 		}
 	}
@@ -203,35 +206,36 @@ public class DmxManager {
 			return;
 		}
 
-		logger.debug("Initializing DMX universe on OLA...");
-
 		UniverseInfoReply universeInfoReply = olaClient.getUniverseList();
 
 		if (universeInfoReply != null) {
 			if (universeInfoReply.getUniverseCount() > 0) {
-				// The default universe is already initialized
+				// At least one universe is already initialized
 				return;
 			}
 		}
 
-		DeviceInfoReply deviceInfoReply = olaClient.getDeviceInfo();
+		logger.debug("Initializing DMX universe on OLA...");
 
-		if (deviceInfoReply == null) {
-			// Device info could not be retreived
-			return;
+		String portId = null;
+
+		try {
+			portId = getConnectedPort();
+		} catch (Exception e) {
+			logger.error("Could not get a output port", e);
 		}
 
-		DeviceInfo deviceInfo = getConnectedDmxDevice(deviceInfoReply);
-
-		if (deviceInfo == null) {
-			// No connected DMX device found
+		if (portId == null || portId.length() == 0) {
+			// No connected DMX device-port found
+			logger.trace("No connected DMX output device found");
 			return;
 		}
 
 		// Create a new universe with the found device
 		try {
-			// Create the port with the device-id, "O" for output and the port ID
-			createUniverse(1, "Standard", deviceInfo.getDeviceId() + "-O-" + deviceInfo.getOutputPort(0).getPortId());
+			// Create the port with the device-id, "O" for output and the port
+			// ID
+			createUniverse(1, "Standard", portId);
 		} catch (Exception e) {
 			logger.error("Could not create a new universe on OLA", e);
 		}
@@ -243,11 +247,6 @@ public class DmxManager {
 		if (sendUniverseTimer != null) {
 			sendUniverseTimer.cancel();
 			sendUniverseTimer = null;
-		}
-
-		if (initializeUniverseTimer != null) {
-			initializeUniverseTimer.cancel();
-			initializeUniverseTimer = null;
 		}
 	}
 

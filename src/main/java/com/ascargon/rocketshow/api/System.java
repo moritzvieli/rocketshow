@@ -11,9 +11,9 @@ import javax.ws.rs.core.Response;
 
 import com.ascargon.rocketshow.Manager;
 import com.ascargon.rocketshow.Settings;
-import com.ascargon.rocketshow.VersionInfo;
 import com.ascargon.rocketshow.util.FactoryReset;
 import com.ascargon.rocketshow.util.LogDownload;
+import com.ascargon.rocketshow.util.VersionInfo;
 
 @Path("/system")
 public class System {

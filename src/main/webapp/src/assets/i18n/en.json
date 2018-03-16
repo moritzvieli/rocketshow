@@ -111,6 +111,7 @@
         "video": "Video",
         "dmx": "DMX (light)",
         "advanced": "Advanced",
+        "info": "Information",
         "language": "Language",
         "warning-reboot": "Do you really want to reboot the device?",
         "factory-reset": "Reset to factory defaults",

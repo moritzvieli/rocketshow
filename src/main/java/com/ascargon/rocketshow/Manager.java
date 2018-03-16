@@ -32,6 +32,7 @@ import com.ascargon.rocketshow.midi.MidiUtil;
 import com.ascargon.rocketshow.midi.MidiUtil.MidiDirection;
 import com.ascargon.rocketshow.util.ResetUsb;
 import com.ascargon.rocketshow.util.ShellManager;
+import com.ascargon.rocketshow.util.Updater;
 
 public class Manager {
 
@@ -117,7 +118,7 @@ public class Manager {
 		midiOutDevice = MidiUtil.getHardwareMidiDevice(midiDevice, MidiDirection.OUT);
 
 		if (midiOutDevice == null) {
-			logger.trace("MIDI output device not found. Try again in 5 seconds.");
+			logger.trace("MIDI output device not found. Try again in 10 seconds.");
 
 			TimerTask timerTask = new TimerTask() {
 				@Override
@@ -131,7 +132,7 @@ public class Manager {
 			};
 
 			connectMidiOutDeviceTimer = new Timer();
-			connectMidiOutDeviceTimer.schedule(timerTask, 5000);
+			connectMidiOutDeviceTimer.schedule(timerTask, 10000);
 
 			return;
 		}
@@ -345,15 +346,15 @@ public class Manager {
 
 	private void restoreSession() throws Exception {
 		File file = new File(BASE_PATH + "session");
-		
+
 		if (file.exists()) {
 			// We already have a session -> restore it from the file
 			try {
 				JAXBContext jaxbContext = JAXBContext.newInstance(Session.class);
-	
+
 				Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 				session = (Session) jaxbUnmarshaller.unmarshal(file);
-	
+
 				logger.info("Session restored");
 			} catch (JAXBException e) {
 				e.printStackTrace();
@@ -389,7 +390,7 @@ public class Manager {
 
 		// Read the current composition file
 		if (currentSet == null) {
-			// We have no set. Simply read the first composition, if available			
+			// We have no set. Simply read the first composition, if available
 			logger.debug("Try setting a default composition...");
 
 			List<Composition> compositions = compositionManager.getAllCompositions();

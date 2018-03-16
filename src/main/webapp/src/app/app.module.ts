@@ -55,6 +55,7 @@ import { InfoDialogComponent } from './info-dialog/info-dialog.component';
 import { RemoteDeviceSelectionComponent } from './remote-device-selection/remote-device-selection.component';
 import { MidiRoutingComponent } from './midi-routing/midi-routing.component';
 import { MidiMappingComponent } from './midi-mapping/midi-mapping.component';
+import { SettingsInfoComponent } from './settings/settings-info/settings-info.component';
 
 const appRoutes: Routes = [
   { path: 'intro', component: IntroComponent },
@@ -99,6 +100,7 @@ const DROPZONE_CONFIG: DropzoneConfigInterface = {
     SettingsDmxComponent,
     MidiRoutingComponent,
     MidiMappingComponent,
+    SettingsInfoComponent,
   ],
   imports: [
     HttpModule,

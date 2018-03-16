@@ -1,4 +1,4 @@
-package com.ascargon.rocketshow;
+package com.ascargon.rocketshow.util;
 
 import java.util.Date;
 import java.util.List;

@@ -15,9 +15,11 @@ adduser \
   --shell /bin/bash \
   --gecos 'Rocket Show' \
   --group \
-  --disabled-password \
   --home /home/rocketshow \
   rocketshow
+
+# Set the password
+echo rocketshow:thisrocks | chpasswd
 
 # Add the user to the required groups
 usermod -a -G video rocketshow
@@ -29,6 +31,9 @@ insert="rocketshow      ALL=(ALL) NOPASSWD: ALL"
 file="/etc/sudoers"
 
 sed -i "s/root\sALL=(ALL:ALL) ALL/root    ALL=(ALL:ALL) ALL\n$insert/" $file
+
+# Lock the user pi
+passwd --lock pi
 
 # Set the required config files to writeable for the rocketshow user
 # chmod 777 /boot/config.txt -> Does not work
@@ -54,9 +59,7 @@ mkdir -p compositions
 mkdir -p tomcat
 mkdir -p update
 
-# Set the user rocketshow as owner and add execution permissions
-# on the update script
-chown -R rocketshow:rocketshow /opt/rocketshow
+# Add execution permissions on the update script
 chmod +x /opt/rocketshow/update.sh
 
 # Install Tomcat (credits to https://wolfpaulus.com/java/tomcat-jessie/)
@@ -143,6 +146,10 @@ cd /opt/rocketshow/tomcat/webapps
 wget -O ROOT.war https://www.rocketshow.net/update/current.war
 cd /opt/rocketshow
 wget https://www.rocketshow.net/update/currentversion.xml
+
+# Set the user rocketshow as owner and add execution permissions
+# on the update script
+chown -R rocketshow:rocketshow /opt/rocketshow
 
 # Keep the whole directory in its current state for the factory reset
 cd /opt

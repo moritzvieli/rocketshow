@@ -16,10 +16,14 @@
   </div>
 </div>
 
-
 <!-- Navigation -->
 <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light" *ngIf="loaded && !isIntro">
-  <a class="navbar-brand" href="#" routerLink="/">{{ settings.deviceName }} - Rocket Show</a>
+  <a class="navbar-brand d-flex" href="#" routerLink="/">
+    <img class="my-auto d-none d-sm-block" src="assets/img/logo.png" height="30px" style="margin-right: 0px;">
+    <span class="my-auto d-none d-sm-block">&nbsp;|&nbsp;</span>
+    <span class="my-auto">{{ settings.deviceName }}</span>
+  </a>
+
   <button class="navbar-toggler navbar-toggler-left" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>

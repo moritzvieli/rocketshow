@@ -3,9 +3,9 @@ package com.ascargon.rocketshow.api;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.ascargon.rocketshow.Updater.UpdateState;
 import com.ascargon.rocketshow.composition.Composition.PlayState;
 import com.ascargon.rocketshow.midi.MidiSignal;
+import com.ascargon.rocketshow.util.Updater.UpdateState;
 
 @XmlRootElement
 public class State {
