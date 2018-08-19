@@ -1,6 +1,9 @@
 package com.ascargon.rocketshow.util;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 import org.apache.log4j.Logger;
 
@@ -19,7 +22,17 @@ public class LogDownload {
 	
 	public static File getLogsFile() throws Exception {
 		// Prepare the log directory for download
-		ShellManager shellManager = new ShellManager(new String[] { "sudo", "zip", "-r", "-j", Manager.BASE_PATH + LOGS_FILE_NAME, Manager.BASE_PATH + "log/*" });
+		ShellManager shellManager = new ShellManager(new String[] { "bash", "-c", "zip -r -j " + Manager.BASE_PATH + LOGS_FILE_NAME + " " + Manager.BASE_PATH + "log/*" });
+		
+		BufferedReader reader = new BufferedReader(new InputStreamReader(shellManager.getInputStream()));
+		String line = null;
+		try {
+			while ((line = reader.readLine()) != null) {
+				logger.debug("Output from log prepare process: " + line);
+			}
+		} catch (IOException e) {
+			logger.error("Could not read log prepare process output", e);
+		}
 		
 		shellManager.getProcess().waitFor();
 		
