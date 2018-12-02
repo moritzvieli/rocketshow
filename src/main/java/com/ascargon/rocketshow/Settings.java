@@ -92,6 +92,8 @@ public class Settings {
 
 	private boolean enableRaspberryGpio;
 
+    private int raspberryGpioDebounceMillis = 500;
+
 	public Settings() {
 		// Initialize default settings
 
@@ -623,5 +625,13 @@ public class Settings {
 	public void setEnableRaspberryGpio(boolean enableRaspberryGpio) {
 		this.enableRaspberryGpio = enableRaspberryGpio;
 	}
+
+    public int getRaspberryGpioDebounceMillis() {
+        return raspberryGpioDebounceMillis;
+    }
+
+    public void setRaspberryGpioDebounceMillis(int raspberryGpioDebounceMillis) {
+        this.raspberryGpioDebounceMillis = raspberryGpioDebounceMillis;
+    }
 
 }

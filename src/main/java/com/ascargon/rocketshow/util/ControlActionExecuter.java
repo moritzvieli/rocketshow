@@ -65,7 +65,7 @@ public class ControlActionExecuter {
 
 	private void executeActionLocally(ControlAction controlAction) throws Exception {
 		// Execute the action locally
-		logger.info("Execute action from MIDI event");
+		logger.info("Execute action from control event");
 
 		switch (controlAction.getAction()) {
 		case PLAY:
