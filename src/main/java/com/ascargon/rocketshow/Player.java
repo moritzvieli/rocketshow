@@ -63,6 +63,8 @@ public class Player {
         standbyCompositions.add("standby3");
         standbyCompositions.add("standby4");
         standbyCompositions.add("standby5");
+        standbyCompositions.add("standby6");
+        standbyCompositions.add("standby7");
 
         try {
             playAsSample(standbyCompositions.get(rand.nextInt(standbyCompositions.size())));
