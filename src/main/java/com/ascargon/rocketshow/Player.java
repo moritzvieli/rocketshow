@@ -18,7 +18,8 @@ public class Player {
 
     private Composition standbyComposition;
     private Timer standbyTimer;
-    private final int standbyWaitMillis = 20000;
+    private final int standbyWaitMillisMin = 30000;
+    private final int standbyWaitMillisMax = 60000;
 
     public Player(Manager manager) {
         this.manager = manager;
@@ -34,22 +35,25 @@ public class Player {
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-                try {
-                    playStandbyComposition();
-                } catch (Exception e) {
-                    logger.error("Could not send the DMX universe", e);
-                }
-
                 if (standbyTimer != null) {
                     standbyTimer.cancel();
                 }
 
                 standbyTimer = null;
+
+                try {
+                    playStandbyComposition();
+                } catch (Exception e) {
+                    logger.error("Could not send the DMX universe", e);
+                }
             }
         };
 
         standbyTimer = new Timer();
-        standbyTimer.schedule(timerTask, standbyWaitMillis);
+
+        Random random = new Random();
+
+        standbyTimer.schedule(timerTask, random.nextInt(standbyWaitMillisMax - standbyWaitMillisMin) + standbyWaitMillisMin);
     }
 
     private void playStandbyComposition() {
