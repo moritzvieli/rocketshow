@@ -2,9 +2,12 @@ package com.ascargon.rocketshow.raspberry;
 
 import com.ascargon.rocketshow.Manager;
 import com.pi4j.io.gpio.*;
+import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import org.apache.log4j.Logger;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class RaspberryGpioControlActionExecuter {
 
@@ -34,39 +37,63 @@ public class RaspberryGpioControlActionExecuter {
 
             button.setDebounce(manager.getSettings().getRaspberryGpioDebounceMillis());
 
-            highCycles.put(button, 0);
 
-            raspberryGpioControl.setButton(button);
+//            RaspberryGpioControlButton raspberryGpioControlButton = new RaspberryGpioControlButton();
+//            raspberryGpioControlButton.setRaspberryGpioControl(raspberryGpioControl);
+//            raspberryGpioControlButton.setButton(button);
+//
+//            raspberryGpioControlButtonList.add(raspberryGpioControlButton);
+//
+//            highCycles.put(button, 0);
+//
+//            raspberryGpioControl.setButton(button);
+
+            GpioPinListenerDigital listener = event -> {
+                if (event.getState().isHigh()) {
+                    logger.debug("Input high from GPIO " + event.getPin() + " recognized");
+
+                    try {
+                        manager.getControlActionExecuter().execute(raspberryGpioControl);
+                    } catch (Exception e) {
+                        logger.error("Could not execute action from Raspberry GPIO", e);
+                    }
+                }
+            };
+
+            // Add the same listener for all pins, because a no-class-def found
+            // error will raise, when
+            // added
+            button.addListener(listener);
         }
 
         // Don't use the listener as recommended, because it will deliver random
         // ghost bounces on instable power networks. Also with correctly implemented
         // pull-down resistors against floating.
-        TimerTask timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                for (RaspberryGpioControl raspberryGpioControl : manager.getSettings().getRaspberryGpioControlList()) {
-                    if (raspberryGpioControl.getButton().getState() == PinState.HIGH) {
-                        raspberryGpioControl.setCyclesHigh(raspberryGpioControl.getCyclesHigh() + 1);
-
-                        if (raspberryGpioControl.getCyclesHigh() >= 3) {
-                            try {
-                                //logger.debug("PLAYING COMPOSITION FOR " + raspberryGpioControl.getPinId());
-                                manager.getControlActionExecuter().execute(raspberryGpioControl);
-                            } catch (Exception e) {
-                                logger.error("Could not execute action from Raspberry GPIO", e);
-                            }
-
-                            raspberryGpioControl.setCyclesHigh(0);
-                        }
-                    } else {
-                        raspberryGpioControl.setCyclesHigh(0);
-                    }
-                }
-            }
-        };
-
-        detectTimer.schedule(timerTask, 20, 20);
+//        TimerTask timerTask = new TimerTask() {
+//            @Override
+//            public void run() {
+//                for (RaspberryGpioControl raspberryGpioControl : manager.getSettings().getRaspberryGpioControlList()) {
+//                    if (raspberryGpioControl.getButton().getState() == PinState.HIGH) {
+//                        raspberryGpioControl.setCyclesHigh(raspberryGpioControl.getCyclesHigh() + 1);
+//
+//                        if (raspberryGpioControl.getCyclesHigh() >= 3) {
+//                            try {
+//                                //logger.debug("PLAYING COMPOSITION FOR " + raspberryGpioControl.getPinId());
+//                                manager.getControlActionExecuter().execute(raspberryGpioControl);
+//                            } catch (Exception e) {
+//                                logger.error("Could not execute action from Raspberry GPIO", e);
+//                            }
+//
+//                            raspberryGpioControl.setCyclesHigh(0);
+//                        }
+//                    } else {
+//                        raspberryGpioControl.setCyclesHigh(0);
+//                    }
+//                }
+//            }
+//        };
+//
+//        detectTimer.schedule(timerTask, 20, 20);
     }
 
     // RaspiPin.getPinByAddress does not work ("read error: no device found")
