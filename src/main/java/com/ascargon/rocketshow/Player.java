@@ -177,7 +177,7 @@ public class Player {
         // Don't allow more than a specified amount of samples to be played in
         // parallel because of performances reasons
         // TODO make the max parallel samples configurable
-        if (sampleCompositionList.size() >= 20) {
+        if (sampleCompositionList.size() >= 5) {
             logger.debug("Not playing composition '" + compositionName
                     + "' as sample, because too many samples are already playing");
 
