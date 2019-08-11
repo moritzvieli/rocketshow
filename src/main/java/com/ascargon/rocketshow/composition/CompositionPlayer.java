@@ -152,24 +152,6 @@ public class CompositionPlayer {
         return startChannelIndex;
     }
 
-    private float getChannelVolume(AudioBus audioBus, int outputChannelIndex, int inputChannelIndex) {
-        int startChannelIndex = getAudioBusStartChannel(audioBus);
-
-        if (outputChannelIndex < startChannelIndex) {
-            return 0;
-        }
-
-        if (inputChannelIndex >= audioBus.getChannels()) {
-            return 0;
-        }
-
-        if (inputChannelIndex == outputChannelIndex - startChannelIndex) {
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-
     private void createGstreamerPipeline(boolean hasAudioFile) {
         pipeline = new Pipeline();
         Bus bus = GstApi.GST_API.gst_element_get_bus(pipeline);
@@ -366,21 +348,26 @@ public class CompositionPlayer {
                     GValueAPI.GVALUE_API.g_value_init(mixMatrix, GstApi.GST_API.gst_value_array_get_type());
 
                     AudioBus audioBus = settingsService.getAudioBusFromName(audioCompositionFile.getOutputBus());
+                    int startChannelIndex = getAudioBusStartChannel(audioBus);
 
                     // Repeat for each output channel
-                    for (int j = 0; j < settingsService.getTotalAudioChannels(); j++) {
+                    for (int outputChannelIndex = 0; outputChannelIndex < settingsService.getTotalAudioChannels(); outputChannelIndex++) {
                         GValueAPI.GValue outputChannel = new GValueAPI.GValue();
                         GValueAPI.GVALUE_API.g_value_init(outputChannel, GstApi.GST_API.gst_value_array_get_type());
 
                         // Fill the channel with the input channels
-                        for (int k = 0; k < audioCompositionFile.getChannels(); k++) {
-                            GValueAPI.GValue inputChannel = new GValueAPI.GValue(GType.FLOAT);
+                        for (int inputChannelIndex = 0; inputChannelIndex < audioCompositionFile.getChannels(); inputChannelIndex++) {
+                            GValueAPI.GValue matrixCoefficient = new GValueAPI.GValue(GType.FLOAT);
 
-                            float channelVolume = getChannelVolume(audioBus, j, k);
-
-                            inputChannel.setValue(channelVolume);
-                            GstApi.GST_API.gst_value_array_append_value(outputChannel, inputChannel.getPointer());
-                            GValueAPI.GVALUE_API.g_value_unset(inputChannel);
+                            // Calculate and set input channel volume 
+                            float channelVolume = 0;
+                            if (outputChannelIndex == startChannelIndex + inputChannelIndex) {
+                                channelVolume = audioCompositionFile.getAudioVolume() * settingsService.getSettings().getAudioVolume();
+                            }
+                            matrixCoefficient.setValue(channelVolume);
+                            
+                            GstApi.GST_API.gst_value_array_append_value(outputChannel, matrixCoefficient.getPointer());
+                            GValueAPI.GVALUE_API.g_value_unset(matrixCoefficient);
                         }
 
                         GstApi.GST_API.gst_value_array_append_value(mixMatrix, outputChannel.getPointer());

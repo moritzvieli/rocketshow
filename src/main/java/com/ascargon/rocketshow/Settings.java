@@ -83,6 +83,7 @@ public class Settings {
     private Integer alsaPeriodSize;
     private Integer alsaBufferSize;
     private Integer alsaPeriodTime;
+    private float audioVolume = 1.0f;
     private List<AudioBus> audioBusList = new ArrayList<>();
 
     private Boolean wlanApEnable;
@@ -458,6 +459,10 @@ public class Settings {
     public Integer getAlsaBufferSize() {
         return alsaBufferSize;
     }
+
+    public float getAudioVolume() { return audioVolume; }
+
+    public void setAudioVolume(float audioVolume) { this.audioVolume = audioVolume; }
 
     @SuppressWarnings("unused")
     public void setAlsaBufferSize(Integer alsaBufferSize) {
