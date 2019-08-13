@@ -188,6 +188,10 @@ public class DefaultSettingsService implements SettingsService {
             settings.setLoggingLevel(Settings.LoggingLevel.INFO);
         }
 
+        if (settings.getAudioVolume() == null) {
+            settings.setAudioVolume(1.0f);
+        }
+
         if (OperatingSystemInformation.SubType.RASPBIAN.equals(operatingSystemInformationService.getOperatingSystemInformation().getSubType())) {
             // Raspbian-specific settings
 

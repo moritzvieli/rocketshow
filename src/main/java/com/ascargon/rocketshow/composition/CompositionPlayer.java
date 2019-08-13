@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.lang.Math;
 
 /**
  * Handle the playing of a single composition.
@@ -361,8 +362,11 @@ public class CompositionPlayer {
 
                             // Calculate and set input channel volume 
                             float channelVolume = 0;
-                            if (outputChannelIndex == startChannelIndex + inputChannelIndex) {
-                                channelVolume = audioCompositionFile.getAudioVolume() * settingsService.getSettings().getAudioVolume();
+
+                            if (inputChannelIndex < audioBus.getChannels()) {
+                                if (outputChannelIndex == startChannelIndex + inputChannelIndex) {
+                                    channelVolume = Math.max(audioCompositionFile.getAudioVolume() * settingsService.getSettings().getAudioVolume(), 1.0f);
+                                }
                             }
                             matrixCoefficient.setValue(channelVolume);
                             
