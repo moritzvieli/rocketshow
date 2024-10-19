@@ -13,6 +13,8 @@ Refer to [the docs](./docs/index.md) to find out how to use Rocket Show.
 
 ### Build
 
+Requires: Java 17, Node 18
+
 Warning: Delete `node_modules/@angular-devkit/build-optimizer/src/.cache` after each NPM package update to make sure,
 the devkit is not caching an old version (see https://github.com/angular/devkit/issues/913).
 
@@ -23,7 +25,9 @@ the devkit is not caching an old version (see https://github.com/angular/devkit/
 For frequent builds, you might want to comment out the frontend-maven-plugin in the POM and make use of the Maven
 parameter `-DskipTests`.
 
-To debug Gstreamer issues, export GST_DEBUG before starting the server:
+#### GStreamer
+
+To debug GStreamer issues, export GST_DEBUG before starting the server:
 
 ```shell
 export GST_DEBUG=3
@@ -38,10 +42,10 @@ gst-launch-1.0 uridecodebin uri=file:///opt/rocketshow/media/video/clouds.mp4 ! 
 
 While developing the web app, it might be convenient to start an Angular server:
 
-1. Start web frontend server: `cd src/main/webapp && npm install && npx ng serve`
+1. Start web frontend server: `cd src/main/webapp && npm install --force && echo "N" | npx ng serve`
 2. Open the web application: http://localhost:4200
 
-On the Mac, Gstreamer and OLA can be installed using Homebrew:
+On the Mac, GStreamer and OLA can be installed using Homebrew:
 
 ```shell
 brew install gstreamer
@@ -59,17 +63,27 @@ gst-launch-1.0 videotestsrc ! videoconvert ! osxvideosink
 gst-launch-1.0 uridecodebin uri=file:///opt/rocketshow/media/video/clouds.mp4 ! queue ! osxaudiosink
 ```
 
-Launch the OLA daemon on Mac:
+### Start
+
+Launch the OLA daemon on Mac (only required for lighting):
 
 ```shell
 olad
 ```
 
-Launch Rocket Show on the mac:
+Launch Rocket Show on the Mac (homebrew):
 
 ```shell
 ./start.sh
 ```
+
+In IntelliJ, you can use the RocketShowApplication launch configuration to start / debug the application.
+On command line use `mvn spring-boot:run` or mvnDebug.
+
+#### Minimal configuration
+
+- Before you can play any audio you have to configure the 'Audio device' in the 'Audio' settings.
+
 
 ## Deployment
 
@@ -204,7 +218,7 @@ currentversion2.xml" can be modified accordingly.
 
 The Rocket Show server is written in Java and uses Spring
 Boot ([https://spring.io/projects/spring-boot](https://spring.io/projects/spring-boot)).
-Gstreamer ([https://gstreamer.freedesktop.org/](https://gstreamer.freedesktop.org/)), a framework written in C, is
+GStreamer ([https://gstreamer.freedesktop.org/](https://gstreamer.freedesktop.org/)), a framework written in C, is
 included as multimedia playback backend.
 
 Spring services are autowired into each other (dependency injection). The interface is named XyService, the
@@ -234,9 +248,9 @@ Services related to audio playback.
 
 Handling the composition and the composition player.
 
-##### Gstreamer
+##### GStreamer
 
-Rocket Show specific calls to the native Gstreamer C api.
+Rocket Show specific calls to the native GStreamer C api.
 
 ##### Image
 
