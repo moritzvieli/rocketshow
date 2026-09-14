@@ -33,12 +33,12 @@ public class DefaultMidiDeviceInService implements MidiDeviceInService {
     private SerialPort midiSerialDevice;
     private final MidiInDeviceReceiver midiInDeviceReceiver;
 
-    public DefaultMidiDeviceInService(SettingsService settingsService, ActionMidiExecutionService actionMidiExecutionService, MidiService midiService, MidiRouterFactory midiRouterFactory) {
+    public DefaultMidiDeviceInService(SettingsService settingsService, ActionMidiExecutionService actionMidiExecutionService, MidiTimecodeSlaveService midiTimecodeSlaveService, MidiService midiService, MidiRouterFactory midiRouterFactory) {
         this.settingsService = settingsService;
         this.midiService = midiService;
 
         // Initialize the MIDI in device receiver to executeFromTrigger MIDI control actions
-        midiInDeviceReceiver = new MidiInDeviceReceiver(actionMidiExecutionService, settingsService, midiRouterFactory);
+        midiInDeviceReceiver = new MidiInDeviceReceiver(actionMidiExecutionService, midiTimecodeSlaveService, settingsService, midiRouterFactory);
 
         // Initialize the MIDI router
         midiRouter = midiRouterFactory.getMidiRouter(settingsService.getSettings().getDeviceInMidiRoutingList());
@@ -114,7 +114,7 @@ public class DefaultMidiDeviceInService implements MidiDeviceInService {
                                     try {
                                         Optional<MidiMessage> maybe = parser.offerByte(b);
                                         maybe.ifPresent(midiMessage -> {
-                                            logger.info("Received MIDI message over serial: {}", midiMessage.toString());
+                                            logger.trace("Received MIDI message over serial: {}", midiMessage.toString());
                                             midiInDeviceReceiver.send(midiMessage, -1);
                                         });
                                     } catch (InvalidMidiDataException e) {

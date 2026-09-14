@@ -10,6 +10,9 @@ import { Component, OnInit } from '@angular/core';
 import { WarningDialogService } from '../../services/warning-dialog.service';
 import { Composition } from '../../models/composition';
 import { ToastrService } from 'ngx-toastr';
+import { Settings } from '../../models/settings';
+import { SettingsService } from '../../services/settings.service';
+import { formatTimecode, parseTimecode } from '../../timecode';
 
 @Component({
     selector: 'app-editor-set',
@@ -37,6 +40,8 @@ export class EditorSetComponent implements OnInit {
   // The set, as it was when we loaded it
   initialSet: Set;
 
+  settings: Settings;
+
   constructor(
     private compositionService: CompositionService,
     private modalService: BsModalService,
@@ -44,10 +49,15 @@ export class EditorSetComponent implements OnInit {
     private pendingChangesDialogService: PendingChangesDialogService,
     private toastrService: ToastrService,
     private translateService: TranslateService,
+    private settingsService: SettingsService,
     private toastGeneralErrorService: ToastGeneralErrorService) {
   }
 
   ngOnInit() {
+    this.settingsService.getSettings().subscribe((settings: Settings) => {
+      this.settings = settings;
+    });
+
     this.loadSets();
     this.loadAvailableCompositions();
 
@@ -116,6 +126,10 @@ export class EditorSetComponent implements OnInit {
 
     this.currentSet = new Set(JSON.parse(setString));
     this.initialSet = new Set(JSON.parse(setString));
+
+    for (const composition of this.currentSet.compositionList) {
+      this.formatTimecodeStart(composition);
+    }
   }
 
   checkPendingChanges(): Observable<boolean> {
@@ -230,7 +244,48 @@ export class EditorSetComponent implements OnInit {
   }
 
   addComposition(composition: Composition) {
-    this.currentSet.compositionList.push(composition);
+    // Copy it: the set-specific settings (auto start, timecode start) belong to this entry, not to
+    // the composition itself or to another entry of the same composition
+    this.currentSet.compositionList.push(
+      Object.assign(new Composition(), composition, {
+        timecodeStartMillis: this.getNextTimecodeStartMillis(),
+      })
+    );
+
+    this.formatTimecodeStart(
+      this.currentSet.compositionList[this.currentSet.compositionList.length - 1]
+    );
+  }
+
+  // Default a newly added composition to start right after the previous one, which is the usual
+  // layout of a set on a continuous timecode
+  private getNextTimecodeStartMillis(): number {
+    const compositionList: Composition[] = this.currentSet.compositionList;
+
+    if (!compositionList.length) {
+      return 0;
+    }
+
+    const last: Composition = compositionList[compositionList.length - 1];
+
+    return (last.timecodeStartMillis || 0) + (last.durationMillis || 0);
+  }
+
+  showTimecodeStart(): boolean {
+    return (
+      this.settings?.midiTimecodeMode == 'SLAVE' &&
+      this.settings?.midiTimecodeSlaveMapping == 'SET'
+    );
+  }
+
+  onTimecodeStartChange(composition: Composition, value: string) {
+    // Keep what was typed as it was typed; it is only re-formatted once the field is left
+    composition.timecodeStartText = value;
+    composition.timecodeStartMillis = parseTimecode(value);
+  }
+
+  formatTimecodeStart(composition: Composition) {
+    composition.timecodeStartText = formatTimecode(composition.timecodeStartMillis);
   }
 
   removeComposition(composition: Composition) {

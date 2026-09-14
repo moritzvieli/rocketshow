@@ -63,6 +63,7 @@
   },
   "play": {
     "help": {
+      "midi-timecode-locked": "本设备正在跟随外部 MIDI 时间码，播放由外部主机控制。",
       "auto-select-next": "启用后，当前作品播放结束后会自动选择并播放下一个作品，便于免操作地播放整个集合。",
       "switch-to-grid": "切换到 Cue 网格视图，每个作品都是一个可直接触发的大按钮。",
       "switch-to-setlist": "切换到 setlist 列表视图，包含播放控制和可滚动的作品列表。",
@@ -70,7 +71,8 @@
       "activity-midi-out": "发送 MIDI 数据时闪烁。",
       "activity-audio": "显示当前各通道的音频输出电平。",
       "activity-lighting": "发送灯光数据时闪烁。"
-    }
+    },
+    "midi-timecode": "时间码"
   },
   "editor": {
     "compositions": "作品",
@@ -98,6 +100,7 @@
     "offset-millis": "延迟（毫秒）",
     "offset-placeholder": "延迟（毫秒）",
     "loop": "循环",
+    "timecode-start": "时间码起点",
     "routing": "MIDI输出",
     "add-routing": "添加输出",
     "edit-file": "编辑文件",
@@ -131,6 +134,7 @@
       "test-play": "试播此作品以进行预览。这不会影响\"开始\"页面上的现场演出。",
       "test-stop": "停止试播。",
       "loop": "启用后，此作品播放到结尾时会自动从头重新开始。",
+      "timecode-start": "本作品在收到的 MIDI 时间码上开始的位置，格式为 hh:mm:ss.mmm。仅在本设备跟随 MIDI 时间码时使用。",
       "audio-volume": "此作品中所有音频文件的总体播放音量。",
       "add-file": "作为此作品一部分播放的媒体文件（音频、视频或 MIDI）。",
       "add-action": "在作品中的指定位置触发动作，例如 MIDI、HTTP 或灯光。",
@@ -184,7 +188,9 @@
       "lighting-send-delay": "在此时间窗口内发生的灯光变化会在发送前合并为一次更新，从而减少网络和 DMX 流量。",
       "designer-frequency-hertz": "每秒重新计算并发送灯光输出的次数。数值越高越流畅，但占用更多处理性能。",
       "designer-live-preview": "在编辑时于设计器中显示灯光输出的实时预览，而不仅在播放时显示。",
-      "midi-timecode": "在播放过程中发送 MIDI 时间码（MTC），以便 DAW 或灯光控台等外部设备跟随当前位置。",
+      "midi-timecode": "在播放过程中发送 MIDI 时间码（MTC），以便 DAW 或灯光控台等外部设备跟随当前位置；或跟随 MIDI 输入收到的时间码，使本设备与外部主机同步播放。",
+      "midi-timecode-slave-mapping": "按作品：收到的时间码驱动当前选中的作品，从该作品所配置的时间码起点开始。按演出集：当前演出集中的每个作品在收到的时间码上各占一段区间，匹配的作品会被自动选中并启动。",
+      "midi-timecode-slave-offset": "补偿收到的时间码和音频输出的延迟。正值播放得更晚，负值播放得更早。",
       "device-in-midi-routing": "定义从已连接输入设备收到的 MIDI 发送到何处，例如发送到 MIDI 输出、灯光或远程设备。",
       "remote-midi-routing": "定义从远程 RocketShow 设备收到的 MIDI 发送到何处。",
       "global-midi-mapping": "在处理之前对传入的 MIDI 进行全局转换，例如移调通道或音符。",
@@ -257,7 +263,11 @@
     "midi-device-in": "MIDI输入",
     "midi-device-out": "MIDI输出",
     "midi-timecode": "MIDI时间码",
-    "midi-timecode-enable": "发送MIDI时间码",
+    "midi-timecode-mode-enum": {
+      "OFF": "关闭",
+      "MASTER": "发送（主机）",
+      "SLAVE": "跟随（从机）"
+    },
     "midi-timecode-frame-rate": "帧率",
     "midi-timecode-frame-rate-enum": {
       "FPS_24": "24帧/秒",
@@ -265,6 +275,13 @@
       "FPS_29_97_DROP": "29.97帧/秒丢帧",
       "FPS_30": "30帧/秒"
     },
+    "midi-timecode-slave-mapping": "时间码映射",
+    "midi-timecode-slave-mapping-enum": {
+      "COMPOSITION": "按作品",
+      "SET": "按演出集"
+    },
+    "midi-timecode-slave-offset": "时间码偏移（毫秒）",
+    "midi-timecode-slave-warning": "跟随外部时间码时，走带由主机控制：作品随时间码启动、停止和定位，循环、自动开始下一个作品以及发送时间码均不生效。灯光、MIDI 和动作会精确跟随主机。音频和视频由声卡与显示器定时，因此通过轻微调整播放速度来保持同步；偏差较大时会跳转定位，这会短暂可闻或可见。视频最多只能达到帧级精度，使用硬件 H.265 解码器的作品只能同步启动，之后无法再校正。请让主机预卷一小段时间，以便播放能够锁定。",
     "midi-control": "控制",
     "midi-control-type": "类型",
     "midi-control-add": "添加控制",

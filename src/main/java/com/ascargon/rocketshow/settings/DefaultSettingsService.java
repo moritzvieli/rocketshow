@@ -31,7 +31,7 @@ public class DefaultSettingsService implements SettingsService {
 
     private final static Logger logger = LoggerFactory.getLogger(Settings.class);
 
-    private final int CURRENT_SETTINGS_VERSION = 2;
+    private final int CURRENT_SETTINGS_VERSION = 4;
     private String directory;
     private final String FILE_NAME = "settings";
 
@@ -155,12 +155,20 @@ public class DefaultSettingsService implements SettingsService {
             }
         }
 
-        if (settings.getMidiTimecodeEnabled() == null) {
-            settings.setMidiTimecodeEnabled(false);
+        if (settings.getMidiTimecodeMode() == null) {
+            settings.setMidiTimecodeMode(MidiTimecodeMode.OFF);
         }
 
         if (settings.getMidiTimecodeFrameRate() == null) {
             settings.setMidiTimecodeFrameRate(MidiTimecodeFrameRate.FPS_30);
+        }
+
+        if (settings.getMidiTimecodeSlaveMapping() == null) {
+            settings.setMidiTimecodeSlaveMapping(MidiTimecodeSlaveMapping.COMPOSITION);
+        }
+
+        if (settings.getMidiTimecodeSlaveOffsetMillis() == null) {
+            settings.setMidiTimecodeSlaveOffsetMillis(0);
         }
 
         // Add the default audio bus
@@ -526,6 +534,17 @@ public class DefaultSettingsService implements SettingsService {
         settings.setVersion(3);
     }
 
+    private void migrateToVersion4() {
+        // MIDI timecode is no longer a simple on/off switch, because a device can now also follow an
+        // incoming timecode. A device that used to send timecode becomes a timecode master.
+        settings.setMidiTimecodeMode(Boolean.TRUE.equals(settings.getMidiTimecodeEnabled())
+                ? MidiTimecodeMode.MASTER
+                : MidiTimecodeMode.OFF);
+        settings.setMidiTimecodeEnabled(null);
+
+        settings.setVersion(4);
+    }
+
     public void migrateFromOldSettings() throws JAXBException {
         boolean migrated = false;
 
@@ -538,6 +557,12 @@ public class DefaultSettingsService implements SettingsService {
         if (settings.getVersion() == 2) {
             // Migrate from version 2
             this.migrateToVersion3();
+            migrated = true;
+        }
+
+        if (settings.getVersion() == 3) {
+            // Migrate from version 3
+            this.migrateToVersion4();
             migrated = true;
         }
 

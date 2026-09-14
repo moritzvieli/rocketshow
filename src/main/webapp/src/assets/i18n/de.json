@@ -63,6 +63,7 @@
   },
   "play": {
     "help": {
+      "midi-timecode-locked": "Dieses Gerät folgt einem eingehenden MIDI-Timecode; der externe Master steuert die Wiedergabe.",
       "auto-select-next": "Wenn aktiviert, wird die nächste Komposition automatisch ausgewählt und abgespielt, sobald die aktuelle endet – praktisch, um ein ganzes Set freihändig durchzuspielen.",
       "switch-to-grid": "Wechsle zum Cue-Raster, in dem jede Komposition eine grosse Schaltfläche ist, die du direkt auslösen kannst.",
       "switch-to-setlist": "Wechsle zur Setlisten-Ansicht mit Transportsteuerung und scrollbarer Kompositionsliste.",
@@ -70,7 +71,8 @@
       "activity-midi-out": "Blinkt, wenn MIDI-Daten gesendet werden.",
       "activity-audio": "Zeigt den aktuellen Audio-Ausgangspegel pro Kanal.",
       "activity-lighting": "Blinkt, wenn Licht-Daten gesendet werden."
-    }
+    },
+    "midi-timecode": "Timecode"
   },
   "editor": {
     "compositions": "Kompositionen",
@@ -98,6 +100,7 @@
     "offset-millis": "Verzögerung in Millisekunden",
     "offset-placeholder": "Verzögerung in Millisekunden",
     "loop": "Wiederholen",
+    "timecode-start": "Timecode-Start",
     "routing": "MIDI Ausgabe",
     "add-routing": "Ausgabe hinzufügen",
     "edit-file": "Datei bearbeiten",
@@ -131,6 +134,7 @@
       "test-play": "Spiele diese Komposition zum Vorhören ab. Dies hat keinen Einfluss auf die laufende Show auf der Seite „Start“.",
       "test-stop": "Stoppt die Testwiedergabe.",
       "loop": "Wenn aktiviert, beginnt diese Komposition automatisch wieder von vorne, sobald sie das Ende erreicht.",
+      "timecode-start": "Die Position des eingehenden MIDI-Timecodes, an der diese Komposition beginnt, als hh:mm:ss.mmm. Wird nur verwendet, solange dieses Gerät einem MIDI-Timecode folgt.",
       "audio-volume": "Gesamtlautstärke für alle Audiodateien in dieser Komposition.",
       "add-file": "Eine Mediendatei (Audio, Video oder MIDI), die als Teil dieser Komposition abgespielt wird.",
       "add-action": "Löse eine Aktion aus – zum Beispiel MIDI, HTTP oder Licht – an einer bestimmten Position innerhalb der Komposition.",
@@ -184,7 +188,9 @@
       "lighting-send-delay": "Lichtänderungen, die innerhalb dieses Zeitfensters auftreten, werden vor dem Senden zu einer einzigen Aktualisierung zusammengefasst, was Netzwerk- und DMX-Last reduziert.",
       "designer-frequency-hertz": "Wie oft pro Sekunde die Lichtausgabe neu berechnet und gesendet wird. Höhere Werte sind flüssiger, benötigen aber mehr Rechenleistung.",
       "designer-live-preview": "Zeigt im Designer während des Bearbeitens eine Live-Vorschau der Lichtausgabe an, statt nur während der Wiedergabe.",
-      "midi-timecode": "Sendet während der Wiedergabe MIDI-Timecode (MTC), damit externe Geräte wie eine DAW oder ein Lichtpult der aktuellen Position folgen können.",
+      "midi-timecode": "Sendet während der Wiedergabe MIDI-Timecode (MTC), damit externe Geräte wie eine DAW oder ein Lichtpult der aktuellen Position folgen können, oder folgt einem am MIDI-Eingang empfangenen Timecode, damit dieses Gerät synchron zu einem externen Master läuft.",
+      "midi-timecode-slave-mapping": "Pro Komposition: Der eingehende Timecode steuert die ausgewählte Komposition, beginnend beim Timecode-Start, der bei ihr konfiguriert ist. Pro Set: Jede Komposition des aktuellen Sets belegt einen eigenen Bereich auf dem eingehenden Timecode, und die passende Komposition wird automatisch ausgewählt und gestartet.",
+      "midi-timecode-slave-offset": "Gleicht die Latenz des eingehenden Timecodes und der Audioausgabe aus. Ein positiver Wert spielt später, ein negativer Wert früher.",
       "device-in-midi-routing": "Legt fest, wohin von angeschlossenen Eingabegeräten empfangenes MIDI gesendet wird, zum Beispiel an den MIDI-Ausgang, das Licht oder Remote-Geräte.",
       "remote-midi-routing": "Legt fest, wohin von Remote-RocketShow-Geräten empfangenes MIDI gesendet wird.",
       "global-midi-mapping": "Transformiert eingehendes MIDI global – zum Beispiel durch Verschieben von Kanälen oder Noten –, bevor es verarbeitet wird.",
@@ -257,7 +263,11 @@
     "midi-device-in": "Eingang",
     "midi-device-out": "Ausgang",
     "midi-timecode": "MIDI Timecode",
-    "midi-timecode-enable": "MIDI Timecode senden",
+    "midi-timecode-mode-enum": {
+      "OFF": "Aus",
+      "MASTER": "Senden (Master)",
+      "SLAVE": "Folgen (Slave)"
+    },
     "midi-timecode-frame-rate": "Framerate",
     "midi-timecode-frame-rate-enum": {
       "FPS_24": "24 fps",
@@ -265,6 +275,13 @@
       "FPS_29_97_DROP": "29.97 fps Drop-Frame",
       "FPS_30": "30 fps"
     },
+    "midi-timecode-slave-mapping": "Timecode-Zuordnung",
+    "midi-timecode-slave-mapping-enum": {
+      "COMPOSITION": "Pro Komposition",
+      "SET": "Pro Set"
+    },
+    "midi-timecode-slave-offset": "Timecode-Versatz (ms)",
+    "midi-timecode-slave-warning": "Solange einem eingehenden Timecode gefolgt wird, steuert der Master die Wiedergabe: Kompositionen starten, stoppen und springen mit dem Timecode, und Wiederholen, das automatische Starten der nächsten Komposition sowie das Senden von Timecode werden nicht verwendet. Licht, MIDI und Aktionen folgen dem Master exakt. Audio und Video werden von der Soundkarte und vom Bildschirm getaktet und deshalb synchron gehalten, indem die Wiedergabegeschwindigkeit leicht angepasst und bei grösseren Abweichungen gesprungen wird, was kurz hör- oder sichtbar ist. Video ist bestenfalls frame-genau, und eine Komposition mit dem Hardware-H.265-Decoder kann nur synchron gestartet, aber nicht nachträglich korrigiert werden. Gib dem Master einen kurzen Vorlauf, damit sich die Wiedergabe einrasten kann.",
     "midi-control": "Steuerung",
     "midi-control-type": "Art",
     "midi-control-add": "Steuerung hinzufügen",

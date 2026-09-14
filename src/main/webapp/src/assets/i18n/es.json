@@ -63,6 +63,7 @@
   },
   "play": {
     "help": {
+      "midi-timecode-locked": "Este dispositivo está siguiendo un código de tiempo MIDI entrante; el maestro externo controla la reproducción.",
       "auto-select-next": "Cuando está activado, la siguiente composición se selecciona y se reproduce automáticamente en cuanto termina la actual, ideal para reproducir un set completo sin intervención.",
       "switch-to-grid": "Cambia a la cuadrícula de cues, donde cada composición es un botón grande que puedes activar directamente.",
       "switch-to-setlist": "Cambia a la vista de setlist con los controles de reproducción y una lista desplazable de composiciones.",
@@ -70,7 +71,8 @@
       "activity-midi-out": "Parpadea cuando se envían datos MIDI.",
       "activity-audio": "Muestra el nivel de salida de audio actual por canal.",
       "activity-lighting": "Parpadea cuando se envían datos de iluminación."
-    }
+    },
+    "midi-timecode": "Código de tiempo"
   },
   "editor": {
     "compositions": "Composiciones",
@@ -98,6 +100,7 @@
     "offset-millis": "Retraso en milisegundos",
     "offset-placeholder": "Retraso en milisegundos",
     "loop": "Repetir",
+    "timecode-start": "Inicio del código de tiempo",
     "routing": "Salida MIDI",
     "add-routing": "Agregar salida",
     "edit-file": "Editar archivo",
@@ -131,6 +134,7 @@
       "test-play": "Reproduce esta composición como prueba para previsualizarla. Esto no afecta al espectáculo en directo de la página \"Inicio\".",
       "test-stop": "Detiene la reproducción de prueba.",
       "loop": "Cuando está activado, esta composición vuelve a empezar automáticamente desde el principio al llegar al final.",
+      "timecode-start": "La posición del código de tiempo MIDI entrante en la que empieza esta composición, como hh:mm:ss.mmm. Solo se utiliza mientras este dispositivo sigue un código de tiempo MIDI.",
       "audio-volume": "Volumen de reproducción general de todos los archivos de audio de esta composición.",
       "add-file": "Un archivo multimedia (audio, vídeo o MIDI) que se reproduce como parte de esta composición.",
       "add-action": "Activa una acción, como MIDI, HTTP o iluminación, en una posición determinada dentro de la composición.",
@@ -184,7 +188,9 @@
       "lighting-send-delay": "Los cambios de iluminación que se producen dentro de esta ventana de tiempo se agrupan en una única actualización antes de enviarse, lo que reduce el tráfico de red y DMX.",
       "designer-frequency-hertz": "Cuántas veces por segundo se recalcula y envía la salida de iluminación. Los valores más altos son más fluidos, pero consumen más potencia de procesamiento.",
       "designer-live-preview": "Muestra una vista previa en vivo de la salida de iluminación en el Diseñador mientras editas, en lugar de solo durante la reproducción.",
-      "midi-timecode": "Envía código de tiempo MIDI (MTC) durante la reproducción para que dispositivos externos, como una DAW o una mesa de luces, puedan seguir la posición actual.",
+      "midi-timecode": "Envía código de tiempo MIDI (MTC) durante la reproducción para que dispositivos externos, como una DAW o una mesa de luces, puedan seguir la posición actual, o sigue un código de tiempo recibido en la entrada MIDI para que este dispositivo reproduzca sincronizado con un maestro externo.",
+      "midi-timecode-slave-mapping": "Por composición: el código de tiempo entrante controla la composición seleccionada, empezando en el inicio de código de tiempo configurado en ella. Por set: cada composición del set actual ocupa su propia ventana en el código de tiempo entrante, y la composición correspondiente se selecciona e inicia automáticamente.",
+      "midi-timecode-slave-offset": "Compensa la latencia del código de tiempo entrante y de la salida de audio. Un valor positivo reproduce más tarde, uno negativo más pronto.",
       "device-in-midi-routing": "Define a dónde se envía el MIDI recibido de los dispositivos de entrada conectados, por ejemplo a la salida MIDI, la iluminación o dispositivos remotos.",
       "remote-midi-routing": "Define a dónde se envía el MIDI recibido de dispositivos RocketShow remotos.",
       "global-midi-mapping": "Transforma el MIDI entrante de forma global —por ejemplo, desplazando canales o notas— antes de procesarlo.",
@@ -257,7 +263,11 @@
     "midi-device-in": "Entrada MIDI",
     "midi-device-out": "Salida MIDI",
     "midi-timecode": "Código de tiempo MIDI",
-    "midi-timecode-enable": "Enviar código de tiempo MIDI",
+    "midi-timecode-mode-enum": {
+      "OFF": "Desactivado",
+      "MASTER": "Enviar (maestro)",
+      "SLAVE": "Seguir (esclavo)"
+    },
     "midi-timecode-frame-rate": "Velocidad de fotogramas",
     "midi-timecode-frame-rate-enum": {
       "FPS_24": "24 fps",
@@ -265,6 +275,13 @@
       "FPS_29_97_DROP": "29.97 fps drop-frame",
       "FPS_30": "30 fps"
     },
+    "midi-timecode-slave-mapping": "Asignación del código de tiempo",
+    "midi-timecode-slave-mapping-enum": {
+      "COMPOSITION": "Por composición",
+      "SET": "Por set"
+    },
+    "midi-timecode-slave-offset": "Desfase del código de tiempo (ms)",
+    "midi-timecode-slave-warning": "Mientras se sigue un código de tiempo entrante, el maestro controla la reproducción: las composiciones se inician, se detienen y se posicionan con el código de tiempo, y la repetición, el inicio automático de la siguiente composición y el envío de código de tiempo no se utilizan. La iluminación, el MIDI y las acciones siguen al maestro con exactitud. El audio y el vídeo están sincronizados por la tarjeta de sonido y por la pantalla, por lo que se mantienen en sincronía ajustando ligeramente la velocidad de reproducción y, ante desviaciones mayores, saltando de posición, lo que se oye o se ve brevemente. El vídeo es, como mucho, preciso al fotograma, y una composición que utilice el decodificador H.265 por hardware solo puede iniciarse sincronizada, sin corrección posterior. Deja un breve pre-roll en el maestro para que la reproducción pueda engancharse.",
     "midi-control": "Control",
     "midi-control-type": "Tipo",
     "midi-control-add": "Agregar control",

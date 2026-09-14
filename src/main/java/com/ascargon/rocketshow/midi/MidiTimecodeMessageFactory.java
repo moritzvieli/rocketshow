@@ -16,7 +16,7 @@ class MidiTimecodeMessageFactory {
     }
 
     static ShortMessage createQuarterFrameMessage(long positionMillis, MidiTimecodeFrameRate frameRate, int messageType) throws InvalidMidiDataException {
-        TimecodePosition position = getTimecodePosition(positionMillis, frameRate, 2);
+        MidiTimecodePosition position = getTimecodePosition(positionMillis, frameRate, 2);
 
         int value = switch (messageType) {
             case 0 -> position.frame() & 0x0F;
@@ -36,7 +36,7 @@ class MidiTimecodeMessageFactory {
     }
 
     static SysexMessage createFullFrameMessage(long positionMillis, MidiTimecodeFrameRate frameRate) throws InvalidMidiDataException {
-        TimecodePosition position = getTimecodePosition(positionMillis, frameRate, 0);
+        MidiTimecodePosition position = getTimecodePosition(positionMillis, frameRate, 0);
         byte[] data = new byte[]{
                 (byte) SysexMessage.SYSTEM_EXCLUSIVE,
                 (byte) FULL_FRAME_UNIVERSAL_REALTIME_SYSEX,
@@ -55,7 +55,7 @@ class MidiTimecodeMessageFactory {
         return message;
     }
 
-    private static TimecodePosition getTimecodePosition(long positionMillis, MidiTimecodeFrameRate frameRate, int frameOffset) {
+    private static MidiTimecodePosition getTimecodePosition(long positionMillis, MidiTimecodeFrameRate frameRate, int frameOffset) {
         long frameNumber = Math.max(0, Math.round(positionMillis * frameRate.getFramesPerSecond() / 1000.0)) + frameOffset;
 
         if (frameRate.isDropFrame()) {
@@ -69,7 +69,7 @@ class MidiTimecodeMessageFactory {
         int minute = (int) ((totalSeconds / 60) % 60);
         int hour = (int) ((totalSeconds / 3600) % 24);
 
-        return new TimecodePosition(hour, minute, second, frame);
+        return new MidiTimecodePosition(hour, minute, second, frame);
     }
 
     private static long convertToDropFrameNumber(long frameNumber) {
@@ -88,8 +88,5 @@ class MidiTimecodeMessageFactory {
         }
 
         return frameNumber + droppedFrames;
-    }
-
-    private record TimecodePosition(int hour, int minute, int second, int frame) {
     }
 }

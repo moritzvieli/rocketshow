@@ -17,8 +17,10 @@ export class Settings {
   version: number;
   midiInDevice: MidiDevice;
   midiOutDevice: MidiDevice;
-  midiTimecodeEnabled: boolean;
+  midiTimecodeMode: string;
   midiTimecodeFrameRate: string;
+  midiTimecodeSlaveMapping: string;
+  midiTimecodeSlaveOffsetMillis: number;
   remoteDeviceList: RemoteDevice[];
   deviceInMidiRoutingList: MidiRouting[];
   remoteMidiRoutingList: MidiRouting[];
@@ -81,8 +83,10 @@ export class Settings {
       this.midiOutDevice = new MidiDevice(data.midiOutDevice);
     }
 
-    this.midiTimecodeEnabled = data.midiTimecodeEnabled;
+    this.midiTimecodeMode = data.midiTimecodeMode;
     this.midiTimecodeFrameRate = data.midiTimecodeFrameRate;
+    this.midiTimecodeSlaveMapping = data.midiTimecodeSlaveMapping;
+    this.midiTimecodeSlaveOffsetMillis = data.midiTimecodeSlaveOffsetMillis;
 
     if (data.remoteDeviceList) {
       this.remoteDeviceList = [];

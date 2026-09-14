@@ -63,6 +63,7 @@
   },
   "play": {
     "help": {
+      "midi-timecode-locked": "Cet appareil suit un code temporel MIDI entrant ; le maître externe commande la lecture.",
       "auto-select-next": "Lorsque cette option est activée, la composition suivante est automatiquement sélectionnée et lue dès que la composition en cours se termine — pratique pour jouer tout un set sans intervention.",
       "switch-to-grid": "Passe à la grille de cues, où chaque composition est un grand bouton que vous pouvez déclencher directement.",
       "switch-to-setlist": "Passe à la vue setlist avec les commandes de lecture et une liste de compositions défilante.",
@@ -70,7 +71,8 @@
       "activity-midi-out": "Clignote lorsque des données MIDI sont envoyées.",
       "activity-audio": "Affiche le niveau de sortie audio actuel par canal.",
       "activity-lighting": "Clignote lorsque des données d'éclairage sont envoyées."
-    }
+    },
+    "midi-timecode": "Code temporel"
   },
   "editor": {
     "compositions": "Compositions",
@@ -98,6 +100,7 @@
     "offset-millis": "Délai en millisecondes",
     "offset-placeholder": "Délai en millisecondes",
     "loop": "Répéter",
+    "timecode-start": "Début du code temporel",
     "routing": "Sortie MIDI",
     "add-routing": "Ajouter une sortie",
     "edit-file": "Modifier le fichier",
@@ -131,6 +134,7 @@
       "test-play": "Lit cette composition à titre d'essai pour la prévisualiser. Cela n'affecte pas le spectacle en direct sur la page \"Démarrer\".",
       "test-stop": "Arrête la lecture d'essai.",
       "loop": "Lorsque cette option est activée, cette composition recommence automatiquement depuis le début une fois arrivée à la fin.",
+      "timecode-start": "La position du code temporel MIDI entrant à laquelle cette composition commence, au format hh:mm:ss.mmm. Utilisé uniquement lorsque cet appareil suit un code temporel MIDI.",
       "audio-volume": "Volume de lecture global de tous les fichiers audio de cette composition.",
       "add-file": "Un fichier multimédia (audio, vidéo ou MIDI) lu dans le cadre de cette composition.",
       "add-action": "Déclenche une action — telle que MIDI, HTTP ou éclairage — à une position définie dans la composition.",
@@ -184,7 +188,9 @@
       "lighting-send-delay": "Les changements d'éclairage qui surviennent dans cette fenêtre de temps sont regroupés en une seule mise à jour avant l'envoi, ce qui réduit le trafic réseau et DMX.",
       "designer-frequency-hertz": "Combien de fois par seconde la sortie d'éclairage est recalculée et envoyée. Des valeurs plus élevées sont plus fluides mais demandent plus de puissance de calcul.",
       "designer-live-preview": "Affiche un aperçu en direct de la sortie d'éclairage dans le Concepteur pendant l'édition, et non plus seulement pendant la lecture.",
-      "midi-timecode": "Envoie le timecode MIDI (MTC) pendant la lecture afin que des appareils externes, comme une DAW ou une console lumière, puissent suivre la position actuelle.",
+      "midi-timecode": "Envoie le timecode MIDI (MTC) pendant la lecture afin que des appareils externes, comme une DAW ou une console lumière, puissent suivre la position actuelle, ou suit un timecode reçu sur l'entrée MIDI afin que cet appareil joue en synchronisation avec un maître externe.",
+      "midi-timecode-slave-mapping": "Par composition : le code temporel entrant pilote la composition sélectionnée, à partir du début de code temporel configuré sur celle-ci. Par set : chaque composition du set actuel occupe sa propre plage sur le code temporel entrant, et la composition correspondante est sélectionnée et démarrée automatiquement.",
+      "midi-timecode-slave-offset": "Compense la latence du code temporel entrant et de la sortie audio. Une valeur positive joue plus tard, une valeur négative plus tôt.",
       "device-in-midi-routing": "Définit où est envoyé le MIDI reçu des périphériques d'entrée connectés, par exemple vers la sortie MIDI, l'éclairage ou les appareils distants.",
       "remote-midi-routing": "Définit où est envoyé le MIDI reçu des appareils RocketShow distants.",
       "global-midi-mapping": "Transforme globalement le MIDI entrant — par exemple en décalant les canaux ou les notes — avant son traitement.",
@@ -257,7 +263,11 @@
     "midi-device-in": "Entrée MIDI",
     "midi-device-out": "Sortie MIDI",
     "midi-timecode": "Code temporel MIDI",
-    "midi-timecode-enable": "Envoyer le code temporel MIDI",
+    "midi-timecode-mode-enum": {
+      "OFF": "Désactivé",
+      "MASTER": "Envoyer (maître)",
+      "SLAVE": "Suivre (esclave)"
+    },
     "midi-timecode-frame-rate": "Fréquence d'images",
     "midi-timecode-frame-rate-enum": {
       "FPS_24": "24 ips",
@@ -265,6 +275,13 @@
       "FPS_29_97_DROP": "29.97 ips drop-frame",
       "FPS_30": "30 ips"
     },
+    "midi-timecode-slave-mapping": "Affectation du code temporel",
+    "midi-timecode-slave-mapping-enum": {
+      "COMPOSITION": "Par composition",
+      "SET": "Par set"
+    },
+    "midi-timecode-slave-offset": "Décalage du code temporel (ms)",
+    "midi-timecode-slave-warning": "Lorsqu'un code temporel entrant est suivi, c'est le maître qui commande la lecture : les compositions démarrent, s'arrêtent et se positionnent avec le code temporel, et la répétition, le démarrage automatique de la composition suivante ainsi que l'envoi de code temporel ne sont pas utilisés. La lumière, le MIDI et les actions suivent le maître exactement. L'audio et la vidéo sont cadencés par la carte son et par l'écran ; ils sont donc maintenus synchronisés en ajustant légèrement la vitesse de lecture et, en cas d'écart plus important, en se repositionnant, ce qui est brièvement audible ou visible. La vidéo est au mieux précise à l'image près, et une composition utilisant le décodeur matériel H.265 peut seulement être démarrée en synchronisation, sans correction ultérieure. Prévoyez un court pré-roll sur le maître pour que la lecture puisse se verrouiller.",
     "midi-control": "Contrôle",
     "midi-control-type": "Type",
     "midi-control-add": "Ajouter un contrôle",

@@ -103,6 +103,13 @@
                             </a>
                             <div class="col-auto flex-grow text-break-word col-auto my-auto pl-0">
                               <p class="mb-0">{{ composition.name }}</p>
+                              @if (showTimecodeStart()) {
+                                <input type="text" class="form-control form-control-sm mt-1" style="width: 8rem;"
+                                  [ngModel]="composition.timecodeStartText" (ngModelChange)="onTimecodeStartChange(composition, $event)"
+                                  (blur)="formatTimecodeStart(composition)"
+                                  placeholder="00:00:00.000" [popover]="'editor.help.timecode-start' | translate"
+                                  triggers="mouseenter:mouseleave" container="body" placement="right">
+                              }
                             </div>
                             <div class="col-auto my-auto">
                               <a class="btn btn-primary btn-sm float-right" href="#" role="button" (click)="removeComposition(composition); false">

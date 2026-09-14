@@ -20,16 +20,27 @@ class MidiInDeviceReceiver implements Receiver {
 
     private final ActionMidiExecutionService actionMidiExecutionService;
 
+    private final MidiTimecodeSlaveService midiTimecodeSlaveService;
+
     private final MidiRouter midiRouter;
 
-    MidiInDeviceReceiver(ActionMidiExecutionService actionMidiExecutionService, SettingsService settingsService, MidiRouterFactory midiRouterFactory) {
+    MidiInDeviceReceiver(ActionMidiExecutionService actionMidiExecutionService, MidiTimecodeSlaveService midiTimecodeSlaveService, SettingsService settingsService, MidiRouterFactory midiRouterFactory) {
         this.actionMidiExecutionService = actionMidiExecutionService;
+        this.midiTimecodeSlaveService = midiTimecodeSlaveService;
 
         midiRouter = midiRouterFactory.getMidiRouter(settingsService.getSettings().getDeviceInMidiRoutingList());
     }
 
     @Override
     public void send(MidiMessage midiMessage, long timeStamp) {
+        // Follow the MIDI timecode, if this device is configured as a timecode slave. Done before
+        // everything else, and for all message types, because a timecode locate arrives as SysEx.
+        try {
+            midiTimecodeSlaveService.processMidiMessage(midiMessage);
+        } catch (Exception e) {
+            logger.error("Could not process the MIDI timecode from the MIDI device", e);
+        }
+
         if (!(midiMessage instanceof ShortMessage shortMessage)) {
             return;
         }

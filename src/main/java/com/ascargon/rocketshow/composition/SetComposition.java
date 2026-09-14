@@ -16,6 +16,10 @@ public class SetComposition {
 	private long durationMillis;
 	private boolean autoStartNextComposition = false;
 
+	// The absolute MIDI timecode position (in milliseconds) at which this composition starts within
+	// the set, used when following an incoming MIDI timecode with the per-set mapping.
+	private long timecodeStartMillis = 0;
+
 	public String getName() {
 		return name;
 	}
@@ -38,6 +42,14 @@ public class SetComposition {
 
 	public void setAutoStartNextComposition(boolean autoStartNextComposition) {
 		this.autoStartNextComposition = autoStartNextComposition;
+	}
+
+	public long getTimecodeStartMillis() {
+		return timecodeStartMillis;
+	}
+
+	public void setTimecodeStartMillis(long timecodeStartMillis) {
+		this.timecodeStartMillis = timecodeStartMillis;
 	}
 
 }

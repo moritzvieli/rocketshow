@@ -24,6 +24,10 @@ public class Composition {
     private String notes;
     private long durationMillis;
     private boolean loop = false;
+
+    // The absolute MIDI timecode position (in milliseconds) at which this composition starts, used
+    // when following an incoming MIDI timecode with the per-composition mapping.
+    private long timecodeStartMillis = 0;
     private List<CompositionFile> compositionFileList = new ArrayList<>();
     private List<LeadSheet> leadSheetList = new ArrayList<>();
     private float audioVolume = 1;

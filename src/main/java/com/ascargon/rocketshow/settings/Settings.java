@@ -45,8 +45,26 @@ public class Settings {
     private String leadSheetPath;
     private MidiDevice midiInDevice;
     private MidiDevice midiOutDevice;
+
+    /**
+     * @deprecated Not used since settings version 4 anymore. Use midiTimecodeMode instead.
+     */
+    @Deprecated
     private Boolean midiTimecodeEnabled;
+
+    // Whether MIDI timecode is sent (master), followed (slave) or not used at all
+    private MidiTimecodeMode midiTimecodeMode;
+
+    // The frame rate used to send MIDI timecode as a master. As a slave, the frame rate announced by
+    // the master is used instead.
     private MidiTimecodeFrameRate midiTimecodeFrameRate;
+
+    // Whether an incoming timecode position addresses the current composition or the current set
+    private MidiTimecodeSlaveMapping midiTimecodeSlaveMapping;
+
+    // Compensates the latency of the incoming timecode (MIDI transport plus audio output buffer).
+    // A positive value plays later, a negative value plays earlier.
+    private Integer midiTimecodeSlaveOffsetMillis;
     private List<RemoteDevice> remoteDeviceList = new ArrayList<>();
 
     /**

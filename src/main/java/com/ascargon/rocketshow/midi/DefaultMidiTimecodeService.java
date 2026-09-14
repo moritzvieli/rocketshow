@@ -35,7 +35,7 @@ public class DefaultMidiTimecodeService implements MidiTimecodeService {
     @Override
     public synchronized void start(Object owner, LongSupplier positionMillisSupplier) {
         Settings settings = settingsService.getSettings();
-        if (!Boolean.TRUE.equals(settings.getMidiTimecodeEnabled())) {
+        if (settings.getMidiTimecodeMode() != MidiTimecodeMode.MASTER) {
             return;
         }
 
@@ -57,7 +57,7 @@ public class DefaultMidiTimecodeService implements MidiTimecodeService {
 
     private void sendQuarterFrame(LongSupplier positionMillisSupplier, MidiTimecodeFrameRate frameRate) {
         Settings settings = settingsService.getSettings();
-        if (!Boolean.TRUE.equals(settings.getMidiTimecodeEnabled()) || !midiDeviceOutService.isConnected()) {
+        if (settings.getMidiTimecodeMode() != MidiTimecodeMode.MASTER || !midiDeviceOutService.isConnected()) {
             return;
         }
 

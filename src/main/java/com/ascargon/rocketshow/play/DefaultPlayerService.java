@@ -499,6 +499,21 @@ public class DefaultPlayerService implements PlayerService {
         return currentCompositionPlayer.getPositionMillis();
     }
 
+    @Override
+    public Composition getCurrentComposition() {
+        return currentCompositionPlayer.getComposition();
+    }
+
+    @Override
+    public void setExternalTimecodePositionMillis(long positionMillis) {
+        currentCompositionPlayer.setExternalTimecodePositionMillis(positionMillis);
+    }
+
+    @Override
+    public void syncToTimecode(long compositionPositionMillis) throws Exception {
+        currentCompositionPlayer.syncToTimecode(compositionPositionMillis);
+    }
+
     public void setComposition(Composition composition, boolean playDefaultCompositionWhenStoppingComposition,
                                boolean forceLoad) throws Exception {
 

@@ -58,17 +58,18 @@
       [popover]="'settings.help.midi-timecode' | translate" triggers="mouseenter:mouseleave" container="body"
       placement="right" aria-hidden="true"></i></label>
   <div class="col-lg-9">
-    <div class="form-check">
-      <input type="checkbox" [ngModel]="settings?.midiTimecodeEnabled"
-        (ngModelChange)="settings.midiTimecodeEnabled = $event" class="form-check-input" id="midi-timecode-enable" />
-      <label class="form-check-label" for="midi-timecode-enable">
-        {{ "settings.midi-timecode-enable" | translate }}
-      </label>
-    </div>
+    <select class="custom-select" [ngModel]="settings?.midiTimecodeMode"
+      (ngModelChange)="settings.midiTimecodeMode = $event" id="midi-timecode-mode">
+      @for (mode of midiTimecodeModes; track mode) {
+      <option [ngValue]="mode">
+        {{ "settings.midi-timecode-mode-enum." + mode | translate }}
+      </option>
+      }
+    </select>
   </div>
 </div>
 
-@if (settings?.midiTimecodeEnabled) {
+@if (settings?.midiTimecodeMode == "MASTER") {
 <div class="form-group row">
   <label class="col-lg-3 col-form-label">{{
     "settings.midi-timecode-frame-rate" | translate
@@ -82,6 +83,43 @@
       </option>
       }
     </select>
+  </div>
+</div>
+}
+
+@if (settings?.midiTimecodeMode == "SLAVE") {
+<div class="alert alert-warning mb-2" role="alert">
+  <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+  {{ "settings.midi-timecode-slave-warning" | translate }}
+</div>
+
+<div class="form-group row">
+  <label class="col-lg-3 col-form-label">{{
+    "settings.midi-timecode-slave-mapping" | translate
+    }}<i class="fa fa-question-circle-o text-muted ml-1" style="cursor: help;"
+      [popover]="'settings.help.midi-timecode-slave-mapping' | translate" triggers="mouseenter:mouseleave"
+      container="body" placement="right" aria-hidden="true"></i></label>
+  <div class="col-lg-9">
+    <select class="custom-select" [ngModel]="settings?.midiTimecodeSlaveMapping"
+      (ngModelChange)="settings.midiTimecodeSlaveMapping = $event" id="midi-timecode-slave-mapping">
+      @for (mapping of midiTimecodeSlaveMappings; track mapping) {
+      <option [ngValue]="mapping">
+        {{ "settings.midi-timecode-slave-mapping-enum." + mapping | translate }}
+      </option>
+      }
+    </select>
+  </div>
+</div>
+
+<div class="form-group row">
+  <label class="col-lg-3 col-form-label">{{
+    "settings.midi-timecode-slave-offset" | translate
+    }}<i class="fa fa-question-circle-o text-muted ml-1" style="cursor: help;"
+      [popover]="'settings.help.midi-timecode-slave-offset' | translate" triggers="mouseenter:mouseleave"
+      container="body" placement="right" aria-hidden="true"></i></label>
+  <div class="col-lg-9">
+    <input type="number" class="form-control" [ngModel]="settings?.midiTimecodeSlaveOffsetMillis"
+      (ngModelChange)="settings.midiTimecodeSlaveOffsetMillis = $event" id="midi-timecode-slave-offset" />
   </div>
 </div>
 }

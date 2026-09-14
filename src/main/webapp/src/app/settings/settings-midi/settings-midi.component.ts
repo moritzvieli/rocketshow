@@ -28,6 +28,8 @@ export class SettingsMidiComponent implements OnInit, OnDestroy {
   midiInDevices: MidiDevice[];
   midiOutDevices: MidiDevice[];
   midiTimecodeFrameRates = ["FPS_24", "FPS_25", "FPS_29_97_DROP", "FPS_30"];
+  midiTimecodeModes = ["OFF", "MASTER", "SLAVE"];
+  midiTimecodeSlaveMappings = ["COMPOSITION", "SET"];
 
   compositions: Composition[];
 
@@ -55,6 +57,14 @@ export class SettingsMidiComponent implements OnInit, OnDestroy {
           this.settings = result;
           if (!this.settings.midiTimecodeFrameRate) {
             this.settings.midiTimecodeFrameRate = "FPS_30";
+          }
+
+          if (!this.settings.midiTimecodeMode) {
+            this.settings.midiTimecodeMode = "OFF";
+          }
+
+          if (!this.settings.midiTimecodeSlaveMapping) {
+            this.settings.midiTimecodeSlaveMapping = "COMPOSITION";
           }
 
           const noneDevice: MidiDevice = {

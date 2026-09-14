@@ -5,6 +5,8 @@ export class State {
     currentCompositionDurationMillis: number = 0;
     positionMillis: number;
     currentSetName: string;
+    midiTimecodeLocked: boolean = false;
+    midiTimecodeMillis: number;
     error: string;
 
     constructor(data?: any) {
@@ -18,6 +20,8 @@ export class State {
         this.currentCompositionDurationMillis = data.currentCompositionDurationMillis;
         this.positionMillis = data.positionMillis;
         this.currentSetName = data.currentSetName;
+        this.midiTimecodeLocked = data.midiTimecodeLocked;
+        this.midiTimecodeMillis = data.midiTimecodeMillis;
         this.error = data.error;
     }
 }

@@ -13,6 +13,9 @@ export class Composition {
   autoStartNextComposition: boolean = false;
   leadSheetList: LeadSheet[] = [];
   loop: boolean;
+  timecodeStartMillis: number = 0;
+  // Only used while editing, so typing a timecode is not fought by the formatter
+  timecodeStartText: string;
   audioVolume: number = 1;
   actionTriggerList: ActionTriggerComposition[] = [];
 
@@ -35,6 +38,7 @@ export class Composition {
     }
 
     this.loop = data.loop;
+    this.timecodeStartMillis = data.timecodeStartMillis || 0;
     this.audioVolume = data.audioVolume;
 
     if (data.actionTriggerList) {
@@ -78,6 +82,7 @@ export class Composition {
       ...this,
       // Exclude unwanted properties
       autoStartNextComposition: undefined,
+      timecodeStartText: undefined,
     };
   }
 }

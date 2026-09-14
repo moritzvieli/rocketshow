@@ -63,6 +63,7 @@
   },
   "play": {
     "help": {
+      "midi-timecode-locked": "This device is following an incoming MIDI timecode; the external master controls playback.",
       "auto-select-next": "When enabled, the next composition is automatically selected and played as soon as the current one finishes — useful for playing through a whole set hands-free.",
       "switch-to-grid": "Switch to the cue grid, where every composition is a large button you can trigger directly.",
       "switch-to-setlist": "Switch to the setlist view with transport controls and a scrolling composition list.",
@@ -70,7 +71,8 @@
       "activity-midi-out": "Blinks when MIDI data is sent.",
       "activity-audio": "Shows the current audio output level per channel.",
       "activity-lighting": "Blinks when lighting data is sent."
-    }
+    },
+    "midi-timecode": "Timecode"
   },
   "editor": {
     "compositions": "Compositions",
@@ -98,6 +100,7 @@
     "offset-millis": "Delay in milliseconds",
     "offset-placeholder": "Delay in milliseconds",
     "loop": "Loop",
+    "timecode-start": "Timecode start",
     "routing": "MIDI Output",
     "add-routing": "Add output",
     "edit-file": "Edit file",
@@ -131,6 +134,7 @@
       "test-play": "Test-play this composition to preview it. This does not affect the live show on the “Start” page.",
       "test-stop": "Stop the test playback.",
       "loop": "When enabled, this composition automatically starts again from the beginning once it reaches the end.",
+      "timecode-start": "The position of the incoming MIDI timecode at which this composition starts, as hh:mm:ss.mmm. Only used while this device follows a MIDI timecode.",
       "audio-volume": "Overall playback volume for all audio files in this composition.",
       "add-file": "A media file (audio, video or MIDI) that is played as part of this composition.",
       "add-action": "Trigger an action — such as MIDI, HTTP or lighting — at a defined position within the composition.",
@@ -184,7 +188,9 @@
       "lighting-send-delay": "Lighting changes that occur within this time window are grouped into a single update before being sent, reducing network and DMX traffic.",
       "designer-frequency-hertz": "How many times per second the lighting output is recalculated and sent. Higher values are smoother but use more processing power.",
       "designer-live-preview": "Shows a live preview of the lighting output in the Designer while you edit, instead of only during playback.",
-      "midi-timecode": "Sends MIDI Timecode (MTC) during playback so external devices, such as a DAW or lighting desk, can follow the current position.",
+      "midi-timecode": "Sends MIDI Timecode (MTC) during playback so external devices, such as a DAW or lighting desk, can follow the current position, or follows a timecode received on the MIDI input so this device plays in sync with an external master.",
+      "midi-timecode-slave-mapping": "Per composition: the incoming timecode drives the selected composition, starting at the timecode start configured on it. Per set: every composition of the current set occupies its own window on the incoming timecode, and the matching composition is selected and started automatically.",
+      "midi-timecode-slave-offset": "Compensates the latency of the incoming timecode and of the audio output. A positive value plays later, a negative value plays earlier.",
       "device-in-midi-routing": "Defines where MIDI received from connected input devices is sent, for example to the MIDI output, lighting or remote devices.",
       "remote-midi-routing": "Defines where MIDI received from remote RocketShow devices is sent.",
       "global-midi-mapping": "Transforms incoming MIDI globally — for example shifting channels or notes — before it is processed.",
@@ -257,7 +263,11 @@
     "midi-device-in": "MIDI input",
     "midi-device-out": "MIDI output",
     "midi-timecode": "MIDI timecode",
-    "midi-timecode-enable": "Send MIDI timecode",
+    "midi-timecode-mode-enum": {
+      "OFF": "Off",
+      "MASTER": "Send (master)",
+      "SLAVE": "Follow (slave)"
+    },
     "midi-timecode-frame-rate": "Frame rate",
     "midi-timecode-frame-rate-enum": {
       "FPS_24": "24 fps",
@@ -265,6 +275,13 @@
       "FPS_29_97_DROP": "29.97 fps drop-frame",
       "FPS_30": "30 fps"
     },
+    "midi-timecode-slave-mapping": "Timecode mapping",
+    "midi-timecode-slave-mapping-enum": {
+      "COMPOSITION": "Per composition",
+      "SET": "Per set"
+    },
+    "midi-timecode-slave-offset": "Timecode offset (ms)",
+    "midi-timecode-slave-warning": "While following an incoming timecode, the master controls the transport: compositions start, stop and locate with the timecode, and looping, automatically starting the next composition and sending timecode are not used. Lighting, MIDI and actions follow the master exactly. Audio and video are clocked by the sound card and the display, so they are kept in sync by trimming the playback rate slightly and, for larger deviations, by seeking, which is briefly audible or visible. Video is frame-accurate at best, and a composition using the hardware H.265 decoder can only be started in sync, never corrected afterwards. Give the master a moment of pre-roll so playback can lock on.",
     "midi-control": "Control",
     "midi-control-type": "Type",
     "midi-control-add": "Add control",

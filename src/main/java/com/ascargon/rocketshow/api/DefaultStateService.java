@@ -2,11 +2,18 @@ package com.ascargon.rocketshow.api;
 
 import com.ascargon.rocketshow.composition.CompositionService;
 import com.ascargon.rocketshow.composition.SetService;
+import com.ascargon.rocketshow.midi.MidiTimecodeSlaveService;
 import com.ascargon.rocketshow.play.PlayerService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DefaultStateService implements StateService {
+
+    private final MidiTimecodeSlaveService midiTimecodeSlaveService;
+
+    public DefaultStateService(MidiTimecodeSlaveService midiTimecodeSlaveService) {
+        this.midiTimecodeSlaveService = midiTimecodeSlaveService;
+    }
 
     private int getCompositionIndexWithoutSet(
             CompositionService compositionService,
@@ -22,6 +29,14 @@ public class DefaultStateService implements StateService {
             CompositionService compositionService
     ) {
         State currentState = new State();
+
+        currentState.setMidiTimecodeLocked(midiTimecodeSlaveService.isLocked());
+
+        long midiTimecodeMillis = midiTimecodeSlaveService.getTimecodeMillis();
+
+        if (midiTimecodeMillis >= 0) {
+            currentState.setMidiTimecodeMillis(midiTimecodeMillis);
+        }
 
         if (playerService != null) {
             currentState.setPlayState(playerService.getPlayState());
