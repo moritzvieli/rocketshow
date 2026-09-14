@@ -12,15 +12,18 @@ class MidiTimecodeMessageFactoryTest {
 
     @Test
     void createQuarterFrameMessageEncodesMessageTypeAndNibble() throws Exception {
-        ShortMessage message = MidiTimecodeMessageFactory.createQuarterFrameMessage(1_234, MidiTimecodeFrameRate.FPS_30, 0);
+        // 1234ms at 30fps is frame 37, i.e. 00:00:01:07
+        MidiTimecodePosition position = MidiTimecodeMessageFactory.getTimecodePosition(1_234, MidiTimecodeFrameRate.FPS_30);
+        ShortMessage message = MidiTimecodeMessageFactory.createQuarterFrameMessage(position, MidiTimecodeFrameRate.FPS_30, 0);
 
         assertEquals(0xF1, message.getStatus());
-        assertEquals(0x09, message.getData1());
+        assertEquals(0x07, message.getData1());
     }
 
     @Test
     void createQuarterFrameMessageEncodesRateInHourHighNibble() throws Exception {
-        ShortMessage message = MidiTimecodeMessageFactory.createQuarterFrameMessage(0, MidiTimecodeFrameRate.FPS_25, 7);
+        MidiTimecodePosition position = MidiTimecodeMessageFactory.getTimecodePosition(0, MidiTimecodeFrameRate.FPS_25);
+        ShortMessage message = MidiTimecodeMessageFactory.createQuarterFrameMessage(position, MidiTimecodeFrameRate.FPS_25, 7);
 
         assertEquals(0xF1, message.getStatus());
         assertEquals(0x72, message.getData1());

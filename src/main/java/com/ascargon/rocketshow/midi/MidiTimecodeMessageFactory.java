@@ -15,9 +15,15 @@ class MidiTimecodeMessageFactory {
     private MidiTimecodeMessageFactory() {
     }
 
-    static ShortMessage createQuarterFrameMessage(long positionMillis, MidiTimecodeFrameRate frameRate, int messageType) throws InvalidMidiDataException {
-        MidiTimecodePosition position = getTimecodePosition(positionMillis, frameRate, 2);
-
+    /**
+     * One of the eight quarter-frame messages that together transmit a position.
+     * <p>
+     * All eight carry the same position, the one the sequence started at: transmitting it takes two
+     * frames, and the receiver adds those two frames back itself. Pass the same position for a whole
+     * sequence (see {@link MidiTimecodeQuarterFrameSequence}), otherwise the nibbles come from
+     * different moments and the receiver assembles a position that was never real.
+     */
+    static ShortMessage createQuarterFrameMessage(MidiTimecodePosition position, MidiTimecodeFrameRate frameRate, int messageType) throws InvalidMidiDataException {
         int value = switch (messageType) {
             case 0 -> position.frame() & 0x0F;
             case 1 -> (position.frame() >> 4) & 0x01;
@@ -35,8 +41,11 @@ class MidiTimecodeMessageFactory {
         return message;
     }
 
+    /**
+     * A full-frame message, used to locate a parked receiver to a position.
+     */
     static SysexMessage createFullFrameMessage(long positionMillis, MidiTimecodeFrameRate frameRate) throws InvalidMidiDataException {
-        MidiTimecodePosition position = getTimecodePosition(positionMillis, frameRate, 0);
+        MidiTimecodePosition position = getTimecodePosition(positionMillis, frameRate);
         byte[] data = new byte[]{
                 (byte) SysexMessage.SYSTEM_EXCLUSIVE,
                 (byte) FULL_FRAME_UNIVERSAL_REALTIME_SYSEX,
@@ -55,8 +64,11 @@ class MidiTimecodeMessageFactory {
         return message;
     }
 
-    private static MidiTimecodePosition getTimecodePosition(long positionMillis, MidiTimecodeFrameRate frameRate, int frameOffset) {
-        long frameNumber = Math.max(0, Math.round(positionMillis * frameRate.getFramesPerSecond() / 1000.0)) + frameOffset;
+    /**
+     * The SMPTE position a playback position in milliseconds corresponds to.
+     */
+    static MidiTimecodePosition getTimecodePosition(long positionMillis, MidiTimecodeFrameRate frameRate) {
+        long frameNumber = Math.max(0, Math.round(positionMillis * frameRate.getFramesPerSecond() / 1000.0));
 
         if (frameRate.isDropFrame()) {
             frameNumber = convertToDropFrameNumber(frameNumber);

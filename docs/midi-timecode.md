@@ -13,6 +13,16 @@ The mode is set under **Settings → MIDI → MIDI timecode**:
 
 Sending and following are mutually exclusive — a device can only be one of the two.
 
+## Sending a timecode
+
+Set **MIDI timecode** to *Send (master)* and choose the frame rate. The timecode is sent on the
+configured MIDI output device while a composition plays, and a full-frame message is sent whenever
+playback starts or is located.
+
+> Earlier versions sent the quarter-frame messages two frames ahead of the actual position, which
+> made every receiver run about 67ms (at 30fps) early. That is fixed, so if you compensated for it
+> on the receiving side, remove that compensation.
+
 ## Following a timecode
 
 Set **MIDI timecode** to *Follow (slave)* and make sure the MIDI input device carrying the timecode

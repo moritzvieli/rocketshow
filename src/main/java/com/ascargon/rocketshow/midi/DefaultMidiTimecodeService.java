@@ -25,7 +25,7 @@ public class DefaultMidiTimecodeService implements MidiTimecodeService {
 
     private ScheduledFuture<?> sendTimecodeHandle;
     private Object owner;
-    private int quarterFrameMessageType = 0;
+    private final MidiTimecodeQuarterFrameSequence quarterFrameSequence = new MidiTimecodeQuarterFrameSequence();
 
     public DefaultMidiTimecodeService(SettingsService settingsService, MidiDeviceOutService midiDeviceOutService) {
         this.settingsService = settingsService;
@@ -42,7 +42,7 @@ public class DefaultMidiTimecodeService implements MidiTimecodeService {
         stopCurrent();
 
         this.owner = owner;
-        quarterFrameMessageType = 0;
+        quarterFrameSequence.reset();
         MidiTimecodeFrameRate frameRate = settings.getMidiTimecodeFrameRate();
 
         try {
@@ -62,8 +62,7 @@ public class DefaultMidiTimecodeService implements MidiTimecodeService {
         }
 
         try {
-            midiDeviceOutService.sendMessage(MidiTimecodeMessageFactory.createQuarterFrameMessage(positionMillisSupplier.getAsLong(), frameRate, quarterFrameMessageType));
-            quarterFrameMessageType = (quarterFrameMessageType + 1) % 8;
+            midiDeviceOutService.sendMessage(quarterFrameSequence.next(positionMillisSupplier.getAsLong(), frameRate));
         } catch (InvalidMidiDataException e) {
             logger.error("Could not send MIDI timecode quarter-frame message", e);
         }
