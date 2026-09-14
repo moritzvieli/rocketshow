@@ -7,3 +7,4 @@ devices.
 
 - [Getting Started](getting-started/getting-started.md)
 - [MIDI Timecode (MTC)](midi-timecode.md)
+- [Controlling Rocket Show over MIDI](midi-control.md)

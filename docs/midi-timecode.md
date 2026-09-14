@@ -13,6 +13,9 @@ The mode is set under **Settings → MIDI → MIDI timecode**:
 
 Sending and following are mutually exclusive — a device can only be one of the two.
 
+To let a master select and start compositions rather than run their timeline, see
+[Controlling Rocket Show over MIDI](midi-control.md).
+
 ## Sending a timecode
 
 Set **MIDI timecode** to *Send (master)* and choose the frame rate. The timecode is sent on the

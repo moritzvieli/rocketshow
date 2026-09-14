@@ -30,6 +30,7 @@ export class SettingsMidiComponent implements OnInit, OnDestroy {
   midiTimecodeFrameRates = ["FPS_24", "FPS_25", "FPS_29_97_DROP", "FPS_30"];
   midiTimecodeModes = ["OFF", "MASTER", "SLAVE"];
   midiTimecodeSlaveMappings = ["COMPOSITION", "SET"];
+  midiChannelList: number[] = [];
 
   compositions: Composition[];
 
@@ -47,6 +48,10 @@ export class SettingsMidiComponent implements OnInit, OnDestroy {
     this.deviceInformationService.getDeviceInformation().subscribe((deviceInformation) => {
       this.deviceInformation = deviceInformation;
     });
+
+    for (let i = 0; i < 16; i++) {
+      this.midiChannelList.push(i);
+    }
   }
 
   private loadSettings() {

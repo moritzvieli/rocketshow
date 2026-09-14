@@ -113,7 +113,7 @@ class MidiTimecodeDecoder {
         int second = nibbles[2] | (nibbles[3] << 4);
         int minute = nibbles[4] | (nibbles[5] << 4);
         int hour = nibbles[6] | ((nibbles[7] & 0x01) << 4);
-        MidiTimecodeFrameRate frameRate = getFrameRateByMidiRateCode((nibbles[7] >> 1) & 0x03);
+        MidiTimecodeFrameRate frameRate = MidiTimecodeFrameRate.fromMidiRateCode((nibbles[7] >> 1) & 0x03);
 
         MidiTimecodePosition position = new MidiTimecodePosition(hour, minute, second, frame);
 
@@ -138,7 +138,7 @@ class MidiTimecodeDecoder {
         }
 
         int hourAndRate = data[5] & 0xFF;
-        MidiTimecodeFrameRate frameRate = getFrameRateByMidiRateCode((hourAndRate >> 5) & 0x03);
+        MidiTimecodeFrameRate frameRate = MidiTimecodeFrameRate.fromMidiRateCode((hourAndRate >> 5) & 0x03);
         MidiTimecodePosition position = new MidiTimecodePosition(
                 hourAndRate & 0x1F,
                 data[6] & 0x3F,
@@ -149,16 +149,6 @@ class MidiTimecodeDecoder {
         reset();
 
         return Optional.of(new Result(Math.max(0, position.toMillis(frameRate)), frameRate, true, 1));
-    }
-
-    private static MidiTimecodeFrameRate getFrameRateByMidiRateCode(int midiRateCode) {
-        for (MidiTimecodeFrameRate frameRate : MidiTimecodeFrameRate.values()) {
-            if (frameRate.getMidiRateCode() == midiRateCode) {
-                return frameRate;
-            }
-        }
-
-        return MidiTimecodeFrameRate.FPS_30;
     }
 
 }

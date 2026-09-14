@@ -249,6 +249,9 @@ export class EditorSetComponent implements OnInit {
     this.currentSet.compositionList.push(
       Object.assign(new Composition(), composition, {
         timecodeStartMillis: this.getNextTimecodeStartMillis(),
+        // Start out inheriting the composition's own number and cue number
+        midiNumber: undefined,
+        showControlCue: undefined,
       })
     );
 
@@ -276,6 +279,23 @@ export class EditorSetComponent implements OnInit {
       this.settings?.midiTimecodeMode == 'SLAVE' &&
       this.settings?.midiTimecodeSlaveMapping == 'SET'
     );
+  }
+
+  // The show control cue number falls back to the MIDI number, so the number is also worth showing
+  // when only show control is used
+  showMidiNumber(): boolean {
+    return (
+      this.settings?.midiCompositionSelectionEnabled ||
+      this.settings?.midiShowControlEnabled
+    );
+  }
+
+  showShowControlCue(): boolean {
+    return this.settings?.midiShowControlEnabled;
+  }
+
+  hasSetOverrides(): boolean {
+    return this.showTimecodeStart() || this.showMidiNumber() || this.showShowControlCue();
   }
 
   onTimecodeStartChange(composition: Composition, value: string) {

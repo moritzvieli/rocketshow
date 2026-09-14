@@ -600,4 +600,17 @@ export class EditorCompositionComponent implements OnInit {
       this.settings?.midiTimecodeSlaveMapping == "COMPOSITION"
     );
   }
+
+  // The show control cue number falls back to the MIDI number, so the number is also worth showing
+  // when only show control is used
+  showMidiNumber(): boolean {
+    return (
+      this.settings?.midiCompositionSelectionEnabled ||
+      this.settings?.midiShowControlEnabled
+    );
+  }
+
+  showShowControlCue(): boolean {
+    return this.settings?.midiShowControlEnabled;
+  }
 }

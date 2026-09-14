@@ -171,6 +171,30 @@ public class DefaultSettingsService implements SettingsService {
             settings.setMidiTimecodeSlaveOffsetMillis(0);
         }
 
+        if (settings.getMidiCompositionSelectionEnabled() == null) {
+            settings.setMidiCompositionSelectionEnabled(false);
+        }
+
+        if (settings.getMidiCompositionSelectionAutoPlay() == null) {
+            settings.setMidiCompositionSelectionAutoPlay(false);
+        }
+
+        if (settings.getMidiShowControlEnabled() == null) {
+            settings.setMidiShowControlEnabled(false);
+        }
+
+        if (settings.getMidiShowControlDeviceId() == null) {
+            settings.setMidiShowControlDeviceId(0);
+        }
+
+        if (settings.getMidiMachineControlEnabled() == null) {
+            settings.setMidiMachineControlEnabled(false);
+        }
+
+        if (settings.getMidiMachineControlDeviceId() == null) {
+            settings.setMidiMachineControlDeviceId(0);
+        }
+
         // Add the default audio bus
         if (settings.getAudioBusList().isEmpty()) {
             AudioBus audioBus = new AudioBus();

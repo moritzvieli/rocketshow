@@ -34,11 +34,15 @@ export class Set {
             durationMillis,
             autoStartNextComposition,
             timecodeStartMillis,
+            midiNumber,
+            showControlCue,
           }) => ({
             name,
             durationMillis,
             autoStartNextComposition,
             timecodeStartMillis: timecodeStartMillis || 0,
+            midiNumber,
+            showControlCue,
           })
         ) || [],
 
